@@ -1,4 +1,4 @@
-PAL: The Parallel Architectures Library
+XPAL: The Parallel Architectures Library
 ==================================
 
 The Parallel Architectures Library (PAL) is an open source project that 
@@ -7,10 +7,10 @@ facilitate writing programs for modern parallel architectures.
 ## Why?
 
 Most of today's low level libraries are poorly suited for modern massively
-parallel architectures because they they were written for single threaded
-processors with large cache hierarchies and/or are proprietary. The future of 
-all of computing is  massively parallel and requires a library that 
-efficient, scalable, and completely open.
+parallel architectures because they they vendor proprietary 
+and/or written for single threaded processors with large cache hierarchies. 
+The future of all of computing is  massively parallel and requires a library 
+that efficient, scalable, and completely open.
 
 ## Portable
 
@@ -20,7 +20,7 @@ limited amount of memoryto massive multicores with MBs of memory.
 
 ##Independent 
 
-PAL conforms to ANSI-C/C99 
+PAL conforms to ANSI-C/C99. 
  
 ## Fast
 
