@@ -19,9 +19,6 @@ The Parallel Architectures Library (PAL) is a free and open-source libary writte
 To meet all of these goals, we had to adhere to the garbage in garbage out philosophy.
 Examples of such tradeoffs include limiting the range, cutting out corner cases, and doing away with error checking.
 
-##Why?
-We have ZERO interest in creating new standards and libaries when existing ones will do, so please do contact us ASAP if you know of APIs and libraries that meet the the design criteria specified.
-
 ##Coding style 
 
 * C99
