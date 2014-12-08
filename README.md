@@ -1,63 +1,39 @@
-XPAL: The Parallel Architectures Library
+PAL: The Parallel Architectures Library
 ==================================
 
-The Parallel Architectures Library (PAL) is an open source project that 
-facilitate writing programs for modern parallel architectures. 
+The Parallel Architectures Library (PAL) is a free and open-source libary written in C designed for "memory challenged" architectures in mind. The initial target for the libary is the Epiphany, but the library should be applicable to a wide range of chips and architectures. 
 
-## Why?
+* Math library (sin, cos, basic vector math operations, ...)
+* DSP library (fft, 1D-filters, sobel filter, median, gaussian histogram, sad,..)
+* Hardware abstraction layer (dma programming, counters, interrupts)
+* POSIX (threads,queues)
 
-Most of today's low level libraries are poorly suited for modern massively
-parallel architectures because they are written for single threaded processors 
-with large cache hierarchies or are vendor proprietary. The future of all of 
-computing is  massively parallel and requires a library that efficient, 
-scalable, and completely open.
-
-## Portable
-
-The goal of the PAL library is to be performance and code portable across a 
-number of hardware architectures, ranging from the smallest CPUs with 
-limited amount of memoryto massive multicores with MBs of memory.
-
-The low level HAL API does assume a shared physical address space.
-
-##Independent 
-
-PAL should conform to ANSI-C/C99/POSIX. 
+## Design criteria
+* Fast  (when data and program fits in local cache/SRAM)
+* Open (duh!)
+* Dense (to fit as much as possible into 32KB of local memory)
+* Simple (no need to reinvent the wheel)
+* Scalable (should lend itself to vector and task parallelism at upper layer)
+* Portable (should be useful for different ISAs, with and without vector extensions, 32/64 bit)
  
-## Fast
+To meet all of these goals, we had to adhere to the garbage in garbage out philosophy.
+Examples of such tradeoffs include limiting the range, cutting out corner cases, and doing away with error checking.
 
-Speed and energy consumption (tightly related concepts) are first order
-citizens in the design PAL. At times, this means error checking is thrown
-out the window or that certain features of a the traditional API must be 
-omitted.
+##Why?
+We have ZERO interest in creating new standards and libaries when existing ones will do, so please do contact us ASAP if you know of APIs and libraries that meet the the design criteria specified.
 
-## Scalable
+##Coding style 
 
-The library is written to support different methods of parallel computing 
-ranging from SIMD at the core level to massive parallelism across machines.
+* C99
+* "K&R coding style, 4 spaces for tabs"
 
-## Components
+##Usage examples
 
-1.) Hardware abstraction layer for things like DMAs, interrupts timers, etc  
-2.) Parallel programming support functions  
-3.) Single threaded math and signal processing functions that runs inside local 
-memory
-
-
-Getting started (build instructions)
-===============
 TBD
 
-Usage examples
-==============
-TBD
+##Contributing
+PAl is an ambitious project and really neeeds all the help it can get. If you have anything to contribute, please do!! Here are the instructions to get started [HERE](CONTRIBUTING.md). 
 
-Contributing
-=============
-
-Want to contributed to PAL? There are instructions to get you started [here](CONTRIBUTING.md). 
-
-Licensing
-=========
+##Licensing
 PAL is licensed under the Apache License, Version 2.0. See LICENSE for full license text.
 
