@@ -1,24 +1,41 @@
 PAL: The Parallel Architectures Library
 ==================================
 
-The Parallel Architectures Library (PAL) is a free and open-source libary written in C designed for "memory challenged" architectures in mind. The initial target for the libary is the Epiphany, but the library should be applicable to a wide range of chips and architectures. 
-
-* Math library (sin, cos, basic vector math operations, ...)
-* DSP library (fft, 1D-filters, sobel filter, median, gaussian histogram, sad,..)
-* Hardware abstraction layer (dma programming, counters, interrupts)
-* POSIX (threads,queues)
+The Parallel Architectures Library (PAL) is a free and open-source libary written in C designed for minimalist processor architectures . The initial target for the libary is the Epiphany, but the library should be applicable to a wide range of chips and architectures. 
 
 ## Design criteria
-* Fast  (when data and program fits in local cache/SRAM)
-* Open (duh!)
+* Fast  (..when data and program fits in local cache/SRAM)
+* Open (permissive open source license)
 * Dense (to fit as much as possible into 32KB of local memory)
-* Simple (no need to reinvent the wheel)
-* Scalable (should lend itself to vector and task parallelism at upper layer)
+* Scalable (should lend itself to vector and task parallelism)
 * Portable (should be useful for different ISAs, with and without vector extensions, 32/64 bit)
- 
+
 To meet all of these goals, we had to adhere to the garbage in garbage out philosophy.
 Examples of such tradeoffs include limiting the range, cutting out corner cases, and doing away with error checking.
 
+## Components
+
+### HAL
+Hardware abstraction layer (dma programming, counters, interrupts, memcpy)
+
+### POSIX
+A subset of POSIX functions needed for parallel programming, including support for mutexes, queues, signalling
+
+### IPC
+Support for functions not anticipated by the POSIX, including memory ordering syncronization and atomic functions
+
+### MATH
+A vectorized math library
+(sin, cos, basic vector math operations, ...)
+
+### DSP
+A vectorized DSP library
+(fft, fir/irr filters, median, gaussian histogram, sad, etc)
+
+### GEMS
+programming tricks passed down through generations
+
+  
 ##API Style Example
 ``` c
 /*Function: Vector addition

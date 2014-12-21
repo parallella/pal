@@ -64,7 +64,7 @@ void p_hist2d_32f();
 /*histogram function*/
 void p_threshold2d_32f();
 
-
+/*sobel/canny/harris/threshold/color conversion/dog/ */
 
 
 
