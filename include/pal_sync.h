@@ -1,37 +1,32 @@
 /*
- * Essential parallel programming primitives
- *
+ * Essential parallel programming primitives  (work with 32/64 bit addresses)
+ * Question: are there standard interfaces here and can we use 
  */
 
-/*mutex*/
-void p_mutex_init(pal_dev_t dev, int n, p_mutex_t *mutex, 
-		    const p_mutexattr_t *attr);
-void p_mutex_lock(pal_dev_t dev, int n, p_mutex_t *mutex);
-int  p_mutex_trylock(pal_dev_t dev, int n, p_mutex_t *mutex);
-void p_mutex_unlock(pal_dev_t dev, int n, p_mutex_t *mutex);
-void p_mutex_destroy(pal_dev_t dev, int n, p_mutex_t *mutex);
+/*mutex (posix and gcc builtin) inspired), same arguments*/
+void p_mutex_init(p_mutex_t *mutex, const p_mutex_attr_t *attr);
+void p_mutex_lock(p_mutex_t *mutex);
+int  p_mutex_trylock(p_mutex_t *mutex);
+void p_mutex_unlock(p_mutex_t *mutex);
+void p_mutex_destroy(p_mutex_t *mutex);
 
-/*atomics*/
-void p_atomic_add(pal_dev_t dev, int n, int n);
-void p_atomic_sub(pal_dev_t dev, int n, int n);
-void p_atomic_and(pal_dev_t dev, int n, int n);
-void p_atomic_xor(pal_dev_t dev, int n, int n);
-void p_atomic_or(pal_dev_t dev, int n, int n);
-void p_atomic_nand(pal_dev_t dev, int n, int n);
-void p_atomic_compare_exchange(pal_dev_t dev, int n, int n);
-void p_atomic_compare_exchange_n(pal_dev_t dev, int n, int n);
+/*atomics seems non standard but useful?, in C11 and gnu libs??*/
 
-/*memory synchronization*/
-void p_mem_sync(pal_dev_t dev, int n, void *pilot);
+void p_atomic_add(p_atom_t *atom, int n);
+void p_atomic_sub(p_atom_t *atom, int n);
+void p_atomic_and(p_atom_t *atom, int n);
+void p_atomic_xor(p_atom_t *atom, int n);
+void p_atomic_or(p_atom_t *atom, int n);
+void p_atomic_nand(p_atom_t *atom, int n);
+void p_atomic_compare_exchange(p_atom_t *atom, int n);
+void p_atomic_compare_exchange_n(p_atom_t *atom, int n);
 
-/*barrier for all threads in work group*/
+/*memory synchronization (make sure all reads/writes to region are done) */
+void p_memsync(void* remote_loc);
+
+/*barrier for all threads in work group (openCL inspired)*/
 void p_barrier();
 
-/*conditionals*/
-void p_cond_init(e_cond_t *cond);
-void p_cond_wait(e_cond_t *cond, e_mutex_t *mutex);
-void p_cond_signal(e_cond_t *cond, e_mutex_t *mutex);
-void p_cond_broadcast(e_cond_t *cond);
 
 
 
