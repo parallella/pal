@@ -1,7 +1,7 @@
 PAL: The Parallel Architectures Library
 ========================================
 
-The Parallel Architectures Library (PAL) is a free and open-source C-libary written for the kind of tiny programmable CPUs that can be found in embedded applications and massively parallel processor architectures. PAL contains the following set of components:
+The Parallel Architectures Library (PAL) is a free and open-source C-libary written for tiny programmable CPUs that can be found in embedded applications and massively parallel processor architectures. PAL contains the following set of components:
 
 * HAL: Minimalist hardware abstraction layer
 * IPC: Set of basic parallel programming and communication primitives
@@ -9,9 +9,9 @@ The Parallel Architectures Library (PAL) is a free and open-source C-libary writ
 * DSP: Vectorized DSP library
 * FFT: Optimized FFT library
 
-Hasn't this been done before?  We wish!! (If you think we missed some important library that can be reused, please do let us know ASAP!  We would love nothing better than finding out that this work has already been done.) 
+Hasn't this been done before?  We wish!! (Please, if you think we missed some important library that can be reused, then do let us know ASAP!  We would love nothing better than finding out that this work has already been done.) 
 
-Based on reviweing 10's of libarries in this space, we have found three main ostacles that make adopting existing library infrastructure difficult:  
+Based on reviweing 10's of libaries we have found three main ostacles that makes it very dificult to adopt any one of the existing libraries "as-is":  
 
 * Most IPC code was written for "large" processors and is not suitable for tiny processors
 * Free and open source APIs (like math.h) is far too inefficient for parallel architectures (no vectors)
