@@ -63,13 +63,15 @@ PAL Library Functions
 * p_read()
 * p_write()
 * p_memcpy()
-* p_memcpy_async()
+* p_memcpy_scatter()
+* p_memcpy_gather()
+* p_memcpy_bcast()
 * p_memalloc()
 * p_memfree()
 * p_memptr()
 
-***Program Execution (shared memory):**
 
+**Program Execution (shared memory):**
 * p_init()
 * p_open()
 * p_close()
@@ -114,7 +116,7 @@ PAL Library Functions
 * p_ftoi()
 * p_itod()
 * p_dtoi()
-* 
+
 **Trancendental:**
 * p_acos_32f()
 * p_acosh_32f()
@@ -173,7 +175,7 @@ PAL Library Functions
 * p_firlat_32f()
 * P_iir_32f()
 * p_hist_32f()
-* 
+
 **2D**
 * p_conv2D_32f()
 * p_acorr2D_32f()
