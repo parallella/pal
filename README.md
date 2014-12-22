@@ -4,16 +4,18 @@ PAL: The Parallel Architectures Library
 The Parallel Architectures Library (PAL) is a free and open-source C-libary written for tiny programmable CPUs that can be found in embedded applications and massively parallel processor architectures. PAL contains the following set of components:
 
 * HAL: Minimalist hardware abstraction layer
-* IPC: Set of basic parallel programming and communication primitives
+* IPC: Set of basic synchronization primitives
 * MATH: Vectorized math library
 * DSP: Vectorized DSP library
 * FFT: Optimized FFT library
 
 Before starting the PAL project, we reviewed an long list of existing libraries/APIs and found the following issues:
 
-* Most IPC code was written for "large" processors and is not suitable for tiny processors
-* Free and open source scalar APIs (like math.h) is not inefficient for parallel architectures
+* IPC code targeted mostly targeted for "big iron" processors and is not suitable for tiny processors
+* Free and open source scalar APIs (like math.h) does not leverage vector/SIMD architectures
 * Hardware vendor provided math and DSP libraries come with proprietary license restrictions
+
+We are not trying to duplicated work here and have tried to cut down the API to the minimal possible.
 
 A complete list of PAL functions can be found at the end of this file.
 
@@ -57,7 +59,7 @@ PAL Library Functions
 ========================================
 ## HAL
 
-Memory Management (global addresse map):
+Memory Management (shared memory):
 * p_read()
 * p_write()
 * p_memcpy()
@@ -66,40 +68,18 @@ Memory Management (global addresse map):
 * p_memfree()
 * p_memptr()
 
-Program Execution Management (workgroup):
-* p_devctl()
+Program Execution (shared memory):
+
 * p_init()
 * p_open()
 * p_close()
 * p_finalize()
 * p_load()
 * p_exec()
-* p_barrier()
-
-Hardware Management (local core):
-* p_setfreq()
-* p_setvolt()
-* p_reset()
-* p_timer_set()
-* p_timer_get()
-* p_timer_start()
-* p_timer_stop()
-* p_irq_mask()
-* p_irq_set()
-* p_irq_mask()
+* p_devctl()
 
 
 ## IPC
-
-Threads:
-* p_attr_init()
-* p_attr_destroy()
-* p_attr_setdetachstate()
-* p_attr_setdevice()
-* p_attr_setinit()
-* p_create()
-* p_ncreate()
-* p_join()
 
 Mutex: 
 * p_mutex_attr_init()
@@ -111,14 +91,6 @@ Mutex:
 * p_mutex_unlock()
 * p_mutex_trylock()
 
-Conditionals:
-* p_cond_attr_init()
-* p_cond_attr_destroy()
-* p_cond_attr_setdevice()
-* p_cond_init()
-* p_cond_destroy()
-* p_wait()
-
 Atomics:
 * p_atomic_init()
 * p_atomic_exchange()
@@ -128,21 +100,13 @@ Atomics:
 * p_atomic_fetch_or()
 * p_atomic_fetch_xor()
 * p_atomic_fetch_and()
-* p_atomic_fence()
 
-Sockets:
-* p_accept()
-* p_bind()
-* p_connect()
-* p_listen()
-* p_recv()
-* p_recvfrom()
-* p_recvmsg()
-* p_send()
-* p_sendmsg()
-* p_sendto()
-* p_socket()
+Memory ordering:
+* p_mem_sync()
 
+Barrier:
+* p_barrier_init()
+* p_barrier_wait()
 
 ## MATH
 * p_itof()
