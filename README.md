@@ -24,7 +24,6 @@ To meet all of these goals, we have to take some liberties with respect to error
 * MATH    Vectorized math library
 * DSP     Vectorized DSP library
 * FFT     Optimized FFT library
-* GEMS    Classic programming tricks "gems"
 ```
 
 ##Licensing
