@@ -19,8 +19,7 @@ To meet all of these goals, we have to take some liberties with respect to error
 ## Components
 ``` c
 * HAL     A universal hardware abstraction layer
-* POSIX   POSIX functions needed for parallel programming
-* IPC     Parallel programming constructs not found in POSIX
+* IPC     A "complete: set of parallel programming primitives (POSIX/SYSCALL COMPLIANT???)
 * MATH    Vectorized math library
 * DSP     Vectorized DSP library
 * FFT     Optimized FFT library
