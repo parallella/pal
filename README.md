@@ -1,15 +1,23 @@
 PAL: The Parallel Architectures Library
 ========================================
 
-The Parallel Architectures Library (PAL) is a free and open-source C-libary written for the kind of tiny programmable CPUs that can be found in embedded applications and massively parallel processor architectures.
+The Parallel Architectures Library (PAL) is a free and open-source C-libary written for the kind of tiny programmable CPUs that can be found in embedded applications and massively parallel processor architectures. PAL contains the following set of components:
 
-We have found three main issues with existing solutions that we will try to address with the PAL library.
+* HAL: Minimalist hardware abstraction layer
+* IPC: Set of basic parallel programming and communication primitives
+* MATH: Vectorized math library
+* DSP: Vectorized DSP library
+* FFT: Optimized FFT library
+
+Hasn't this been done before?  We wish!! (If you think we missed some important library that can be reused, please do let us know ASAP!  We would love nothing better than finding out that this work has already been done.) 
+
+Based on reviweing 10's of libarries in this space, we have found three main ostacles that make adopting existing library infrastructure difficult:  
 
 * Most IPC code was written for "large" processors and is not suitable for tiny processors
 * Free and open source APIs (like math.h) is far too inefficient for parallel architectures (no vectors)
 * Hardware vendor provided math and DSP libraries come with proprietary license restrictions
 
-The design goals for the library are as follows:
+The design goals for the PAL are as follows:
 
 * Fast (assumes program and data resides in local cache/scratchpad)
 * Open (permissive open source license)
@@ -17,14 +25,6 @@ The design goals for the library are as follows:
 * Scalable (should lend itself to vector and task parallelism)
 * Portable (should be useful for different ISAs, with and without vector extensions, 32/64 bit)
 
-If you think we missed some important library that can be reused, please do let us know ASAP!  We would love nothing better than finding out that this work has already been done.
-
-## PAL Components
-* HAL: Minimalist hardware abstraction layer
-* IPC: Set of basic parallel programming and communication primitives
-* MATH: Vectorized math library
-* DSP: Vectorized DSP library
-* FFT: Optimized FFT library
 
 ##Licensing
 PAL is licensed under the Apache License, Version 2.0. See LICENSE for full license text.
