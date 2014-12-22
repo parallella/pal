@@ -1,17 +1,20 @@
 PAL: The Parallel Architectures Library
 ========================================
 
-The Parallel Architectures Library (PAL) is a free and open-source libary written in C designed for minimalist processor architectures . The initial target for the libary is the Epiphany, but the library should be applicable to a wide range of chips and architectures. 
+The Parallel Architectures Library (PAL) is a free and open-source C-libary written for tiny programmable CPUs that can be found in embedded applications and massively parallel processor architectures. 
 
-## Design criteria
-* Fast  (..when data and program fits in local cache/SRAM)
+PAL does not answer the question "how to do parallel programming", but does provide an efficient abstraction layer that simplifies the creation of highly parallel programming frameworks and applications.  
+
+
+## Design goals
+* Fast (assumes program and data resides in local cache/scratchpad)
 * Open (permissive open source license)
-* Dense (to fit as much as possible into 32KB of local memory)
+* Small (because every bit counts for embedded processors)
 * Scalable (should lend itself to vector and task parallelism)
 * Portable (should be useful for different ISAs, with and without vector extensions, 32/64 bit)
 
-To meet all of these goals, we had to adhere to the garbage in garbage out philosophy.
-Examples of such tradeoffs include limiting the range, cutting out corner cases, and doing away with error checking.
+To meet all of these goals, we have to take some liberties with respect to error checking and safety. The overriding philophy is "garbage in garbage out". The responsibility on proper usage gets pushed up by one layer.
+
 
 ## Components
 ``` c
@@ -55,8 +58,6 @@ PAL Library Functions
 ========================================
 ## HAL
 
-Assumes a shared memory architecture  
-
 Memory Management (global addresse map):
 * p_read()
 * p_write()
@@ -80,12 +81,12 @@ Program Execution Management (workgroup):
 * p_open()
 * p_close()
 * p_finalize()
-* p_readelf()
+* p_load()
 * p_exec()
 * p_barrier()
-* p_bcast
+* p_bcast()
 
-## IPC ("POSIX-LITE", global memory)
+## IPC ("POSIX-LITE", global shared memory)
 
 Threads:
 * p_attr_init()
@@ -114,9 +115,6 @@ Conditionals:
 * p_cond_init()
 * p_cond_destroy()
 * p_wait()
-
-Signalling:
-* p_signal()  
 
 Atomics:
 * p_atomic_init()
