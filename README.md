@@ -20,13 +20,11 @@ The design goals for the library are as follows:
 If you think we missed some important library that can be reused, please do let us know ASAP!  We would love nothing better than finding out that this work has already been done.
 
 ## PAL Components
-``` c
-* HAL     A universal hardware abstraction layer
-* IPC     A "complete: set of parallel programming primitives (POSIX/SYSCALL COMPLIANT???)
-* MATH    Vectorized math library
-* DSP     Vectorized DSP library
-* FFT     Optimized FFT library
-```
+* HAL: Minimalist hardware abstraction layer
+* IPC: Set of basic parallel programming and communication primitives
+* MATH: Vectorized math library
+* DSP: Vectorized DSP library
+* FFT: Optimized FFT library
 
 ##Licensing
 PAL is licensed under the Apache License, Version 2.0. See LICENSE for full license text.
