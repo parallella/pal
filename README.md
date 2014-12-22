@@ -3,7 +3,7 @@ PAL: The Parallel Architectures Library
 
 The Parallel Architectures Library (PAL) is a free and open-source C-libary written for tiny programmable CPUs that can be found in embedded applications and massively parallel processor architectures. 
 
-PAL does not answer the question "how to do parallel programming", but does provide an efficient abstraction layer that simplifies the creation of highly parallel programming frameworks and applications.  
+PAL does not answer the question "how to do parallel programming", but does provide an efficient abstraction layer that simplifies the creation of highly parallel programming frameworks and applications.
 
 
 ## Design goals
@@ -62,6 +62,7 @@ Memory Management (global addresse map):
 * p_read()
 * p_write()
 * p_memcpy()
+* p_memcpy_async()
 * p_memalloc()
 * p_memfree()
 * p_memptr()
@@ -86,7 +87,7 @@ Program Execution Management (workgroup):
 * p_barrier()
 * p_bcast()
 
-## IPC ("POSIX-LITE", global shared memory)
+## IPC
 
 Threads:
 * p_attr_init()
@@ -215,12 +216,10 @@ Sockets:
 * p_thresh2D_32f()
 * p_scale2D_32f()
 * p_lut2D_32f()
-* p_memcpy2D_32f()
 
 ## FFT
 * p_fftplan_32f()
 * p_fftexec_32f()
 * p_fftdestroy()
-
 
 
