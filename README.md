@@ -1,32 +1,16 @@
 PAL: The Parallel Architectures Library
 ========================================
 
-The Parallel Architectures Library (PAL) is a free and open-source C-libary written for tiny programmable CPUs that can be found in embedded applications and massively parallel processor architectures. PAL contains the following set of components:
-
-* HAL: Minimalist hardware abstraction layer
-* IPC: Set of basic synchronization primitives
-* MATH: Vectorized math library
-* DSP: Vectorized DSP library
-* FFT: Optimized FFT library
-
-Before starting the PAL project, we reviewed an long list of existing libraries/APIs and found the following issues:
-
-* IPC code targeted mostly targeted for "big iron" processors and is not suitable for tiny processors
-* Free and open source scalar APIs (like math.h) does not leverage vector/SIMD architectures
-* Hardware vendor provided math and DSP libraries come with proprietary license restrictions
-
-We are not trying to duplicated work here and have tried to cut down the API to the minimal possible.
-
-A complete list of PAL functions can be found at the end of this file.
+The Parallel Architectures Library (PAL) is a free and open-source C-libary that provides optimized math routines and low-level synchronization primitives for parallel programming. The library was designed for tiny CPUs found in most of today's energy constrained electronic systems.
 
 PAL Design Goals:
 
 * Fast (assumes program and data resides in local cache/scratchpad)
-* Open (permissive open source license)
-* Small (because every bit counts for embedded processors)
+* Small (because every bit counts for embedded processors, RAM/ROM <<< 1MB)
 * Scalable (should lend itself to vector and task parallelism)
-* Portable (should be useful for different ISAs, with and without vector extensions, 32/64 bit)
+* Open (permissive open source license)
 
+A complete list of linked functions can be found at the end of this file 
 
 ##Licensing
 PAL is licensed under the Apache License, Version 2.0. See LICENSE for full license text.
