@@ -3,12 +3,12 @@ PAL: The Parallel Architectures Library
 
 The Parallel Architectures Library (PAL) is a free and open-source C-libary that provides optimized math routines and low-level synchronization primitives for parallel programming. The library was designed for tiny CPUs found in most of today's energy constrained electronic systems.
 
-PAL Design Goals:
+##Design Goals:
 
-* Fast (assumes program and data resides in local cache/scratchpad)
-* Small (because every bit counts for embedded processors, RAM/ROM <<< 1MB)
-* Scalable (should lend itself to vector and task parallelism)
-* Open (permissive open source license)
+* **Fast** (All the tricks)
+* **Small** (Targeted for modern embedded CPUs like ARM MCUs and Epiphany where RAM/ROM <<< 1MB)
+* **Scalable** (Native vector parallelism)
+* **Open** (Permissive Apache 2.0 Licensing)
 
 A complete list of linked functions can be found at the end of this file 
 
