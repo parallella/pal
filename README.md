@@ -1,7 +1,13 @@
 PAL: The Parallel Architectures Library
 ========================================
 
-The Parallel Architectures Library (PAL) is a free and open-source C-libary written for tiny programmable CPUs that can be found in embedded applications and massively parallel processor architectures.
+The Parallel Architectures Library (PAL) is a free and open-source C-libary written for the kind of tiny programmable CPUs that can be found in embedded applications and massively parallel processor architectures.
+
+We have found three main issues with existing solutions that we will try to address with the PAL library.
+
+* Most IPC code was written for "large" processors and is not suitable for tiny processors
+* Free and open source APIs (like math.h) is far too inefficient for parallel architectures (no vectors)
+* Hardware vendor provided math and DSP libraries come with proprietary license restrictions
 
 The design goals for the library are as follows:
 
@@ -11,18 +17,9 @@ The design goals for the library are as follows:
 * Scalable (should lend itself to vector and task parallelism)
 * Portable (should be useful for different ISAs, with and without vector extensions, 32/64 bit)
 
-To meet all of these goals, we have to take some liberties with respect to error checking and safety. The overriding philophy is "garbage in garbage out". The responsibility on proper usage gets pushed up by one layer.
+If you think we missed some important library that can be reused, please do let us know ASAP!  We would love nothing better than finding out that this work has already been done.
 
-## Why?
-With so much history, certainly there must be a library (or API) that meets the stated goals? Believe us when we say we have tried! We would love nothing more than to take an existing library and just hit the compile button. Unfortunately, this just isn't possible. Here are the major issues we found:
-* Today's C/C++ code was written for "large" processors and is not suitable for tiny processors
-* Hardware vendor MATH and DSP libraries come with proprietary license restrictions
-* 
-
-If you think we missed some important library that can be reused, please do let us know! (we dislike NIH disease as much as anyone)
-
-
-## Components
+## PAL Components
 ``` c
 * HAL     A universal hardware abstraction layer
 * IPC     A "complete: set of parallel programming primitives (POSIX/SYSCALL COMPLIANT???)
