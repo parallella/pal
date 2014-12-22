@@ -53,13 +53,28 @@ void p_add_32f( int n, float* a, float* b, float* y );
 
 PAL Library Functions
 ========================================
-## HAL -->FROM COPRTHR/ESDK (GENERIC local shared memory, address pointers)
+## HAL
+
+Assumes a shared memory architecture  
+
+Memory Management (global addresse map):
 * p_read()
 * p_write()
 * p_memcpy()
 * p_memalloc()
 * p_memfree()
 * p_memptr()
+
+Hardware Management (local core):
+* p_setfreq()
+* p_setvolt()
+* p_reset()
+* p_timer_set()
+* p_timer_get()
+* p_timer_start()
+* p_timer_stop()
+
+Program Execution Management (workgroup):
 * p_devctl()
 * p_init()
 * p_open()
@@ -67,16 +82,12 @@ PAL Library Functions
 * p_finalize()
 * p_readelf()
 * p_exec()
-* p_freq()
-* p_volt()
-* p_halt()
-* p_resume()
-* p_timer_set()
-* p_timer_get()
-* p_timer_start()
-* p_timer_stop()
+* p_barrier()
+* p_bcast
 
-## "POSIX-LITE"/IPC -->FROM COPRTRH (BUT GENERIC TO ALL PROCESSORS)
+## IPC ("POSIX-LITE", global memory)
+
+Threads:
 * p_attr_init()
 * p_attr_destroy()
 * p_attr_setdetachstate()
@@ -85,6 +96,8 @@ PAL Library Functions
 * p_create()
 * p_ncreate()
 * p_join()
+
+Mutex: 
 * p_mutex_attr_init()
 * p_mutex_atr_destroy()
 * p_mutex_attr_setdevice()
@@ -93,23 +106,42 @@ PAL Library Functions
 * p_mutex_lock()
 * p_mutex_unlock()
 * p_mutex_trylock()
+
+Conditionals:
 * p_cond_attr_init()
 * p_cond_attr_destroy()
 * p_cond_attr_setdevice()
 * p_cond_init()
 * p_cond_destroy()
 * p_wait()
-* p_signal()
-(more functions)
-* p_atomic_add()
-* p_atomic_sub()
-* p_atomic_and()
-* p_atimic_xor()
-* p_atomic_or()
-* p_atomic_nand()
+
+Signalling:
+* p_signal()  
+
+Atomics:
+* p_atomic_init()
+* p_atomic_exchange()
 * p_atomic_compare_exchange()
-* p_memsync()
-* p_barrier()
+* p_atomic_fetch_add()
+* p_atomic_fetch_sub()
+* p_atomic_fetch_or()
+* p_atomic_fetch_xor()
+* p_atomic_fetch_and()
+* p_atomic_fence()
+
+Sockets:
+* p_accept()
+* p_bind()
+* p_connect()
+* p_listen()
+* p_recv()
+* p_recvfrom()
+* p_recvmsg()
+* p_send()
+* p_sendmsg()
+* p_sendto()
+* p_socket()
+
 
 ## MATH
 * p_itof()
@@ -185,12 +217,12 @@ PAL Library Functions
 * p_thresh2D_32f()
 * p_scale2D_32f()
 * p_lut2D_32f()
+* p_memcpy2D_32f()
 
 ## FFT
 * p_fftplan_32f()
 * p_fftexec_32f()
 * p_fftdestroy()
 
-## GEMS
 
 
