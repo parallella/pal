@@ -59,7 +59,7 @@ PAL Library Functions
 ========================================
 ## HAL
 
-Memory Management (shared memory):
+**Memory Management (shared memory):**
 * p_read()
 * p_write()
 * p_memcpy()
@@ -68,7 +68,7 @@ Memory Management (shared memory):
 * p_memfree()
 * p_memptr()
 
-Program Execution (shared memory):
+***Program Execution (shared memory):**
 
 * p_init()
 * p_open()
@@ -76,12 +76,11 @@ Program Execution (shared memory):
 * p_finalize()
 * p_load()
 * p_exec()
-* p_devctl()
 
 
 ## IPC
 
-Mutex: 
+**Mutex:**
 * p_mutex_attr_init()
 * p_mutex_atr_destroy()
 * p_mutex_attr_setdevice()
@@ -91,7 +90,7 @@ Mutex:
 * p_mutex_unlock()
 * p_mutex_trylock()
 
-Atomics:
+**Atomics:**
 * p_atomic_init()
 * p_atomic_exchange()
 * p_atomic_compare_exchange()
@@ -101,18 +100,22 @@ Atomics:
 * p_atomic_fetch_xor()
 * p_atomic_fetch_and()
 
-Memory ordering:
-* p_mem_sync()
+**Memory ordering:**
+* p_mem_flush()
 
-Barrier:
+**Barrier:**
 * p_barrier_init()
 * p_barrier_wait()
 
 ## MATH
+
+**Conversion:**
 * p_itof()
 * p_ftoi()
 * p_itod()
 * p_dtoi()
+* 
+**Trancendental:**
 * p_acos_32f()
 * p_acosh_32f()
 * p_asin_32f()
@@ -131,12 +134,16 @@ Barrier:
 * p_sin_32f()
 * p_tan_32f()
 * p_tanh_32f()
+ 
+**Reduction Operations**
 * p_sum_32f()
 * p_ave_32f()
 * p_mean_32f()
 * p_maxval_32f()
 * p_minval_32f()
 * p_sop_32f()
+
+**Matrix Operations**
 * p_matmul_32f()
 * p_matadd_32f()
 * p_matacc_32f()
@@ -155,6 +162,8 @@ Barrier:
 
 
 ## DSP
+
+**1D**
 * p_acorr_32f()
 * p_conf_32f()
 * p_corr_32f()
@@ -164,6 +173,8 @@ Barrier:
 * p_firlat_32f()
 * P_iir_32f()
 * p_hist_32f()
+* 
+**2D**
 * p_conv2D_32f()
 * p_acorr2D_32f()
 * p_ave2D_32f()
