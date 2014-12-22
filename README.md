@@ -9,15 +9,15 @@ The Parallel Architectures Library (PAL) is a free and open-source C-libary writ
 * DSP: Vectorized DSP library
 * FFT: Optimized FFT library
 
-Hasn't this been done before?  We wish!! (Please, if you think we missed some important library that can be reused, then do let us know ASAP!  We would love nothing better than finding out that this work has already been done.) 
-
-Based on reviweing 10's of libaries we have found three main ostacles that makes it very dificult to adopt any one of the existing libraries "as-is":  
+Before starting the PAL project, we reviewed an long list of existing libraries/APIs and found the following issues:
 
 * Most IPC code was written for "large" processors and is not suitable for tiny processors
-* Free and open source APIs (like math.h) is far too inefficient for parallel architectures (no vectors)
+* Free and open source scalar APIs (like math.h) is not inefficient for parallel architectures
 * Hardware vendor provided math and DSP libraries come with proprietary license restrictions
 
-The design goals for the PAL are as follows:
+A complete list of PAL functions can be found at the end of this file.
+
+PAL Design Goals:
 
 * Fast (assumes program and data resides in local cache/scratchpad)
 * Open (permissive open source license)
