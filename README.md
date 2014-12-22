@@ -1,12 +1,10 @@
 PAL: The Parallel Architectures Library
 ========================================
 
-The Parallel Architectures Library (PAL) is a free and open-source C-libary written for tiny programmable CPUs that can be found in embedded applications and massively parallel processor architectures. 
+The Parallel Architectures Library (PAL) is a free and open-source C-libary written for tiny programmable CPUs that can be found in embedded applications and massively parallel processor architectures.
 
-PAL does not answer the question "how to do parallel programming", but does provide an efficient abstraction layer that simplifies the creation of highly parallel programming frameworks and applications.
+The design goals for the library are as follows:
 
-
-## Design goals
 * Fast (assumes program and data resides in local cache/scratchpad)
 * Open (permissive open source license)
 * Small (because every bit counts for embedded processors)
@@ -14,6 +12,14 @@ PAL does not answer the question "how to do parallel programming", but does prov
 * Portable (should be useful for different ISAs, with and without vector extensions, 32/64 bit)
 
 To meet all of these goals, we have to take some liberties with respect to error checking and safety. The overriding philophy is "garbage in garbage out". The responsibility on proper usage gets pushed up by one layer.
+
+## Why?
+With so much history, certainly there must be a library (or API) that meets the stated goals? Believe us when we say we have tried! We would love nothing more than to take an existing library and just hit the compile button. Unfortunately, this just isn't possible. Here are the major issues we found:
+* Today's C/C++ code was written for "large" processors and is not suitable for tiny processors
+* Hardware vendor MATH and DSP libraries come with proprietary license restrictions
+* 
+
+If you think we missed some important library that can be reused, please do let us know! (we dislike NIH disease as much as anyone)
 
 
 ## Components
@@ -29,7 +35,7 @@ To meet all of these goals, we have to take some liberties with respect to error
 PAL is licensed under the Apache License, Version 2.0. See LICENSE for full license text.
 
 ##Contributing
-PAl is an ambitious project and really neeeds all the help it can get. If you have anything to contribute, please do!! Istructions for get started can be found [HERE](CONTRIBUTING.md). 
+PAL is an ambitious project and neeeds all the help it can get. If you have anything to contribute, please do!! Instructions for get started can be found [HERE](CONTRIBUTING.md). 
 
 ##Coding style 
 * C99
@@ -65,15 +71,6 @@ Memory Management (global addresse map):
 * p_memfree()
 * p_memptr()
 
-Hardware Management (local core):
-* p_setfreq()
-* p_setvolt()
-* p_reset()
-* p_timer_set()
-* p_timer_get()
-* p_timer_start()
-* p_timer_stop()
-
 Program Execution Management (workgroup):
 * p_devctl()
 * p_init()
@@ -83,7 +80,19 @@ Program Execution Management (workgroup):
 * p_load()
 * p_exec()
 * p_barrier()
-* p_bcast()
+
+Hardware Management (local core):
+* p_setfreq()
+* p_setvolt()
+* p_reset()
+* p_timer_set()
+* p_timer_get()
+* p_timer_start()
+* p_timer_stop()
+* p_irq_mask()
+* p_irq_set()
+* p_irq_mask()
+
 
 ## IPC
 
@@ -214,6 +223,7 @@ Sockets:
 * p_thresh2D_32f()
 * p_scale2D_32f()
 * p_lut2D_32f()
+* p_memcpy2D_32f()
 
 ## FFT
 * p_fftplan_32f()
