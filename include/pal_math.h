@@ -94,11 +94,11 @@ void p_tanh_32f( const float* a, float* c, int n );
 /*dot product: c =  sum ( a[n-1:0] * b[n-1:0] ) */
 void p_dot_32f( const float* a,  const float* b,  float* c, int n );
 
-/*absolute value: c = | a[n-1:0] - b[n-1:0] | */
-void p_abs_32f( const float* a,  const float* b,  float* c, int n );
+/*absolute difference: c = | a[n-1:0] - b[n-1:0] | */
+void p_absdiff_32f( const float* a,  const float* b,  float* c, int n );
 
 /*add vectors: c =  a[n-1:0] + b[n-1:0]  */
-void p_sub_32f( const float* a,  const float* b,  float* c, int n );
+void p_add_32f( const float* a,  const float* b,  float* c, int n );
 
 /*subtract vectors: c =  a[n-1:0] - b[n-1:0]  */
 void p_sub_32f( const float* a,  const float* b,  float* c, int n );
