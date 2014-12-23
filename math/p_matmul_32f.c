@@ -1,21 +1,13 @@
-//#include <stdio.h>
+void p_matmul4x4_32f(const float *a, const float *b, float *c, int n);
 
-//why m,n,k, makes no sense!
-//1.Work on 4 rows and columns at a time
-//2.Bring in 16 A values, 16 B values  (16 loads)
-//3.compute c16 (64)
-//4.loop around 2&3 until done (8 times for 32x32)
-//5.Store c16 (8 stores)
-
-
-void p_matmul4x4_32f(int n, float *a, float *b, float *c);
-
-void p_matmul_32f(int m,         //number of rows in 'a'
-		  int n,         //number of columns in 'a'
-		  int k,         //number of columns in 'b' 
-		  float* a,      //pointer to input array a
-		  float* b,      //pointer to input array b
-		  float* c ){    //pointer to output array c
+void p_matmul_32f(
+		  const float* a,   //pointer to input array a
+		  const float* b,   //pointer to input array b
+		  float* c,         //pointer to result array
+		  int m,            //number of rows in 'a'
+		  int n,            //number of columns in 'a'
+		  int k             //number of columns in 'b' 
+){ 
 
   int i,j,kk;   
   int as,bs;
@@ -26,7 +18,7 @@ void p_matmul_32f(int m,         //number of rows in 'a'
       bs=0;
       for(kk=0;kk<n;kk=kk+4){//inner summation 
 	//function below should be assembly
-	p_matmul4x4_32f(n, a+as+kk, b+bs+j, c+as+j);	
+	p_matmul4x4_32f(a+as+kk, b+bs+j, c+as+j, n);	
 	bs=bs+n<<2;
       }
     }
@@ -35,7 +27,7 @@ void p_matmul_32f(int m,         //number of rows in 'a'
 }
 
 
-void p_matmul4x4_32f(int n, float *a, float* b, float *c){
+void p_matmul4x4_32f(const float *a, const float* b, float *c, int n){
 
   int i;
   int bs=0;

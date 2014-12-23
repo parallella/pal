@@ -1,5 +1,6 @@
-void p_ftoi(int n,
-	    float* a,
-	    int* y){
-  /*put code here*/
+void p_ftoi ( const float* a, int* c, int n  ){
+
+
+/*PLACE CODE HERE*/
+
 }

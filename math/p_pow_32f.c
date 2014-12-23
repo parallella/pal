@@ -1,6 +1,6 @@
-void p_pow_32f(int n,
-	       float* a,
-	       float* b,
-	       float* y){
-  /*put code here*/
+void p_pow_32f ( const float* a, const float* b, float* c, int n ){
+
+
+/*PLACE CODE HERE*/
+
 }

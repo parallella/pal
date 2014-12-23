@@ -1,7 +1,6 @@
-void p_sincos_32f(int n,
-		  float* a,
-		  float* y,
-		  float* z
-		  ){
-  /*put code here*/
+void p_sincos_32f ( const float* a, float* c, float* z ){
+
+
+/*PLACE CODE HERE*/
+
 }

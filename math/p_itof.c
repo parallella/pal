@@ -1,5 +1,6 @@
-void p_itof(int n,
-	    int* a,
-	    float* y){
-  /*put code here*/
+void p_itof ( const int* a, float* c, int n ){
+
+
+/*PLACE CODE HERE*/
+
 }

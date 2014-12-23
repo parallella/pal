@@ -1,6 +1,6 @@
-void p_cos_32f(int n,
-	       float* a,
-	       float* y){
-  /*put code here*/
-}
+void p_cos_32f ( const float* a, float* c, int n ){
 
+
+/*PLACE CODE HERE*/
+
+}
