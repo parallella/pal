@@ -1,119 +1,164 @@
 /*
- *Floating point conversion functions
+ ****************************************************************
+ * Basic Element Wise Vector Math Functions
+ *
+ * a,b : input vector pointer
+ * c   : result vector pointer
+ * n   : length of input/output vector
+ *
+ ****************************************************************
  */
 
-/*integer to float conversion on a vector*/
-void p_itof(int n, int* a, float* y);
+
+/*integer to float conversion*/
+void p_itof( const int* a, float* c, int n );
 
 /*float to integer conversion*/
-void p_ftoi(int n, float* a, int* y );
+void p_ftoi( const float* a, int* c, int n  );
 
+/*absolute value c = abs ( a ) */
+void p_abs_32f( const float* a, float* c, int n );
 
+/*arc cosine: c = acos ( a ) */
+void p_acos_32f( const float* a, float* c, int n );
+
+/*arc hyperbolic cosine, c = acosh ( a ) */
+void p_acosh_32f( const float* a, float* c, int n );
+
+/*arc sine: c = asin ( a ) */
+void p_asin_32f( const float* a, float* c, int n );
+
+/*arc hyperbolic sine: c = asinh ( a ) */
+void p_asinh_32f( const float* a, float* c, int n );
+
+/*arc tanget: c = atan ( a ) */
+void p_atan_32f( const float* a, float* c, int n );
+
+/*arc tangent of b/a: c = atan2 ( a , b) */
+void p_atan2_32f( const float* a, const float* b, float* c, int n );
+
+/*arc hyperbolic tanget: c = atanh ( a ) */
+void p_atanh_32f( const float* a, float* c, int n );
+
+/*cubic root of a:  c = cbrt ( a) */
+void p_cbrt_32f( const float* a, float* c, int n );
+
+/*cosine: c = cos ( a ) */
+void p_cos_32f( const float* a, float* c, int n );
+
+/*hyperpolic cosine:  c = cosh ( a ) */
+void p_cosh_32f(const float* a, float* c, int n );
+
+/*division: c =  a ./ b */
+void p_div_32f( const float* a, const float* b, float* c, int n );
+
+/*exponential: c = exp ( a ) */
+void p_exp_32f( const float* a, float* c, int n );
+
+/*inverse: c = 1 / ( a ) */
+void p_inv_32f( const float* a, float* c, int n );
+
+/*inverse cube root: c = 1 / cbrt ( a ) */
+void p_invcbrt_32f( const float* a, float* c, int n );
+
+/*inverse square root c = 1 / sqrt ( a ) */
+void p_invsqrt_32f( const float* a, float* c, int n );
+
+/*natural log: c = ln ( a ) */
+void p_ln_32f( const float* a, float* c, int n );
+
+/*denary logarithm: c = log10 ( a ) */
+void p_log10_32f( const float* a, float* c, int n );
+
+/*element raised to a power: c = pow ( a , b ) */
+void p_pow_32f( const float* a, const float* b, float* c, int n );
+
+/*sine: c = sin ( a ) */
+void p_sin_32f( const float* a, float* c, int n );
+
+/*computes sin and cos of a: c = sin ( a ),  z = cos ( a ) */
+void p_sincos_32f( const float* a, float* c, float* z );
+
+/*hyperbolic Sine: c = sinh ( a ) */
+void p_sinh_32f( const float* a, float* c, int n );
+
+/*square root c = sqrt ( a ) */
+void p_sqrt_32f(const float* a, float* c, int n );
+
+/*tangent: c = tan ( a ) */
+void p_tan_32f( const float* a, float* c, int n );
+
+/*hyperbolic tangent, c = tanh ( a ) */
+void p_tanh_32f( const float* a, float* c, int n );
+
+/*dot product: c =  sum ( a[n-1:0] * b[n-1:0] ) */
+void p_dot_32f( const float* a,  const float* b,  float* c, int n );
+
+/*absolute value: c = | a[n-1:0] - b[n-1:0] | */
+void p_abs_32f( const float* a,  const float* b,  float* c, int n );
+
+/*add vectors: c =  a[n-1:0] + b[n-1:0]  */
+void p_sub_32f( const float* a,  const float* b,  float* c, int n );
+
+/*subtract vectors: c =  a[n-1:0] - b[n-1:0]  */
+void p_sub_32f( const float* a,  const float* b,  float* c, int n );
 
 /*
- * Trigonometric functions (element wise)
+ ****************************************************************
+ * Vector Reduction Operations
+ *
+ * a, b : input vector pointer
+ * c    : scalar result pointer
+ * n    : length of input vector
+ *
+ ****************************************************************
  */
 
-/*inverse cosine*/
-void p_acos_32f(int n, float* a, float* y );
+/*sum: c = sum ( a[n-1:0] ) */
+void p_sum_32f( const float* a, float* c, int n  );
 
-/*inverse hyperbolic cosine*/
-void p_acosh_32f(int n, float* a, float* y );
+/*sum of squares: c =  sum( a[n-1:0]^2 ) */
+void p_sumsq_32f( const float* a, float* c, int n  );
 
-/*inverse sine*/
-void p_asin_32f(int n, float* a, float* y );
+/*mean: c = sum ( a[n-1:0] ) / n  */
+void p_mean_32f( const float* a, float* c, int n );
 
-/*inverse tanget*/
-void p_atan_32f(int n, float* a, float* y );
+/*middle value: c = median ( a[n-1:0] ) */
+void p_median_32f( const float* a, float* c, int n  );
 
-/*four quadrant inverse tangent*/
-void p_atan2_32f(int n, float* a, float* b, float* y );
+/*most common number: c = mode ( a[n-1:0] ) */
+void p_mode_32f( const float* a, float* c, int n  );
 
-/*cube root*/
-void p_cbrt_32f(int n, float* a, float* y );
+/*find max value and its index from input vector */
+void p_maxval_32f( const float* a, float* c, int* index, int n );
 
-/*cosine*/
-void p_cos_32f(int n, float* a, float* y );
-
-/*hyperpolic cosine*/
-void p_cosh_32f(int n, float* a, float* y );
-
-/*exponential*/
-void p_exp_32f(int n, float* a, float* y );
-
-/*inverse cube root*/
-void p_icbrt_32f(int n, float* a, float* y );
-
-/*natural log*/
-void p_ln_32f(int n, float* a, float* y );
-
-/*denary logarithm*/
-void p_log10_32f(int n, float* a, float* y );
-
-/*element raised to a specific power*/
-void p_pow_32f(int n, float* a, float* b, float* y );
-
-/*sine*/
-void p_sin_32f(int n, float* a, float* y );
-
-/*sine & cosine*/
-void p_sincos_32f(int n, float* a, float* y, float* z );
-
-/*hyperbolic Sine*/
-void p_sinh_32f(int n, float* a, float* y );
-
-/*tangent*/
-void p_tan_32f(int n, float* a, float* y );
-
-/*hyperbolic Tangent*/
-void p_tanh_32f(int n, float* a, float* y );
+/*find min value and its index from input vector */
+void p_minval_32f( const float* a, float* c, int* index, int n  );
 
 /*
- * Reduction functions
+****************************************************************
+ * Matrix Math
+ *
+ * a, b  : input matrix pointer
+ * c     : result matrix pointer
+ * m     : number of rows of matrix 'a' and 'c'
+ * n     : number of columns of matrix 'b' and 'c'
+ * k     : number of columns of matrix 'a' and rows of matrix 'b'
+ *
+ *          _ _ _        _ _ _        _ _ _
+ *         |     |      |     |      |     |
+ *       m |  a  |  * k |  b  |  = m |  c  |
+ *         |_ _ _|      |_ _ _|      |_ _ _|
+ *            k            n            n 
+ *
+ ***************************************************************
  */
+     
+/*multiply matrices: c[] += a[] * b[] */
+void p_matmul_32f( const float* a, const float* b, float* c, int m, int n, int k );
 
-/*sum*/
-void p_sum_32f(int n, float* a, float* y  );
+/*invert a matrix, c[] = 1 / a[] */
+void p_matinv_32f( const float* a, float* c, int m );
 
-/*avarage of vector*/
-void p_ave_32f(int n, float* a, float* y );
-
-/*mean of vector*/
-void p_mean_32f(int n, float* a, float* y );
-
-/*find max value in a vector and index*/
-void p_maxval_32f(int n, float* a, int* index, float* y );
-
-/*find min value in a vector and index*/
-void p_minval_32f(int n, float* a, int* index, float* y );
-
-/*sum of product on vector*/
-void p_sop_32f(int n, const float* a, const float* b, const float* c);
-
-/*
- * Matrix math
- */
-
-/*multiply two matrices*/
-void p_matmul_32f(int m, int n, int k, const float* a, const float* b, const float* c);
-
-/*add two matrices*/
-void p_matadd_32f(int m, int n, const float* a, const float* b, const float* c);
-
-/*subtract two matrices*/
-void p_matsub_32f(int m, int n, const float* a, const float* b, const float* c);
-
-/*transpose a matrix*/
-void p_mattran_32f(int m, int k, const float* a, const float* c);
-
-/*element wise division*/
-void p_matdiv_32f(int m, int n, float* a, float* b, float* y );
-
-/*element wise square root*/
-void p_matsqrt_32f(int m, int n, float* a, float* y );
-
-/*element wise inverse square root*/
-void p_matisqrt_32f(int m, int n, int k, float* a, float* y );
-
-/*invert a matrix, gauss jordan, not singular, square, no error checking*/
-void p_matinv_32f(int m, const float* a, const float* y);
+/*transpose a matrix, c[] =  a[]^T */
+void p_mattran_32f( const float* a, float* c, int m );
