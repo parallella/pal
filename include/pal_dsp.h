@@ -1,76 +1,106 @@
-/* 
- * 1D DSP Functions
+/*
+ ****************************************************************
+ * 1D: Filters, Convolution, Correlation Functions
+ *
+ * x,y          : input vector pointers
+ * h            : input coefficient vector pointer
+ * r            : output result vector pointer
+ * dbuf         : delay buffer pointer
+ * nx,ny,nr,nh  : size of respective vectors
+ * 
+ ****************************************************************
  */
 
-/*auto correlation*/
-void p_acorrs_32f(int n, float* a, float* y );
+/*auto correlation: r[j] = sum ( x[j+k] * x[k] ), k=0..(n-j-1) */
+void p_acorr_32f( const float* x, float* r, int nx );
 
-/*convolution*/
-void p_conv_32f(int n, float* a, float* h, float* y );
+/*convolution: r[j] = sum ( h[k] * x[j-k), k=0..(nh-1) */
+void p_convol_32f( const float* x, const float* h, float* r, int nx, int nh );
 
-/*correlation*/
-void p_corr_32f(int n, float* a, float* b, float* y );
+/*correlation: r[j] = sum ( x[j+k] * y[k]), k=0..(nx+ny-1) */
+void p_corr_32f(const float* x, const float* y, float* r, int nx, int ny );
 
-/*real fir filter*/
-void p_fir_32f(int nx, int nh, float* a, float* h, float* y );
+/*FIR filter direct form: r[j] = sum ( h[k] * x [j-k]), k=0..(nh-1) */
+void p_fir_32f(const float* x, const float* h, float* r, float* dbuf, int nx, int nh );
 
-/*decimating fir filter*/
-void p_firdec_32f(int nx, int nh, float* a, float* h, float* y );
+/*FIR filter with decimation: r[j] = sum ( h[k] * x [j*D-k]), k=0..(nh-1) */
+void p_firdec_32f(const float* x, const float* h, float* r, float* dbuf, int nx, int nh, int dfactor );
 
-/*interpolating fir filter*/
-void p_firint_32f(int nx, int nh, float* a, float* h, float* y );
+/*FIR filter with inerpolation: r[j] = sum ( h[k] * x [j*D-k]), k=0..(nh-1) */
+void p_firint_32f(const float* x, const float* h, float* r, float* dbuf, int nx, int nh, int ifactor );
 
-/*lattice fir filter*/
-void p_firlat_32f(int nx, int nh, float* a, float* h, float* y );
+/*FIR filter lattice form*/
+void p_firlat_32f(const float* x, const float* h, float* r, float* dbuf, int nx, int nh);
 
-/*iir filter*/
-void p_iir_32f(int nx, int nh, float* a, float* h, float* y );
+/*FIR symmetric form: */
+void p_firsym_32f(const float* x, const float* h, float* r, float* dbuf, int nx, int nh);
 
-/*histogram*/
-void p_hist_32f(int n, float* a, float* y );
+/*IIR filter: */
+void p_iir_32f(const float* x, const float* h, float* r, float* dbuf, int nx, int nh);
 
 /*
- *2D DSP Functions (image processing mostly)
+ ****************************************************************
+ * Image Processing Functions
+ *
+ * x,y       : input matrix pointer
+ * m         : filter mask pointer
+ * r         : output matrix pointer
+ * rows      : rows in input image
+ * columns   : columns in input image (multiple of 4)
+ * msize     : mask size (square)
+ * opt       : options
+ *
+ ****************************************************************
  */
 
-void p_filter2d_32f(float * restrict A, int na, int ma, float * restrict M, 
-		    int nm, int mm, float * restrict B);
+/*2D convolution */
+void p_convol2D_32f(const float* x, const float* m, float* r, int rows, int cols, int msize);
 
-/*moving average filter*/
-void p_ave2d_32f(float * restrict A, int na, int ma, int nm, float scf, 
-	       float * restrict B);
+/*2D box filter (3x3) */
+void p_box3x3_32f(const float* x, const float* m, float* r, int rows, int cols);
 
-/*median filter*/
-void p_median2d_32f();
+/*2D gauss filter (3x3) */
+void p_gauss3x3_32f(const float* x, const float* m, float* r, int rows, int cols);
 
-/*sobel filter*/
-void p_sobel2d_32f();
+/*2D median filter (3x3) */
+void p_median3x3_32f(const float* x, const float* m, float* r, int rows, int cols);
 
-/*correlation function*/
-void p_corr2d_32f();
+/*2D sobel filter (3x3) */
+void p_sobel3x3_32f(const float* x, const float* m, float* r, int rows, int cols);
 
-/*auto-correlation function*/
-void p_acorr2d_32f();
+/*2D laplace filter (3x3) */
+void p_laplacel3x3_32f(const float* x, const float* m, float* r, int rows, int cols);
 
-/*sum of absolute differences*/
-void p_sad2d_32f();
+/*2D scharr filter (3x3) */
+void p_scharr3x3_32f(const float* x, const float* m, float* r, int rows, int cols);
 
-/*mad*/
-void p_mad2d_32f();
+/*2D prewitt filter (3x3) */
+void p_prewitt3x3_32f(const float* x, const float* m, float* r, int rows, int cols);
 
-/*histogram function*/
-void p_hist2d_32f();
+/*2D moving average filter (3x3) */
+void p_average3x3_32f(const float* x, const float* m, float* r, int rows, int cols);
 
-/*histogram function*/
-void p_threshold2d_32f();
+/*2D canny filter */
+void p_canny_32f(const float* x, const float* m, float* r, int rows, int cols, int msize);
 
-/*sobel/canny/harris/threshold/color conversion/dog/ */
+/*2D sum of absolute differences*/
+void p_sad8x8_32f(const float* x, const float* m, float* r, int rows, int cols);
+void p_sad16x16_32f(const float* x, const float* m, float* r, int rows, int cols);
 
+/*2D sum of mean differences*/
+void p_mad8x8_32f(const float* x, const float* m, float* r, int rows, int cols);
+void p_mad16x16_32f(const float* x, const float* m, float* r, int rows, int cols);
 
+/*2D integral if image */
+void p_integral2D_32f(const float* x, const float* m, float* r, int rows, int cols);
 
+/*2D fast convolution (FFT based) */
+void p_fastconv_32f(const float* x, const float* y, float* r, int rows, int cols );
 
+/*2D resize image*/
+void p_resize_32f(const float* x, float* r, int rows, int cols, int opt );
 
-
+//what else??
 
 
 
