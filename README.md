@@ -63,58 +63,57 @@ PAL Library Functions
 ========================================
 ## HAL
 
-**Memory Management (shared memory):**
-* p_read()
-* p_write()
-* p_memcpy()
-* p_memcpy_scatter()
-* p_memcpy_gather()
-* p_memcpy_bcast()
-* p_memalloc()
-* p_memfree()
-* p_memptr()
-
-
-**Program Execution (shared memory):**
-* p_init()
-* p_open()
-* p_close()
-* p_finalize()
-* p_load()
-* p_exec()
-
-
-## IPC
+**Shared memory management):**
+FUNCTION     | NOTES
+------------ | -------------
+[p_write()](hal/p_write.c) | write to a global memory location
+[p_read()](hal/p_read.c)   | read from a global memory location
+[p_memcpy()](hal/p_memcpy.c) | copy memory area
+[p_memcpy_scatter()](hal/p_memcpy_scatter.c) | copy-scatter operation
+[p_memcpy_gather()](hal/p_memcpy_gather.c) | copy-gather operation
+[p_memcpy_bcast()](hal/p_memcpy_bcast.c) | copy-broadcast operation
+[p_memalloc()](hal/p_memalloc.c) | dynamic memory allocator
+[p_memfree()](hal/p_memfree.c) | free up dynamic memory
+[p_memptr()](hal/p_memptr.c) | free up dynamic memory
+x
+**Program execution:**
+FUNCTION     | NOTES
+------------ | -------------
+[p_init()](hal/p_init.c)         | initialize the run time
+[p_load()](hal/p_load.c)         | load binary elf file into memory
+[p_open()](hal/p_open.c)         | open a set of slave processors
+[p_close()](hal/p_close.c)       | close a set of slave processors
+[p_exec()](hal/p_exec.c)         | copy binary to slave processor and start
+[p_finalize()](hal/p_finalize.c) | close down run time
 
 **Mutex:**
-* p_mutex_attr_init()
-* p_mutex_atr_destroy()
-* p_mutex_attr_setdevice()
-* p_mutex_init()
-* p_mutex_destroy()
-* p_mutex_lock()
-* p_mutex_unlock()
-* p_mutex_trylock()
+FUNCTION     | NOTES
+------------ | -------------
+[p_mutex_init()](hal/p_mutex_init.c)       | mutex initialization
+[p_mutex_destroy()](hal/p_mutex_destroy.c) | mutex destroy
+[p_mutex_lock()](hal/p_mutex_lock.c)       | mutex lock
+[p_mutex_unlock()](hal/p_mutex_unlock.c)   | mutex lock
+[p_mutex_trylock()](hal/p_mutex_trylock.c) | mutex try lock
 
-**Atomics:**
-* p_atomic_init()
-* p_atomic_exchange()
-* p_atomic_compare_exchange()
-* p_atomic_fetch_add()
-* p_atomic_fetch_sub()
-* p_atomic_fetch_or()
-* p_atomic_fetch_xor()
-* p_atomic_fetch_and()
+**Atomic memory operatins:**
+FUNCTION     | NOTES
+------------ | -------------
+[p_atomic_init()](hal/p_atomic_init.c)         | atomic variable initialization
+[p_atomic_exchange()](hal/p_atomic_exchange.c) | atomic variable exchange
+[p_atomic_cmpexchange()](hal/p_atomic_exchange.c)| atomic variable compare and exchange
+[p_atomic_add()] (hal/p_atomic_add.c) | atomic featch and add
+[p_atomic_sub()] (hal/p_atomic_sub.c) | atomic featch and subtract
+[p_atomic_or()]  (hal/p_atomic_or.c)  | atomic featch and 'OR'
+[p_atomic_xor()] (hal/p_atomic_xor.c) | atomic featch and 'XOR'
+[p_atomic_and()] (hal/p_atomic_and.c) | atomic featch and 'AND'
 
 **Memory ordering:**
-* p_mem_flush()
-
-**Barrier:**
-* p_barrier_init()
-* p_barrier_wait()
+FUNCTION     | NOTES
+------------ | -------------
+[p_memflush()](math/p_memflush.c)   | flush read/write path to a memory
 
 ## MATH
-FUNCTION | NOTES
+FUNCTION     | NOTES
 ------------ | -------------
 [p_abs()](math/p_abs.c)   | absolute value
 [p_absdiff()](math/p_absdiff.c)   | absolute difference
