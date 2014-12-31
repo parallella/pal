@@ -116,7 +116,22 @@ PAL Library Functions
 ## MATH
 FUNCTION | NOTES
 ------------ | -------------
-[p_acos()](math/p_acos.c)  | arc cosine
+[p_abs()](math/p_abs.c)   | absolute value
+[p_acos()](math/p_acos.c) | arc cosine
+[p_acosh()](math/p_acosh.c) | arc hyperbolic cosine
+[p_asin()](math/p_asin.c) | arc sine
+[p_asinhh()](math/p_asinh.c) | arc hyperbolic sine
+[p_cbrt()](math/p_cbrt.c) | cubic root
+[p_cos()](math/p_cos.c) | cosine
+
+
+
+
+
+
+
+[p_itof()](math/p_itof.c) | integer to float conversion
+[p_ftoi()](math/p_ftoi.c) | float to integer conversion
 
  
 ## DSP
