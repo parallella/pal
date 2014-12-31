@@ -128,13 +128,15 @@ FUNCTION | NOTES
 [p_cosh()](math/p_cosh.c) | hyperbolic cosine
 [p_div()](math/p_div.c) | division
 [p_exp()](math/p_div.c) | expontial
+[p_ftoi()](math/p_ftoi.c) | float to integer conversion
+[p_itof()](math/p_itof.c) | integer to float conversion
 [p_inv()](math/p_inv.c) | inverse
 [p_invcbrt()](math/p_invcbrt.c) | inverse cube root
 [p_invsqrt()](math/p_invcbrt.c) | inverse square root
 [p_ln()](math/p_invcbrt.c) | natural log
 [p_log10()](math/p_log10.c) | denary log
-[p_maxval()](math/p_maxval.c) | finds max val
-[p_minval()](math/p_minval.c) | finds min val
+[p_max()](math/p_max.c) | finds max val
+[p_min()](math/p_min.c) | finds min val
 [p_mean()](math/p_mean.c) | mean operation
 [p_median()](math/p_mean.c) | finds middle value
 [p_mode()](math/p_mode.c) | finds most common value
@@ -151,26 +153,37 @@ FUNCTION | NOTES
 [p_tanh()](math/p_tanh.c) | hyperbolic tangent
 [p_dot()](math/p_dot.c) | dot product
 
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-[p_itof()](math/p_itof.c) | integer to float conversion
-[p_ftoi()](math/p_ftoi.c) | float to integer conversion
-
- 
 ## DSP
+
+FUNCTION     | NOTES
+------------ | -------------
+[p_acorr()](math/p_acorr.c) | autocorrelation (r[j] = sum ( x[j+k] * x[k] ), k=0..(n-j-1))
+[p_conv()](math/p_conv.c) | convolution: r[j] = sum ( h[k] * x[j-k), k=0..(nh-1)
+[p_corr()](math/p_corr.c) | correlation: r[j] = sum ( x[j+k] * y[k]), k=0..(nx+ny-1)
+[p_fir()](math/p_fir.c) | FIR filter direct form: r[j] = sum ( h[k] * x [j-k]), k=0..(nh-1)
+[p_firdec()](math/p_firdec.c) | FIR filter with decimation: r[j] = sum ( h[k] * x [j*D-k]), k=0..(nh-1)
+[p_firint()](math/p_firint.c) | FIR filter with inerpolation: r[j] = sum ( h[k] * x [j*D-k]), k=0..(nh-1)
+[p_firlat()](math/p_firlat.c) | FIR filter lattice form
+[p_firsym()](math/p_firsym.c) | FIR symmetric form
+[p_iir()](math/p_iir.c) | IIR filter
+
+## IMAGE PROCESSING
+FUNCTION     | NOTES
+------------ | -------------
+[p_average3x3()](math/p_average3x3.c) | 2d 3x3 moving average filter
+[p_box3x3()](math/p_box3x3.c)         | 2d box filter (3x3)
+[p_conv2d()](math/p_conv2d.c)         | 2d convolution
+[p_gauss3x3()](math/p_gauss3x3.c)     | 2d gaussian blur filter (3x3)
+[p_mad8x8()](math/p_mad8x8.c)         | 2d sum of mean differences (8x8)
+[p_mad16x16()](math/p_mad16x16.c)     | 2d sum of mean differences (16x16)
+[p_median3x3()](math/p_median3x3.c)   | 2d median filter (3x3)
+[p_laplace3x3()](math/p_laplace3x3.c) | 2d laplace filter (3x3)
+[p_prewitt3x3()](math/p_prewitt3x3.c) | 2d prewitt filter (3x3)
+[p_sad8x8()](math/p_sad8x8.c)         | 2d sum of absolute differences (8x8)
+[p_sad16x16()](math/p_sad16x16.c)     | 2d sum of absolute differences (16x16)
+[p_sobel3x3()](math/p_sobel3x3.c)     | 2d sobel filter (3x3)
+[p_scale2d()](math/p_scale2d.c)       | 2d image scaling
+[p_scharr3x3()](math/p_scharr3x3.c)   | 2d scharr filter (3x3)
 
 ## FFT
 
