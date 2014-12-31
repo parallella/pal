@@ -117,12 +117,48 @@ PAL Library Functions
 FUNCTION | NOTES
 ------------ | -------------
 [p_abs()](math/p_abs.c)   | absolute value
+[p_absdiff()](math/p_absdiff.c)   | absolute difference
+[p_add()](math/p_add.c)   | add
 [p_acos()](math/p_acos.c) | arc cosine
 [p_acosh()](math/p_acosh.c) | arc hyperbolic cosine
 [p_asin()](math/p_asin.c) | arc sine
 [p_asinhh()](math/p_asinh.c) | arc hyperbolic sine
 [p_cbrt()](math/p_cbrt.c) | cubic root
 [p_cos()](math/p_cos.c) | cosine
+[p_cosh()](math/p_cosh.c) | hyperbolic cosine
+[p_div()](math/p_div.c) | division
+[p_exp()](math/p_div.c) | expontial
+[p_inv()](math/p_inv.c) | inverse
+[p_invcbrt()](math/p_invcbrt.c) | inverse cube root
+[p_invsqrt()](math/p_invcbrt.c) | inverse square root
+[p_ln()](math/p_invcbrt.c) | natural log
+[p_log10()](math/p_log10.c) | denary log
+[p_maxval()](math/p_maxval.c) | finds max val
+[p_minval()](math/p_minval.c) | finds min val
+[p_mean()](math/p_mean.c) | mean operation
+[p_median()](math/p_mean.c) | finds middle value
+[p_mode()](math/p_mode.c) | finds most common value
+[p_mul()](math/p_mul.c) | multiplication
+[p_pow()](math/p_pow.c) | element raised to a power
+[p_sin()](math/p_sin.c) | sine
+[p_sincos()](math/p_sincos.c) | sine and cos results
+[p_sinh()](math/p_sinh.c) | hyperbolic sine
+[p_sqrt()](math/p_sqrt.c) | square root
+[p_sub()](math/p_sub.c) | subtract
+[p_sum()](math/p_sum.c) | sum of all vector elements
+[p_sumsq()](math/p_sumsq.c) | sum of all vector squared elements 
+[p_tan()](math/p_tan.c) | tangent
+[p_tanh()](math/p_tanh.c) | hyperbolic tangent
+[p_dot()](math/p_dot.c) | dot product
+
+
+
+
+
+
+
+
+
 
 
 
