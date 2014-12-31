@@ -21,8 +21,28 @@ PAL is an ambitious project and neeeds all the help it can get. If you have anyt
 ##Coding style 
 * C99
 * "K&R coding style, 4 spaces for tabs"
+* 
 
-##API Style Example
+##API Style
+The PAL library provides a set of "native" functions (fastest) and a set of "vector object" functions (easiest). The native funtions uses ONLY native C data types and explicit array indexing, while the array based functions use opaque array objects.
+
+##Naming convention
+* All functions start with "p_"
+* Function data types are indicated as follows:
+  8u   : 8 bit unsigned
+  8s   : 8 bit signed
+  16u  : 16 bit integer unsigned
+  16s  : 16 bit integer signed
+  16q  : 0.15 signed fractional
+  16qc : 0.15 signed complex fractional 
+  32u  : 32 bit unsigned integer
+  32s  : 32 bit signed integer
+  32f  : 32 bit IEEE float point
+  32fc : 32 bit IEEE complex float         
+  64f  : 64 bit IEEE floating point
+
+
+##API Native Example Style
 ``` c
 /*Function: Vector addition
             y[n-1:0]=a[n-1:0]+b[n-1:0]
@@ -94,171 +114,14 @@ PAL Library Functions
 * p_barrier_wait()
 
 ## MATH
+FUNCTION | NOTES
+------------ | -------------
+[p_acos()](math/p_acos.c)  | arc cosine
 
-**Conversion:**
-``` c
-/*integer to float conversion on a vector*/
-void p_itof(int n, int* a, float* y);
-
-/*float to integer conversion*/
-void p_ftoi(int n, float* a, int* y );
-```
-
-**Standard Math Functions:**
-``` c
-
-/*inverse cosine*/
-void p_acos_32f(int n, float* a, float* y );
-
-/*inverse hyperbolic cosine*/
-void p_acosh_32f(int n, float* a, float* y );
-
-/*inverse sine*/
-void p_asin_32f(int n, float* a, float* y );
-
-/*inverse tanget*/
-void p_atan_32f(int n, float* a, float* y );
-
-/*four quadrant inverse tangent*/
-void p_atan2_32f(int n, float* a, float* b, float* y );
-
-/*cube root*/
-void p_cbrt_32f(int n, float* a, float* y );
-
-/*cosine*/
-void p_cos_32f(int n, float* a, float* y );
-
-/*hyperpolic cosine*/
-void p_cosh_32f(int n, float* a, float* y );
-
-/*exponential*/
-void p_exp_32f(int n, float* a, float* y );
-
-/*inverse cube root*/
-void p_icbrt_32f(int n, float* a, float* y );
-
-/*natural log*/
-void p_ln_32f(int n, float* a, float* y );
-
-/*denary logarithm*/
-void p_log10_32f(int n, float* a, float* y );
-
-/*element raised to a specific power*/
-void p_pow_32f(int n, float* a, float* b, float* y );
-
-/*sine*/
-void p_sin_32f(int n, float* a, float* y );
-
-/*sine & cosine*/
-void p_sincos_32f(int n, float* a, float* y, float* z );
-
-/*hyperbolic Sine*/
-void p_sinh_32f(int n, float* a, float* y );
-
-/*tangent*/
-void p_tan_32f(int n, float* a, float* y );
-
-/*hyperbolic Tangent*/
-void p_tanh_32f(int n, float* a, float* y );
-```
  
-**Reduction Operations**
-
-``` c
-/*sum*/
-void p_sum_32f(int n, float* a, float* y  );
-
-/*avarage of vector*/
-void p_ave_32f(int n, float* a, float* y );
-
-/*mean of vector*/
-void p_mean_32f(int n, float* a, float* y );
-
-/*find max value in a vector and index*/
-void p_maxval_32f(int n, float* a, int* index, float* y );
-
-/*find min value in a vector and index*/
-void p_minval_32f(int n, float* a, int* index, float* y );
-
-/*sum of product on vector*/
-void p_sop_32f(int n, const float* a, const float* b, const float* c);
-
-```
-
-**Matrix Operations**
-``` c
-
-/*multiply two matrices*/
-void p_matmul_32f(int m, int n, int k, float* a, float* b, float* c);
-
-/*add two matrices*/
-void p_matadd_32f(int m, int n, float* a, float* b, float* c);
-
-/*subtract two matrices*/
-void p_matsub_32f(int m, int n, float* a, float* b, float* c);
-
-/*absolute difference of two matrices*/
-void p_matabsdiff_32f(int m, int n, float* a, float* b, float* c);
-
-/*absolute difference oftwo matrices*/
-void p_matsqadd_32f(int m, int n, float* a, float* b, float* c);
-
-/*element wise division*/
-void p_matdiv_32f(int m, int n, float* a, float* b, float* y );
-
-/*element wise square root*/
-void p_matsqrt_32f(int m, int n, float* a, float* y );
-
-/*element wise inverse square root*/
-void p_matisqrt_32f(int m, int n, int k, float* a, float* y );
-
-/*invert a matrix, gauss jordan, not singular, square, no error checking*/
-void p_matinv_32f(int m, float* a, float* y);
-
-/*transpose a matrix*/
-void p_mattran_32f(int m, int k, float* a, float* c);
-
-```
-
-
-
 ## DSP
 
-**1D**
-* p_acorr_32f()
-* p_conf_32f()
-* p_corr_32f()
-* p_fir_32f()
-* p_firdec_32f()
-* p_firint_32f()
-* p_firlat_32f()
-* P_iir_32f()
-* p_hist_32f()
-
-**2D**
-* p_conv2D_32f()
-* p_acorr2D_32f()
-* p_ave2D_32f()
-* p_median2D_32f()
-* p_sobel2D_32f()
-* p_box2D_32f()
-* p_canny2D_32f()
-* p_harris2D_32f()
-* p_gauss2D_32f()
-* p_sad2D_32f()
-* p_mad2D_32f()
-* p_hist2D_32f()
-* p_mag2D_32f()
-* p_histeq2D_32f()
-* p_minmax2D_32f()
-* p_thresh2D_32f()
-* p_scale2D_32f()
-* p_lut2D_32f()
-* p_memcpy2D_32f()
-
 ## FFT
-* p_fftplan_32f()
-* p_fftexec_32f()
-* p_fftdestroy()
+
 
 
