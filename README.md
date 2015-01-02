@@ -4,45 +4,44 @@ PAL: The Parallel Architectures Library
 The Parallel Architectures Library (PAL) is a collection of C libraries that
 faciliate high performance computation, synchronization, and data movement.
 
-### Content
+# Content
 1. [Design goals](#design-goals)  
 2. [License](#license)  
 3. [Pay it forward](#pay-it-forward)  
-4. [Library API reference](#pal-reference)
-4.0 [Syntax](#syntax)   
-4.1 [Memory management (*new)](#memory-management)
-4.2 [Program excution (*new)](#program-execution)
-4.3 [Basic math (*new)](#basic-math)
-4.4 [Image processing (*new)](#image-processing)
-4.5 [DSP (*new)](#dsp)
-4.6 [FFT (*new)](#fft)
-4.7 [Linar algebra (BLAS)](#blas)
-4.8 [System Calls (BIONIC)](#system-calls)
-4.8 [Atomics (C11)](#atomics)
-4.A [Mutex (POSIX)](#mutex)
-4.B [Threading (POSIX)](#threading)
+4. [Library API reference](#pal-api-reference)  
+4.0 [Syntax](#syntax)  
+4.1 [Memory management (PAL)](#memory-management)  
+4.2 [Program excution (PAL)](#program-execution)  
+4.3 [Basic math (PAL)](#basic-math)  
+4.4 [Image processing (PAL)](#image-processing)  
+4.5 [DSP (PAL)](#dsp)  
+4.6 [FFT (PAL)](#fft)  
+4.7 [Linar algebra (BLAS)](#blas)  
+4.8 [System Calls (LIBC-BIONIC)](#system-calls)  
+4.9 [Mutex (POSIX-BIONIC)](#mutex)  
+4.A [Threads (POSIX-BIONIC)](#threads)  
+4.B [Atomics (C11)](#atomics) 
+
 
 ##Design Goals
 
 * **Fast**     (All about speed. No belt...no suspenders)
-* **Open**     (Permissive Apache 2.0 licensing)
+* **Open**     (Permissive Apache 2.0/BSD/MIT licensing)
 * **Compact**  (Developed for CPUs with limited local memory)
 * **Scalable** (Support thread and data scaling)
 * **Portable** (Across architectures and run time environments)   
 
 ##License
-PAL is licensed under the Apache License, Version 2.0. See LICENSE for full license text.
+The PAL source code is licensed under the Apache License, Version 2.0. See LICENSE for full license text unless otherwise specified.
 
 ##Pay it forward
-We are investing a significant amount of time and money to make PAL a reality. 
 Pay it forward! Instructions for contributing can be found [HERE](CONTRIBUTING.md). 
 
-
-PAL API Reference
+PAL API REFERENCE
 ========================================
 ## 
 
-##Memory Management
+##MEMORY MANAGEMENT
 
 FUNCTION     | NOTES
 ------------ | -------------
@@ -56,9 +55,7 @@ FUNCTION     | NOTES
 [p_free()](hal/p_free.c)          | free up dynamic memory
 [p_flush()](math/p_flush.c)       | flush a physical memory read/write path  
 
-Atomic memory operations covered with C11 atomics (stdatomic.h).
-
-##Program execution
+##PROGRAM EXECUTION
 
 FUNCTION     | NOTES
 ------------ | -------------
@@ -159,17 +156,17 @@ FUNCTION     | NOTES
 FUNCTION     | NOTES
 ------------ | -------------
 
-## Atomics
+## MUTEX
 
 FUNCTION     | NOTES
 ------------ | -------------
 
-## Mutex
+## THREADS
 
 FUNCTION     | NOTES
 ------------ | -------------
 
-## Threading
+## ATOMICS
 
 FUNCTION     | NOTES
 ------------ | -------------
