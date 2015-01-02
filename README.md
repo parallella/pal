@@ -58,66 +58,40 @@ void p_add_32f( int n, float* a, float* b, float* y );
 
 ```
 
-PAL Library Functions
+PAL API
 ========================================
-## HAL
+## 
 
-**Shared memory management:**
+##Memory Management
 
 FUNCTION     | NOTES
 ------------ | -------------
 [p_write()](hal/p_write.c)        | write to global memory
 [p_read()](hal/p_read.c)          | read from global memory
-[p_copy()](hal/p_copy.c)          | copy memory area
-[p_copy2d()](hal/p_copy2d.c)      | copy 2D memory area
-[p_scatter()](hal/p_scatter.c)    | copy scatter operation
-[p_gather()](hal/p_gather.c)      | copy gather operation
-[p_bcast()](hal/p_bcast.c)        | copy gather operation
+[p_copy()](hal/p_copy.c)          | copy memory
+[p_scatter()](hal/p_scatter.c)    | copy scatter
+[p_gather()](hal/p_gather.c)      | copy gather
+[p_bcast()](hal/p_bcast.c)        | copy broadcast
 [p_malloc()](hal/p_malloc.c)      | dynamic memory allocator
 [p_free()](hal/p_free.c)          | free up dynamic memory
+[p_memflush()](math/p_memflush.c) | flush a physical memory read/write path  
 
-**Program execution:**
+Atomic memory operations covered through C11 atomics. (<stdatomics.h>)
+
+##Program execution
 
 FUNCTION     | NOTES
 ------------ | -------------
 [p_init()](hal/p_init.c)         | initialize the run time
-[p_load()](hal/p_load.c)         | load binary elf file into memory
+[p_load()](hal/p_load.c)         | load binary elf file into an array
 [p_open()](hal/p_open.c)         | open a set of slave processors
+[p_exec()](hal/p_exec.c)         | run a program on a slave processor
 [p_close()](hal/p_close.c)       | close a set of slave processors
-[p_exec()](hal/p_exec.c)         | copy binary to slave processor and start
 [p_finalize()](hal/p_finalize.c) | close down run time
 
-**Mutex:**
+##Synchronization
 
-FUNCTION     | NOTES
------------- | -------------
-[p_mutex_init()](hal/p_mutex_init.c)       | mutex initialization
-[p_mutex_destroy()](hal/p_mutex_destroy.c) | mutex destroy
-[p_mutex_lock()](hal/p_mutex_lock.c)       | mutex lock
-[p_mutex_unlock()](hal/p_mutex_unlock.c)   | mutex lock
-[p_mutex_trylock()](hal/p_mutex_trylock.c) | mutex try lock
-
-**Atomic memory operatins:**
-
-FUNCTION     | NOTES
------------- | -------------
-[p_atomic_init()](hal/p_atomic_init.c)         | atomic variable initialization
-[p_atomic_exchange()](hal/p_atomic_exchange.c) | atomic variable exchange
-[p_atomic_cmpexchange()](hal/p_atomic_cmpexchange.c)| atomic variable compare and exchange
-[p_atomic_add()] (hal/p_atomic_add.c) | atomic featch and add
-[p_atomic_sub()] (hal/p_atomic_sub.c) | atomic featch and subtract
-[p_atomic_or()]  (hal/p_atomic_or.c)  | atomic featch and logical 'or'
-[p_atomic_xor()] (hal/p_atomic_xor.c) | atomic featch and logical 'xor'
-[p_atomic_and()] (hal/p_atomic_and.c) | atomic featch and logical 'and'
-
-**Memory ordering:**
-
-FUNCTION     | NOTES
------------- | -------------
-[p_memflush()](math/p_memflush.c)   | flush read/write path to a memory
-
-**Memory ordering:**
-
+* POSIX <pthread.h>
 
 ## MATH
 FUNCTION     | NOTES
@@ -177,20 +151,20 @@ FUNCTION     | NOTES
 ## IMAGE PROCESSING
 FUNCTION     | NOTES
 ------------ | -------------
-[p_average3x3()](math/p_average3x3.c) | 2d 3x3 moving average filter
-[p_box3x3()](math/p_box3x3.c)         | 2d box filter (3x3)
+[p_average3x3()](math/p_average3x3.c) | 3x3 moving average filter
+[p_box3x3()](math/p_box3x3.c)         | box filter (3x3)
 [p_conv2d()](math/p_conv2d.c)         | 2d convolution
-[p_gauss3x3()](math/p_gauss3x3.c)     | 2d gaussian blur filter (3x3)
-[p_mad8x8()](math/p_mad8x8.c)         | 2d sum of mean differences (8x8)
-[p_mad16x16()](math/p_mad16x16.c)     | 2d sum of mean differences (16x16)
-[p_median3x3()](math/p_median3x3.c)   | 2d median filter (3x3)
-[p_laplace3x3()](math/p_laplace3x3.c) | 2d laplace filter (3x3)
-[p_prewitt3x3()](math/p_prewitt3x3.c) | 2d prewitt filter (3x3)
-[p_sad8x8()](math/p_sad8x8.c)         | 2d sum of absolute differences (8x8)
-[p_sad16x16()](math/p_sad16x16.c)     | 2d sum of absolute differences (16x16)
-[p_sobel3x3()](math/p_sobel3x3.c)     | 2d sobel filter (3x3)
+[p_gauss3x3()](math/p_gauss3x3.c)     | gaussian blur filter (3x3)
+[p_mad8x8()](math/p_mad8x8.c)         | sum of mean differences (8x8)
+[p_mad16x16()](math/p_mad16x16.c)     | sum of mean differences (16x16)
+[p_median3x3()](math/p_median3x3.c)   | median filter (3x3)
+[p_laplace3x3()](math/p_laplace3x3.c) | laplace filter (3x3)
+[p_prewitt3x3()](math/p_prewitt3x3.c) | prewitt filter (3x3)
+[p_sad8x8()](math/p_sad8x8.c)         | sum of absolute differences (8x8)
+[p_sad16x16()](math/p_sad16x16.c)     | sum of absolute differences (16x16)
+[p_sobel3x3()](math/p_sobel3x3.c)     | sobel filter (3x3)
 [p_scale2d()](math/p_scale2d.c)       | 2d image scaling
-[p_scharr3x3()](math/p_scharr3x3.c)   | 2d scharr filter (3x3)
+[p_scharr3x3()](math/p_scharr3x3.c)   | scharr filter (3x3)
 
 ## FFT
 
