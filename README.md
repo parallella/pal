@@ -5,24 +5,26 @@ The Parallel Architectures Library (PAL) is a collection of C libraries that
 faciliate high performance computation, synchronization, and data movement.
 
 ### Content
-* Design goals
-* License
-* Pay it forward
-* Library API reference
--[Memory management(new)](#memory-management)
--[Program excution (new)](#program-execution)
--[Basic math (new)](#basic-math)
--[Image processing (new)](#image-processing)
--[DSP (new)](#dsp)
--[FFT (FFTW compatible)](#fft)
--[Linar algebra (BLAS)](#blas)
--[Atomics (C11)](#atomics)
--[Synchronization (POSIX)](#atomics)
--[Threading (POSIX)](#threading)
+1. [Design goals](#design-goals)  
+2. [License](#license)  
+3. [Pay it forward](#pay-it-forward)  
+4. [Library API reference](#pal-reference)
+4.0 [Syntax](#syntax)   
+4.1 [Memory management (*new)](#memory-management)
+4.2 [Program excution (*new)](#program-execution)
+4.3 [Basic math (*new)](#basic-math)
+4.4 [Image processing (*new)](#image-processing)
+4.5 [DSP (*new)](#dsp)
+4.6 [FFT (*new)](#fft)
+4.7 [Linar algebra (BLAS)](#blas)
+4.8 [System Calls (BIONIC)](#system-calls)
+4.8 [Atomics (C11)](#atomics)
+4.A [Mutex (POSIX)](#mutex)
+4.B [Threading (POSIX)](#threading)
 
 ##Design Goals
 
-* **Fast**     (Not always safe, but very fast!)
+* **Fast**     (All about speed. No belt...no suspenders)
 * **Open**     (Permissive Apache 2.0 licensing)
 * **Compact**  (Developed for CPUs with limited local memory)
 * **Scalable** (Support thread and data scaling)
@@ -35,25 +37,8 @@ PAL is licensed under the Apache License, Version 2.0. See LICENSE for full lice
 We are investing a significant amount of time and money to make PAL a reality. 
 Pay it forward! Instructions for contributing can be found [HERE](CONTRIBUTING.md). 
 
-##API Style
-The PAL library provides a set of "native" functions (fastest) and a set of "vector object" functions (easiest). The native funtions uses ONLY native C data types and explicit array indexing, while the array based functions use opaque array objects.
 
-##Naming convention
-* All functions start with "p_"
-* Function data types are indicated as follows:
-  8u   : 8 bit unsigned  
-  8s   : 8 bit signed  
-  16u  : 16 bit integer unsigned  
-  16s  : 16 bit integer signed  
-  16q  : 0.15 signed fractional  
-  16qc : 0.15 signed complex fractional  
-  32u  : 32 bit unsigned integer  
-  32s  : 32 bit signed integer  
-  32f  : 32 bit IEEE float point  
-  32fc : 32 bit IEEE complex float           
-  64f  : 64 bit IEEE floating point  
-
-PAL API
+PAL API Reference
 ========================================
 ## 
 
@@ -84,9 +69,6 @@ FUNCTION     | NOTES
 [p_close()](hal/p_close.c)       | close a set of slave processors
 [p_finalize()](hal/p_finalize.c) | close down run time
 
-##Synchronization
-
-* POSIX (pthread.h)
 
 ## BASIC MATH
 FUNCTION     | NOTES
@@ -129,6 +111,7 @@ FUNCTION     | NOTES
 [p_tanh()](math/p_tanh.c)        | hyperbolic tangent
 
 ## IMAGE PROCESSING
+
 FUNCTION     | NOTES
 ------------ | -------------
 [p_average3x3()](math/p_average3x3.c) | 3x3 moving average filter
@@ -160,19 +143,33 @@ FUNCTION     | NOTES
 [p_firsym()](math/p_firsym.c) | FIR symmetric form
 [p_iir()](math/p_iir.c) | IIR filter
 
-## Linear Algebra
-* BLAS
-* LAPACK
-
-
-
 
 ## FFT
+
 FUNCTION     | NOTES
 ------------ | -------------
 
-## Linear Algebra
+## BLAS
+
+FUNCTION     | NOTES
+------------ | -------------
+
+## System Calls
+
+FUNCTION     | NOTES
+------------ | -------------
 
 ## Atomics
 
+FUNCTION     | NOTES
+------------ | -------------
+
+## Mutex
+
+FUNCTION     | NOTES
+------------ | -------------
+
 ## Threading
+
+FUNCTION     | NOTES
+------------ | -------------
