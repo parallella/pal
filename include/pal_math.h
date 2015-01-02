@@ -63,7 +63,7 @@ void p_invcbrt_32f( const float* a, float* c, int n );
 /*inverse square root c = 1 / sqrt ( a ) */
 void p_invsqrt_32f( const float* a, float* c, int n );
 
-/*natural log: c = ln ( a ) */
+/*natural logarithm: c = ln ( a ) */
 void p_ln_32f( const float* a, float* c, int n );
 
 /*denary logarithm: c = log10 ( a ) */
@@ -102,6 +102,9 @@ void p_add_32f( const float* a,  const float* b,  float* c, int n );
 /*subtract vectors: c =  a[n-1:0] - b[n-1:0]  */
 void p_sub_32f( const float* a,  const float* b,  float* c, int n );
 
+/*multiply vectors: c =  a[n-1:0] - b[n-1:0]  */
+void p_mul_32f( const float* a,  const float* b,  float* c, int n );
+
 /*
  ****************************************************************
  * Vector Reduction Operations
@@ -129,35 +132,9 @@ void p_median_32f( const float* a, float* c, int n  );
 void p_mode_32f( const float* a, float* c, int n  );
 
 /*find max value and its index from input vector */
-void p_maxval_32f( const float* a, float* c, int* index, int n );
+void p_maxl_32f( const float* a, float* c, int* index, int n );
 
 /*find min value and its index from input vector */
-void p_minval_32f( const float* a, float* c, int* index, int n  );
+void p_minl_32f( const float* a, float* c, int* index, int n  );
 
-/*
-****************************************************************
- * Matrix Math
- *
- * a, b  : input matrix pointer
- * c     : result matrix pointer
- * m     : number of rows of matrix 'a' and 'c'
- * n     : number of columns of matrix 'b' and 'c'
- * k     : number of columns of matrix 'a' and rows of matrix 'b'
- *
- *          _ _ _        _ _ _        _ _ _
- *         |     |      |     |      |     |
- *       m |  a  |  * k |  b  |  = m |  c  |
- *         |_ _ _|      |_ _ _|      |_ _ _|
- *            k            n            n 
- *
- ***************************************************************
- */
-     
-/*multiply matrices: c[] += a[] * b[] */
-void p_matmul_32f( const float* a, const float* b, float* c, int m, int n, int k );
 
-/*invert a matrix, c[] = 1 / a[] */
-void p_matinv_32f( const float* a, float* c, int m );
-
-/*transpose a matrix, c[] =  a[]^T */
-void p_mattran_32f( const float* a, float* c, int m );
