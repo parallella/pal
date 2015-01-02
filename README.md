@@ -6,9 +6,9 @@ The Parallel Architectures Library (PAL) is a free and open-source C-libary that
 ##Design Goals:
 
 * **Fast** (No tricks held back)
+* **Open** (Permissive Apache 2.0 Licensing)
 * **Compact** (Designed for tiny CPUs with less than 32KB of local memory)
 * **Scalable** (Native vector parallelism)
-* **Open** (Permissive Apache 2.0 Licensing)
 
 A complete list of linked functions can be found at the end of this file 
 
@@ -29,18 +29,17 @@ The PAL library provides a set of "native" functions (fastest) and a set of "vec
 ##Naming convention
 * All functions start with "p_"
 * Function data types are indicated as follows:
-  8u   : 8 bit unsigned
-  8s   : 8 bit signed
-  16u  : 16 bit integer unsigned
-  16s  : 16 bit integer signed
-  16q  : 0.15 signed fractional
-  16qc : 0.15 signed complex fractional 
-  32u  : 32 bit unsigned integer
-  32s  : 32 bit signed integer
-  32f  : 32 bit IEEE float point
-  32fc : 32 bit IEEE complex float         
-  64f  : 64 bit IEEE floating point
-
+  8u   : 8 bit unsigned  
+  8s   : 8 bit signed  
+  16u  : 16 bit integer unsigned  
+  16s  : 16 bit integer signed  
+  16q  : 0.15 signed fractional  
+  16qc : 0.15 signed complex fractional  
+  32u  : 32 bit unsigned integer  
+  32s  : 32 bit signed integer  
+  32f  : 32 bit IEEE float point  
+  32fc : 32 bit IEEE complex float           
+  64f  : 64 bit IEEE floating point  
 
 ##API Native Example Style
 ``` c
@@ -63,19 +62,19 @@ PAL Library Functions
 ========================================
 ## HAL
 
-**Shared memory management):**
+**Shared memory management:**
 FUNCTION     | NOTES
 ------------ | -------------
-[p_write()](hal/p_write.c) | write to a global memory location
-[p_read()](hal/p_read.c)   | read from a global memory location
-[p_memcpy()](hal/p_memcpy.c) | copy memory area
-[p_memcpy_scatter()](hal/p_memcpy_scatter.c) | copy-scatter operation
-[p_memcpy_gather()](hal/p_memcpy_gather.c) | copy-gather operation
-[p_memcpy_bcast()](hal/p_memcpy_bcast.c) | copy-broadcast operation
-[p_memalloc()](hal/p_memalloc.c) | dynamic memory allocator
-[p_memfree()](hal/p_memfree.c) | free up dynamic memory
-[p_memptr()](hal/p_memptr.c) | free up dynamic memory
-x
+[p_write()](hal/p_write.c)        | write to global memory
+[p_read()](hal/p_read.c)          | read from global memory
+[p_copy()](hal/p_copy.c)          | copy memory area
+[p_copy2d()](hal/p_copy2d.c)      | copy 2D memory area
+[p_scatter()](hal/p_scatter.c)    | copy scatter operation
+[p_gather()](hal/p_gather.c)      | copy gather operation
+[p_bcast()](hal/p_bcast.c)        | copy gather operation
+[p_malloc()](hal/p_malloc.c)      | dynamic memory allocator
+[p_free()](hal/p_free.c)          | free up dynamic memory
+
 **Program execution:**
 FUNCTION     | NOTES
 ------------ | -------------
@@ -100,57 +99,61 @@ FUNCTION     | NOTES
 ------------ | -------------
 [p_atomic_init()](hal/p_atomic_init.c)         | atomic variable initialization
 [p_atomic_exchange()](hal/p_atomic_exchange.c) | atomic variable exchange
-[p_atomic_cmpexchange()](hal/p_atomic_exchange.c)| atomic variable compare and exchange
+[p_atomic_cmpexchange()](hal/p_atomic_cmpexchange.c)| atomic variable compare and exchange
 [p_atomic_add()] (hal/p_atomic_add.c) | atomic featch and add
 [p_atomic_sub()] (hal/p_atomic_sub.c) | atomic featch and subtract
-[p_atomic_or()]  (hal/p_atomic_or.c)  | atomic featch and 'OR'
-[p_atomic_xor()] (hal/p_atomic_xor.c) | atomic featch and 'XOR'
-[p_atomic_and()] (hal/p_atomic_and.c) | atomic featch and 'AND'
+[p_atomic_or()]  (hal/p_atomic_or.c)  | atomic featch and logical 'or'
+[p_atomic_xor()] (hal/p_atomic_xor.c) | atomic featch and logical 'xor'
+[p_atomic_and()] (hal/p_atomic_and.c) | atomic featch and logical 'and'
 
 **Memory ordering:**
 FUNCTION     | NOTES
 ------------ | -------------
 [p_memflush()](math/p_memflush.c)   | flush read/write path to a memory
 
+**Memory ordering:**
+
+
 ## MATH
 FUNCTION     | NOTES
 ------------ | -------------
-[p_abs()](math/p_abs.c)   | absolute value
-[p_absdiff()](math/p_absdiff.c)   | absolute difference
-[p_add()](math/p_add.c)   | add
-[p_acos()](math/p_acos.c) | arc cosine
-[p_acosh()](math/p_acosh.c) | arc hyperbolic cosine
-[p_asin()](math/p_asin.c) | arc sine
-[p_asinhh()](math/p_asinh.c) | arc hyperbolic sine
-[p_cbrt()](math/p_cbrt.c) | cubic root
-[p_cos()](math/p_cos.c) | cosine
-[p_cosh()](math/p_cosh.c) | hyperbolic cosine
-[p_div()](math/p_div.c) | division
-[p_exp()](math/p_div.c) | expontial
-[p_ftoi()](math/p_ftoi.c) | float to integer conversion
-[p_itof()](math/p_itof.c) | integer to float conversion
-[p_inv()](math/p_inv.c) | inverse
-[p_invcbrt()](math/p_invcbrt.c) | inverse cube root
-[p_invsqrt()](math/p_invcbrt.c) | inverse square root
-[p_ln()](math/p_invcbrt.c) | natural log
-[p_log10()](math/p_log10.c) | denary log
-[p_max()](math/p_max.c) | finds max val
-[p_min()](math/p_min.c) | finds min val
-[p_mean()](math/p_mean.c) | mean operation
-[p_median()](math/p_mean.c) | finds middle value
-[p_mode()](math/p_mode.c) | finds most common value
-[p_mul()](math/p_mul.c) | multiplication
-[p_pow()](math/p_pow.c) | element raised to a power
-[p_sin()](math/p_sin.c) | sine
-[p_sincos()](math/p_sincos.c) | sine and cos results
-[p_sinh()](math/p_sinh.c) | hyperbolic sine
-[p_sqrt()](math/p_sqrt.c) | square root
-[p_sub()](math/p_sub.c) | subtract
-[p_sum()](math/p_sum.c) | sum of all vector elements
-[p_sumsq()](math/p_sumsq.c) | sum of all vector squared elements 
-[p_tan()](math/p_tan.c) | tangent
-[p_tanh()](math/p_tanh.c) | hyperbolic tangent
-[p_dot()](math/p_dot.c) | dot product
+[p_abs()](math/p_abs.c)          | absolute value
+[p_absdiff()](math/p_absdiff.c)  | absolute difference
+[p_add()](math/p_add.c)          | add
+[p_acos()](math/p_acos.c)        | arc cosine
+[p_acosh()](math/p_acosh.c)      | arc hyperbolic cosine
+[p_asin()](math/p_asin.c)        | arc sine
+[p_asinhh()](math/p_asinh.c)     | arc hyperbolic sine
+[p_cbrt()](math/p_cbrt.c)        | cubic root
+[p_cos()](math/p_cos.c)          | cosine
+[p_cosh()](math/p_cosh.c)        | hyperbolic cosine
+[p_div()](math/p_div.c)          | division
+[p_dot()](math/p_dot.c)          | dot product
+[p_exp()](math/p_div.c)          | expontial
+[p_ftoi()](math/p_ftoi.c)        | float to integer conversion
+[p_itof()](math/p_itof.c)        | integer to float conversion
+[p_inv()](math/p_inv.c)          | inverse
+[p_invcbrt()](math/p_invcbrt.c)  | inverse cube root
+[p_invsqrt()](math/p_invcbrt.c)  | inverse square root
+[p_ln()](math/p_invcbrt.c)       | natural log
+[p_log10()](math/p_log10.c)      | denary log
+[p_max()](math/p_max.c)          | finds max val
+[p_min()](math/p_min.c)          | finds min val
+[p_mean()](math/p_mean.c)        | mean operation
+[p_median()](math/p_mean.c)      | finds middle value
+[p_mode()](math/p_mode.c)        | finds most common value
+[p_mul()](math/p_mul.c)          | multiplication
+[p_pow()](math/p_pow.c)          | element raised to a power
+[p_sin()](math/p_sin.c)          | sine
+[p_sincos()](math/p_sincos.c)    | sine and cos results
+[p_sinh()](math/p_sinh.c)        | hyperbolic sine
+[p_sqrt()](math/p_sqrt.c)        | square root
+[p_sub()](math/p_sub.c)          | subtract
+[p_sum()](math/p_sum.c)          | sum of all vector elements
+[p_sumsq()](math/p_sumsq.c)      | sum of all vector squared elements 
+[p_tan()](math/p_tan.c)          | tangent
+[p_tanh()](math/p_tanh.c)        | hyperbolic tangent
+
 
 ## DSP
 
