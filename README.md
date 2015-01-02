@@ -13,8 +13,8 @@ faciliate high performance computation, synchronization, and data movement.
 4.1 [Memory management (PAL)](#memory-management)  
 4.2 [Program excution (PAL)](#program-execution)  
 4.3 [Basic math (PAL)](#basic-math)  
+4.5 [Basic DSP (PAL)](#dsp)  
 4.4 [Image processing (PAL)](#image-processing)  
-4.5 [DSP (PAL)](#dsp)  
 4.6 [FFT (PAL)](#fft)  
 4.7 [Linar algebra (BLAS)](#blas)  
 4.8 [System Calls (LIBC-BIONIC)](#system-calls)  
@@ -22,6 +22,7 @@ faciliate high performance computation, synchronization, and data movement.
 4.A [Threads (POSIX-BIONIC)](#threads)  
 4.B [Atomics (C11)](#atomics) 
 
+----------------------------------------------------------------------
 
 ##Design Goals
 
@@ -35,7 +36,7 @@ faciliate high performance computation, synchronization, and data movement.
 The PAL source code is licensed under the Apache License, Version 2.0. See LICENSE for full license text unless otherwise specified.
 
 ##Pay it forward
-Pay it forward! Instructions for contributing can be found [HERE](CONTRIBUTING.md). 
+Seriously, pay it forward! Instructions for contributing can be found [HERE](CONTRIBUTING.md). 
 
 PAL API REFERENCE
 ========================================
@@ -67,7 +68,7 @@ FUNCTION     | NOTES
 [p_finalize()](hal/p_finalize.c) | close down run time
 
 
-## BASIC MATH
+## MATH
 FUNCTION     | NOTES
 ------------ | -------------
 [p_abs()](math/p_abs.c)          | absolute value
@@ -107,25 +108,6 @@ FUNCTION     | NOTES
 [p_tan()](math/p_tan.c)          | tangent
 [p_tanh()](math/p_tanh.c)        | hyperbolic tangent
 
-## IMAGE PROCESSING
-
-FUNCTION     | NOTES
------------- | -------------
-[p_average3x3()](math/p_average3x3.c) | 3x3 moving average filter
-[p_box3x3()](math/p_box3x3.c)         | box filter (3x3)
-[p_conv2d()](math/p_conv2d.c)         | 2d convolution
-[p_gauss3x3()](math/p_gauss3x3.c)     | gaussian blur filter (3x3)
-[p_mad8x8()](math/p_mad8x8.c)         | sum of mean differences (8x8)
-[p_mad16x16()](math/p_mad16x16.c)     | sum of mean differences (16x16)
-[p_median3x3()](math/p_median3x3.c)   | median filter (3x3)
-[p_laplace3x3()](math/p_laplace3x3.c) | laplace filter (3x3)
-[p_prewitt3x3()](math/p_prewitt3x3.c) | prewitt filter (3x3)
-[p_sad8x8()](math/p_sad8x8.c)         | sum of absolute differences (8x8)
-[p_sad16x16()](math/p_sad16x16.c)     | sum of absolute differences (16x16)
-[p_sobel3x3()](math/p_sobel3x3.c)     | sobel filter (3x3)
-[p_scale2d()](math/p_scale2d.c)       | 2d image scaling
-[p_scharr3x3()](math/p_scharr3x3.c)   | scharr filter (3x3)
-
 ## DSP
 
 FUNCTION     | NOTES
@@ -140,6 +122,27 @@ FUNCTION     | NOTES
 [p_firsym()](math/p_firsym.c) | FIR symmetric form
 [p_iir()](math/p_iir.c) | IIR filter
 
+## IMAGE PROCESSING
+
+FUNCTION     | NOTES
+------------ | -------------
+[p_average3x3()](math/p_average3x3.c) | moving average filter (3x3)
+[p_box3x3()](math/p_box3x3.c)         | box filter (3x3)
+[p_conv2d()](math/p_conv2d.c)         | 2d convolution
+[p_gauss3x3()](math/p_gauss3x3.c)     | gaussian blur filter (3x3)
+[p_mad8x8()](math/p_mad8x8.c)         | sum of mean differences (8x8)
+[p_mad16x16()](math/p_mad16x16.c)     | sum of mean differences (16x16)
+[p_median3x3()](math/p_median3x3.c)   | median filter (3x3)
+[p_laplace3x3()](math/p_laplace3x3.c) | laplace filter (3x3)
+[p_prewitt3x3()](math/p_prewitt3x3.c) | prewitt filter (3x3)
+[p_sad8x8()](math/p_sad8x8.c)         | sum of absolute differences (8x8)
+[p_sad16x16()](math/p_sad16x16.c)     | sum of absolute differences (16x16)
+[p_sobel3x3()](math/p_sobel3x3.c)     | sobel filter (3x3)
+[p_scale2d()](math/p_scale2d.c)       | 2d image scaling
+[p_scharr3x3()](math/p_scharr3x3.c)   | scharr filter (3x3)
+
+
+
 
 ## FFT
 
@@ -151,7 +154,7 @@ FUNCTION     | NOTES
 FUNCTION     | NOTES
 ------------ | -------------
 
-## System Calls
+## SYSTEM CALLS
 
 FUNCTION     | NOTES
 ------------ | -------------
