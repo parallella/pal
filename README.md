@@ -63,6 +63,7 @@ PAL Library Functions
 ## HAL
 
 **Shared memory management:**
+
 FUNCTION     | NOTES
 ------------ | -------------
 [p_write()](hal/p_write.c)        | write to global memory
@@ -76,6 +77,7 @@ FUNCTION     | NOTES
 [p_free()](hal/p_free.c)          | free up dynamic memory
 
 **Program execution:**
+
 FUNCTION     | NOTES
 ------------ | -------------
 [p_init()](hal/p_init.c)         | initialize the run time
@@ -86,6 +88,7 @@ FUNCTION     | NOTES
 [p_finalize()](hal/p_finalize.c) | close down run time
 
 **Mutex:**
+
 FUNCTION     | NOTES
 ------------ | -------------
 [p_mutex_init()](hal/p_mutex_init.c)       | mutex initialization
@@ -95,6 +98,7 @@ FUNCTION     | NOTES
 [p_mutex_trylock()](hal/p_mutex_trylock.c) | mutex try lock
 
 **Atomic memory operatins:**
+
 FUNCTION     | NOTES
 ------------ | -------------
 [p_atomic_init()](hal/p_atomic_init.c)         | atomic variable initialization
@@ -107,6 +111,7 @@ FUNCTION     | NOTES
 [p_atomic_and()] (hal/p_atomic_and.c) | atomic featch and logical 'and'
 
 **Memory ordering:**
+
 FUNCTION     | NOTES
 ------------ | -------------
 [p_memflush()](math/p_memflush.c)   | flush read/write path to a memory
