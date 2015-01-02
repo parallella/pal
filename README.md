@@ -1,27 +1,39 @@
 PAL: The Parallel Architectures Library
 ========================================
 
-The Parallel Architectures Library (PAL) is a free and open-source C-libary that provides optimized math routines and low-level synchronization primitives for parallel programming. 
+The Parallel Architectures Library (PAL) is a collection of C libraries that
+faciliate high performance computation, synchronization, and data movement.
 
-##Design Goals:
+### Content
+* Design goals
+* License
+* Pay it forward
+* Library API reference
+-[Memory management(new)](#memory-management)
+-[Program excution (new)](#program-execution)
+-[Basic math (new)](#basic-math)
+-[Image processing (new)](#image-processing)
+-[DSP (new)](#dsp)
+-[FFT (FFTW compatible)](#fft)
+-[Linar algebra (BLAS)](#blas)
+-[Atomics (C11)](#atomics)
+-[Synchronization (POSIX)](#atomics)
+-[Threading (POSIX)](#threading)
 
-* **Fast** (No tricks held back)
-* **Open** (Permissive Apache 2.0 Licensing)
-* **Compact** (Designed for tiny CPUs with less than 32KB of local memory)
-* **Scalable** (Native vector parallelism)
+##Design Goals
 
-A complete list of linked functions can be found at the end of this file 
+* **Fast**     (Not always safe, but very fast!)
+* **Open**     (Permissive Apache 2.0 licensing)
+* **Compact**  (Developed for CPUs with limited local memory)
+* **Scalable** (Support thread and data scaling)
+* **Portable** (Across architectures and run time environments)   
 
-##Licensing
+##License
 PAL is licensed under the Apache License, Version 2.0. See LICENSE for full license text.
 
-##Contributing
-PAL is an ambitious project and neeeds all the help it can get. If you have anything to contribute, please do!! Instructions for get started can be found [HERE](CONTRIBUTING.md). 
-
-##Coding style 
-* C99
-* "K&R coding style, 4 spaces for tabs"
-* 
+##Pay it forward
+We are investing a significant amount of time and money to make PAL a reality. 
+Pay it forward! Instructions for contributing can be found [HERE](CONTRIBUTING.md). 
 
 ##API Style
 The PAL library provides a set of "native" functions (fastest) and a set of "vector object" functions (easiest). The native funtions uses ONLY native C data types and explicit array indexing, while the array based functions use opaque array objects.
@@ -41,23 +53,6 @@ The PAL library provides a set of "native" functions (fastest) and a set of "vec
   32fc : 32 bit IEEE complex float           
   64f  : 64 bit IEEE floating point  
 
-##API Native Example Style
-``` c
-/*Function: Vector addition
-            y[n-1:0]=a[n-1:0]+b[n-1:0]
-
-  Arguments: 
-  
-  n is the number of elements in the vector
-  a is a pointer to an intput array of floats
-  b is a pointer to an input array of floats
-  y is a pointer to an output array of floats
- */
- 
-void p_add_32f( int n, float* a, float* b, float* y );
-
-```
-
 PAL API
 ========================================
 ## 
@@ -74,9 +69,9 @@ FUNCTION     | NOTES
 [p_bcast()](hal/p_bcast.c)        | copy broadcast
 [p_malloc()](hal/p_malloc.c)      | dynamic memory allocator
 [p_free()](hal/p_free.c)          | free up dynamic memory
-[p_memflush()](math/p_memflush.c) | flush a physical memory read/write path  
+[p_flush()](math/p_flush.c)       | flush a physical memory read/write path  
 
-Atomic memory operations covered through C11 atomics. (<stdatomics.h>)
+Atomic memory operations covered with C11 atomics (stdatomic.h).
 
 ##Program execution
 
@@ -91,9 +86,9 @@ FUNCTION     | NOTES
 
 ##Synchronization
 
-* POSIX <pthread.h>
+* POSIX (pthread.h)
 
-## MATH
+## BASIC MATH
 FUNCTION     | NOTES
 ------------ | -------------
 [p_abs()](math/p_abs.c)          | absolute value
@@ -102,7 +97,7 @@ FUNCTION     | NOTES
 [p_acos()](math/p_acos.c)        | arc cosine
 [p_acosh()](math/p_acosh.c)      | arc hyperbolic cosine
 [p_asin()](math/p_asin.c)        | arc sine
-[p_asinhh()](math/p_asinh.c)     | arc hyperbolic sine
+[p_asinh()](math/p_asinh.c)      | arc hyperbolic sine
 [p_cbrt()](math/p_cbrt.c)        | cubic root
 [p_cos()](math/p_cos.c)          | cosine
 [p_cosh()](math/p_cosh.c)        | hyperbolic cosine
@@ -133,21 +128,6 @@ FUNCTION     | NOTES
 [p_tan()](math/p_tan.c)          | tangent
 [p_tanh()](math/p_tanh.c)        | hyperbolic tangent
 
-
-## DSP
-
-FUNCTION     | NOTES
------------- | -------------
-[p_acorr()](math/p_acorr.c) | autocorrelation (r[j] = sum ( x[j+k] * x[k] ), k=0..(n-j-1))
-[p_conv()](math/p_conv.c) | convolution: r[j] = sum ( h[k] * x[j-k), k=0..(nh-1)
-[p_corr()](math/p_corr.c) | correlation: r[j] = sum ( x[j+k] * y[k]), k=0..(nx+ny-1)
-[p_fir()](math/p_fir.c) | FIR filter direct form: r[j] = sum ( h[k] * x [j-k]), k=0..(nh-1)
-[p_firdec()](math/p_firdec.c) | FIR filter with decimation: r[j] = sum ( h[k] * x [j*D-k]), k=0..(nh-1)
-[p_firint()](math/p_firint.c) | FIR filter with inerpolation: r[j] = sum ( h[k] * x [j*D-k]), k=0..(nh-1)
-[p_firlat()](math/p_firlat.c) | FIR filter lattice form
-[p_firsym()](math/p_firsym.c) | FIR symmetric form
-[p_iir()](math/p_iir.c) | IIR filter
-
 ## IMAGE PROCESSING
 FUNCTION     | NOTES
 ------------ | -------------
@@ -166,7 +146,33 @@ FUNCTION     | NOTES
 [p_scale2d()](math/p_scale2d.c)       | 2d image scaling
 [p_scharr3x3()](math/p_scharr3x3.c)   | scharr filter (3x3)
 
+## DSP
+
+FUNCTION     | NOTES
+------------ | -------------
+[p_acorr()](math/p_acorr.c) | autocorrelation (r[j] = sum ( x[j+k] * x[k] ), k=0..(n-j-1))
+[p_conv()](math/p_conv.c) | convolution: r[j] = sum ( h[k] * x[j-k), k=0..(nh-1)
+[p_corr()](math/p_corr.c) | correlation: r[j] = sum ( x[j+k] * y[k]), k=0..(nx+ny-1)
+[p_fir()](math/p_fir.c) | FIR filter direct form: r[j] = sum ( h[k] * x [j-k]), k=0..(nh-1)
+[p_firdec()](math/p_firdec.c) | FIR filter with decimation: r[j] = sum ( h[k] * x [j*D-k]), k=0..(nh-1)
+[p_firint()](math/p_firint.c) | FIR filter with inerpolation: r[j] = sum ( h[k] * x [j*D-k]), k=0..(nh-1)
+[p_firlat()](math/p_firlat.c) | FIR filter lattice form
+[p_firsym()](math/p_firsym.c) | FIR symmetric form
+[p_iir()](math/p_iir.c) | IIR filter
+
+## Linear Algebra
+* BLAS
+* LAPACK
+
+
+
+
 ## FFT
+FUNCTION     | NOTES
+------------ | -------------
 
+## Linear Algebra
 
+## Atomics
 
+## Threading
