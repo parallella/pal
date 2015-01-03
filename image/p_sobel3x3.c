@@ -1,13 +1,13 @@
 /*
  * A Sobel 3x3 convolution filter (m) with the Sobel operators defined as: 
  *
- *            | -1  0  1 |
- * Gx = 1/8 * | -2  0  2 |
- *            | -1  0  1 |
+ *       | -1  0  1 |
+ * Gx =  | -2  0  2 | * 1/8
+ *       | -1  0  1 |
  *
- *            | -1 -2 -1 |
- * Gy = 1/8 * |  0  0  0 |
- *            |  1  2  1 |
+ *       | -1 -2 -1 |
+ * Gy =  |  0  0  0 | * 1/8
+ *       |  1  2  1 |
  *
  * G = sqrt (Gx^2 + Gy^2)
  * 
