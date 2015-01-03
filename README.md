@@ -46,15 +46,15 @@ PAL API REFERENCE
 
 FUNCTION     | NOTES
 ------------ | -------------
-[p_write()](hal/p_write.c)        | write to global memory
-[p_read()](hal/p_read.c)          | read from global memory
-[p_copy()](hal/p_copy.c)          | copy memory
-[p_scatter()](hal/p_scatter.c)    | copy scatter
-[p_gather()](hal/p_gather.c)      | copy gather
-[p_bcast()](hal/p_bcast.c)        | copy broadcast
-[p_malloc()](hal/p_malloc.c)      | dynamic memory allocator
-[p_free()](hal/p_free.c)          | free up dynamic memory
-[p_flush()](math/p_flush.c)       | flush a physical memory read/write path  
+[p_write()](memory/p_write.c)        | write to global memory
+[p_read()](memory/p_read.c)          | read from global memory
+[p_copy()](memory/p_copy.c)          | copy memory
+[p_scatter()](memory/p_scatter.c)    | copy scatter
+[p_gather()](memory/p_gather.c)      | copy gather
+[p_bcast()](memory/p_bcast.c)        | copy broadcast
+[p_malloc()](memory/p_malloc.c)      | dynamic memory allocator
+[p_free()](memory/p_free.c)          | free up dynamic memory
+[p_flush()](memory/p_flush.c)       | flush a physical memory read/write path  
 
 ##PROGRAM EXECUTION
 
