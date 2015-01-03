@@ -2,13 +2,13 @@ Open equestions/assumptions:
 ==================================
 
 * Q: Impose a minimum vector length of 4 for speed?  
-  A: Yes  
+  A: 
 
-* Q: Trig functions run only on normalized range (0..2pi)  
-  A: Yes  
+* Q: Trig functions range
+  A: 0..2pi
 
-* Q: Work with matrix objects?  
-  A: No, too slow! Need to work at assembly or with pointer arithmetic.  
+* Q: Work with matrix objects or on arrays?  
+  A:  
 
 * Q: Work with explicit C99 native types?  
   A:  
@@ -17,52 +17,43 @@ Open equestions/assumptions:
   A: ??  
 
 * Q: 32/64 bit portability  
-  A: ??  
+  A:   
 
+* Q: Argument order, "natural" or compatible with other the "other" library
+  A: Natural order, except for when we want to implement exact API
 
-"TODO" list for the old ESDK
-==================================
+* Q: Saturation/overflow policy
+  A: GIGO
 
-comments: be constistent, underscor instead of "-"
-
-* e_trace_dma.c - REPLACE, in favor of http://lttng.org/blog/2014/11/25/tracing-bare-metal-systems/
-* e_trace.c     - REPLACE, in favor of lttng
-* e_shm.c       - review..???
-* e_reg_write.c - keep, good abstraction layer for register write, how generic to make?
-                  make it a 32 or 64 bit bit address constant?
-                  make it work for zynq as well
-                  should work on any core, ARM, epiphany etc, same interface, different data
-                  and addresses
-* e_reg_read.c  - same as above
-* epiphany-hal-data.h - Address should be ID+local, up to architecture
-                        no error checking, responsibility at upper level
-* epiphany-hal.c      - init, finalize, open, close, alloc, free (standardize)
-* e_mutex_*,c      - make it a posix interface -->exactly posix, no silly coordinates, 
-                     just an address
-* e_barrier        - should there be an array of barriers or just one?
-* e_memcpy         - generic interface, do detection inside
-                     how many cycles could this actually cost?
-* e_irq_set        - needed, comp to signal..
-* e_irq_mask       - useful for most interrupt controllers                      
-* e_irq_mask_all   - too specific to epiphany                    
-* e_irq_clear      - useful
-* e_irq_attach     - register an ISR, too slow to be useful?
-* e_dma_wait       - remove, should be hidden, need better spec, examples for api writes
-* e_dma_start      - same as above
-* e_dma_set_desc   - seems pretty useless, still too hard
-* e_dma_copy       - descriptor placement needs work, clashing, why not hide in memcpy
-                     should be in memcpy, should require three values: 
-                     (src,dst,count)
-		     impose alignment restrictions?
-		     (pre,body,post-->make safe)
-* e_wait           - cancel, who needs it
-* e_ctimer_stop    - make generic,
-* e_ctimer_start   - make generic,
-* *.s              - remove
-*coreid*	   - remove
-
+* Q: Include scatter gather in basic memcpy operations
+  A: Yes, fundemental to DMAs, should be in hal
+   
+* Q: Include barrier?
+  A: Yes, fundemental to all models, based on absolute address like mutex
  
-  
+* Q: Perfect API compatibility
+  A: The ability to run the exact same code on multiple platforms is magic!
+     Strive for MPI and POSIX same name no change compatibility.
+     Build up with time
+
+ *Q: What DSP/math API's where researched?
+  A: SAL:     http://opensal.net/  
+     VSIPL:   http://portals.omg.org/hpec/files/vsipl/software3.html  
+     LIQUID:  http://liquidsdr.org/  
+     NUMERIX: http://www.numerix-dsp.com/siglib.html  
+     CMSIS:   http://www.keil.com/pack/doc/CMSIS/DSP/html/index.html
+     OPENCV:  http://docs.opencv.org/
+     OPENVX:  https://www.khronos.org/openvx/
+     CUDA:    
+     MKL:
+     EIGEN:
+     BLAS:
+     FFTW:
+   
+*Q: Which POSIX starting point
+  A: Bionic, newlib, uClibc?
+
+  http://08926976467793358646.googlegroups.com/attach/0f8eba5ecb95c6f4/OVERVIEW.TXT?part=4&view=1&vt=ANaJVrFbDIqCdywFb24oT2VrarYJMy1EUpl-7AOO-klYKQuRSf-JFpCIR6UQfHpYdXO5PXx9b0syhIYYxpxVkkAs0rJgbC3jT_AVyrQaqvmzqDuB_rRuKBM
 
 
 
