@@ -9,9 +9,9 @@ faciliate high performance computation, synchronization, and data movement.
 2. [License](#license)  
 3. [Pay it forward](#pay-it-forward)  
 4. [Library API reference](#pal-api-reference)  
-4.0 [Syntax](#syntax)  
-4.1 [Memory management (PAL)](#memory-management)  
-4.2 [Program excution (PAL)](#program-execution)  
+4.0 [Syntax](#syntax)
+4.1 [Program excution (PAL)](#program-execution)  
+4.2 [Memory management (PAL)](#memory-management)  
 4.3 [Basic math (PAL)](#basic-math)  
 4.5 [Basic DSP (PAL)](#dsp)  
 4.4 [Image processing (PAL)](#image-processing)  
@@ -42,6 +42,17 @@ PAL API REFERENCE
 ========================================
 ## 
 
+##PROGRAM EXECUTION
+
+FUNCTION     | NOTES
+------------ | -------------
+[p_init()](loader/p_init.c)         | initialize the run time
+[p_load()](loader/p_load.c)         | load binary elf file into memory
+[p_open()](loader/p_open.c)         | open a team of processors
+[p_run()](loader/p_run.c)           | run a program on a team of processor
+[p_close()](loader/p_close.c)       | close a team of processors
+[p_finalize()](loader/p_finalize.c) | cleans up run time
+
 ##MEMORY MANAGEMENT
 
 FUNCTION     | NOTES
@@ -56,16 +67,6 @@ FUNCTION     | NOTES
 [p_free()](memory/p_free.c)          | free up dynamic memory
 [p_flush()](memory/p_flush.c)       | flush a physical memory read/write path  
 
-##PROGRAM EXECUTION
-
-FUNCTION     | NOTES
------------- | -------------
-[p_init()](loader/p_init.c)         | initialize the run time
-[p_load()](loader/p_load.c)         | load binary elf file into memory
-[p_open()](loader/p_open.c)         | open a team of processors
-[p_run()](loader/p_run.c)           | run a program on a team of processor
-[p_close()](loader/p_close.c)       | close a team of processors
-[p_finalize()](loader/p_finalize.c) | cleans up run time
 
 ## MATH
 FUNCTION     | NOTES
