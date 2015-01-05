@@ -1,6 +1,6 @@
 /*
  ****************************************************************
- * Image Processing Functions
+ * Image Processing Functions (raw/native format)
  *
  * x,y       : input matrix pointer
  * m         : filter mask pointer
@@ -24,7 +24,6 @@ void p_gauss3x3_32f(const float* x, float* r, int rows, int cols);
 
 /*2d median filter (3x3) */
 void p_median3x3_32f(const float* x, float* r, int rows, int cols);
-
 
 /*2d laplace filter (3x3) */
 void p_laplacel3x3_32f(const float* x, float* r, int rows, int cols);
@@ -50,12 +49,12 @@ void p_mad16x16_32f(const float* x, float* r, int rows, int cols);
 void p_integral2d_32f(const float* x, float* r, int rows, int cols);
 
 /*2d resize image*/
-void p_scale2d_32f(const float* x, float* r, int rows, int cols, int opt );
-
+void p_scale2d_32f(const float* x, float* r, int rows, int cols, int opt);
 
 /*2d sobel filter (3x3) */
 void p_sobel3x3_32f(const float* x, float* r, int rows, int cols);
-//what else??
+
+
 
 
 
