@@ -9,7 +9,7 @@ faciliate high performance computation, synchronization, and data movement.
 2. [License](#license)  
 3. [Pay it forward](#pay-it-forward)  
 4. [Library API reference](#pal-api-reference)  
-4.0 [Syntax](#syntax)
+4.0 [Syntax](#syntax)  
 4.1 [Program excution (PAL)](#program-execution)  
 4.2 [Memory management (PAL)](#memory-management)  
 4.3 [Basic math (PAL)](#basic-math)  
