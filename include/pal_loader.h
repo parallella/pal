@@ -38,7 +38,7 @@ pal_team_t *p_open(pal_dev_t *dev, int nstart, int ntotal, int ncols );
  *Loads a program file into memory from the file system
  *could be a bit stream, elf, etc
 */
-pal_program_t *p_load(char *executable);
+pal_program_t *p_load(pal_dev_t *dev, char *exe);
 
 /*Run a program on N processors of a device*/
 void p_run (pal_program_t *prog, //program to run

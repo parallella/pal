@@ -61,11 +61,11 @@ FUNCTION     | NOTES
 FUNCTION     | NOTES
 ------------ | -------------
 [p_init()](loader/p_init.c)         | initialize the run time
-[p_load()](loader/p_load.c)         | load binary elf file into an array
-[p_open()](loader/p_open.c)         | open a set of slave processors
-[p_exec()](loader/p_exec.c)         | run a program on a slave processor
-[p_close()](loader/p_close.c)       | close a set of slave processors
-[p_finalize()](loader/p_finalize.c) | close down run time
+[p_load()](loader/p_load.c)         | load binary elf file into memory
+[p_open()](loader/p_open.c)         | open a team of processors
+[p_run()](loader/p_run.c)           | run a program on a team of processor
+[p_close()](loader/p_close.c)       | close a team of processors
+[p_finalize()](loader/p_finalize.c) | cleans up run time
 
 ## MATH
 FUNCTION     | NOTES
