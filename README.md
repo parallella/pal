@@ -46,27 +46,26 @@ PAL API REFERENCE
 
 FUNCTION     | NOTES
 ------------ | -------------
-[p_write()](hal/p_write.c)        | write to global memory
-[p_read()](hal/p_read.c)          | read from global memory
-[p_copy()](hal/p_copy.c)          | copy memory
-[p_scatter()](hal/p_scatter.c)    | copy scatter
-[p_gather()](hal/p_gather.c)      | copy gather
-[p_bcast()](hal/p_bcast.c)        | copy broadcast
-[p_malloc()](hal/p_malloc.c)      | dynamic memory allocator
-[p_free()](hal/p_free.c)          | free up dynamic memory
-[p_flush()](math/p_flush.c)       | flush a physical memory read/write path  
+[p_write()](memory/p_write.c)        | write to global memory
+[p_read()](memory/p_read.c)          | read from global memory
+[p_copy()](memory/p_copy.c)          | copy memory
+[p_scatter()](memory/p_scatter.c)    | copy scatter
+[p_gather()](memory/p_gather.c)      | copy gather
+[p_bcast()](memory/p_bcast.c)        | copy broadcast
+[p_malloc()](memory/p_malloc.c)      | dynamic memory allocator
+[p_free()](memory/p_free.c)          | free up dynamic memory
+[p_flush()](memory/p_flush.c)       | flush a physical memory read/write path  
 
 ##PROGRAM EXECUTION
 
 FUNCTION     | NOTES
 ------------ | -------------
-[p_init()](hal/p_init.c)         | initialize the run time
-[p_load()](hal/p_load.c)         | load binary elf file into an array
-[p_open()](hal/p_open.c)         | open a set of slave processors
-[p_exec()](hal/p_exec.c)         | run a program on a slave processor
-[p_close()](hal/p_close.c)       | close a set of slave processors
-[p_finalize()](hal/p_finalize.c) | close down run time
-
+[p_init()](loader/p_init.c)         | initialize the run time
+[p_load()](loader/p_load.c)         | load binary elf file into an array
+[p_open()](loader/p_open.c)         | open a set of slave processors
+[p_exec()](loader/p_exec.c)         | run a program on a slave processor
+[p_close()](loader/p_close.c)       | close a set of slave processors
+[p_finalize()](loader/p_finalize.c) | close down run time
 
 ## MATH
 FUNCTION     | NOTES
