@@ -5,11 +5,11 @@ The Parallel Architectures Library (PAL) is a collection of C libraries that
 faciliate high performance computation, and data movement, and synchronization.
 
 # Content
-1. [Design goals](#design-goals)  
-2. [License](#license)  
-3. [Pay it forward](#pay-it-forward)  
-4. [A simple PAL Example](#a-simple-pal-example)
-5. [Library API reference](#pal-api-reference)  
+1.  [Design goals](#design-goals)  
+2.  [License](#license)  
+3.  [Pay it forward](#pay-it-forward)  
+4.  [Simple PAL Example](#simple-pal-example)
+5.  [Library API reference](#pal-api-reference)  
 5.0 [Syntax](#syntax)  
 5.1 [Program Excution](#program-execution)  
 5.2 [Data Movement](#data-movement)  
@@ -37,7 +37,20 @@ The PAL source code is licensed under the Apache License, Version 2.0. See LICEN
 ##Pay it forward
 Seriously, pay it forward! Instructions for contributing can be found [HERE](CONTRIBUTING.md). 
 
-PAL API REFERENCE
+##Simple PAL Example
+
+Manager
+``` c
+
+```
+
+Worker
+``` c
+
+```
+
+
+PAL LIBRARY API REFERENCE
 ========================================
 ## 
 
@@ -60,13 +73,15 @@ FUNCTION     | NOTES
 
 FUNCTION     | NOTES
 ------------ | -------------
-[p_write()](hal/p_write.c)       | write to global memory
-[p_read()](hal/p_read.c)         | read from global memory
-[p_copy()](hal/p_copy.c)         | copy memory
-[p_scatter()](hal/p_scatter.c)   | copy scatter
-[p_gather()](hal/p_gather.c)     | copy gather
-[p_bcast()](hal/p_bcast.c)       | copy broadcast
-[p_flush()](hal/p_flush.c)       | flush a physical memory read/write path  
+[p_write()](memory/p_write.c)        | write to global memory
+[p_read()](memory/p_read.c)          | read from global memory
+[p_copy()](memory/p_copy.c)          | copy memory
+[p_scatter()](memory/p_scatter.c)    | copy scatter
+[p_gather()](memory/p_gather.c)      | copy gather
+[p_bcast()](memory/p_bcast.c)        | copy broadcast
+[p_malloc()](memory/p_malloc.c)      | dynamic memory allocator
+[p_free()](memory/p_free.c)          | free up dynamic memory
+[p_flush()](memory/p_flush.c)       | flush a physical memory read/write path  
 
 ##SYNCHRONIZATION
 FUNCTION     | NOTES
