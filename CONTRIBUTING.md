@@ -4,8 +4,9 @@ If you are interested in contributing to PAL, here are some instructions to get 
 started. Thank you!
 
 ### Coding Style
-* "K&R coding style, 4 spaces for tabs"
-* A reference: https://www.kernel.org/doc/Documentation/CodingStyle
+* Linux Kernel Coding Style
+* Doxygen/Javadoc instead of kernel-doc
+* See [CODING-STYLE.md](CODING-STYLE.md)
 
 ### Contribution Conventions
 * If it's a bug fix branch, name it XXXX-something where XXXX is the number of the
