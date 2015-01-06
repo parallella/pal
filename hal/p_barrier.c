@@ -1,7 +1,7 @@
 /*
  *
  * FUNCTION:
- * p_barrier_wait(): Wait until all members in a team have reached this point
+ * p_barrier(): Wait until all members in a team have reached this point
  *            
  * ARGUMENTS:
  * team
@@ -11,7 +11,7 @@
  * 
  */
 
-void p_barrier_wait (pal_team_t *team){
+void p_barrier (pal_team_t *team){
 
     /*PUT CODE HERE*/
     //1.Every processor on the team runs this function

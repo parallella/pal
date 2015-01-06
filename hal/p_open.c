@@ -5,11 +5,9 @@
  *           available workforce discovered during p_init()
  *            
  * ARGUMENTS:
- * dev    - pointer to program (in memory) to launch
- * nstart - id of first processor in team
- * ntotal - total number of processors in team
- * ncols  - columns of a block (only used for 2D mesh architectures) 
- *          (rows=ntotal/cols)
+ * dev    - device descriptor
+ * list   - a list of processor ids from *dev
+ * flags  - 
  *
  * RETURN VALUE:
  *
@@ -17,9 +15,7 @@
  */
 
 pal_team_t p_open (pal_dev_t *dev,  //device descriptor
-		   int nstart,      //id of first processor in team
-		   int ntotal,      //total number of processors in team
-		   int ncols,       //columns in team block (rows=ntotal/cols)
+		   pal_pid_t *list, //a list of processor ids from *dev
 		   int flags        //launch flags
 		   ){
     
@@ -29,4 +25,11 @@ pal_team_t p_open (pal_dev_t *dev,  //device descriptor
     //2. "inherit" information from "dev"
     //3. No reservations, error checking?
     //4.
+
+    //Place the barrier initialization in here as well.
+    //1.Look at team structure 
+    //2.Find out the list of processors in the 
+    //3.Initialize the counter in teh team structure to N (equal to 
+    //  number of processors in team)
+
 }
