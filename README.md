@@ -13,7 +13,7 @@ faciliate high performance computation, and data movement, and synchronization.
 5.0 [Syntax](#syntax)  
 5.1 [Program Excution](#program-execution)  
 5.2 [Data Movement](#data-movement)  
-5.3 [Synhcronization](#synchronization)
+5.3 [Synhcronization](#synchronization)  
 5.3 [Basic Math](#basic-math)  
 5.5 [Basic DSP](#basic-dsp)  
 5.4 [Image Processing](#image-processing)  
@@ -66,8 +66,7 @@ FUNCTION     | NOTES
 [p_finalize()](hal/p_finalize.c)         | cleans up run time
 [p_malloc()](hal/p_malloc.c)             | dynamic memory allocator
 [p_free()](hal/p_free.c)                 | free up dynamic memory
-[p_barrier_init()](hal/p_barrier_init.c) | team barrier init
-[p_barrier_wait()](hal/p_barrier_wait.c) | team barrier wait
+[p_barrier()](hal/p_barrier.c)           | team barrier wait
 
 ##DATA MOVEMENT
 
@@ -81,23 +80,23 @@ FUNCTION     | NOTES
 [p_bcast()](memory/p_bcast.c)        | copy broadcast
 [p_malloc()](memory/p_malloc.c)      | dynamic memory allocator
 [p_free()](memory/p_free.c)          | free up dynamic memory
-[p_flush()](memory/p_flush.c)       | flush a physical memory read/write path  
+[p_flush()](memory/p_flush.c)        | flush a physical memory read/write path  
 
 ##SYNCHRONIZATION
 FUNCTION     | NOTES
 ------------ | -------------
-[p_mutex_lock()](hal/p_mutex_lock.c)             | lock a mutex
-[p_mutex_trylock()](hal/p_mutex_trylock.c)       | try locking a mutex once
-[p_mutex_unlock()](hal/p_mutex_unlock.c)         | unlock (clear) a mutex
-[p_mutex_init()](hal/p_mutex_init.c)             | initialize a mutex
-[p_atomic_add()](hal/p_atomic_add.c)             | atomid fetch and add
-[p_atomic_sub()](hal/p_atomic_sub.c)             | atomid fetch and sub
-[p_atomic_and()](hal/p_atomic_and.c)             | atomid fetch and logical 'and'
-[p_atomic_xor()](hal/p_atomic_xor.c)             | atomid fetch and logical 'xor'
-[p_atomic_or()](hal/p_atomic_or.c)               | atomid fetch and logical 'or'
-[p_atomic_nand()](hal/p_atomic_nand.c)           | atomid fetch and logical 'nand'
-[p_atomic_cmpex()](hal/p_atomic_cmpex .c)        | atomid compare and exchange
-[p_atomic_cmpex_not()](hal/p_atomic_cmpex_not.c) | atomid compare and exchange not
+[p_mutex_lock()](hal/p_mutex_lock.c)                           | lock a mutex
+[p_mutex_trylock()](hal/p_mutex_trylock.c)                     | try locking a mutex once
+[p_mutex_unlock()](hal/p_mutex_unlock.c)                       | unlock (clear) a mutex
+[p_mutex_init()](hal/p_mutex_init.c)                           | initialize a mutex
+[p_atomic_add()](hal/p_atomic_add.c)                           | atomic fetch and add
+[p_atomic_sub()](hal/p_atomic_sub.c)                           | atomic fetch and sub
+[p_atomic_and()](hal/p_atomic_and.c)                           | atomic fetch and logical 'and'
+[p_atomic_xor()](hal/p_atomic_xor.c)                           | atomic fetch and logical 'xor'
+[p_atomic_or()](hal/p_atomic_or.c)                             | atomic fetch and logical 'or'
+[p_atomic_nand()](hal/p_atomic_nand.c)                         | atomic fetch and logical 'nand'
+[p_atomic_exchange()](hal/p_atomic_exchange .c)                | atomic exhchange (swap)
+[p_atomic_compare_exchange()](hal/p_atomic_compare_exchange.c) | atomic compare and exchange
 
 ## BASIC MATH
 
