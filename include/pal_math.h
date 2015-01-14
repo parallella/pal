@@ -36,13 +36,19 @@
 #define M_DIV15          0.0666666666666666666  /* 1/15 */
 #define M_DIV16          0.0625                 /* 1/16 */
 
-/*ADDED PHYSICAL CONSTANTS (ADD YOUR FAVORITE..)*/
+/*ADDED PHYSICAL CONSTANTS (ADD YOUR FAVORITES:-)*/
 #define M_C             299792458               /*speed of light (m/s)*/
 #define M_M0            1.2566370614359172950   /*mag permeability (mH/m)*/
 #define M_H             ((float)6.62606957e-34) /*planck constant (J/Hz)*/
 #define M_HBAR          ((float)1.05457172e-34) /*diract constant* (J.s/rad)*/
 #define M_K             ((float)1.3806488e-23)  /*boltzmann constant (J/K)*/
 #define M_ME            ((float)9.10938291e-31) /*mass of electron (kg)*/
+#define M_MP            ((float)1.672614e-27)   /*mass of proton (kg)*/
+#define M_MN            ((float)1.674920e-27)   /*mass of neutron (kg)*/
+#define M_EC            ((float)1.6021917e-19)  /*charge of electron (C)*/
+#define M_F             ((float)9.648670e4)     /*faraday constant (C/mol)*/
+#define M_G             ((float)6.6732e-11)     /*gravitational constant (N*m^2/kg^2)*/
+#define M_A             ((float)6.022169e23)    /*avogadro constant*/
 
 /*computing macros?
  *
