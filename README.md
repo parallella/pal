@@ -41,47 +41,41 @@ Seriously, pay it forward! Instructions for contributing can be found [HERE](CON
 
 **Host "Boss" Code**
 ``` c
-#include <stdio.h>
-#include <stdlib.h>
-#include <pal_core.h>
-
 int main(int argc, char *argv[]){
 
     //Opaque objects	   
-    pal_dev_t dev0; 
-    pal_program_t prog0;
-    pal_team_t team0;
-  
+    p_dev_t dev0; 
+    p_program_t prog0;
+    p_team_t team0;
+    
     //Local variables
-    int* list;
-    int* total;   
+    int total;   
 
     //Initialize system
-    pal_init(EPIPHANY, STANDARD, dev0);
+    p_init(EPIPHANY, DEFAULT, dev0);
    
     //Load an ELF file from the file system
-    pal_load(dev0, "./hello.elf", prog0);
+    p_load(dev0, "./hello.elf", prog0);
 
     //Dynamically create a team
-    pal_query(dev0, LIST, *list); 
-    pal_query(dev0, TOTAL,*total); 
-
-    //Open a team 
-    pal_open(dev0, *list, total, team0);
+    p_query(dev0, TOTAL, &total); 
+  
+    //Open a team (additive)
+    p_open(dev0, 0, total, team0);
     
     //Run the program "process" on a team of processors
     int nargs = 0;
     void*  args[]={};	      	
-    pal_run(team0, prog0, nargs, args, ASYNC);
+    p_run(prog0,team0,nargs, args, ASYNC);
 
-    //Wait for completion     
-    pal_wait(team0);
+    //Wait until team has finished work     
+    p_barrier(team0);
 
     //Close down the team
-    pal_close(team0);
+    p_close(team0);
 
     //Close down device
-    pal_finalize(dev0);    
+    p_finalize(dev0);    
 }
 
 ```
