@@ -8,10 +8,20 @@
 #include <stdio.h>
 #include <stdlib.h>
 
+/*
+ ***********************************************************************
+ * SPECIFIC TYPES (LINUX INSPIRED)
+ ***********************************************************************
+ */
+
+typedef unsigned long long u64;
+typedef uint32_t u32;
+typedef uint16_t u16;
+typedef uint8_t u8;
 
 /*
  ***********************************************************************
- * RUN-TIME DEFINITIONS
+ * FLAGS
  ***********************************************************************
  */
 #define SMP       0x01
@@ -19,6 +29,13 @@
 #define CLUSTER   0x04
 #define EPIPHANY  0x08
 #define FPGA      0x10
+
+/*
+ ***********************************************************************
+ * BIT FIELD FLAGS
+ ***********************************************************************
+ */
+#DEFINE ASYNC     0x01
 
 /*
  *DEVICE QUERY PARAMETERS
@@ -41,27 +58,27 @@
  ***********************************************************************
  */
 
-struct pal_dev;
-struct pal_team;
-struct pal_program;
-struct pal_symbol;
-struct pal_event;
-struct pal_mem;
-struct pal_memptr;
-struct pal_atom;
-struct pal_mutex;
-struct pal_mutex_attr;
+struct p_dev;
+struct p_team;
+struct p_program;
+struct p_symbol;
+struct p_event;
+struct p_mem;
+struct p_memptr;
+struct p_atom;
+struct p_mutex;
+struct p_mutex_attr;
 
-typedef struct pal_dev* pal_dev_t;
-typedef struct pal_team* pal_team_t;
-typedef struct pal_program* pal_program_t;
-typedef struct pal_symbol* pal_symbol_t;
-typedef struct pal_event* pal_event_t;
-typedef struct pal_mem* pal_mem_t;
-typedef struct pal_memptr* pal_memptr_t;
-typedef struct pal_atom* pal_atom_t;
-typedef struct pal_mutex* pal_mutex_t;
-typedef struct pal_mutex_attr* pal_mutex_attr_t;
+typedef struct p_dev* p_dev_t;
+typedef struct p_team* p_team_t;
+typedef struct p_program* p_program_t;
+typedef struct p_symbol* p_symbol_t;
+typedef struct p_event* p_event_t;
+typedef struct p_mem* p_mem_t;
+typedef struct p_memptr* p_memptr_t;
+typedef struct p_atom* p_atom_t;
+typedef struct p_mutex* p_mutex_t;
+typedef struct p_mutex_attr* p_mutex_attr_t;
 /*
  ***********************************************************************
  * PROGRAM EXECUTION
@@ -69,37 +86,37 @@ typedef struct pal_mutex_attr* pal_mutex_attr_t;
  */
 
 /*Device structure setup*/
-int pal_init(int type, int flags, pal_dev_t dev);
+int p_init(int type, int flags, p_dev_t dev);
 
-/*Query the device for certain properties*/
-int pal_query(pal_dev_t dev, int property, int *result);
+/*Query certain properties within an object (tightly controlled)*/
+int p_query(void* obj, int property, int *result);
 
 /*Loads a program (or library) from the file system into memory */
-int pal_load(pal_dev_t dev, char *file, pal_prog_t prog);
+int p_load(p_dev_t dev, char *file, p_program_t p);
 
 /*Open a team of processors*/
-int pal_open(pal_dev_t dev, int *list, int flags, pal_team_t team);
+int p_open(p_dev_t dev, int *list, p_team_t t);
 
 /*Get symbol from the program in memory*/
-int pal_getsymbol(pal_program_t prog, char* symbol, pal_symbol_t symbol);
+int p_getsymbol(p_program_t p, char* symbol, p_symbol_t s);
 
 /*Run a program on N processors of a device, return event*/
-int pal_run(pal_team_t team, pal_program_t prog, int argn, void **args, int flags, pal_event_t event);
+int p_run(p_program_t program, p_team_t team, int argn, void **args, int flags);
 
 /*Team Barrier*/
-int pal_barrier(pal_team_t team);
+int p_barrier(p_team_t team);
 
 /*Memory allocation*/
-int pal_malloc(pal_team_t team, int n, size_t size, pal_mem_t mem);
+int p_malloc(p_team_t team, int n, size_t size, p_mem_t mem);
 
 /*Get a the physical address of the memory object*/
-void pal_getaddr(pal_mem_t mem, pal_memptr_t memptr);
+void p_getaddr(p_mem_t mem, p_memptr_t memptr);
 
 /*Free allocated memory */
-void pal_free(pal_mem_t mem);
+void p_free(p_mem_t mem);
 
 /*Finalize device run time*/
-int pal_finalize(pal_dev_t dev);
+int p_finalize(p_dev_t dev);
 
 /*
  ***********************************************************************
@@ -108,25 +125,25 @@ int pal_finalize(pal_dev_t dev);
  */
 
 /*Writes to a global memory address from a local address*/
-int pal_write(void *src, size_t nb, int flags, pal_mem_t mem, pal_event_t event);
+int p_write(void *src, size_t nb, int flags, p_mem_t mem);
 
 /*Reads from a global memory address */
-int pal_read(pal_mem_t mem, size_t nb, int flags, void *dst, pal_event_t event);    
+int p_read(p_mem_t mem, size_t nb, int flags, void *dst);    
 
 /*Scatters data from a local array to a list of remote memory objects*/
-int pal_scatter(void *src, size_t nsrc, size_t ndst, int flags, void** dstlist, pal_event_t event); 
+int p_scatter(void *src, size_t nsrc, size_t ndst, int flags, void** dstlist); 
 
 /*Gathers data from a list of remote memory objects into a local array*/
-int pal_gather(void** srclist, size_t nsrc, size_t ndst, int flags, void *dst, pal_event_t event); 
+int p_gather(void** srclist, size_t nsrc, size_t ndst, int flags, void *dst); 
 
 /*Broadcasts an array based to a list of destination pointers*/
-int pal_bcast(void *src, size_t nsrc, size_t ndst, int flags, void** dstlist, pal_event_t event); 
+int p_bcast(void *src, size_t nsrc, size_t ndst, int flags, void** dstlist); 
 
 /*Flushes the read/write path to a specific memory location (blocking)*/
-void pal_flush(pal_mem_t mem);
+void p_flush(p_mem_t mem);
 
 /*Specialized low level shared memory memcpy interface (non-blocking)*/
-int pal_copy(void *src, size_t nb, int flags, void *dst);
+int p_copy(void *src, size_t nb, int flags, void *dst);
 
 /*
  ***********************************************************************
@@ -136,40 +153,40 @@ int pal_copy(void *src, size_t nb, int flags, void *dst);
  */
 
 /*mutex (posix and gcc builtin) inspired), same arguments*/
-void pal_mutex_init(pal_mutex_t mutex, pal_mutex_attr_t attr);
+void p_mutex_init(p_mutex_t mutex, p_mutex_attr_t attr);
 
 /*Lock a mutex (try until fail)*/
-void pal_mutex_lock(pal_mutex_t mutex);
+void p_mutex_lock(p_mutex_t mutex);
 
 /*Try locking a mutex once*/
-int  pal_mutex_trylock(pal_mutex_t mutex);
+int  p_mutex_trylock(p_mutex_t mutex);
 
 /*Unlock a mutex*/
-void pal_mutex_unlock(pal_mutex_t mutex);
+void p_mutex_unlock(p_mutex_t mutex);
 
 /*Destroy a mutex*/
-void pal_mutex_destroy(pal_mutex_t mutex);
+void p_mutex_destroy(p_mutex_t mutex);
 
 /*atomic fetch and add*/
-void pal_atomic_add_32u(pal_atom_t atom, unsigned int n);
+void p_atomic_add_u32(p_atom_t atom, u32 n);
 
 /*atomic fetch and subtract*/
-void pal_atomic_sub_32u(pal_atom_t atom, unsigned int n);
+void p_atomic_sub_u32(p_atom_t atom, u32 n);
 
 /*atomic fetch and logical 'and'*/
-void pal_atomic_and_32u(pal_atom_t atom, unsigned int n);
+void p_atomic_and_u32(p_atom_t atom, u32 n);
 
 /*atomic fetch and logical 'xor'*/
-void pal_atomic_xor_32u(pal_atom_t atom, unsigned int n);
+void p_atomic_xor_u32(p_atom_t atom, u32 n);
 
 /*atomic fetch and logical 'or'*/
-void pal_atomic_or_32u(pal_atom_t atom, unsigned int n);
+void p_atomic_or_u32(p_atom_t atom, u32 n);
 
 /*atomic fetch and logical 'nand'*/
-void pal_atomic_nand_32u(pal_atom_t atom, unsigned int n);
+void p_atomic_nand_u32(p_atom_t atom, u32 n);
 
-/*atomic exchange*/
-void pal_atomic_exchange_32u(pal_atom_t atom, int *val, int *ret);
+/*atomic swap*/
+void p_atomic_swap_u32(p_atom_t atom, u32 *input);
 
-/*atomic compare and exchange*/
-void pal_atomic_compare_exchange_32u(pal_atom_t atom, int *expected, int desired);
+/*atomic compare and swap*/
+void p_atomic_compswap_u32(p_atom_t atom, u32 *input, u32 desired);
