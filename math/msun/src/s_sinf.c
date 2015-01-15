@@ -68,9 +68,6 @@ sinf(float x)
 		return __kernel_sindf(x + (hx > 0 ? -s4pio2 : s4pio2));
 	}
 
-    /* sin(Inf or NaN) is NaN */
-	else if (ix>=0x7f800000) return x-x;
-
     /* general argument reduction needed */
 	else {
 	    n = __ieee754_rem_pio2f(x,&y);
