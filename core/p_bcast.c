@@ -17,7 +17,7 @@
 #include "pal_core.h"
 #include "pal_private.h"
 
-void *p_bcast (void *dst_list, const void *loc_src, size_t nb, int nd, int flags){
+int p_bcast (void *src, size_t nsrc, size_t ndst, int flags, void** dstlist){
 
     int i;
       
@@ -25,4 +25,6 @@ void *p_bcast (void *dst_list, const void *loc_src, size_t nb, int nd, int flags
 	//1. get pointer from array of pointers based on i
 	//2. memcpy(dst,src,nb);
     }
+
+    return(0);
 }

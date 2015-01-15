@@ -10,7 +10,7 @@
 #include "pal_core.h"
 #include "pal_private.h"
 
-void p_flush (void *dst){
+void p_flush (p_mem_t mem){
 
     unsigned int tmpvar;
     //1.Read data from remote location to local temp variable (READ)
@@ -24,4 +24,6 @@ void p_flush (void *dst){
     while(1){
 	//read..
     }   
+
+    return(0);
 }

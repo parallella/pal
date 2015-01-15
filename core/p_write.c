@@ -2,9 +2,9 @@
 #include "pal_core.h"
 #include "pal_core_private.h"
 
-void *pal_getsymbol (pal_program_t prog, char* symbol){
-    void *result;
+int p_write (void *src, size_t nb, int flags, p_mem_t mem){
+
     /*PLACE CODE HERE*/
 
-    return(result);
+    return(0);
 }

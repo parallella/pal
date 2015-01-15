@@ -23,8 +23,8 @@
 #include "pal_core.h"
 #include "pal_private.h"
 
-void *p_copy (void *dst, const void *src, size_t nb, int flags){
+int p_copy (void *src, size_t nb, int flags, void *dst){
 
     /*PLACE CODE HERE*/
-
+    return(0);
 }

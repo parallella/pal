@@ -1,68 +1,44 @@
 #include <stdio.h>
 #include <stdlib.h>
 #include <pal_core.h>
-#define N 32
 
 int main(int argc, char *argv[]){
+
+    //Opaque objects	   
+    p_dev_t dev0; 
+    p_program_t prog0;
+    p_team_t team0;
     
-    //Some variable declarations
-    size_t bufsize = N * sizeof(float);   
+    //Local variables
+    int total;   
 
     //Initialize system
-    pal_dev_t dev0 =  pal_init(EPIPHANY, 0);
-
-    //Query system for information
-    int *all   = pal_query(dev0, ALL);    //list of all all processor ids
-    int *myid  = pal_query(dev0, WHOAMI); //this processor
-        
+    p_init(EPIPHANY, DEFAULT, dev0);
+   
     //Load an ELF file from the file system
-    pal_program_t prog0 = pal_load(dev0, "./my.elf");
+    p_load(dev0, "./hello.elf", prog0);
 
-    //Create a working team
-    pal_team_t team0 = pal_open(dev0, all, 0);
+    //Dynamically create a team
+    p_query(dev0, TOTAL, &total); 
+
+    //1.Create a bit mask one bit per processor(0..N)
+    //2.This should be dynamic depending information from query, regular malloc
+    //3.For embedded system, it could be fixed(N)
     
-    //Allocate regular memory
-    float* a = (float*) malloc(bufsize);
-    float* b = (float*) malloc(bufsize);
-    float* c = (float*) malloc(bufsize);
-
-    //Allocate working device memory (per processor)
-    pal_mem_t mem0 = pal_malloc(team0, *myid, bufsize);    
-    pal_mem_t mem1 = pal_malloc(team0, *myid, bufsize);    
-    pal_mem_t mem2 = pal_malloc(team0, *myid, bufsize);
+    //Open a team (additive)
+    p_open(dev0, 0, total, team0);
     
-    //Copy a working set to shared memory (event ignored)
-    pal_write (a, mem0, bufsize, 0);
-    pal_write (b, mem1, bufsize, 0);
+    //Run the program "process" on a team of processors
+    int nargs = 0;
+    void*  args[]={};	      	
+    p_run(team0, prog0, nargs, args, ASYNC);
 
-    //Pass the arguments to the program
-
-    /*fix later
-      int argc=3;
-      int argv;
-      char argv[0] = pal_getaddr(mem0);
-      char argv[1] = pal_getaddr(mem1);
-      char argv[2] = pal_getaddr(mem2);
-    */
-    //Run the program on a team of processors
-    pal_run(team0, prog0, argc, argv, 0);
-
-    //Read back data from shared memory 
-    pal_read(mem2, c, bufsize, 0);
+    //Wait for completion     
+    p_wait(team0);
 
     //Close down the team
-    pal_close(team0);
+    p_close(team0);
 
-    //Free up device memory 
-    pal_free(mem0);
-    pal_free(mem1);
-    pal_free(mem2);
-
-    //Free up regular malloc memory
-    free(a);
-    free(b);
-    free(c);
-
-    //Close down device connection
-    pal_finalize(dev0);    
+    //Close down device
+    p_finalize(dev0);    
 }

@@ -2,9 +2,9 @@
 #include "pal_core.h"
 #include "pal_core_private.h"
 
-void *pal_getaddr (pal_mem_t mem){
-    void *result;
+int p_getaddr (pal_mem_t mem, void **ptr){
+
     /*PLACE CODE HERE*/
 
-    return(result);
+    return(0);
 }

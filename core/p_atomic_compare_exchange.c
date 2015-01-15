@@ -4,9 +4,9 @@
 
 #include "pal_core.h"
 #include "pal_private.h"
-void pal_atomic_compare_exchange_32u (pal_atom_t *atom, int *expected, int desired){
-
-
-/*PLACE CODE HERE*/
+int p_atomic_compswap_u32(p_atom_t atom, u32 *input, u32 desired){
+    
+    /*PLACE CODE HERE*/
+    return(0);
 
 }

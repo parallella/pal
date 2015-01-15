@@ -22,20 +22,13 @@
  *
  *                          
  * flags     tbd
- *
- *
- * RETURN VALUE:
- *
- * pal_dev_t struct pointer
- *
  */
 #include "pal_core.h"
 #include "pal_core_private.h"
 
-void *pal_init (int type, int flags){
+int p_init (int type, int flags, p_dev_t dev){
 
-    void *result;
-    
+  
     /*PLACE CODE HERE*/   
 
     //1.get system information based on search and flag (type)
@@ -43,6 +36,6 @@ void *pal_init (int type, int flags){
     //3.return pointer to p_dev_t
     //4.exit 
 
-    return(result);
+    return(0);
 
 }

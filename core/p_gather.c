@@ -16,7 +16,7 @@
 #include "pal_core.h"
 #include "pal_private.h"
 
-void *p_gather (void *loc_dst, const void *src_list, size_t nb, int ns, int flags){
+int p_gather (void** srclist, size_t nsrc, size_t ndst, int flags, void *dst){
 
     /*PLACE CODE HERE*/
 

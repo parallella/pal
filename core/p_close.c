@@ -13,7 +13,7 @@
 #include "pal_core.h"
 #include "pal_core_private.h"
 
-void pal_close (pal_team_t team){
+int p_close (p_team_t team){
 
-    //free
+    return(0);
 }

@@ -1,19 +1,7 @@
-/*
- *
- * FUNCTION:
- * pal_barrier(): Wait until all members in a team have reached this point
- *            
- * ARGUMENTS:
- * team
- *
- * RETURN VALUE:
- *
- * 
- */
 #include "pal_core.h"
 #include "pal_private.h"
 
-void pal_barrier (pal_team_t *team){
+int p_barrier (p_team_t team){
 
     /*PUT CODE HERE*/
     //1.Every processor on the team runs this function
@@ -30,4 +18,6 @@ void pal_barrier (pal_team_t *team){
     //2.) this structure gets pushed out durung the p_open call
     //3.) 
 
+    return(0);
+    
 }
