@@ -8,6 +8,7 @@ gcc simple_example.c \
 ../p_malloc.c \
 ../p_write.c \
 ../p_read.c \
+../p_barrier.c \
 ../p_close.c \
 ../p_run.c \
 ../p_free.c \
