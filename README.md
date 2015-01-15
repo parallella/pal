@@ -7,7 +7,7 @@ faciliate high performance computation, and data movement, and synchronization.
 # Content
 1.  [Design goals](#design-goals)  
 2.  [License](#license)  
-3.  [Pay it forward](#pay-it-forward)  
+3.  [Pay it forward](#contribution)  
 4.  [Simple PAL Example](#simple-pal-example)
 5.  [Library API reference](#pal-api-reference)  
 5.0 [Syntax](#syntax)  
@@ -34,45 +34,59 @@ faciliate high performance computation, and data movement, and synchronization.
 ##License
 The PAL source code is licensed under the Apache License, Version 2.0. See LICENSE for full license text unless otherwise specified.
 
-##Pay it forward
+##Contribution
 Seriously, pay it forward! Instructions for contributing can be found [HERE](CONTRIBUTING.md). 
 
 ##An Example
 
-**Boss Code**
+**Host "Boss" Code**
 ``` c
 #include <stdio.h>
 #include <stdlib.h>
 #include <pal_core.h>
 
 int main(int argc, char *argv[]){
-    
+
+    //Opaque objects	   
+    pal_dev_t dev0; 
+    pal_program_t prog0;
+    pal_team_t team0;
+  
+    //Local variables
+    int* list;
+    int* total;   
+
     //Initialize system
-    pal_dev_t dev0 =  pal_init(EPIPHANY, 0);
-
-    //Query system for information
-    int *all   = pal_query(dev0, ALL);
-    int *myid  = pal_query(dev0, WHOAMI);
-        
+    pal_init(EPIPHANY, STANDARD, dev0);
+   
     //Load an ELF file from the file system
-    pal_program_t prog0 = pal_load(dev0, "./hello.elf");
+    pal_load(dev0, "./hello.elf", prog0);
 
-    //Create a working team
-    pal_team_t team0 = pal_open(dev0, all, 0);
+    //Dynamically create a team
+    pal_query(dev0, LIST, *list); 
+    pal_query(dev0, TOTAL,*total); 
+
+    //Open a team 
+    pal_open(dev0, *list, total, team0);
     
-    //Run the program on a team of processors
-    pal_run(team0, prog0, argc, argv, 0);
+    //Run the program "process" on a team of processors
+    int nargs = 0;
+    void*  args[]={};	      	
+    pal_run(team0, prog0, nargs, args, ASYNC);
+
+    //Wait for completion     
+    pal_wait(team0);
 
     //Close down the team
     pal_close(team0);
 
-    //Close down device connection
+    //Close down device
     pal_finalize(dev0);    
 }
 
 ```
 
-**Worker Code (compiles into hello.elf)**
+**Kernel "Worker" Code (hello.c) **
 ``` c
 #include <stdio.h>
 #include <stdlib.h>
@@ -84,6 +98,9 @@ printf("Hello world!\n");
 PAL LIBRARY API REFERENCE
 ========================================
 ## 
+##SYNTAX
+*Function argument order: inputs, outputs, flags/options
+*
 
 ##PROGRAM EXECUTION
 
