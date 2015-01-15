@@ -120,4 +120,8 @@ Open equestions/assumptions:
 *Q: Typedefs for some structs
  A: Yes, because the intent is to make these completely opaque
     
-    
+*Q: Include events in argument list?
+ A: No. Complicated, can't think of a clean solution
+
+*Q: Include event information in memory/team objects
+ A: Read/write ordering and "done" is too tricky for everyone.     
