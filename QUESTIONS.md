@@ -124,4 +124,11 @@ Open equestions/assumptions:
  A: No. Complicated, can't think of a clean solution
 
 *Q: Include event information in memory/team objects
- A: Read/write ordering and "done" is too tricky for everyone.     
+ A: Read/write ordering and "done" is too tricky for everyone.
+
+*Q: Argument ordering in functions: inputs, flags, otput
+ A: Having flags last dies make some sense
+
+*Q: Argument passing to run
+ A: Enable passing arguments in "main style" and function-kernel style.     
+    Contract between caller/calle program. Short cuts allowed
