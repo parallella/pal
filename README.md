@@ -19,10 +19,7 @@ faciliate high performance computation, and data movement, and synchronization.
 5.4 [Image Processing](#image-processing)  
 5.6 [FFT](#fft)  
 5.7 [Linar Algebra (BLAS)](#blas)  
--vector operations
--matrix-vector operations
--matrix-matrix operations
-5.8 [System Calls](#system-calls)
+5.8 [System Calls](#system-calls)  
 
 ----------------------------------------------------------------------
 
@@ -42,27 +39,23 @@ Seriously, pay it forward! Instructions for contributing can be found [HERE](CON
 
 ##An Example
 
-**Boss Code
+**Boss Code**
 ``` c
 #include <stdio.h>
 #include <stdlib.h>
 #include <pal_core.h>
-#define N 32
 
 int main(int argc, char *argv[]){
     
-    //Some variable declarations
-    size_t bufsize = N * sizeof(float);   
-
     //Initialize system
     pal_dev_t dev0 =  pal_init(EPIPHANY, 0);
 
     //Query system for information
-    int *all   = pal_query(dev0, ALL);    //list of all all processor ids
-    int *myid  = pal_query(dev0, WHOAMI); //this processor
+    int *all   = pal_query(dev0, ALL);
+    int *myid  = pal_query(dev0, WHOAMI);
         
     //Load an ELF file from the file system
-    pal_program_t prog0 = pal_load(dev0, "./my.elf");
+    pal_program_t prog0 = pal_load(dev0, "./hello.elf");
 
     //Create a working team
     pal_team_t team0 = pal_open(dev0, all, 0);
@@ -79,11 +72,14 @@ int main(int argc, char *argv[]){
 
 ```
 
-**Worker Code
+**Worker Code (compiles into hello.elf)**
 ``` c
-
+#include <stdio.h>
+#include <stdlib.h>
+int main(int argc, char *argv[]){
+printf("Hello world!\n");
+}
 ```
-
 
 PAL LIBRARY API REFERENCE
 ========================================
