@@ -1,11 +1,4 @@
-#include <sys/types.h>
-#include <sys/mman.h>
-#include <fcntl.h>
-#include <unistd.h>
-#include <string.h>
-#include <ctype.h>
-#include <err.h>
-#include <stdio.h>
+#include <stdint.h>
 #include <stdlib.h>
 
 /*
@@ -19,11 +12,14 @@ typedef uint32_t u32;
 typedef uint16_t u16;
 typedef uint8_t u8;
 
+#define DEFAULT   0x00
+
 /*
  ***********************************************************************
- * FLAGS
+ * DEVICE TYPE
  ***********************************************************************
  */
+
 #define SMP       0x01
 #define OPENCL    0x02
 #define CLUSTER   0x04
@@ -32,19 +28,22 @@ typedef uint8_t u8;
 
 /*
  ***********************************************************************
- * BIT FIELD FLAGS
+ * FLAGS
  ***********************************************************************
  */
-#DEFINE ASYNC     0x01
+#define DEFAULT   0x00
+#define ASYNC    0x01
 
 /*
+ ***********************************************************************
  *DEVICE QUERY PARAMETERS
+ ***********************************************************************
  */
 
 #define NAME           0
 #define WHOAMI         1
 #define TOPOLOGY       2
-#define ALL            3
+#define TOTAL          3
 #define ORIGIN         4
 #define ROWS           5 
 #define SIMD_SIZE      6
@@ -95,7 +94,7 @@ int p_query(void* obj, int property, int *result);
 int p_load(p_dev_t dev, char *file, p_program_t p);
 
 /*Open a team of processors*/
-int p_open(p_dev_t dev, int *list, p_team_t t);
+int p_open(p_dev_t dev, int start, int total, p_team_t team);
 
 /*Get symbol from the program in memory*/
 int p_getsymbol(p_program_t p, char* symbol, p_symbol_t s);
@@ -103,20 +102,20 @@ int p_getsymbol(p_program_t p, char* symbol, p_symbol_t s);
 /*Run a program on N processors of a device, return event*/
 int p_run(p_program_t program, p_team_t team, int argn, void **args, int flags);
 
-/*Team Barrier*/
+/*Execution barrier*/
 int p_barrier(p_team_t team);
 
 /*Memory allocation*/
 int p_malloc(p_team_t team, int n, size_t size, p_mem_t mem);
-
-/*Get a the physical address of the memory object*/
-void p_getaddr(p_mem_t mem, p_memptr_t memptr);
 
 /*Free allocated memory */
 void p_free(p_mem_t mem);
 
 /*Finalize device run time*/
 int p_finalize(p_dev_t dev);
+
+/*Memory fence*/
+int p_fence(p_mem_t mem);
 
 /*
  ***********************************************************************
@@ -153,40 +152,40 @@ int p_copy(void *src, size_t nb, int flags, void *dst);
  */
 
 /*mutex (posix and gcc builtin) inspired), same arguments*/
-void p_mutex_init(p_mutex_t mutex, p_mutex_attr_t attr);
+int p_mutex_init(p_mutex_t mp);
 
 /*Lock a mutex (try until fail)*/
-void p_mutex_lock(p_mutex_t mutex);
+int p_mutex_lock(p_mutex_t mp);
 
 /*Try locking a mutex once*/
-int  p_mutex_trylock(p_mutex_t mutex);
+int  p_mutex_trylock(p_mutex_t mp);
 
 /*Unlock a mutex*/
-void p_mutex_unlock(p_mutex_t mutex);
+int p_mutex_unlock(p_mutex_t mp);
 
 /*Destroy a mutex*/
-void p_mutex_destroy(p_mutex_t mutex);
+int p_mutex_destroy(p_mutex_t mp);
 
 /*atomic fetch and add*/
-void p_atomic_add_u32(p_atom_t atom, u32 n);
+int p_atomic_add_u32(p_atom_t atom, u32 n);
 
 /*atomic fetch and subtract*/
-void p_atomic_sub_u32(p_atom_t atom, u32 n);
+int p_atomic_sub_u32(p_atom_t atom, u32 n);
 
 /*atomic fetch and logical 'and'*/
-void p_atomic_and_u32(p_atom_t atom, u32 n);
+int p_atomic_and_u32(p_atom_t atom, u32 n);
 
 /*atomic fetch and logical 'xor'*/
-void p_atomic_xor_u32(p_atom_t atom, u32 n);
+int p_atomic_xor_u32(p_atom_t atom, u32 n);
 
 /*atomic fetch and logical 'or'*/
-void p_atomic_or_u32(p_atom_t atom, u32 n);
+int p_atomic_or_u32(p_atom_t atom, u32 n);
 
 /*atomic fetch and logical 'nand'*/
-void p_atomic_nand_u32(p_atom_t atom, u32 n);
+int p_atomic_nand_u32(p_atom_t atom, u32 n);
 
 /*atomic swap*/
-void p_atomic_swap_u32(p_atom_t atom, u32 *input);
+int p_atomic_swap_u32(p_atom_t atom, u32 *input);
 
 /*atomic compare and swap*/
-void p_atomic_compswap_u32(p_atom_t atom, u32 *input, u32 desired);
+int p_atomic_compswap_u32(p_atom_t atom, u32 *input, u32 desired);
