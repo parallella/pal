@@ -31,10 +31,10 @@ int main(int argc, char *argv[]){
     //Run the program "process" on a team of processors
     int nargs = 0;
     void*  args[]={};	      	
-    p_run(team0, prog0, nargs, args, ASYNC);
+    p_run(prog0,team0,nargs, args, ASYNC);
 
-    //Wait for completion     
-    p_wait(team0);
+    //Wait until team has finished work     
+    p_barrier(team0);
 
     //Close down the team
     p_close(team0);
