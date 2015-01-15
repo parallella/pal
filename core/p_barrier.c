@@ -1,5 +1,5 @@
 #include "pal_core.h"
-#include "pal_private.h"
+#include "pal_core_private.h"
 
 int p_barrier (p_team_t team){
 
