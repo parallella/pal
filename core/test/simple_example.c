@@ -20,11 +20,7 @@ int main(int argc, char *argv[]){
 
     //Dynamically create a team
     p_query(dev0, TOTAL, &total); 
-
-    //1.Create a bit mask one bit per processor(0..N)
-    //2.This should be dynamic depending information from query, regular malloc
-    //3.For embedded system, it could be fixed(N)
-    
+  
     //Open a team (additive)
     p_open(dev0, 0, total, team0);
     
