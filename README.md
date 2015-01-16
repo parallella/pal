@@ -14,10 +14,10 @@ faciliate high performance computation, and data movement, and synchronization.
 5.1 [Program Excution](#program-execution)  
 5.2 [Data Movement](#data-movement)  
 5.3 [Synhcronization](#synchronization)  
-5.3 [Basic Math](#basic-math)  
-5.5 [Basic DSP](#basic-dsp)  
+5.3 [Basic Math](#math)  
+5.5 [Basic DSP](#dsp)  
 5.4 [Image Processing](#image-processing)  
-5.6 [FFT](#fft)  
+5.6 [FFT (FFTW)](#fft)  
 5.7 [Linar Algebra (BLAS)](#blas)  
 5.8 [System Calls](#system-calls)  
 
@@ -85,48 +85,50 @@ PAL LIBRARY API REFERENCE
 
 FUNCTION     | NOTES
 ------------ | -------------
-[p_init()](hal/p_init.c)                 | initialize the run time
-[p_load()](hal/p_load.c)                 | load binary elf file into memory
-[p_open()](hal/p_open.c)                 | open a team of processors
-[p_run()](hal/p_run.c)                   | run a program on a team of processor
-[p_close()](hal/p_close.c)               | close a team of processors
-[p_finalize()](hal/p_finalize.c)         | cleans up run time
-[p_malloc()](hal/p_malloc.c)             | dynamic memory allocator
-[p_free()](hal/p_free.c)                 | free up dynamic memory
-[p_barrier()](hal/p_barrier.c)           | team barrier wait
+[p_init()](core/p_init.c)            | initialize the run time
+[p_query()](core/p_query.c)          | query an opaque PAL structure
+[p_load()](core/p_load.c)            | load binary elf file into memory
+[p_getsymbol()](core/p_getsymbol.c)  | retrieve symbol information from program
+[p_run()](core/p_run.c)              | run a program on a team of processor
+[p_open()](core/p_open.c)            | open a team of processors
+[p_close()](core/p_close.c)          | close a team of processors
+[p_malloc()](core/p_malloc.c)        | dynamic memory allocator
+[p_free()](core/p_free.c)            | free up dynamic memory
+[p_barrier()](core/p_barrier.c)      | team barrier wait
+[p_fence()](core/p_fence.c)          | a memory fence
+[p_finalize()](core/p_finalize.c)    | cleans up run time
+
 
 ##DATA MOVEMENT  
 
 FUNCTION     | NOTES
 ------------ | -------------
-[p_write()](memory/p_write.c)        | write to global memory
-[p_read()](memory/p_read.c)          | read from global memory
-[p_copy()](memory/p_copy.c)          | copy memory
-[p_scatter()](memory/p_scatter.c)    | copy scatter
-[p_gather()](memory/p_gather.c)      | copy gather
-[p_bcast()](memory/p_bcast.c)        | copy broadcast
-[p_malloc()](memory/p_malloc.c)      | dynamic memory allocator
-[p_free()](memory/p_free.c)          | free up dynamic memory
-[p_flush()](memory/p_flush.c)        | flush a physical memory read/write path  
+[p_write()](core/p_write.c)        | write to a memory object
+[p_read()](core/p_read.c)          | read from a memory object
+[p_scatter()](core/p_scatter.c)    | copy scatter operation
+[p_gather()](core/p_gather.c)      | copy gather operation
+[p_bcast()](core/p_bcast.c)        | copy broadcast operation
+[p_flush()](core/p_flush.c)        | flush a physical memory read/write path  
+[p_copy()](core/p_copy.c)          | specialized low level shared memory call
 
 ##SYNCHRONIZATION  
 
 FUNCTION     | NOTES
 ------------ | -------------
-[p_mutex_lock()](hal/p_mutex_lock.c)                           | lock a mutex
-[p_mutex_trylock()](hal/p_mutex_trylock.c)                     | try locking a mutex once
-[p_mutex_unlock()](hal/p_mutex_unlock.c)                       | unlock (clear) a mutex
-[p_mutex_init()](hal/p_mutex_init.c)                           | initialize a mutex
-[p_atomic_add()](hal/p_atomic_add.c)                           | atomic fetch and add
-[p_atomic_sub()](hal/p_atomic_sub.c)                           | atomic fetch and sub
-[p_atomic_and()](hal/p_atomic_and.c)                           | atomic fetch and logical 'and'
-[p_atomic_xor()](hal/p_atomic_xor.c)                           | atomic fetch and logical 'xor'
-[p_atomic_or()](hal/p_atomic_or.c)                             | atomic fetch and logical 'or'
-[p_atomic_nand()](hal/p_atomic_nand.c)                         | atomic fetch and logical 'nand'
-[p_atomic_exchange()](hal/p_atomic_exchange .c)                | atomic exhchange (swap)
-[p_atomic_compare_exchange()](hal/p_atomic_compare_exchange.c) | atomic compare and exchange
+[p_mutex_lock()](core/p_mutex_lock.c)           | lock a mutex
+[p_mutex_trylock()](core/p_mutex_trylock.c)     | try locking a mutex once
+[p_mutex_unlock()](core/p_mutex_unlock.c)       | unlock (clear) a mutex
+[p_mutex_init()](core/p_mutex_init.c)           | initialize a mutex
+[p_atomic_add()](core/p_atomic_add.c)           | atomic fetch and add
+[p_atomic_sub()](core/p_atomic_sub.c)           | atomic fetch and sub
+[p_atomic_and()](core/p_atomic_and.c)           | atomic fetch and 'and'
+[p_atomic_xor()](core/p_atomic_xor.c)           | atomic fetch and 'xor'
+[p_atomic_or()](core/p_atomic_or.c)             | atomic fetch and 'or'
+[p_atomic_nand()](core/p_atomic_nand.c)         | atomic fetch and 'nand'
+[p_atomic_swap()](core/p_atomic_swap .c)        | atomic exhchange (swap)
+[p_atomic_compswap()](core/p_atomic_compswap.c) | atomic compare and exchange
 
-## BASIC MATH  
+##MATH  
 
 FUNCTION     | NOTES
 ------------ | -------------
@@ -169,7 +171,7 @@ FUNCTION     | NOTES
 [p_tan()](math/p_tan.c)           | tangent
 [p_tanh()](math/p_tanh.c)         | hyperbolic tangent
 
-##BASIC DSP  
+##DSP  
 
 FUNCTION     | NOTES
 ------------ | -------------
@@ -208,7 +210,7 @@ FUNCTION     | NOTES
 
 ##BLAS  
 
-*A port of the BLIS library
+* A port of the BLIS library
 
 ##SYSTEM CALLS
 
