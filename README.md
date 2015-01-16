@@ -39,53 +39,36 @@ Seriously, pay it forward! Instructions for contributing can be found [HERE](CON
 
 ##An Example
 
-**Host "Boss" Code**
+**Manager Code**  
+
 ``` c
 int main(int argc, char *argv[]){
 
     //Opaque objects	   
-    p_dev_t dev0; 
-    p_program_t prog0;
-    p_team_t team0;
-    
-    //Local variables
-    int total;   
+    p_dev_t dev0;        //device structure
+    p_program_t prog0;   //program structure
+    p_team_t team0;      //team structure
+    int total;           //number of processors to run on
+    int nargs = 0;       //number of arguments for program
+    void*  args[]={};    //arument pointers
 
-    //Initialize system
-    p_init(EPIPHANY, DEFAULT, dev0);
-   
-    //Load an ELF file from the file system
-    p_load(dev0, "./hello.elf", prog0);
-
-    //Dynamically create a team
-    p_query(dev0, TOTAL, &total); 
-  
-    //Open a team (additive)
-    p_open(dev0, 0, total, team0);
-    
-    //Run the program "process" on a team of processors
-    int nargs = 0;
-    void*  args[]={};	      	
-    p_run(prog0,team0,nargs, args, ASYNC);
-
-    //Wait until team has finished work     
-    p_barrier(team0);
-
-    //Close down the team
-    p_close(team0);
-
-    //Close down device
-    p_finalize(dev0);    
+    p_init(EPIPHANY, DEFAULT, dev0);       //initialize system
+    p_load(dev0, "./hello.elf", prog0);    //load ELF file into memory
+    p_query(dev0, TOTAL, &total);          //find number of processors  
+    p_open(dev0, 0, total, team0);         //assign members to a team    
+    p_run(prog0,team0,nargs, args, ASYNC); //send program to team to run
+    p_barrier(team0);                      //wait for team to finish
+    p_close(team0);                        //disband team
+    p_finalize(dev0);                      //unhook the device
 }
 
 ```
 
-**Kernel "Worker" Code (hello.c) **
+**Worker Code (hello.elf) **  
 ``` c
 #include <stdio.h>
-#include <stdlib.h>
 int main(int argc, char *argv[]){
-printf("Hello world!\n");
+    printf("Hello world!\n");
 }
 ```
 
