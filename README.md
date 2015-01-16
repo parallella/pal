@@ -8,7 +8,7 @@ faciliate high performance computation, and data movement, and synchronization.
 1.  [Design goals](#design-goals)  
 2.  [License](#license)  
 3.  [Pay it forward](#contribution)  
-4.  [Simple PAL Example](#simple-pal-example)
+4.  [A Simple Example](#a-simple-example)
 5.  [Library API reference](#pal-api-reference)  
 5.0 [Syntax](#syntax)  
 5.1 [Program Excution](#program-execution)  
@@ -35,9 +35,9 @@ faciliate high performance computation, and data movement, and synchronization.
 The PAL source code is licensed under the Apache License, Version 2.0. See LICENSE for full license text unless otherwise specified.
 
 ##Contribution
-Seriously, pay it forward! Instructions for contributing can be found [HERE](CONTRIBUTING.md). 
+Pay it forward! Instructions for contributing can be found [HERE](CONTRIBUTING.md). 
 
-##An Example
+##A Simple Example
 
 **Manager Code**  
 
@@ -64,7 +64,7 @@ int main(int argc, char *argv[]){
 
 ```
 
-**Worker Code (hello.elf) **  
+**Worker Code (hello.elf)**  
 ``` c
 #include <stdio.h>
 int main(int argc, char *argv[]){
@@ -74,12 +74,14 @@ int main(int argc, char *argv[]){
 
 PAL LIBRARY API REFERENCE
 ========================================
-## 
-##SYNTAX
-*Function argument order: inputs, outputs, flags/options
-*
 
-##PROGRAM EXECUTION
+##SYNTAX  
+
+* Function argument order: inputs, outputs
+* Functions return 0 when successful
+* The flags variable is a bitmask with each option occuping one bit
+
+##PROGRAM EXECUTION  
 
 FUNCTION     | NOTES
 ------------ | -------------
@@ -93,7 +95,7 @@ FUNCTION     | NOTES
 [p_free()](hal/p_free.c)                 | free up dynamic memory
 [p_barrier()](hal/p_barrier.c)           | team barrier wait
 
-##DATA MOVEMENT
+##DATA MOVEMENT  
 
 FUNCTION     | NOTES
 ------------ | -------------
@@ -107,7 +109,8 @@ FUNCTION     | NOTES
 [p_free()](memory/p_free.c)          | free up dynamic memory
 [p_flush()](memory/p_flush.c)        | flush a physical memory read/write path  
 
-##SYNCHRONIZATION
+##SYNCHRONIZATION  
+
 FUNCTION     | NOTES
 ------------ | -------------
 [p_mutex_lock()](hal/p_mutex_lock.c)                           | lock a mutex
@@ -123,7 +126,7 @@ FUNCTION     | NOTES
 [p_atomic_exchange()](hal/p_atomic_exchange .c)                | atomic exhchange (swap)
 [p_atomic_compare_exchange()](hal/p_atomic_compare_exchange.c) | atomic compare and exchange
 
-## BASIC MATH
+## BASIC MATH  
 
 FUNCTION     | NOTES
 ------------ | -------------
@@ -166,7 +169,7 @@ FUNCTION     | NOTES
 [p_tan()](math/p_tan.c)           | tangent
 [p_tanh()](math/p_tanh.c)         | hyperbolic tangent
 
-##BASIC DSP
+##BASIC DSP  
 
 FUNCTION     | NOTES
 ------------ | -------------
@@ -180,7 +183,7 @@ FUNCTION     | NOTES
 [p_firsym()](dsp/p_firsym.c) | FIR symmetric form
 [p_iir()](dsp/p_iir.c)       | IIR filter
 
-##IMAGE PROCESSING
+##IMAGE PROCESSING  
 
 FUNCTION     | NOTES
 ------------ | -------------
@@ -200,12 +203,14 @@ FUNCTION     | NOTES
 [p_scharr3x3()](image/p_scharr3x3.c)   | scharr filter (3x3)
 
 ##FFT  
+
 * An FFTW like interface
 
-##BLAS
+##BLAS  
 
-*Will implement a port of the BLIS library
+*A port of the BLIS library
 
 ##SYSTEM CALLS
 
-* Bionic libc implementation as starting point
+* Bionic libc implementation as starting point..
+
