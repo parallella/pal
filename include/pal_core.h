@@ -93,14 +93,17 @@ int p_query(void* obj, int property, int *result);
 /*Loads a program (or library) from the file system into memory */
 int p_load(p_dev_t dev, char *file, p_program_t p);
 
-/*Open a team of processors*/
-int p_open(p_dev_t dev, int start, int total, p_team_t team);
-
 /*Get symbol from the program in memory*/
 int p_getsymbol(p_program_t p, char* symbol, p_symbol_t s);
 
 /*Run a program on N processors of a device, return event*/
 int p_run(p_program_t program, p_team_t team, int argn, void **args, int flags);
+
+/*Open a team of processors*/
+int p_open(p_dev_t dev, int start, int total, p_team_t team);
+
+/*Close a team of processors*/
+int p_close(p_team_t team); 
 
 /*Execution barrier*/
 int p_barrier(p_team_t team);
