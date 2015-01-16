@@ -1,6 +1,6 @@
 /*Standard math constants*/
-#define	M_E		2.7182818284590452354	/* e */
-#define	M_LOG2E		1.4426950408889634074	/* log 2e */
+#define	M_E		2.71828182845904523540	/* e */
+#define	M_LOG2E		1.44269504088896340740	/* log 2e */
 #define	M_LOG10E	0.43429448190325182765	/* log 10e */
 #define	M_LN2		0.69314718055994530942	/* log e2 */
 #define	M_LN10		2.30258509299404568402	/* log e10 */
@@ -37,24 +37,22 @@
 #define M_DIV16          0.0625                 /* 1/16 */
 
 /*ADDED PHYSICAL CONSTANTS (ADD YOUR FAVORITES:-)*/
-#define M_C             299792458               /*speed of light (m/s)*/
-#define M_M0            1.2566370614359172950   /*mag permeability (mH/m)*/
-#define M_H             ((float)6.62606957e-34) /*planck constant (J/Hz)*/
-#define M_HBAR          ((float)1.05457172e-34) /*diract constant* (J.s/rad)*/
-#define M_K             ((float)1.3806488e-23)  /*boltzmann constant (J/K)*/
-#define M_ME            ((float)9.10938291e-31) /*mass of electron (kg)*/
-#define M_MP            ((float)1.672614e-27)   /*mass of proton (kg)*/
-#define M_MN            ((float)1.674920e-27)   /*mass of neutron (kg)*/
-#define M_EC            ((float)1.6021917e-19)  /*charge of electron (C)*/
-#define M_F             ((float)9.648670e4)     /*faraday constant (C/mol)*/
-#define M_G             ((float)6.6732e-11)     /*gravitational constant (N*m^2/kg^2)*/
-#define M_A             ((float)6.022169e23)    /*avogadro constant*/
+#define PH_C             299792458               /*speed of light (m/s)*/
+#define PH_M0            1.2566370614359172950   /*mag permeability (mH/m)*/
+#define PH_H             ((float)6.62606957e-34) /*planck constant (J/Hz)*/
+#define PH_HBAR          ((float)1.05457172e-34) /*diract constant* (J.s/rad)*/
+#define PH_K             ((float)1.3806488e-23)  /*boltzmann constant (J/K)*/
+#define PH_ME            ((float)9.10938291e-31) /*mass of electron (kg)*/
+#define PH_MP            ((float)1.672614e-27)   /*mass of proton (kg)*/
+#define PH_MN            ((float)1.674920e-27)   /*mass of neutron (kg)*/
+#define PH_EC            ((float)1.6021917e-19)  /*charge of electron (C)*/
+#define PH_F             ((float)9.648670e4)     /*faraday constant (C/mol)*/
+#define PH_G             ((float)6.6732e-11)     /*gravitational constant (N*m^2/kg^2)*/
+#define PH_AVO           ((float)6.022169e23)    /*avogadro constant*/
 
 /*computing macros?
  *
  *abs,floor,ceil,round,sign,zsign,sqr,min,max,swap,clamp
- *
- *
  *
  */
 
@@ -70,100 +68,100 @@
  */
 
 /*integer to float conversion*/
-void p_itof( const int* a, float* c, int n );
+void p_itof(int* a, float* c, int n );
 
 /*float to integer conversion*/
-void p_ftoi( const float* a, int* c, int n  );
+void p_ftoi(float* a, int* c, int n  );
 
 /*absolute value c = abs ( a ) */
-void p_abs_32f( const float* a, float* c, int n );
+void p_abs_f32(float* a, float* c, int n );
 
 /*arc cosine: c = acos ( a ) */
-void p_acos_32f( const float* a, float* c, int n );
+void p_acos_f32(float* a, float* c, int n );
 
 /*arc hyperbolic cosine, c = acosh ( a ) */
-void p_acosh_32f( const float* a, float* c, int n );
+void p_acosh_f32(float* a, float* c, int n );
 
 /*arc sine: c = asin ( a ) */
-void p_asin_32f( const float* a, float* c, int n );
+void p_asin_f32(float* a, float* c, int n );
 
 /*arc hyperbolic sine: c = asinh ( a ) */
-void p_asinh_32f( const float* a, float* c, int n );
+void p_asinh_f32(float* a, float* c, int n );
 
 /*arc tanget: c = atan ( a ) */
-void p_atan_32f( const float* a, float* c, int n );
+void p_atan_f32(float* a, float* c, int n );
 
 /*arc tangent of b/a: c = atan2 ( a , b) */
-void p_atan2_32f( const float* a, const float* b, float* c, int n );
+void p_atan2_f32(float* a, float* b, float* c, int n );
 
 /*arc hyperbolic tanget: c = atanh ( a ) */
-void p_atanh_32f( const float* a, float* c, int n );
+void p_atanh_f32(float* a, float* c, int n );
 
 /*cubic root of a:  c = cbrt ( a) */
-void p_cbrt_32f( const float* a, float* c, int n );
+void p_cbrt_f32(float* a, float* c, int n );
 
 /*cosine: c = cos ( a ) */
-void p_cos_32f( const float* a, float* c, int n );
+void p_cos_f32(float* a, float* c, int n );
 
 /*hyperpolic cosine:  c = cosh ( a ) */
-void p_cosh_32f(const float* a, float* c, int n );
+void p_cosh_f32(float* a, float* c, int n );
 
 /*division: c =  a ./ b */
-void p_div_32f( const float* a, const float* b, float* c, int n );
+void p_div_f32(float* a, float* b, float* c, int n );
 
 /*exponential: c = exp ( a ) */
-void p_exp_32f( const float* a, float* c, int n );
+void p_exp_f32(float* a, float* c, int n );
 
 /*inverse: c = 1 / ( a ) */
-void p_inv_32f( const float* a, float* c, int n );
+void p_inv_f32(float* a, float* c, int n );
 
 /*inverse cube root: c = 1 / cbrt ( a ) */
-void p_invcbrt_32f( const float* a, float* c, int n );
+void p_invcbrt_f32(float* a, float* c, int n );
 
 /*inverse square root c = 1 / sqrt ( a ) */
-void p_invsqrt_32f( const float* a, float* c, int n );
+void p_invsqrt_f32(float* a, float* c, int n );
 
 /*natural logarithm: c = ln ( a ) */
-void p_ln_32f( const float* a, float* c, int n );
+void p_ln_f32(float* a, float* c, int n );
 
 /*denary logarithm: c = log10 ( a ) */
-void p_log10_32f( const float* a, float* c, int n );
+void p_log10_f32(float* a, float* c, int n );
 
 /*element raised to a power: c = pow ( a , b ) */
-void p_pow_32f( const float* a, const float* b, float* c, int n );
+void p_pow_f32(float* a, float* b, float* c, int n );
 
 /*sine: c = sin ( a ) */
-void p_sin_32f( const float* a, float* c, int n );
+void p_sin_f32(float* a, float* c, int n );
 
 /*computes sin and cos of a: c = sin ( a ),  z = cos ( a ) */
-void p_sincos_32f( const float* a, float* c, float* z );
+void p_sincos_f32(float* a, float* c, float* z );
 
 /*hyperbolic Sine: c = sinh ( a ) */
-void p_sinh_32f( const float* a, float* c, int n );
+void p_sinh_f32(float* a, float* c, int n );
 
 /*square root c = sqrt ( a ) */
-void p_sqrt_32f(const float* a, float* c, int n );
+void p_sqrt_f32(float* a, float* c, int n );
 
 /*tangent: c = tan ( a ) */
-void p_tan_32f( const float* a, float* c, int n );
+void p_tan_f32(float* a, float* c, int n );
 
 /*hyperbolic tangent, c = tanh ( a ) */
-void p_tanh_32f( const float* a, float* c, int n );
+void p_tanh_f32(float* a, float* c, int n );
 
 /*dot product: c =  sum ( a[n-1:0] * b[n-1:0] ) */
-void p_dot_32f( const float* a,  const float* b,  float* c, int n );
+void p_dot_f32(float* a,  float* b,  float* c, int n );
 
 /*absolute difference: c = | a[n-1:0] - b[n-1:0] | */
-void p_absdiff_32f( const float* a,  const float* b,  float* c, int n );
+void p_absdiff_f32(float* a,  float* b,  float* c, int n );
 
 /*add vectors: c =  a[n-1:0] + b[n-1:0]  */
-void p_add_32f( const float* a,  const float* b,  float* c, int n );
+void p_add_f32(float* a,  float* b,  float* c, int n );
 
 /*subtract vectors: c =  a[n-1:0] - b[n-1:0]  */
-void p_sub_32f( const float* a,  const float* b,  float* c, int n );
+void p_sub_f32(float* a,  float* b,  float* c, int n );
 
 /*multiply vectors: c =  a[n-1:0] - b[n-1:0]  */
-void p_mul_32f( const float* a,  const float* b,  float* c, int n );
+void p_mul_f32(float* a,  float* b,  float* c, int n );
 
 /*
  ****************************************************************
@@ -177,24 +175,24 @@ void p_mul_32f( const float* a,  const float* b,  float* c, int n );
  */
 
 /*sum: c = sum ( a[n-1:0] ) */
-void p_sum_32f( const float* a, float* c, int n  );
+void p_sum_f32(float* a, float* c, int n  );
 
 /*sum of squares: c =  sum( a[n-1:0]^2 ) */
-void p_sumsq_32f( const float* a, float* c, int n  );
+void p_sumsq_f32(float* a, float* c, int n  );
 
 /*mean: c = sum ( a[n-1:0] ) / n  */
-void p_mean_32f( const float* a, float* c, int n );
+void p_mean_f32(float* a, float* c, int n );
 
 /*middle value: c = median ( a[n-1:0] ) */
-void p_median_32f( const float* a, float* c, int n  );
+void p_median_f32(float* a, float* c, int n  );
 
 /*most common number: c = mode ( a[n-1:0] ) */
-void p_mode_32f( const float* a, float* c, int n  );
+void p_mode_f32(float* a, float* c, int n  );
 
 /*find max value and its index from input vector */
-void p_maxl_32f( const float* a, float* c, int* index, int n );
+void p_max_f32(float* a, float* c, int* index, int n );
 
 /*find min value and its index from input vector */
-void p_minl_32f( const float* a, float* c, int* index, int n  );
+void p_min_f32(float* a, float* c, int* index, int n  );
 
 
