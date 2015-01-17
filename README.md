@@ -42,24 +42,29 @@ Pay it forward! Instructions for contributing can be found [HERE](CONTRIBUTING.m
 **Manager Code**  
 
 ``` c
+#include <stdio.h>
+#include <stdlib.h>
+#include <stdio.h>
+#include <pal_core.h>
+
 int main(int argc, char *argv[]){
+      
+    p_dev_t *dev0;       //device information object
+    p_program_t *prog0;  //in memory exetutable object
+    p_team_t *team0;     //working team object
+    p_mem_t *mem0;       //memory object
 
-    //Opaque objects	   
-    p_dev_t dev0;        //device structure
-    p_program_t prog0;   //program structure
-    p_team_t team0;      //team structure
-    int total;           //number of processors to run on
-    int nargs = 0;       //number of arguments for program
-    void*  args[]={};    //arument pointers
+    int status;
+    int nodes;
 
-    p_init(EPIPHANY, DEFAULT, dev0);       //initialize system
-    p_load(dev0, "./hello.elf", prog0);    //load ELF file into memory
-    p_query(dev0, TOTAL, &total);          //find number of processors  
-    p_open(dev0, 0, total, team0);         //assign members to a team    
-    p_run(prog0,team0,nargs, args, ASYNC); //send program to team to run
-    p_barrier(team0);                      //wait for team to finish
-    p_close(team0);                        //disband team
-    p_finalize(dev0);                      //unhook the device
+    dev0   = p_init(EPIPHANY, STANDARD);    //initialize system
+    prog0  = p_load(dev0, "./hello.elf");   //load executable file into memory
+    nodes  = p_query(dev0, NODES);          //query how many nodes are in system
+    team0  = p_open(dev0, 0, nodes);        //Open a team (additive)
+    status = p_run(prog0, team0, 0, NULL, ASYNC); //run program on team
+    status = p_barrier(team0);              //set barrier on work team
+    status = p_free(team0);                //free the resource)anything with po
+    status = p_finalize(dev0);             //close down the device    
 }
 
 ```
@@ -189,7 +194,6 @@ FUNCTION     | NOTES
 
 FUNCTION     | NOTES
 ------------ | -------------
-[p_average3x3()](image/p_average3x3.c) | moving average filter (3x3)
 [p_box3x3()](image/p_box3x3.c)         | box filter (3x3)
 [p_conv2d()](image/p_conv2d.c)         | 2d convolution
 [p_gauss3x3()](image/p_gauss3x3.c)     | gaussian blur filter (3x3)
