@@ -13,7 +13,7 @@ int main(int argc, char *argv[]){
     int status;
     int nodes;
 
-    dev0   = p_init(EPIPHANY, STANDARD);    //initialize system
+    dev0   = p_init(EPIPHANY, 0);           //initialize system
     prog0  = p_load(dev0, "./hello.elf");   //load executable file into memory
     nodes  = p_query(dev0, NODES);          //query how many nodes are in system
     team0  = p_open(dev0, 0, nodes);        //Open a team (additive)
