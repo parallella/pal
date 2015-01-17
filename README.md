@@ -91,18 +91,19 @@ PAL LIBRARY API REFERENCE
 FUNCTION     | NOTES
 ------------ | -------------
 [p_init()](core/p_init.c)            | initialize the run time
-[p_query()](core/p_query.c)          | query an opaque PAL structure
+[p_query()](core/p_query.c)          | query a PAL oject
 [p_load()](core/p_load.c)            | load binary elf file into memory
-[p_getsymbol()](core/p_getsymbol.c)  | retrieve symbol information from program
+[p_getsymbol()](core/p_getsymbol.c)  | retrieve symbol info from program
 [p_run()](core/p_run.c)              | run a program on a team of processor
 [p_open()](core/p_open.c)            | open a team of processors
+[p_add()](core/p_add.c)              | add members to team
+[p_remove()](core/p_remove.c)        | remove members from team
 [p_close()](core/p_close.c)          | close a team of processors
-[p_malloc()](core/p_malloc.c)        | dynamic memory allocator
-[p_free()](core/p_free.c)            | free up dynamic memory
 [p_barrier()](core/p_barrier.c)      | team barrier wait
-[p_fence()](core/p_fence.c)          | a memory fence
+[p_malloc()](core/p_malloc.c)        | allocate memory
+[p_free()](core/p_free.c)            | free a PAL object  
+[p_fence()](core/p_fence.c)          | memory fence
 [p_finalize()](core/p_finalize.c)    | cleans up run time
-
 
 ##DATA MOVEMENT  
 
