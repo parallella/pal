@@ -44,6 +44,7 @@ void *p_init (int type, int flags){
 	}
 	else{
 	    /*putting in static values for now...magic later!*/ 	    
+	    dev->property[TYPE]=type;/*storing type of structure*/
 	    dev->property[VERSION]=0xDEADBEEF;/*not needed in ideal case*/
 	    dev->property[NODES]=16;
 	    dev->property[TOPOLOGY]=2;/*2D mesh*/	    
