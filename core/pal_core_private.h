@@ -4,23 +4,24 @@ struct p_dev {
 };
 
 struct p_team {    
-    struct p_dev* dev;         
+    p_dev_t *dev;         
+    int    size;
     u32    proc_bitmap[256]; //holds one bit per processor
     //A lot less efficient to make it generic rather than block
     //based
 };
 
 struct p_mem {
-    struct p_dev* dev;
-    size_t memsize;
-    void* mem;
+    p_dev_t *dev;
+    size_t size;
+    void* memptr;
     
 };
 
 struct p_program {
     struct p_dev* dev;
     size_t progsize;
-    void* program;
+    char* program;
 };
 
 struct p_symbol {
