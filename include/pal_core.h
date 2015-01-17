@@ -50,7 +50,7 @@ typedef uint8_t u8;
  ***********************************************************************
  */
 
-#define VERSION        0
+#define TYPE           0
 #define NODES          1
 #define TOPOLOGY       2
 #define ROWS           3
@@ -63,7 +63,7 @@ typedef uint8_t u8;
 #define REMOTE_MEMBASE 10
 #define LOCAL_MEMSIZE  11
 #define LOCAL_MEMBASE  12
-
+#define VERSION        13
 /*
  ***********************************************************************
  * OPAQUE OBJECT TYPES 
@@ -95,14 +95,20 @@ int p_query(void* obj, int property);
 /*Loads a program (or library) from the file system into memory */
 void *p_load(p_dev_t *dev, char *file);
 
+/*Open a team of processors*/
+void *p_open(p_dev_t *dev, int start, int size);
+
+/*Add team members*/
+int p_add(p_team_t *team, int start, int size);
+
 /*Get symbol from the program in memory*/
 int p_getsymbol(p_program_t *prog, char* symbol, p_symbol_t *sym);
 
-/*Run a program on N processors of a device, return event*/
+/*Run a program on N processors*/
 int p_run(p_program_t *prog, p_team_t *team, int argn, void **args, int flags);
 
-/*Open a team of processors*/
-void *p_open(p_dev_t *dev, int start, int total);
+/*Remove team members*/
+int p_remove(p_team_t *team, int start, int size);
 
 /*Close a team of processors*/
 int p_close(p_team_t *team); 
@@ -114,7 +120,7 @@ int p_barrier(p_team_t *team);
 int p_malloc(p_team_t *team, int n, size_t size, p_mem_t *mem);
 
 /*Free allocated memory */
-void p_free(void *obj);
+int p_free(void *obj);
 
 /*Finalize device run time*/
 int p_finalize(p_dev_t *dev);
