@@ -1,7 +1,7 @@
 #include "pal_core.h"
 #include "pal_core_private.h"
 
-int p_barrier (p_team_t team){
+int p_barrier (p_team_t *team){
 
     /*PUT CODE HERE*/
     //1.Every processor on the team runs this function
