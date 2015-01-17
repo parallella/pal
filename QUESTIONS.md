@@ -132,3 +132,6 @@ Open equestions/assumptions:
 *Q: Argument passing to run
  A: Enable passing arguments in "main style" and function-kernel style.     
     Contract between caller/calle program. Short cuts allowed
+
+*Q: Is it practical to run the same executable on bare metal and in Linux?
+ A: 
