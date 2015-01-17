@@ -49,10 +49,8 @@ void *p_init (int type, int flags){
 	    dev->property[CHIPROWS]=4;
 	    dev->property[CHIPCOLS]=4;
 	    dev->property[SIMD]=1;/*epiphany is a scalar processor*/
-	    dev->property[REMOTE_MEMSIZE]=32768;/*32KB*/
-	    dev->property[REMOTE_MEMBASE]=0x80800000;/*array origin*/
-	    dev->property[LOCAL_MEMSIZE]=536870912;/*512MB*/
-	    dev->property[LOCAL_MEMBASE]=0x30800000;/*used by c-run time*/
+	    dev->property[MEMSIZE]=32768;/*32KB*/
+	    dev->property[MEMBASE]=0x80800000;/*array origin*/
 	}
 	break;	
     case FPGA:
