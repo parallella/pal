@@ -25,11 +25,11 @@ typedef uint8_t u8;
  ***********************************************************************
  */
 
+#define EPIPHANY  0x00
 #define SMP       0x01
-#define OPENCL    0x02
-#define GRID      0x03
-#define EPIPHANY  0x04
-#define FPGA      0x05
+#define FPGA      0x03
+#define GPU       0x04
+#define GRID      0x05
 
 /*
  ***********************************************************************
@@ -59,11 +59,10 @@ typedef uint8_t u8;
 #define CHIPROWS       6
 #define CHIPCOLS       7
 #define SIMD           8
-#define REMOTE_MEMSIZE 9
-#define REMOTE_MEMBASE 10
-#define LOCAL_MEMSIZE  11
-#define LOCAL_MEMBASE  12
-#define VERSION        13
+#define MEMSIZE        9
+#define MEMBASE        10
+#define VERSION        11
+#define MEMARCH        12
 /*
  ***********************************************************************
  * OPAQUE OBJECT TYPES 
@@ -117,7 +116,7 @@ int p_close(p_team_t *team);
 int p_barrier(p_team_t *team);
 
 /*Memory allocation*/
-int p_malloc(p_team_t *team, int n, size_t size, p_mem_t *mem);
+void *p_malloc(p_team_t *team, int n, size_t size);
 
 /*Free allocated memory */
 int p_free(void *obj);
@@ -135,10 +134,13 @@ int p_fence(p_mem_t *mem);
  */
 
 /*Writes to a global memory address from a local address*/
-int p_write(void *src, size_t nb, int flags, p_mem_t mem);
+int p_write(void *src, size_t nb, int flags, p_mem_t *mem);
 
 /*Reads from a global memory address */
 int p_read(p_mem_t *mem, size_t nb, int flags, void *dst);    
+
+/*Flushes the read/write path to a specific memory location (blocking)*/
+void p_flush(p_mem_t *mem);
 
 /*Scatters data from a local array to a list of remote memory objects*/
 int p_scatter(void *src, size_t nsrc, size_t ndst, int flags, void** dstlist); 
@@ -149,8 +151,6 @@ int p_gather(void** srclist, size_t nsrc, size_t ndst, int flags, void *dst);
 /*Broadcasts an array based to a list of destination pointers*/
 int p_bcast(void *src, size_t nsrc, size_t ndst, int flags, void** dstlist); 
 
-/*Flushes the read/write path to a specific memory location (blocking)*/
-void p_flush(p_mem_t *mem);
 
 /*Specialized low level shared memory memcpy interface (non-blocking)*/
 int p_copy(void *src, size_t nb, int flags, void *dst);
@@ -169,7 +169,7 @@ int p_mutex_init(p_mutex_t *mp);
 int p_mutex_lock(p_mutex_t *mp);
 
 /*Try locking a mutex once*/
-int  p_mutex_trylock(p_mutex_t *mp);
+int p_mutex_trylock(p_mutex_t *mp);
 
 /*Unlock a mutex*/
 int p_mutex_unlock(p_mutex_t *mp);
