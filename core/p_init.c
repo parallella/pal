@@ -24,9 +24,8 @@
 #include "pal_core.h"
 #include "pal_core_private.h"
 void *p_init (int type, int flags){
-    
-    p_dev_t *dev;
-
+    printf("Running p_init(%d,%d)\n",type,flags);
+    p_dev_t *dev;    
     switch (type) {	
     case EPIPHANY:	
 	if(flags & LINUX){
@@ -55,15 +54,21 @@ void *p_init (int type, int flags){
 	break;	
     case FPGA:
 	break;	
-    case OPENCL:
+    case GPU:
 	break;	
     case SMP:
+	dev=(p_dev_t *) malloc(sizeof(p_dev_t));
+	dev->property[TYPE]=type;/*storing type of structure*/
+	dev->property[VERSION]=0xDEADBEEF;/*not needed in ideal case*/
+	dev->property[NODES]=4;
+	dev->property[SIMD]=4;/*epiphany is a scalar processor*/
+	dev->property[MEMSIZE]=32768;/*32KB*/
+	dev->property[MEMBASE]=0x80800000;/*array origin*/
 	break;
     case GRID:
 	break;
     default:
 	return(NULL);
     }
-    printf("Finished p_init\n");
     return(dev);
 }

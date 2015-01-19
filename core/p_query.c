@@ -1,33 +1,35 @@
 /**
  *
- * Queries an opaque object,returning an integer
+ * Queries a PAL object,returning an integer
+ * The object can be of type pal_dev_t, pal_mem_t, or pal_team_t.
+ * Valid queries should never return '0'.
  *
  * @param obj  Device object to query
  *
  * @param prop Property to query
  *
  *        TYPE     - Device type
- *                   0:EPIPHANY
- *                   1:SMP
- *                   2:FPGA
- *                   3:GPU
- *                   4:GRID
+ *                   1:EPIPHANY
+ *                   2:GRID
+ *                   3:SMP
+ *                   4:FPGA
+ *                   5:GPU
  *        ISA      - Instruction Set Architecture
- *                   0:EPIPHANY
- *                   1:x86
- *                   2:ARM
- *                   3:MIPS
+ *                   1:EPIPHANY
+ *                   2:x86
+ *                   3:ARM
+ *                   4:MIPS
  *        MEMARCH  - Memory architecture
- *                   0:32 bits
- *                   1:64 bits
+ *                   1:32 bits
+ *                   2:64 bits
  *        TOPOLOGY - Network topology of device
- *                   0:Point to point
- *                   1:Bus
- *                   2:Star
- *                   3:Ring
- *                   4:Mesh
- *                   5:Hypercube
- *                   6:Tre
+ *                   1:Point to point
+ *                   2:Bus
+ *                   3:Star
+ *                   4:Ring
+ *                   5:Mesh
+ *                   6:Hypercube
+ *                   7:Tree
  *        NODES    - Number of nodes in device
  *        ROWS     - Number of rows in topology
  *        COLS     - Number of cols in topology
@@ -39,7 +41,7 @@
  *        MEMBASE  - Memory offset of first node 
  *        VERSION  - Unique platform version "tag" 
  *
- * @return      Returns result of query (int)
+ * @return      Value of property being queried
  *
  */
 #include "pal_core.h"
@@ -51,6 +53,6 @@ int p_query (void *obj, int prop){
     p_dev_t *dev;
     /*TODO, need to be clever with queries different object types*/
     dev = (p_dev_t *) obj;    
-    res=dev->property[property];
+    res=dev->property[prop];
     return (res);
 }
