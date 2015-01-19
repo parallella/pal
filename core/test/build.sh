@@ -30,3 +30,4 @@ gcc memory_example.c \
 ../p_finalize.c \
 -o memory_example.elf -I/home/aolofsson/Work_all/Work_december/pal/include
 
+gcc hello_world.c -o hello_world.elf
