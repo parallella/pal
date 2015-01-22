@@ -1,3 +1,23 @@
+/**
+ *
+ * Copies a block pointed to by 'src' into the memory objecct
+ * 'mem'.
+ * 
+ * @param src   A pointer to a block of memory
+ *
+ * @param nb    Number of bytes to copy
+ * 
+ * @param flags Bitmask field indicating runtime options
+ *              
+ *        ASYNC: Specifies asynchronous (non-blocking) operation. 
+ *               The default is blocking    
+ *
+ * @param mem   Pointer to a memory object created with p_malloc();
+ *
+ * @return      Returns 0 if successful.
+ *
+ */
+
 #include <stddef.h>
 #include <string.h>
 #include "pal_core.h"

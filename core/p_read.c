@@ -1,3 +1,22 @@
+/**
+ *
+ * Copies the content of 'mem' into the area pointed to by the 'dst' pointer.
+ * 
+ *
+ * @param mem   Pointer to a memory object created with p_malloc();
+ *
+ * @param nb    Number of bytes to copy
+ * 
+ * @param flags Bitmask field indicating runtime options
+ *              
+ *        ASYNC: Specifies asynchronous (non-blocking) operation. 
+ *               The default is blocking    
+ *
+ * @param dst   Address to copy the memory block to
+ *
+ * @return      Returns 0 if successful.
+ *
+ */
 #include <stddef.h>
 #include <stdio.h>
 #include <string.h>

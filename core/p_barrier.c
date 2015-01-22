@@ -1,8 +1,19 @@
+/**
+ *
+ * A barrier for 'team'. The barrier is initialized when the team is 
+ * opened.                       
+ *
+ * @param team  Pointer to object containing information about team. 
+ *
+ * @return      Returns 0 if successful.
+ *
+ */
 #include <stdio.h>
 #include "pal_core.h"
 #include "pal_core_private.h"
 
 int p_barrier (p_team_t *team){
+
     printf("Running p_barrier(p_team_t)\n");
 
     /*PUT CODE HERE*/

@@ -1,3 +1,17 @@
+/**
+ *
+ * Create a team of processors based on the the total list of processors
+ * defined within the device 'dev'.
+ *
+ * @param dev   Pointer to object containing device information 
+ *
+ * @param start Index of first processor within 'dev' to include in team
+ *
+ * @param size  Total number of processors in team.
+ *
+ * @return      Returns 0 if successful.
+ *
+ */
 #include <stdio.h>
 #include "pal_core.h"
 #include "pal_core_private.h"

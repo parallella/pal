@@ -1,3 +1,23 @@
+/**
+ *
+ * Runs(launches) the program 'prog' on all of the members of 'team'.
+ *
+ * @param prog      Pointer to the program to run that was loaded with p_load();
+ *
+ * @param team      Team to run with.
+ *
+ * @param function  Name of function within 'prog' to run
+ *
+ * @param argn      Number of arguments to be supplied to 'function'
+ *
+ * @param args      An array of pointers to function arguments
+ *
+ * @param flags     Bitfield mask type flags 
+ *       
+ * @return      Returns 0 if successful.
+ *
+ */
+
 #include <unistd.h>
 #include <stdio.h>
 #include <stdlib.h>
