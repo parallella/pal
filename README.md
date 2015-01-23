@@ -96,13 +96,13 @@ FUNCTION     | NOTES
 [p_getsymbol()](core/p_getsymbol.c)  | retrieve symbol info from program
 [p_run()](core/p_run.c)              | run a program on a team of processor
 [p_open()](core/p_open.c)            | open a team of processors
-[p_add()](core/p_add.c)              | add members to team
+[p_append()](core/p_append.c)        | add members to team
 [p_remove()](core/p_remove.c)        | remove members from team
 [p_close()](core/p_close.c)          | close a team of processors
 [p_barrier()](core/p_barrier.c)      | team barrier wait
+[p_fence()](core/p_fence.c)          | memory fence
 [p_malloc()](core/p_malloc.c)        | allocate memory
 [p_free()](core/p_free.c)            | free a PAL object  
-[p_fence()](core/p_fence.c)          | memory fence
 [p_finalize()](core/p_finalize.c)    | cleans up run time
 
 ##DATA MOVEMENT  
@@ -114,7 +114,6 @@ FUNCTION     | NOTES
 [p_scatter()](core/p_scatter.c)    | copy scatter operation
 [p_gather()](core/p_gather.c)      | copy gather operation
 [p_bcast()](core/p_bcast.c)        | copy broadcast operation
-[p_flush()](core/p_flush.c)        | flush a physical memory read/write path  
 [p_copy()](core/p_copy.c)          | specialized low level shared memory call
 
 ##SYNCHRONIZATION  
