@@ -39,7 +39,8 @@
  *        SIMD     - Vector size at each node
  *        MEMSIZE  - Local memory size at each node
  *        MEMBASE  - Memory offset of first node 
- *        VERSION  - Unique platform version "tag" 
+ *        VERSION  - Unique platform version "tag"
+ *        WHOAMI   - Returns index of current node 
  *
  * @return      Value of property being queried
  *
@@ -48,10 +49,13 @@
 #include "pal_core_private.h"
 #include <stdio.h>
 int p_query (void *obj, int prop){
+    /*TODO, need to be clever with queries different object types*/
+
     
     int res;
     p_dev_t *dev;
-    /*TODO, need to be clever with queries different object types*/
+    
+    printf("Running p_query(obj,%d)\n", prop);
     dev = (p_dev_t *) obj;    
     res=dev->property[prop];
     return (res);

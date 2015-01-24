@@ -10,15 +10,15 @@ struct p_team {
     int     *statptr;  //list of status "regs". idle/working
 };
 
-//Too much overhead?
+//Optimize later, focus on function...
 struct p_mem {
-    p_dev_t *team     //pointer to the associated team structure
-    size_t   size;    //size of memory buffer
-    void    *memptr;  //pointer to allocated memory
+    p_dev_t *team;    //pointer to the associated team structure
+    int      mutex;   //optional mutex to grab before reading/writing 'mem' 
     int      takeit;  //indicates that new data is ready (wraparound impl)
     int      gotit;   //indicates that data was read (wraparound impl)
-    int      mutex;   //optional mutex to grab before reading/writing 'mem' 
     int      pilot;   //temp var used for flushing read/write path to 'mem'
+    size_t   size;    //size of memory buffer
+    void    *memptr;  //pointer to allocated memory    
 };
 
 struct p_program {

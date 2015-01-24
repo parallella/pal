@@ -20,7 +20,7 @@
 #include "pal_core_private.h"
 
 void *p_malloc (p_team_t *team, int n, size_t size){
-
+    printf("Running p_malloc(p_team_t,%d,%d)\n", n, (int) size);
     p_mem_t *mem;
     mem=malloc(sizeof(p_mem_t));        
     mem->size   = size;
