@@ -25,7 +25,7 @@ int main (int argc, char **argv){
     myid   = p_query(dev0,WHOAMI);   //find my id
     all    = p_query(dev0, NODES);   //find # of device nodes
     team0  = p_open(dev0, 0, all);   //open a team
-    mem0   = p_malloc(team0,myid,0); //allocate mem0 memory object
+    mem0   = p_malloc(team0,N*sizeof(int));   //allocate mem0 memory object
     status = p_write(a,N*sizeof(int),0,mem0); //write data to mem0
     status = p_read(mem0,N*sizeof(int),0,b);  //read data from mem0  
     status = p_free(mem0);           //free memory

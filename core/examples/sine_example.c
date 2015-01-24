@@ -18,26 +18,35 @@ int main (int argc, char **argv){
     p_dev_t *dev0;       //device information
     p_program_t *prog0;  //program to execute
     p_team_t *team0;     //working team
-    p_mem_t *mem0;       //memory object
-    float *a,*b;         //input and output arrays
+    p_mem_t *mem0;      //memory object (input)
+    p_mem_t *mem1;      //memory object (output)
    
-
-    //Allocating local memory
-    a = malloc(N*sizeof(float));
-    b = malloc(N*sizeof(float));
-    
     //Setting arguments
       
-    //Program flow
-    dev0   = p_init(type, 0);               //initialize system
-    myid   = p_query(dev0,WHOAMI);          //find my id
-    all    = p_query(dev0, NODES);          //find # of device nodes
-    prog0  = p_load(dev0, elf);             //load executable file into memory    
-    team0  = p_open(dev0, 0, nodes);        //Open a team (additive)
-    mem0   = p_gmalloc(team0,myid,0);       //allocate global memory object    
-    status = p_run(prog0, team0, func, 0, NULL, ASYNC); //run program on team
-    status = p_barrier(team0);              //set barrier on work team
-    status = p_free(team0);                //free the resource)anything with po
+    //Initialize memory/team
+    dev0   = p_init(type, 0);                 //initialize system
+    all    = p_query(dev0, NODES);            //find # of device nodes
+    prog0  = p_load(dev0, elf);               //load executable file
+    team0  = p_open(dev0, 0, all);            //open a team
+
+    //Allocate memory
+    mem0   = p_malloc(team0, N*sizeof(float)); //allocate local memory object   
+    mem1   = p_malloc(team0, N*sizeof(float)); //allocate local memory object   
+
+    //Setting arguments
+    unsigned int nargs = 2;
+    void* args[] = { &mem0, &mem1 };
+
+    //Running function
+    status = p_run(prog0, team0, func, nargs, args, ASYNC);
+
+    //Wait until all team members have finished
+    status = p_barrier(team0);
+
+    //Cleanup
+    status = p_free(mem0);                 //free memory
+    status = p_free(mem1);                 //free memory
+    status = p_close(team0);               //close the team
     status = p_finalize(dev0);             //close down the device    
 
 }

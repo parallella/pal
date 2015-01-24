@@ -47,5 +47,6 @@ gcc sine_example.c \
 
 #Task compilation
 gcc hello_task.c -o hello_task.elf
-gcc sine_task.c ../../math/p_sin.c -o sine_task.elf -I/home/aolofsson/Work_all/Work_december/pal/include
+gcc sine_task.c ../../math/p_sin.c -o sine_task.elf -I/home/aolofsson/Work_all/Work_december/pal/include -lm
+
 
