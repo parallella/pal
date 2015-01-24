@@ -25,11 +25,11 @@ typedef uint8_t u8;
  ***********************************************************************
  */
 
-#define EPIPHANY  0x00
-#define SMP       0x01
-#define FPGA      0x03
-#define GPU       0x04
-#define GRID      0x05
+#define EPIPHANY  0x01
+#define GRID      0x02
+#define SMP       0x03
+#define FPGA      0x04
+#define GPU       0x05
 
 /*
  ***********************************************************************
@@ -63,6 +63,7 @@ typedef uint8_t u8;
 #define MEMBASE        10
 #define VERSION        11
 #define MEMARCH        12
+#define WHOAMI         13
 /*
  ***********************************************************************
  * OPAQUE OBJECT TYPES 
@@ -104,7 +105,8 @@ int p_add(p_team_t *team, int start, int size);
 int p_getsymbol(p_program_t *prog, char* symbol, p_symbol_t *sym);
 
 /*Run a program on N processors*/
-int p_run(p_program_t *prog, p_team_t *team, int argn, void **args, int flags);
+int p_run(p_program_t *prog, p_team_t *team, char *function,
+	  int argn, void **args, int flags);
 
 /*Remove team members*/
 int p_remove(p_team_t *team, int start, int size);
@@ -115,8 +117,11 @@ int p_close(p_team_t *team);
 /*Execution barrier*/
 int p_barrier(p_team_t *team);
 
-/*Memory allocation*/
-void *p_malloc(p_team_t *team, int n, size_t size);
+/*Local memory allocation*/
+void *p_malloc(p_team_t *team, size_t size);
+
+/*Global memory allocation*/
+void *p_gmalloc(p_team_t *team, int n, size_t size);
 
 /*Free allocated memory */
 int p_free(void *obj);
