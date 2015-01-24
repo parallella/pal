@@ -42,6 +42,8 @@ int p_run(p_program_t *prog, p_team_t *team, char *function,
     case GPU:
         break;  
     case SMP:		
+	//NOTE!: fork or join?, shared memory objects much more efficient 
+	//with threads
 	printf("Forking %d processes!\n",team->size);
 	 char * const elf[]={prog->name, NULL};
 	 char * path=prog->name;	 
