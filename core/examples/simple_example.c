@@ -10,7 +10,7 @@ int main (int argc, char **argv){
     int opt;
     int type=3;//1=EP,2=GRID,3=SMP
     int nodes=16;//16
-    char *elf="./hello_world.elf";
+    char *elf="./hello_task.elf";
     char *func="main";
     int status;
       
