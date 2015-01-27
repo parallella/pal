@@ -1,10 +1,8 @@
 #ifndef _PAL_CORE_H_
 #define _PAL_CORE_H_
 
-
 #include <stdlib.h>
 #include <stdint.h>
-
 
 /*
  ***********************************************************************
@@ -16,8 +14,6 @@ typedef unsigned long long u64;
 typedef uint32_t u32;
 typedef uint16_t u16;
 typedef uint8_t u8;
-
-
 
 /*
  ***********************************************************************
@@ -39,6 +35,9 @@ typedef uint8_t u8;
 #define ASYNC      0x01
 #define METAL      0x02
 #define LINUX      0x04
+#define SOURCE     0x08
+#define BIN        0x10
+
 #define DEFAULT    0
 #define STANDARD   0
 #define SUCCESS    0
@@ -70,100 +69,89 @@ typedef uint8_t u8;
  ***********************************************************************
  */
 
-typedef struct p_dev p_dev_t;
-typedef struct p_team p_team_t;
-typedef struct p_program p_program_t;
-typedef struct p_symbol p_symbol_t;
-typedef struct p_event p_event_t;
-typedef struct p_mem p_mem_t;
-typedef struct p_memptr p_memptr_t;
 typedef struct p_atom p_atom_t;
 typedef struct p_mutex p_mutex_t;
 typedef struct p_mutex_attr p_mutex_attr_t;
+
 /*
  ***********************************************************************
- * PROGRAM EXECUTION
+ * PROGRAM FLOW
  ***********************************************************************
  */
 
 /*Device structure setup*/
-void *p_init(int type, int flags);
+int p_init(int type, int flags);
 
-/*Query certain properties within an object (tightly controlled)*/
-int p_query(void* obj, int property);
+/*Query a property of a device*/
+int p_query(int dev, int property);
 
-/*Loads a program (or library) from the file system into memory */
-void *p_load(p_dev_t *dev, char *file);
+/*Loads a program from the file system into memory */
+int p_load(int dev, char *file, char *function);
 
 /*Open a team of processors*/
-void *p_open(p_dev_t *dev, int start, int size);
+int p_open(int dev, int start, int count);
 
 /*Add team members*/
-int p_add(p_team_t *team, int start, int size);
-
-/*Get symbol from the program in memory*/
-int p_getsymbol(p_program_t *prog, char* symbol, p_symbol_t *sym);
-
-/*Run a program on N processors*/
-int p_run(p_program_t *prog, p_team_t *team, char *function,
-	  int argn, void **args, int flags);
+int p_append(int team, int start, int count);
 
 /*Remove team members*/
-int p_remove(p_team_t *team, int start, int size);
+int p_remove(int team, int start, int count);
+
+/*Run a program on N processors*/
+int p_run(int prog, int team, int start, int count, 
+	  int argn, void *args[], int flags);
 
 /*Close a team of processors*/
-int p_close(p_team_t *team); 
+int p_close(int team); 
 
 /*Execution barrier*/
-int p_barrier(p_team_t *team);
+int p_barrier(int team);
 
 /*Local memory allocation*/
-void *p_malloc(p_team_t *team, size_t size);
+int p_malloc(int team, size_t size);
 
 /*Global memory allocation*/
-void *p_gmalloc(p_team_t *team, int n, size_t size);
+int p_gmalloc(int team, int n, size_t size);
 
 /*Free allocated memory */
-int p_free(void *obj);
+int p_free(int mem);
 
 /*Finalize device run time*/
-int p_finalize(p_dev_t *dev);
+int p_finalize(int dev);
 
 /*Memory fence*/
-int p_fence(p_mem_t *mem);
+int p_fence(int mem);
 
 /*
  ***********************************************************************
- * LOW LEVEL SHARED MEMORY MANAGEMENT (USER SPACE)
+ * MOVING BITS AROUND
  ***********************************************************************
  */
 
 /*Writes to a global memory address from a local address*/
-int p_write(void *src, size_t nb, int flags, p_mem_t *mem);
+ssize_t p_write(int mem, const void *src, size_t nbytes, int flags);
 
 /*Reads from a global memory address */
-int p_read(p_mem_t *mem, size_t nb, int flags, void *dst);    
+ssize_t p_read(int mem, void *dst, size_t nbytes, int flags);    
 
-/*Flushes the read/write path to a specific memory location (blocking)*/
-void p_flush(p_mem_t *mem);
+/*Flushes the read and write paths to a specific memory object*/
+ssize_t p_flush(int mem);
 
 /*Scatters data from a local array to a list of remote memory objects*/
-int p_scatter(void *src, size_t nsrc, size_t ndst, int flags, void** dstlist); 
+ssize_t p_scatter(int *mlist[], void *src, size_t nsrc, size_t ndst, int flags); 
 
 /*Gathers data from a list of remote memory objects into a local array*/
-int p_gather(void** srclist, size_t nsrc, size_t ndst, int flags, void *dst); 
+ssize_t p_gather(int *mlist[], void *dst, size_t nsrc, size_t ndst, int flags); 
 
 /*Broadcasts an array based to a list of destination pointers*/
-int p_bcast(void *src, size_t nsrc, size_t ndst, int flags, void** dstlist); 
-
+ssize_t p_broadcast(int *mlist[], void *src, size_t nsrc, size_t ndst, int flags); 
 
 /*Specialized low level shared memory memcpy interface (non-blocking)*/
-int p_copy(void *src, size_t nb, int flags, void *dst);
+ssize_t p_memcpy(void *dst, void *src, size_t nbytes, int flags);
 
 /*
  ***********************************************************************
- * SYNCHRONIZATION PRIMITIVES
- *
+ * SYNCHRONIZATION PRIMITIVES (SHARED MEMORY)
  ***********************************************************************
  */
 
