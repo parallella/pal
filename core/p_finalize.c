@@ -3,7 +3,7 @@
  * Cleans up/finalizes the run time for device 'dev'. Should be called before 
  * exiting the main program.
  *
- * @param dev  Pointer to object containing information about team. 
+ * @param dev   Device object desriptor (int)
  *
  * @return      Returns 0 if successful.
  *
@@ -12,9 +12,7 @@
 #include "pal_core.h"
 #include "pal_core_private.h"
 
-int p_finalize (p_dev_t *dev){
-
-    printf("Running p_finalize(p_team_t)\n");
-
+int p_finalize (int dev){
+    printf("Running p_finalize(%d)\n", dev);
     return(0);
 }

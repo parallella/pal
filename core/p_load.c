@@ -3,26 +3,27 @@
  * Loads a program from a file into an object in memory and prepares the program
  * for execution.
  *
- * @param dev   Pointer to object containing device information 
+ * @param dev       Pointer to object containing device information 
  *
- * @param file  File name of executable to load.
+ * @param file      File name of executable to load.
  *
- * @return      Returns 0 if successful.
+ * @param function  Name of function within 'prog' to run
+ *
+ * @return          Returns 0 if successful.
  *
  */
 #include <stdio.h>
 #include "pal_core.h"
 #include "pal_core_private.h"
+int p_load (int dev, char *file, char *function, int flags){
+    int index,type;
 
-void *p_load (p_dev_t *dev, char *file){
-    printf("Running p_load(p_dev_t,%s)\n",file);
+    printf("Running p_load(%d,%s)\n",dev,file);
 
-    p_program_t *prog;
+    //Find device type
+    type=p_query(dev,TYPE);
 
-    prog = (p_program_t *) malloc(sizeof(p_program_t));
-    prog->dev=dev;
-    prog->name=file;
-    switch(prog->dev->property[TYPE]){	
+    switch(type){	
     case EPIPHANY:
 	break;
     case FPGA:
@@ -34,7 +35,7 @@ void *p_load (p_dev_t *dev, char *file){
     case GRID:
         break;
     default:
-        return(NULL);
+        return(ERROR);
     }	
-    return(prog);
+    return(index);
 }

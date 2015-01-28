@@ -4,8 +4,11 @@
 #include "pal_core.h"
 #include "pal_private.h"
 
-int p_gather (void** srclist, size_t nsrc, size_t ndst, int flags, void *dst){
+ssize_t p_gather(int *mlist[], int mcount, 
+		 void *dbuf, size_t dcount,
+		 int disp[], int flags){ 
 
     /*PLACE CODE HERE*/
-
+    
+    return(0);
 }

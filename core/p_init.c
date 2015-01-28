@@ -11,8 +11,9 @@
  *        EPIPHANY - An array of RISC processors with distributed shared memory
  *        FPGA     - A set of FPGA accelerators supported by a host processor
  *        SMP      - Multiple core shared memory processor system
- *        OPENCL   - Platforms supporting the OpenCL runtime
- *        GRID     - A distributed system across a network
+ *        GPU      - GPUs supported by the OpenCL runtime
+ *        GRID     - A distributed system of processors with IP addresses
+ *                   Can fall back to the local host as well ("batch")
  *
  * @param flags Bitmask field indicating runtime options
  *       
@@ -23,19 +24,17 @@
 #include <stdio.h>
 #include "pal_core.h"
 #include "pal_core_private.h"
-void *p_init (int type, int flags){
-    printf("Running p_init(%d,%d)\n",type,flags);
+int p_init (int type, int flags){
+    int index;
     p_dev_t *dev;    
+
+    printf("Running p_init(%d,%d)\n",type,flags);
+    //Store information about system somewhere... 
     switch (type) {	
     case EPIPHANY:	
 	if(flags & LINUX){
 	    /*Get information from kernel driver/device tree*/	    
-	}
-	else if(flags & METAL){
-	    /*Get information from a static C-run time structure*/ 
-	    /*Is this kind of portability possible?*/
-	}
-	else{
+	    /*store information in structure p_dev_t */
 	    dev=(p_dev_t *) malloc(sizeof(p_dev_t));
 	    /*putting in static values for now...magic later!*/ 	    
 	    dev->property[TYPE]=type;/*storing type of structure*/
@@ -51,24 +50,35 @@ void *p_init (int type, int flags){
 	    dev->property[MEMSIZE]=32768;/*32KB*/
 	    dev->property[MEMBASE]=0x80800000;/*array origin*/
 	}
+	else if(flags & METAL){
+	    /*Get information from a static C-run time structure*/ 
+	}
 	break;	
     case FPGA:
+	/*same style as epiphany*/
 	break;	
     case GPU:
+	/*assume an installed OpenCL env*/
+	/*clinfo*/
 	break;	
     case SMP:
+	/*query the hardware for resources*/
+	/*stuff into structure*/
 	dev=(p_dev_t *) malloc(sizeof(p_dev_t));
 	dev->property[TYPE]=type;/*storing type of structure*/
 	dev->property[VERSION]=0xDEADBEEF;/*not needed in ideal case*/
 	dev->property[NODES]=4;
-	dev->property[SIMD]=4;/*epiphany is a scalar processor*/
+	dev->property[SIMD]=4;
 	dev->property[MEMSIZE]=32768;/*32KB*/
 	dev->property[MEMBASE]=0x80800000;/*array origin*/
 	break;
     case GRID:
+	/*pass through for slurm?*/
+	/*create batch file*/
+	/*.. srun -n 8 ./hello.elf*/
 	break;
     default:
-	return(NULL);
+	return(ERROR);
     }
-    return(dev);
+    return(index);
 }

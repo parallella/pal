@@ -1,9 +1,8 @@
 /**
  *
- * Frees up resources occupied by 'obj'. The object can be of type, 
- * p_dev_t, p_mem_t, or p_team_t.
+ * Frees up resources occupied by 'mem'.
  *
- * @param obj Pointer to object to free.
+ * @param mem Memory object descriptor (int)
  *
  * @return    Returns 0 if successful.
  *
@@ -12,7 +11,7 @@
 #include "pal_core.h"
 #include "pal_core_private.h"
 
-int p_free (void *obj){
-    printf("Running p_free(obj)\n");
+int p_free (int  mem){
+    printf("Running p_free(%d)\n",mem);
     return(0);
 }

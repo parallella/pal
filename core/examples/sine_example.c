@@ -34,8 +34,8 @@ int main (int argc, char **argv){
     mem1   = p_malloc(team0, N*sizeof(float)); //allocate local memory object   
 
     //Setting arguments
-    unsigned int nargs = 2;
-    void* args[] = { &mem0, &mem1 };
+    unsigned int nargs = 1;
+    void* args[] = { &mem0 };
 
     //Running function
     status = p_run(prog0, team0, func, nargs, args, ASYNC);
@@ -45,7 +45,6 @@ int main (int argc, char **argv){
 
     //Cleanup
     status = p_free(mem0);                 //free memory
-    status = p_free(mem1);                 //free memory
     status = p_close(team0);               //close the team
     status = p_finalize(dev0);             //close down the device    
 

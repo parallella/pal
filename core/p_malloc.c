@@ -16,11 +16,32 @@
 #include "pal_core.h"
 #include "pal_core_private.h"
 
-void *p_malloc (p_team_t *team, size_t size){
-    printf("Running p_malloc(p_team_t,%d)\n", (int) size);
+int p_malloc (int team, size_t size){
+    
+    printf("Running p_malloc(%d,%d)\n", team, (int) size);
     p_mem_t *mem;
-    mem=malloc(sizeof(p_mem_t));        
-    mem->size   = size;
-    mem->memptr = malloc(size);
-    return(mem);    
+
+    switch(0){//FIX!	
+    case EPIPHANY://shared memory model
+	break;
+    case FPGA://shared memory model
+        break;  
+    case GPU://shared memory model
+        break;  
+    case SMP://heap (thread model)
+	/*
+	mem=malloc(sizeof(p_mem_t));            
+	mem->mutex  = 23;
+	mem->takeit = 0;
+	mem->gotit  = 0;
+	mem->size   = size;
+	mem->memptr = malloc(size);
+	break;
+	*/
+    case GRID://file+IP (rcp?)
+	break;
+    default:
+	return(1);
+    }
+    return(0);    
 }

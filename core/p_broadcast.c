@@ -1,30 +1,8 @@
-/*
- *
- * FUNCTION:
- * p_broadcast(): broadcasts an array of bytes from source to a list of 
- *                destination addresses
- * 
- * ARGUMENTS:
- * dst_list - an array of complete address destination pointers
- * loc_src  - complete address source pointer
- * nb       - number of bytes to copy
- * nd       - number of destinations
- * flags    - independent flags to assert, separate with '|'
- *            ASYNC : Makes copy call asynchronous (ie non-blocking)  
- *
- */
 #include <stddef.h>
 #include "pal_core.h"
 #include "pal_private.h"
 
-int p_broadcast (void *src, size_t nsrc, size_t ndst, int flags, void** dstlist){
-
-    int i;
-      
-    for (i=0;i<nd;i++){
-	//1. get pointer from array of pointers based on i
-	//2. memcpy(dst,src,nb);
-    }
-
+ssize_t p_broadcast(int *mlist[], void *src, size_t nsrc, size_t ndst, int flags){
+    printf("Running p_broadcast()\n");
     return(0);
 }

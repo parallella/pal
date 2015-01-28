@@ -23,8 +23,9 @@
 #include "pal_core.h"
 #include "pal_core_private.h"
 
-int p_read (p_mem_t *mem, size_t nb, int flags, void *dst){
-    printf("Running p_read(p_mem_t,%d,%d,%p)\n", (int) nb,flags, dst);
-    memcpy(dst, mem->memptr,nb);
+
+ssize_t p_read(int mem, void *dst, size_t nb, int flags){
+    printf("Running p_read(%d,%d,%d,%p)\n", mem, (int) nb,flags, dst);
+    //memcpy(dst, mem->memptr,nb);
     return(0);
 }

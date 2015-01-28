@@ -2,7 +2,7 @@
  *
  * Add members to an existing team of processors.
  *
- * @param team  Pointer to existing team object
+ * @param team  Team number
  *
  * @param start Index of first processor from 'dev' (referenced by 'team') 
  *              to be added to the existing team
@@ -16,7 +16,7 @@
 #include "pal_core.h"
 #include "pal_core_private.h"
 
-int p_append (p_team_t *team, int start, int size){
+int p_append (int team, int start, int size){
     printf("Running p_append(p_team_t,%d,%d)\n", start, size);    
     //need to implement
     return(0);

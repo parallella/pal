@@ -48,15 +48,15 @@
 #include "pal_core.h"
 #include "pal_core_private.h"
 #include <stdio.h>
-int p_query (void *obj, int prop){
-    /*TODO, need to be clever with queries different object types*/
+int p_query (int dev, int prop){
+    printf("Running p_query(%d,%d)\n",dev, prop);
 
-    
-    int res;
-    p_dev_t *dev;
-    
-    printf("Running p_query(obj,%d)\n", prop);
-    dev = (p_dev_t *) obj;    
-    res=dev->property[prop];
+    /*TODO, need to be clever with queries different object types*/    
+    int res;    
+    /*
+      p_dev_t *dev;   
+      dev = (p_dev_t *) obj;    
+      res=dev->property[prop];
+    */
     return (res);
 }

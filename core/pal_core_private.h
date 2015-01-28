@@ -1,3 +1,10 @@
+typedef struct p_dev p_dev_t;
+typedef struct p_team p_team_t;
+typedef struct p_program p_program_t;
+typedef struct p_symbol p_symbol_t;
+typedef struct p_event p_event_t;
+typedef struct p_mem p_mem_t;
+typedef struct p_memptr p_memptr_t;
 
 struct p_dev {
     int property[32];   
