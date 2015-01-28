@@ -24,9 +24,10 @@
 #include <stdio.h>
 #include "pal_core.h"
 #include "pal_core_private.h"
-int p_init (int type, int flags){
-    int index;
-    p_dev_t *dev;    
+
+int p_init (int type, int flags){   
+    int index=p_dev_table_global.size;
+    p_dev_t *dev;
 
     printf("Running p_init(%d,%d)\n",type,flags);
     //Store information about system somewhere... 
@@ -77,6 +78,13 @@ int p_init (int type, int flags){
 	/*create batch file*/
 	/*.. srun -n 8 ./hello.elf*/
 	break;
+    case DEMO:	
+	dev=(p_dev_t *) malloc(sizeof(p_dev_t));
+	dev->property[TYPE]=type;
+	dev->property[NODES]=4;
+	p_dev_table_global.devptr[index] = dev;
+	p_dev_table_global.size   = p_dev_table_global.size + 1;
+	break;	
     default:
 	return(ERROR);
     }

@@ -16,26 +16,20 @@
 #include "pal_core.h"
 #include "pal_core_private.h"
 int p_load (int dev, char *file, char *function, int flags){
-    int index,type;
+    printf("Running p_load(%d,%s,%s,%d)\n",dev,file, function, flags);
 
-    printf("Running p_load(%d,%s)\n",dev,file);
+    int index=p_program_table_global.size;
+    p_dev_t *devptr= p_dev_table_global.devptr[dev];
+    p_program_t *prog;
 
-    //Find device type
-    type=p_query(dev,TYPE);
+    //Creating a program structure
+    prog = (p_program_t *) malloc(sizeof(p_program_t));    
+    prog->devptr=devptr;
+    prog->name=file;
 
-    switch(type){	
-    case EPIPHANY:
-	break;
-    case FPGA:
-        break;  
-    case GPU:
-        break;  
-    case SMP:	
-        break;
-    case GRID:
-        break;
-    default:
-        return(ERROR);
-    }	
+    //Writing into global table
+    p_program_table_global.progptr[index] = prog; 
+    p_program_table_global.size = p_program_table_global.size + 1; 
+  
     return(index);
 }

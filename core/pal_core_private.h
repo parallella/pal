@@ -1,17 +1,11 @@
-typedef struct p_dev p_dev_t;
-typedef struct p_team p_team_t;
-typedef struct p_program p_program_t;
-typedef struct p_symbol p_symbol_t;
-typedef struct p_event p_event_t;
-typedef struct p_mem p_mem_t;
-typedef struct p_memptr p_memptr_t;
+//TEMPORARY HACK!!
 
 struct p_dev {
     int property[32];   
 };
 
 struct p_team {    
-    p_dev_t *dev;      //pointer to the associated device structure
+    p_dev_t *devptr;   //pointer to the associated device structure
     int      size;     //number of member nodes    
     int     *teamptr;  //list of addresses, one per node (int)
     int     *statptr;  //list of status "regs". idle/working
@@ -19,7 +13,7 @@ struct p_team {
 
 //Optimize later, focus on function...
 struct p_mem {
-    p_dev_t *team;    //pointer to the associated team structure
+    p_dev_t *teamptr; //pointer to the associated team structure
     int      mutex;   //optional mutex to grab before reading/writing 'mem' 
     int      takeit;  //indicates that new data is ready (wraparound impl)
     int      gotit;   //indicates that data was read (wraparound impl)
@@ -29,7 +23,7 @@ struct p_mem {
 };
 
 struct p_program {
-    p_dev_t *dev;      //pointer to the associated device structure        
+    p_dev_t *devptr;   //pointer to the associated device structure        
     char    *name;     //executable file name
 };
 

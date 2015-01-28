@@ -27,15 +27,22 @@
 #include "pal_core_private.h"
 
 int p_run(int prog, int team, int start, int size,
-	  int argn, void *args[], int flags){
+	  int nargs, void *args[], int flags){
     
-    printf("Running p_run(%d,%d,%d,%d,%d, argv,%d)\n", prog, team, start,size,argn,flags);
+    printf("Running p_run(%d,%d,%d,%d,%d, argv,%d)\n", prog, team, start,size,nargs,flags);
+    p_program_t *progptr = p_program_table_global.progptr[prog];
+    p_team_t *teamptr    = p_team_table_global.teamptr[team];
+    p_dev_t *devptr      = progptr->devptr;
+    int type             = devptr->property[TYPE];
 
-
-    pid_t child_pid[16],wpid,i;
-    int status=0;	
+    pid_t child_pid[16];//FIX!!
+    int wpid,i, status=0;
     
-    switch(0){//FIX!! (implement with FD)
+    char * const elf[]={progptr->name, NULL};
+    char *path=progptr->name;	 
+
+    char * argv[16];//FIX!
+    switch(type){
     case EPIPHANY:
 	break;
     case FPGA:
@@ -43,42 +50,30 @@ int p_run(int prog, int team, int start, int size,
     case GPU:
         break;  
     case SMP:		
-	//NOTE!: fork or join?, shared memory objects much more efficient 
-	//with threads
-	printf("Forking %d processes!\n",size);
-	//char * const elf[]={prog->name, NULL};
-	//char * path=prog->name;	 
-	 for(i=0;i<size;i++){
-	     child_pid[i]=fork();
-	     if (child_pid[i] == 0) {
-		 //HACK: this is tricky, leaving this for the professionals..
-		 //how to run a program based on function name?
-		 //my_average(input,n,output);
-		 exit;
-	     } 
-	 }	 	 
-	 //Waiting for all children to finish. Right way?
-	 for(i=0;i<size;i++){
-	     while(0<waitpid(child_pid[i],NULL,0));
-	 }
 	 break;
     case GRID:
+        break;	
+    case DEMO:
+	for(i=0;i<nargs;i++){
+	    argv[i]=args[i];
+	}
+	for(i=nargs;i<16;i++){
+	    argv[i] =  NULL;
+	}
+	for(i=start;i<(size+start);i++){
+	    child_pid[i]=fork();
+	    if (child_pid[i] == 0) {
+		execve(path,elf,argv);//executing		
+		exit;
+	    } 
+	}	 	 
+	//Waiting for all children to finish. Right way?
+	for(i=start;i<(start+size);i++){
+	    while(0<waitpid(child_pid[i],NULL,0));
+	}       
         break;	
     default:
         return(1);
     }
          
 }
-/*
-void my_average (float *a, int size, float *res){
-    
-    int i;
-    *res=0;
-    printf("hello\n");
-    for(i=0;i<size;i++){
-	(*res)+=*(a+i);	
-    }
-    *res=(*res)/(float) size;
-    printf("--Average of this batch is %f--\n", *res);
-}
-*/

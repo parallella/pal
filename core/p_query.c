@@ -51,12 +51,8 @@
 int p_query (int dev, int prop){
     printf("Running p_query(%d,%d)\n",dev, prop);
 
-    /*TODO, need to be clever with queries different object types*/    
-    int res;    
-    /*
-      p_dev_t *dev;   
-      dev = (p_dev_t *) obj;    
-      res=dev->property[prop];
-    */
+    int res;
+    p_dev_t *devptr= p_dev_table_global.devptr[dev];    
+    res=devptr->property[NODES];         
     return (res);
 }
