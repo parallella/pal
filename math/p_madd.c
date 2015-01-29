@@ -1,6 +1,6 @@
 /**
  *
- * Calculate 'a' raised to the exponent 'b'
+ * Element wise multiply accumulate: c+=a*b' 
  *
  * @param a     Pointer to input vector
  *
@@ -13,11 +13,12 @@
  * @return      None
  *
  */
-#include <math.h>
-void p_pow_32f (float* a, float* b, float* c, int n ){
+
+void p_madd_32f (float* a, float* b,  float* c, int n ){
 
     int i;
     for(i=0;i<n;i++){
-        *(c+i) = powf(*(a+i), *(b+i));
+        *(c+i) += *(a+i) * *(b+i);
     }
+
 }

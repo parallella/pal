@@ -1,6 +1,22 @@
-void p_sin_32f ( const float* a, float* c, int n ){
+/**
+ *
+ * Compute the sine of the vector 'a'. Angles are specified in radians.
+ * The radian number must be in the range 0 to 2pi,
+ *
+ * @param a     Pointer to input vector
+ *
+ * @param c     Pointer to output vector
+ *
+ * @param n     Size of 'a' and 'c' vector.
+ *       
+ * @return      None
+ *
+ */
+#include <math.h>
+void p_sin_32f ( float* a, float* c, int n ){
 
-
-/*PLACE CODE HERE*/
-
+    int i;
+    for(i=0;i<n;i++){
+	*(c+i)=sinf(*(a+i));
+    }
 }

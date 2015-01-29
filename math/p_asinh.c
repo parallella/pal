@@ -1,6 +1,22 @@
-void p_asinh_32f ( const float* a, float* c, int n ){
+/**
+ *
+ * calculates the inverse hyperbolic sine of 'a'. The function does not check 
+ * for illegal input values.
+ *
+ * @param a     Pointer to input vector
+ *
+ * @param c     Pointer to output vector
+ *
+ * @param n     Size of 'a' and 'c' vector.
+ *       
+ * @return      None
+ *
+ */
+#include <math.h>
+void p_asinh_32f ( float* a, float* c, int n ){
 
-
-/*PLACE CODE HERE*/
-
+    int i;
+    for(i=0;i<n;i++){
+	*(c+i)=asinhf(*(a+i));
+    }
 }
