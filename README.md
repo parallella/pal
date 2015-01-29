@@ -1,8 +1,8 @@
 PAL: The Parallel Architectures Library
 ========================================
 
-The Parallel Architectures Library (PAL) is a collection of C libraries that
-faciliate high performance computation, and data movement, and synchronization.
+The Parallel Architectures Library (PAL) is C library that provides optimized 
+vector math, synchronization, and data movement functionality.
 
 # Content
 1.  [Design goals](#design-goals)  
@@ -28,14 +28,16 @@ faciliate high performance computation, and data movement, and synchronization.
 * **Fast**     (All about speed. No belt...no suspenders)
 * **Open**     (Permissive Apache 2.0/BSD/MIT licensing)
 * **Compact**  (Developed for CPUs with limited local memory)
-* **Scalable** (Support thread and data scaling)
-* **Portable** (Across architectures and run time environments)   
+* **Scalable** (Support for thread and data scaling)
+* **Portable** (Across instruction set architectures)   
 
 ##License
-The PAL source code is licensed under the Apache License, Version 2.0. See LICENSE for full license text unless otherwise specified.
+The PAL source code is licensed under the Apache License, Version 2.0. 
+See LICENSE for full license text unless otherwise specified.
 
 ##Contribution
-Pay it forward! Instructions for contributing can be found [HERE](CONTRIBUTING.md). 
+Pay it forward! Instructions for contributing can be found 
+[HERE](CONTRIBUTING.md). 
 
 ##A Simple Example
 
@@ -101,7 +103,8 @@ FUNCTION     | NOTES
 [p_close()](core/p_close.c)          | close a team of processors
 [p_barrier()](core/p_barrier.c)      | team barrier wait
 [p_fence()](core/p_fence.c)          | memory fence
-[p_malloc()](core/p_malloc.c)        | allocate memory
+[p_malloc()](core/p_malloc.c)        | allocate local memory
+[p_gmalloc()](core/p_gmalloc.c)      | allocate global memory
 [p_free()](core/p_free.c)            | free a PAL object  
 [p_finalize()](core/p_finalize.c)    | cleans up run time
 
@@ -129,7 +132,6 @@ FUNCTION     | NOTES
 [p_atomic_and()](core/p_atomic_and.c)           | atomic fetch and 'and'
 [p_atomic_xor()](core/p_atomic_xor.c)           | atomic fetch and 'xor'
 [p_atomic_or()](core/p_atomic_or.c)             | atomic fetch and 'or'
-[p_atomic_nand()](core/p_atomic_nand.c)         | atomic fetch and 'nand'
 [p_atomic_swap()](core/p_atomic_swap .c)        | atomic exhchange (swap)
 [p_atomic_compswap()](core/p_atomic_compswap.c) | atomic compare and exchange
 

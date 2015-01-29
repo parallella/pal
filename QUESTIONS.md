@@ -8,9 +8,9 @@ Open equestions/assumptions:
   A: 0..2pi
 
 * Q: Work with matrix objects or on arrays?  
-  A:  
+  A: Raw arrays as default
 
-* Q: Work with explicit C99 native types?  
+* Q: Work with explicit C99 native types for DSP library?  
   A:  Yes, no savings in hidden structures, except for types
   
 * Q: Library vs API portability?  
@@ -53,13 +53,13 @@ Open equestions/assumptions:
   A: Bionic, newlib, uClibc, other?
 
 *Q: int dd or explicit structure type?
- A: 
+ A: file descriptor..
 
 *Q: Should we have the ability to open device as stream, what does it mean?
- A: No, that is one level up.
+ A: No, that is one level up.(fifo=memory+state)
 
 *Q: Use argc/argv for passing variables?
- A: Yes
+ A: Make the argv of type void* args[], not just chars
 
 *Q: NAN, denormal numbers in math
  A: pass through (gigo)
@@ -72,7 +72,7 @@ Open equestions/assumptions:
  A: Yes
 
 *Q: Do we still need a fast memcpy like interface?
- A: Yes
+ A: Yes, but it's niche for shared memory systems
 
 *Q: What should the processor id be?
  A: A simple integer
@@ -135,3 +135,35 @@ Open equestions/assumptions:
 
 *Q: Is it practical to run the same executable on bare metal and in Linux?
  A: 
+
+*Q: Use of "node" to represent a processor?
+ A: The reason I chose this name was to abstract away as much as possible
+    the biases people have. The word "core" has been completely bastardized
+    by the indistry and spans anything from a multiply unit up to a CPU
+    running Linux. The word processor could work, but also carries with it
+    a heavy history and suggests a microprocessor. Node is non-descript
+    which is a good thing. I also like that a node is often represented
+    by a dot, which ironically is what compute hardware has become. Programmers
+    should think about memory, dots, and lines when architecting algorihtms
+    and programs. Anything beyond that is too much mental overhead.
+
+*Q: Is there a need for a new memory object?
+ A: Yes, memory is not the same thing as a file and files are not 
+    appropriate as something to work with when doing HPC. We need very
+    fast and direct manipulations of array data.
+
+*Q: Make ssize_t a first class citizen for memory manipulation
+ A: Yes, we can no longer assume that all writes succeed. The faulty domain
+    of clusters is making it down to chips. 
+
+*Q: Why not make the PAL memory objects true file descriptors?
+ A: 
+
+*Q: Math arg name output, change to 'res' for clarity
+ A: 
+
+*Q: Include consts for input pointers to functions, any other keyword?
+ A: 
+
+
+

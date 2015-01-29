@@ -8,23 +8,26 @@ started. Thank you!
 * Doxygen/Javadoc instead of kernel-doc
 * See [CODING-STYLE.md](CODING-STYLE.md)
 
+### Contribution advice
+* Keep changes small (especially if you are a new contributor)  
+* You are responsible for not breaking something with your PR
+* Include examples/test code for pull request
+
 ### Contribution Conventions
-* If it's a bug fix branch, name it XXXX-something where XXXX is the number of the
-  issue.
+* If it's a bug fix branch, name it XXXX-something where XXXX is the number of
+the issue.
 * If it's a feature branch, create an enhancement issue to announce your
   intentions, and name it XXXX-something where XXXX is the number of the issue.
 * Pull requests descriptions should be as clear as possible and include a
-reference to all the issues that they address.
-Commit messages must start with a capitalized and short summary (max. 50
+reference to all the issues that they address. 
+* Commit messages must start with a capitalized and short summary (max. 50
 chars) written in the imperative, followed by an optional, more detailed
 explanatory text which is separated from the summary by an empty line.
-* Code review comments may be added to your pull request. Discuss, then make the
-suggested modifications and push additional commits to your feature branch. Be
-sure to post a comment after pushing. The new commits will show up in the pull
-request automatically, but the reviewers will not be notified unless you
+* Code review comments may be added to your pull request. Discuss, then make 
+the suggested modifications and push additional commits to your feature branch. Be sure to post a comment after pushing. The new commits will show up in the 
+pull request automatically, but the reviewers will not be notified unless you
 comment.
-* Pull requests must be cleanly rebased ontop of master without multiple branches
-mixed into the PR.
+* Pull requests must be cleanly rebased ontop of master without multiple branches mixed into the PR.
 * Before the pull request is merged, make sure that you squash your commits into
 logical units of work using `git rebase -i` and `git push -f`. After every
 commit the test suite should be passing. Include documentation changes in the
