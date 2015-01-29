@@ -196,3 +196,21 @@ void p_max_f32(float* a, float* c, int* index, int n );
 void p_min_f32(float* a, float* c, int* index, int n  );
 
 
+
+/*
+ ****************************************************************
+ * Miscellaneous Operations
+ *
+ ****************************************************************
+ */
+
+/*sort an array*/
+void p_sort_32f (float *a, float* c, int n);
+void p_sort_u32 (int *a, int* c, int n);
+
+/*generate random number*/
+void p_rand_init();
+void p_rand();
+
+/*population count*/
+void p_popcount_u32 (unsigned int *a, unsigned int *c, int n);

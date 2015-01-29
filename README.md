@@ -5,24 +5,33 @@ The Parallel Architectures Library (PAL) is C library that provides optimized
 vector math, synchronization, and data movement functionality.
 
 # Content
-1.  [Design goals](#design-goals)  
-2.  [License](#license)  
-3.  [Pay it forward](#contribution)  
-4.  [A Simple Example](#a-simple-example)
-5.  [Library API reference](#pal-api-reference)  
-5.0 [Syntax](#syntax)  
-5.1 [Program Excution](#program-execution)  
-5.2 [Data Movement](#data-movement)  
-5.3 [Synhcronization](#synchronization)  
-5.3 [Basic Math](#math)  
-5.5 [Basic DSP](#dsp)  
-5.4 [Image Processing](#image-processing)  
-5.6 [FFT (FFTW)](#fft)  
-5.7 [Linar Algebra (BLAS)](#blas)  
-5.8 [System Calls](#system-calls)  
+1.  [Why?](#why)
+2.  [Design goals](#design-goals)  
+3.  [License](#license)  
+4.  [Pay it forward](#contribution)  
+5.  [A Simple Example](#a-simple-example)
+6.  [Library API reference](#pal-api-reference)  
+6.0 [Syntax](#syntax)  
+6.1 [Program Excution](#program-execution)  
+6.2 [Data Movement](#data-movement)  
+6.3 [Synhcronization](#synchronization)  
+6.3 [Basic Math](#math)  
+6.5 [Basic DSP](#dsp)  
+6.4 [Image Processing](#image-processing)  
+6.6 [FFT (FFTW)](#fft)  
+6.7 [Linar Algebra (BLAS)](#blas)  
+6.8 [System Calls](#system-calls)  
 
 ----------------------------------------------------------------------
 
+##Why?
+
+Why are we doing this? Surely, PAL functionality must be covered by existing 
+libraries? Perhaps, but we certainly could not find libraries that fit ALL of
+our design goals. Some libraries failed because they were proprietary, others
+were not high performance, and most were not well suited for simple processors
+with limited local memory.
+ 
 ##Design Goals
 
 * **Fast**     (All about speed. No belt...no suspenders)
@@ -44,38 +53,50 @@ Pay it forward! Instructions for contributing can be found
 **Manager Code**  
 
 ``` c
+#include "pal_core.h"
 #include <stdio.h>
-#include <stdlib.h>
-#include <stdio.h>
-#include <pal_core.h>
+#define N 16 
+int main (int argc, char *argv[]){    
 
-int main(int argc, char *argv[]){
-      
-    p_dev_t *dev0;       //device information object
-    p_program_t *prog0;  //in memory exetutable object
-    p_team_t *team0;     //working team object
-    p_mem_t *mem0;       //memory object
+    //Stack variables
+    char *file="./hello_task.elf";
+    char *func="main";
+    int status, i, all, nargs=1;   
+    void* args[nargs];
+    char argbuf[20];
 
-    int status;
-    int nodes;
+    //Integer index into opaque structures
+    int dev0, prog0, team0, mem[4];    
 
-    dev0   = p_init(EPIPHANY, STANDARD);    //initialize system
-    prog0  = p_load(dev0, "./hello.elf");   //load executable file into memory
-    nodes  = p_query(dev0, NODES);          //query how many nodes are in system
-    team0  = p_open(dev0, 0, nodes);        //Open a team (additive)
-    status = p_run(prog0, team0, 0, NULL, ASYNC); //run program on team
-    status = p_barrier(team0);              //set barrier on work team
-    status = p_free(team0);                //free the resource)anything with po
-    status = p_finalize(dev0);             //close down the device    
+    //Execution setup
+    dev0   = p_init(DEMO, 0);                 //initialize device and team  
+    prog0  = p_load(dev0, file, func, 0);     //load a program from file system 
+    all    = p_query(dev0, NODES);            //find number of nodes in system
+    team0  = p_open(dev0, 0, all);            //create a team       
+
+    //Running program
+    for(i=0;i<all;i++){
+	sprintf(argbuf, "%d", i); //string args needed to run main asis
+	args[0]=&argbuf;
+	status = p_run(prog0, team0, i, 1, nargs, args, 0);
+    }
+    p_barrier(team0);    //not needed
+    p_close(team0);      //close team   
+    p_finalize(dev0);    //finalize memory
 }
-
 ```
 
-**Worker Code (hello.elf)**  
+**Worker Code (hello_task.elf)**  
 ``` c
 #include <stdio.h>
-int main(int argc, char *argv[]){
-    printf("Hello world!\n");
+int main(int argc, char* argv[]){
+    int pid=0;    
+    int i;
+    pid=atoi(argv[2]);
+    for(i=0;i<1000000;i++){     
+    }
+    printf("--Processor %d says hello!--\n", pid);    
+    return i;
 }
 ```
 
@@ -95,7 +116,6 @@ FUNCTION     | NOTES
 [p_init()](core/p_init.c)            | initialize the run time
 [p_query()](core/p_query.c)          | query a PAL oject
 [p_load()](core/p_load.c)            | load binary elf file into memory
-[p_getsymbol()](core/p_getsymbol.c)  | retrieve symbol info from program
 [p_run()](core/p_run.c)              | run a program on a team of processor
 [p_open()](core/p_open.c)            | open a team of processors
 [p_append()](core/p_append.c)        | add members to team
@@ -104,7 +124,7 @@ FUNCTION     | NOTES
 [p_barrier()](core/p_barrier.c)      | team barrier wait
 [p_fence()](core/p_fence.c)          | memory fence
 [p_malloc()](core/p_malloc.c)        | allocate local memory
-[p_gmalloc()](core/p_gmalloc.c)      | allocate global memory
+[p_rmalloc()](core/p_rmalloc.c)      | allocate memory on remote processor
 [p_free()](core/p_free.c)            | free a PAL object  
 [p_finalize()](core/p_finalize.c)    | cleans up run time
 
@@ -112,12 +132,12 @@ FUNCTION     | NOTES
 
 FUNCTION     | NOTES
 ------------ | -------------
-[p_write()](core/p_write.c)        | write to a memory object
-[p_read()](core/p_read.c)          | read from a memory object
-[p_scatter()](core/p_scatter.c)    | copy scatter operation
-[p_gather()](core/p_gather.c)      | copy gather operation
-[p_bcast()](core/p_bcast.c)        | copy broadcast operation
-[p_copy()](core/p_copy.c)          | specialized low level shared memory call
+[p_write()](core/p_write.c)         | write to a memory object
+[p_read()](core/p_read.c)           | read from a memory object
+[p_scatter()](core/p_scatter.c)     | copy scatter operation
+[p_gather()](core/p_gather.c)       | copy gather operation
+[p_broadcast()](core/p_broadcast.c) | copy broadcast operation
+[p_memcpy()](core/p_memcpy.c)       | fast memcpy()
 
 ##SYNCHRONIZATION  
 
@@ -167,9 +187,10 @@ FUNCTION     | NOTES
 [p_mul()](math/p_mul.c)           | multiplication
 [p_popcount()](math/p_popcount.c) | count the number of bits set
 [p_pow()](math/p_pow.c)           | element raised to a power
-[p_sort()](math/p_sort.c)         | heap sort
+[p_rand()](math/p_rand.c)         | random number generator
+[p_randinit()](math/p_randinit.c) | initialize random number generator
+x[p_sort()](math/p_sort.c)        | heap sort
 [p_sin()](math/p_sin.c)           | sine
-[p_sincos()](math/p_sincos.c)     | sine and cos results
 [p_sinh()](math/p_sinh.c)         | hyperbolic sine
 [p_sqrt()](math/p_sqrt.c)         | square root
 [p_sub()](math/p_sub.c)           | subtract
