@@ -25,7 +25,7 @@ The Parallel Architectures Library (PAL) is C library that provides optimized ro
 ##Why?
 As hard as we tried, we could not find libraries that fit our design criteria. There a a number of libraries that cover some of the functionality we needed but all of them were either far too large or were proprietary. The overall goal of the PAL effort is to provide an update the standard C libraries to address the trend towards massive multi-processor parallelism and SIMD computing. 
 
-##Design Criteria
+##Design Goals
 
 * **Fast** (Super fast..but not always safe)
 * **Compact** (as small as possible to fit with processors that have less than <<32KB of RAM)
