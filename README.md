@@ -1,14 +1,13 @@
 PAL: The Parallel Architectures Library
 ========================================
 
-The Parallel Architectures Library (PAL) is C library that provides optimized 
-vector math, synchronization, and data movement functionality.
+The Parallel Architectures Library (PAL) is C library that provides optimized routines for vector math, synchronization, and multi-processor communication.
 
-# Content
+## Content
 1.  [Why?](#why)
 2.  [Design goals](#design-goals)  
 3.  [License](#license)  
-4.  [Pay it forward](#contribution)  
+4.  [Contribution Wanted!](#contribution)  
 5.  [A Simple Example](#a-simple-example)
 6.  [Library API reference](#pal-api-reference)  
 6.0 [Syntax](#syntax)  
@@ -23,30 +22,24 @@ vector math, synchronization, and data movement functionality.
 6.8 [System Calls](#system-calls)  
 
 ----------------------------------------------------------------------
-
 ##Why?
+As hard as we tried, we could not find libraries that fit our design criteria. There a a number of libraries that cover the functionality we needed but all of them were either far too large or were proprietary. The overall goal of the PAL effort is to provide an update the standard C libraries to address the trend towards massive multiprocessor parallelism and vector computing. 
 
-Why are we doing this? Surely, PAL functionality must be covered by existing 
-libraries? Perhaps, but we certainly could not find libraries that fit ALL of
-our design goals. Some libraries failed because they were proprietary, others
-were not high performance, and most were not well suited for simple processors
-with limited local memory.
- 
-##Design Goals
+##Design Criteria
 
-* **Fast**     (All about speed. No belt...no suspenders)
-* **Open**     (Permissive Apache 2.0/BSD/MIT licensing)
-* **Compact**  (Developed for CPUs with limited local memory)
-* **Scalable** (Support for thread and data scaling)
-* **Portable** (Across instruction set architectures)   
+* **Fast** (Super fast..but not always safe)
+* **Compact** (as small as possible to fit with processors that have less than <<32KB of RAM)
+* **Scalable** (thread and data scalable, limited only by the amount of local memory)
+* **Portable across platforms** (deployable across different ISAs and system architectures)
+* **Permissive license** (Apache 2.0 license to maximize overall use)
 
 ##License
 The PAL source code is licensed under the Apache License, Version 2.0. 
 See LICENSE for full license text unless otherwise specified.
 
 ##Contribution
-Pay it forward! Instructions for contributing can be found 
-[HERE](CONTRIBUTING.md). 
+Our goal is to make PAL a broad community project from day one. Some of these functions are tricky, but the biggest challenge with this library is real the volume of code that needs to be typed in. If you know C, you are ready to contribute. If just 100 people contribute one function, we'll be done in a no time! PAL is designed to be very modular to facilitate parallel contributions. Instructions for contributing can be found [HERE](CONTRIBUTING.md). 
+
 
 ##A Simple Example
 
@@ -69,10 +62,10 @@ int main (int argc, char *argv[]){
     int dev0, prog0, team0, mem[4];    
 
     //Execution setup
-    dev0   = p_init(DEMO, 0);                 //initialize device and team  
-    prog0  = p_load(dev0, file, func, 0);     //load a program from file system 
-    all    = p_query(dev0, NODES);            //find number of nodes in system
-    team0  = p_open(dev0, 0, all);            //create a team       
+    dev0  = p_init(DEMO, 0);             //initialize device and team  
+    prog0 = p_load(dev0, file, func, 0); //load a program from file system 
+    all   = p_query(dev0, NODES);        //find number of nodes in system
+    team0 = p_open(dev0, 0, all);        //create a team       
 
     //Running program
     for(i=0;i<all;i++){
@@ -93,8 +86,6 @@ int main(int argc, char* argv[]){
     int pid=0;    
     int i;
     pid=atoi(argv[2]);
-    for(i=0;i<1000000;i++){     
-    }
     printf("--Processor %d says hello!--\n", pid);    
     return i;
 }
@@ -103,43 +94,49 @@ int main(int argc, char* argv[]){
 PAL LIBRARY API REFERENCE
 ========================================
 
-##SYNTAX  
-
-* Function argument order: inputs, outputs
-* Functions return 0 when successful
-* The flags variable is a bitmask with each option occuping one bit
-
-##PROGRAM EXECUTION  
+##PROGRAM FLOW  
+The program flow functions are used to manage the systems and to run programs.
+All opaque objects are references through simple integers. 
 
 FUNCTION     | NOTES
 ------------ | -------------
 [p_init()](core/p_init.c)            | initialize the run time
-[p_query()](core/p_query.c)          | query a PAL oject
+[p_query()](core/p_query.c)          | query a device object
 [p_load()](core/p_load.c)            | load binary elf file into memory
 [p_run()](core/p_run.c)              | run a program on a team of processor
 [p_open()](core/p_open.c)            | open a team of processors
 [p_append()](core/p_append.c)        | add members to team
 [p_remove()](core/p_remove.c)        | remove members from team
 [p_close()](core/p_close.c)          | close a team of processors
-[p_barrier()](core/p_barrier.c)      | team barrier wait
+[p_barrier()](core/p_barrier.c)      | wait for team to catch up
 [p_fence()](core/p_fence.c)          | memory fence
-[p_malloc()](core/p_malloc.c)        | allocate local memory
-[p_rmalloc()](core/p_rmalloc.c)      | allocate memory on remote processor
-[p_free()](core/p_free.c)            | free a PAL object  
 [p_finalize()](core/p_finalize.c)    | cleans up run time
 
-##DATA MOVEMENT  
+##MEMORY ALLOCATION  
+These functions are used for creating memory objects. The function returns a unique integer for each new memory object. This integer can then be used by functions like p_read and p_write to access the data within the memory object.  
 
 FUNCTION     | NOTES
 ------------ | -------------
-[p_write()](core/p_write.c)         | write to a memory object
-[p_read()](core/p_read.c)           | read from a memory object
-[p_scatter()](core/p_scatter.c)     | copy scatter operation
-[p_gather()](core/p_gather.c)       | copy gather operation
-[p_broadcast()](core/p_broadcast.c) | copy broadcast operation
+[p_malloc()](core/p_malloc.c)        | allocate memory on local processor
+[p_rmalloc()](core/p_rmalloc.c)      | allocate memory on remote processor
+[p_free()](core/p_free.c)            | free memory
+
+##DATA MOVEMENT  
+The data movement functions move blocks of data between opaque memory objects and locations specified by pointers. The memory object is specified by a simple integer. The exception is the p_memcpy function which copies blocks of bytes within a shared memory architecture only.
+
+FUNCTION     | NOTES
+------------ | -------------
+[p_broadcast()](core/p_broadcast.c) | broadcast operation
+[p_gather()](core/p_gather.c)       | gather operation
 [p_memcpy()](core/p_memcpy.c)       | fast memcpy()
+[p_read()](core/p_read.c)           | read from a memory object
+[p_scatter()](core/p_scatter.c)     | scatter operation
+[p_write()](core/p_write.c)         | write to a memory object
+
 
 ##SYNCHRONIZATION  
+The synchronization functions can be used in shared memory system to facilitate program sequencing and resources locking.
+
 
 FUNCTION     | NOTES
 ------------ | -------------
@@ -152,10 +149,15 @@ FUNCTION     | NOTES
 [p_atomic_and()](core/p_atomic_and.c)           | atomic fetch and 'and'
 [p_atomic_xor()](core/p_atomic_xor.c)           | atomic fetch and 'xor'
 [p_atomic_or()](core/p_atomic_or.c)             | atomic fetch and 'or'
-[p_atomic_swap()](core/p_atomic_swap .c)        | atomic exhchange (swap)
+[p_atomic_swap()](core/p_atomic_swap.c)         | atomic exchange
 [p_atomic_compswap()](core/p_atomic_compswap.c) | atomic compare and exchange
 
 ##MATH  
+The math funtions are single threaded vectorized functions intended to run 
+on a single core. Math functions use pointers for input/output arguments 
+and take in a separate variable to indicate the size of the vectors.
+Speed and size is a priority and some liberties have been taken with respect
+to accuracy and safety. 
 
 FUNCTION     | NOTES
 ------------ | -------------
@@ -200,12 +202,18 @@ x[p_sort()](math/p_sort.c)        | heap sort
 [p_tanh()](math/p_tanh.c)         | hyperbolic tangent
 
 ##DSP  
+The digital signal processing (dsp) funtions are similar to the math functions
+in that they are single threaded vectorized functions intended to run on a 
+single core. Also, just like the math functions they take in pointers for 
+input/output arguments and a separate variable to indicate the size of the 
+vectors. Speed and size is a priority and some liberties have been taken with 
+respect to accuracy and safety.
 
 FUNCTION     | NOTES
 ------------ | -------------
 [p_acorr()](dsp/p_acorr.c)   | autocorrelation (r[j] = sum ( x[j+k] * x[k] ), k=0..(n-j-1))
 [p_conv()](dsp/p_conv.c)     | convolution: r[j] = sum ( h[k] * x[j-k), k=0..(nh-1)
-[p_corr()](dsp/p_corr.c)     | correlation: r[j] = sum ( x[j+k] * y[k]), k=0..(nx+ny-1)
+[p_xcorr()](dsp/p_xcorr.c)   | correlation: r[j] = sum ( x[j+k] * y[k]), k=0..(nx+ny-1)
 [p_fir()](dsp/p_fir.c)       | FIR filter direct form: r[j] = sum ( h[k] * x [j-k]), k=0..(nh-1)
 [p_firdec()](dsp/p_firdec.c) | FIR filter with decimation: r[j] = sum ( h[k] * x [j*D-k]), k=0..(nh-1)
 [p_firint()](dsp/p_firint.c) | FIR filter with inerpolation: r[j] = sum ( h[k] * x [j*D-k]), k=0..(nh-1)
@@ -213,6 +221,8 @@ FUNCTION     | NOTES
 [p_iir()](dsp/p_iir.c)       | IIR filter
 
 ##IMAGE PROCESSING  
+The image processing functions work on 2D arrays of data and use the same
+argument passing conventions as the dsp and math functions. 
 
 FUNCTION     | NOTES
 ------------ | -------------
