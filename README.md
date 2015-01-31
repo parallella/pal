@@ -209,7 +209,6 @@ FUNCTION     | NOTES
 [p_fir()](dsp/p_fir.c)       | FIR filter direct form: r[j] = sum ( h[k] * x [j-k]), k=0..(nh-1)
 [p_firdec()](dsp/p_firdec.c) | FIR filter with decimation: r[j] = sum ( h[k] * x [j*D-k]), k=0..(nh-1)
 [p_firint()](dsp/p_firint.c) | FIR filter with inerpolation: r[j] = sum ( h[k] * x [j*D-k]), k=0..(nh-1)
-[p_firlat()](dsp/p_firlat.c) | FIR filter lattice form
 [p_firsym()](dsp/p_firsym.c) | FIR symmetric form
 [p_iir()](dsp/p_iir.c)       | IIR filter
 
