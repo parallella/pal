@@ -1,6 +1,6 @@
 /**
  *
- * Computes a real FIR filter (direct-form) with 'h' symmetric coefficients 
+ * Computes a FIR filter (direct-form) with 'h' symmetric coefficients 
  * The filter is assumed to have a  symmetric impulse response. The real input
  * data is stored in vector x. The filter output result is stored in vector r. 
  * The function maintains the array 'dbuf' containing the previous delayed 
@@ -10,13 +10,13 @@
  *
  * @param h     Pointer to first half of symmetric filter coefficients.
  *
- * @param dbuf  Pointer to delay buffer of length nh*2+2
- *
- * @param r     Pointer to result vector
+ * @param dbuf  Pointer to delay buffer of length 2*nh+2
+ * 
+ * @param nx    The number of input (and output) samples
  *
  * @param nh    The number of coefficients of the filter.
  *
- * @param nx    The number of input (and output) samples
+ * @param r     Pointer to result vector
  *
  * @return      None
  *
