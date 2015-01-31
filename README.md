@@ -23,7 +23,7 @@ The Parallel Architectures Library (PAL) is C library that provides optimized ro
 
 ----------------------------------------------------------------------
 ##Why?
-As hard as we tried, we could not find libraries that fit our design criteria. There a a number of libraries that cover the functionality we needed but all of them were either far too large or were proprietary. The overall goal of the PAL effort is to provide an update the standard C libraries to address the trend towards massive multiprocessor parallelism and vector computing. 
+As hard as we tried, we could not find libraries that fit our design criteria. There a a number of libraries that cover some of the functionality we needed but all of them were either far too large or were proprietary. The overall goal of the PAL effort is to provide an update the standard C libraries to address the trend towards massive multi-processor parallelism and SIMD computing. 
 
 ##Design Criteria
 
@@ -38,7 +38,7 @@ The PAL source code is licensed under the Apache License, Version 2.0.
 See LICENSE for full license text unless otherwise specified.
 
 ##Contribution
-Our goal is to make PAL a broad community project from day one. Some of these functions are tricky, but the biggest challenge with this library is real the volume of code that needs to be typed in. If you know C, you are ready to contribute. If just 100 people contribute one function, we'll be done in a no time! PAL is designed to be very modular to facilitate parallel contributions. Instructions for contributing can be found [HERE](CONTRIBUTING.md). 
+Our goal is to make PAL a broad community project from day one. Some of these functions are tricky, but the biggest challenge with the PAL library is real the volume of functions and code.  If just 100 people contribute one function, we'll be done in a no time! PAL is designed to be very modular to facilitate parallel contributions. Instructions for contributing can be found [HERE](CONTRIBUTING.md). If you know C, your are ready to contribute!!!
 
 
 ##A Simple Example
@@ -191,7 +191,7 @@ FUNCTION     | NOTES
 [p_pow()](math/p_pow.c)           | element raised to a power
 [p_rand()](math/p_rand.c)         | random number generator
 [p_randinit()](math/p_randinit.c) | initialize random number generator
-x[p_sort()](math/p_sort.c)        | heap sort
+[p_sort()](math/p_sort.c)         | heap sort
 [p_sin()](math/p_sin.c)           | sine
 [p_sinh()](math/p_sinh.c)         | hyperbolic sine
 [p_sqrt()](math/p_sqrt.c)         | square root
