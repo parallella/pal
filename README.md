@@ -229,8 +229,6 @@ FUNCTION     | NOTES
 [p_box3x3()](image/p_box3x3.c)         | box filter (3x3)
 [p_conv2d()](image/p_conv2d.c)         | 2d convolution
 [p_gauss3x3()](image/p_gauss3x3.c)     | gaussian blur filter (3x3)
-[p_mad8x8()](image/p_mad8x8.c)         | sum of mean differences (8x8)
-[p_mad16x16()](image/p_mad16x16.c)     | sum of mean differences (16x16)
 [p_median3x3()](image/p_median3x3.c)   | median filter (3x3)
 [p_laplace3x3()](image/p_laplace3x3.c) | laplace filter (3x3)
 [p_prewitt3x3()](image/p_prewitt3x3.c) | prewitt filter (3x3)
