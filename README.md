@@ -9,11 +9,11 @@ The Parallel Architectures Library (PAL) is a compact C library with optimized r
 3.  [License](#license)  
 4.  [Contribution Wanted!](#contribution)  
 5.  [A Simple Example](#a-simple-example)
-6.  [Library API reference](#pal-api-reference)  
+6.  [Library API reference](#library-api-reference)  
 6.0 [Syntax](#syntax)  
-6.1 [Program Excution](#program-execution)  
+6.1 [Program Flow](#program-flow)  
 6.2 [Data Movement](#data-movement)  
-6.3 [Synhcronization](#synchronization)  
+6.3 [Synchronization](#synchronization)  
 6.3 [Basic Math](#math)  
 6.5 [Basic DSP](#dsp)  
 6.4 [Image Processing](#image-processing)  
@@ -23,7 +23,7 @@ The Parallel Architectures Library (PAL) is a compact C library with optimized r
 
 ----------------------------------------------------------------------
 ##Why?
-As hard as we tried, we could not find libraries that fit our design criteria. There a a number of libraries that cover some of the functionality we needed but all of the existing offerings were either far too bulky or had the wrong license. The overall goal of the PAL effort is to provide an update the standard C libraries to address the trend towards massive multi-processor parallelism and SIMD computing. 
+As hard as we tried we could not find libraries that were a perfect fit for our design criteria. There a a number of projects and commercial products that offer most of the functionality of PAL but all of the existing offerings were either far too bulky or had the wrong license. In essence, the goal of the PAL effort is to provide an update the standard C libraries to address the trend towards massive multi-processor parallelism and SIMD computing. 
 
 ##Design Goals
 
@@ -137,7 +137,7 @@ FUNCTION     | NOTES
 
 
 ##SYNCHRONIZATION  
-The synchronization functions can be used in shared memory system to facilitate program sequencing and resources locking.
+The synchronization functions are useful for program sequencing and resource locking in shared memory systems.
 
 
 FUNCTION     | NOTES
@@ -155,11 +155,7 @@ FUNCTION     | NOTES
 [p_atomic_compswap()](core/p_atomic_compswap.c) | atomic compare and exchange
 
 ##MATH  
-The math funtions are single threaded vectorized functions intended to run 
-on a single core. Math functions use pointers for input/output arguments 
-and take in a separate variable to indicate the size of the vectors.
-Speed and size is a priority and some liberties have been taken with respect
-to accuracy and safety. 
+The math funtions are single threaded vectorized functions intended to run on a single processor. Math functions use pointers for input/output arguments and take in a separate variable to indicate the size of the vectors. Speed and size is a priority and some liberties have been taken with respect to accuracy and safety. 
 
 FUNCTION     | NOTES
 ------------ | -------------
@@ -180,8 +176,8 @@ FUNCTION     | NOTES
 [p_itof()](math/p_itof.c)         | integer to float conversion
 [p_inv()](math/p_inv.c)           | inverse
 [p_invcbrt()](math/p_invcbrt.c)   | inverse cube root
-[p_invsqrt()](math/p_invcbrt.c)   | inverse square root
-[p_ln()](math/p_invcbrt.c)        | natural log
+[p_invsqrt()](math/p_invsqrt.c)   | inverse square root
+[p_ln()](math/p_ln.c)             | natural log
 [p_log10()](math/p_log10.c)       | denary log
 [p_max()](math/p_max.c)           | finds max val
 [p_min()](math/p_min.c)           | finds min val
@@ -192,7 +188,7 @@ FUNCTION     | NOTES
 [p_popcount()](math/p_popcount.c) | count the number of bits set
 [p_pow()](math/p_pow.c)           | element raised to a power
 [p_rand()](math/p_rand.c)         | random number generator
-[p_randinit()](math/p_randinit.c) | initialize random number generator
+[p_randinit()](math/p_rand.c)     | initialize random number generator
 [p_sort()](math/p_sort.c)         | heap sort
 [p_sin()](math/p_sin.c)           | sine
 [p_sinh()](math/p_sinh.c)         | hyperbolic sine
@@ -237,7 +233,6 @@ FUNCTION     | NOTES
 [p_sad8x8()](image/p_sad8x8.c)         | sum of absolute differences (8x8)
 [p_sad16x16()](image/p_sad16x16.c)     | sum of absolute differences (16x16)
 [p_sobel3x3()](image/p_sobel3x3.c)     | sobel filter (3x3)
-[p_scale2d()](image/p_scale2d.c)       | 2d image scaling
 [p_scharr3x3()](image/p_scharr3x3.c)   | scharr filter (3x3)
 
 ##FFT  
