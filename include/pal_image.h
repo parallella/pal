@@ -43,18 +43,6 @@ void p_sad8x8_f32(float* x, float* r, int rows, int cols);
 /*2d sum of absolute differences (16x16) */
 void p_sad16x16_f32(float* x, float* r, int rows, int cols);
 
-/*2d sum of mean differences (8x8)*/
-void p_mad8x8_f32(float* x, float* r, int rows, int cols);
-
-/*2d sum of mean differences (16x16)*/
-void p_mad16x16_f32(float* x, float* r, int rows, int cols);
-
-/*2d integral if image */
-void p_integral2d_f32(float* x, float* r, int rows, int cols);
-
-/*2d resize image*/
-void p_scale2d_f32(float* x, float* r, int rows, int cols, int opt);
-
 /*2d sobel filter (3x3) */
 void p_sobel3x3_f32(float* x, float* r, int rows, int cols);
 

@@ -1,12 +1,21 @@
-/*
+/**
  * A Laplace 3x3 convolution filter (m) with the Laplace operators defined as: 
  *
  *        |  0 -1  0 |
  * LA3 =  | -1  4 -1 |
  *        |  0 -1  0 |
  *
+ * @param x    Pointer to input image, a 2D array of size 'rows' x 'cols' 
+ * 
+ * @param rows Number of rows in input image
+ * 
+ * @param cols Number of columns in input image
+ *
+ * @param r    Pointer to output image
+ *
+ *
  */
-void p_laplacel3x3_32f (const float* x, float* r, int rows, int cols){
+void p_laplace3x3_32f (float* x, int rows, int cols, float* r){
 
     int ia, ja;
     float LA;

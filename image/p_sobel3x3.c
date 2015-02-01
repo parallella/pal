@@ -1,4 +1,4 @@
-/*
+/**
  * A Sobel 3x3 convolution filter (m) with the Sobel operators defined as: 
  *
  *       | -1  0  1 |
@@ -13,10 +13,18 @@
  * 
  * Gradient Direction (theta) = atan2(Gy,Gx)
  *
+ * @param x    Pointer to input image, a 2D array of size 'rows' x 'cols' 
+ * 
+ * @param rows Number of rows in input image
+ * 
+ * @param cols Number of columns in input image
+ *
+ * @param r    Pointer to output image
+ *
  */
 #include <math.h>
 
-void p_sobel3x3_32f (const float* x, float* r, int rows, int cols){
+void p_sobel3x3_32f (float* x, int rows, int cols, float* r){
         
     int ia, ja;
     float Dx, Dy;

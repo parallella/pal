@@ -1,15 +1,22 @@
 /*
- * A 3x3 moving average filter also called a box filter. 
- *  Basically a convolution with a 3x3 coefficient matrix all set to ones.
+ * A 3x3 box filter (aka a moving average filter)
+ * Basically a convolution with a 3x3 coefficient matrix all set to ones.
  *
  *    |1 1 1|
  * M =|1 1 1| * 1/9
  *    |1 1 1|
  *
+ * @param x    Pointer to input image, a 2D array of size 'rows' x 'cols' 
+ * 
+ * @param rows Number of rows in input image
+ * 
+ * @param cols Number of columns in input image
+ *
+ * @param r    Pointer to output image
+ *
  */
 
-
-void p_box3x3_32f (const float* x, float* r, int rows, int cols){
+void p_box3x3_32f (float* x,  int rows, int cols, float* r){
 
     
     int ia, ja;
