@@ -16,7 +16,7 @@
  * @return        None
  *
  */
-void p_convol_32f (float* x, float* h, int nx, int nh, float* r){
+void p_conv_32f (float* x, float* h, int nx, int nh, float* r){
 
 /*PLACE CODE HERE*/
 
