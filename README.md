@@ -23,7 +23,7 @@ The Parallel Architectures Library (PAL) is a compact C library with optimized r
 
 ----------------------------------------------------------------------
 ##Why?
-As hard as we tried we could not find libraries that were a perfect fit for our design criteria. There a a number of projects and commercial products that offer most of the functionality of PAL but all of the existing offerings were either far too bulky or had the wrong license. In essence, the goal of the PAL effort is to provide an update the standard C libraries to address the trend towards massive multi-processor parallelism and SIMD computing. 
+As hard as we tried we could not find libraries that were a perfect fit for our design criteria. There a a number of projects and commercial products that offer most of the functionality of PAL but all of the existing offerings were either far too bulky or had the wrong license. In essence, the goal of the PAL effort is to provide extensions to the standard set of C libraries to address the trend towards massive multi-processor parallelism and SIMD computing. 
 
 ##Design Goals
 
@@ -38,7 +38,7 @@ The PAL source code is licensed under the Apache License, Version 2.0.
 See LICENSE for full license text unless otherwise specified.
 
 ##Contribution
-Our goal is to make PAL a broad community project from day one. Some of these functions are tricky, but the biggest challenge with the PAL library is really the volume of simple functions.  The good news, if just 100 people contribute one function, we'll be done in a couple of days! If you know C, your are ready to contribute!!
+Our goal is to make PAL a broad community project from day one. Some of these functions are tricky, but the biggest challenge with the PAL library is really the volume of simple functions.  The good news is that if just 100 people contribute one function each, we'll be done in a couple of days! If you know C, your are ready to contribute!!
 
 Instructions for contributing can be found [HERE](CONTRIBUTING.md). 
 
@@ -97,8 +97,7 @@ PAL LIBRARY API REFERENCE
 ========================================
 
 ##PROGRAM FLOW  
-These program flow functions are used to manage the systems and to run programs.
-All opaque objects are references through simple integers. 
+These program flow functions are used to manage the system and to execute programs. All opaque objects are referenced with simple integers. 
 
 FUNCTION     | NOTES
 ------------ | -------------
@@ -115,7 +114,7 @@ FUNCTION     | NOTES
 [p_finalize()](core/p_finalize.c)    | cleans up run time
 
 ##MEMORY ALLOCATION  
-These functions are used for creating memory objects. The function returns a unique integer for each new memory object. This integer can then be used by functions like p_read() and p_write() to access the data within the memory object.  
+These functions are used for creating memory objects. The function returns a unique integer for each new memory object. This integer can then be used by functions like p_read() and p_write() to access data within the memory object.  
 
 FUNCTION     | NOTES
 ------------ | -------------
