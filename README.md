@@ -1,7 +1,7 @@
 PAL: The Parallel Architectures Library
 ========================================
 
-The Parallel Architectures Library (PAL) is C library that provides optimized routines for vector math, synchronization, and multi-processor communication.
+The Parallel Architectures Library (PAL) is a compact C library with optimized routines for vector math, synchronization, and multi-processor communication.
 
 ## Content
 1.  [Why?](#why)
@@ -23,7 +23,7 @@ The Parallel Architectures Library (PAL) is C library that provides optimized ro
 
 ----------------------------------------------------------------------
 ##Why?
-As hard as we tried, we could not find libraries that fit our design criteria. There a a number of libraries that cover some of the functionality we needed but all of them were either far too large or were proprietary. The overall goal of the PAL effort is to provide an update the standard C libraries to address the trend towards massive multi-processor parallelism and SIMD computing. 
+As hard as we tried, we could not find libraries that fit our design criteria. There a a number of libraries that cover some of the functionality we needed but all of the existing offerings were either far too bulky or had the wrong license. The overall goal of the PAL effort is to provide an update the standard C libraries to address the trend towards massive multi-processor parallelism and SIMD computing. 
 
 ##Design Goals
 
@@ -38,7 +38,9 @@ The PAL source code is licensed under the Apache License, Version 2.0.
 See LICENSE for full license text unless otherwise specified.
 
 ##Contribution
-Our goal is to make PAL a broad community project from day one. Some of these functions are tricky, but the biggest challenge with the PAL library is real the volume of functions and code.  If just 100 people contribute one function, we'll be done in a no time! PAL is designed to be very modular to facilitate parallel contributions. Instructions for contributing can be found [HERE](CONTRIBUTING.md). If you know C, your are ready to contribute!!!
+Our goal is to make PAL a broad community project from day one. Some of these functions are tricky, but the biggest challenge with the PAL library is really the volume of simple functions.  The good news, if just 100 people contribute one function, we'll be done in a couple of days! If you know C, your are ready to contribute!!
+
+Instructions for contributing can be found [HERE](CONTRIBUTING.md). 
 
 
 ##A Simple Example
@@ -95,7 +97,7 @@ PAL LIBRARY API REFERENCE
 ========================================
 
 ##PROGRAM FLOW  
-The program flow functions are used to manage the systems and to run programs.
+These program flow functions are used to manage the systems and to run programs.
 All opaque objects are references through simple integers. 
 
 FUNCTION     | NOTES
@@ -113,7 +115,7 @@ FUNCTION     | NOTES
 [p_finalize()](core/p_finalize.c)    | cleans up run time
 
 ##MEMORY ALLOCATION  
-These functions are used for creating memory objects. The function returns a unique integer for each new memory object. This integer can then be used by functions like p_read and p_write to access the data within the memory object.  
+These functions are used for creating memory objects. The function returns a unique integer for each new memory object. This integer can then be used by functions like p_read() and p_write() to access the data within the memory object.  
 
 FUNCTION     | NOTES
 ------------ | -------------
