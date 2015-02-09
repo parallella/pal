@@ -14,7 +14,7 @@
  *
  * @param dst   Address to copy the memory block to
  *
- * @return      Returns 0 if successful.
+ * @return      Returns number of bytes read.
  *
  */
 #include <stddef.h>
@@ -24,7 +24,7 @@
 #include "pal_core_private.h"
 
 
-ssize_t p_read(int mem, void *dst, size_t nb, int flags){
+size_t p_read(int mem, void *dst, off_t offset, size_t nb, int flags){
     printf("Running p_read(%d,%d,%d,%p)\n", mem, (int) nb,flags, dst);
     //memcpy(dst, mem->memptr,nb);
     return(0);
