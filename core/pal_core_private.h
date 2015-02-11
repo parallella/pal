@@ -36,10 +36,11 @@ struct p_event {
 };
 
 struct p_atom_u32 {
-    u32 mutex;   //resource mutex
-    u32 var;     //atomic variable
+    uint32_t mutex;   //resource mutex
+    uint32_t var;     //atomic variable
 };
 
 struct p_mutex {
-    u32 mutex;   //mutex
+    uint32_t mutex;   //mutex
 };
+
