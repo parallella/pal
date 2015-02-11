@@ -29,6 +29,8 @@
 int p_run(int prog, int team, int start, int size,
 	  int nargs, void *args[], int flags){
     
+    /* TODO: Clean me up please */
+
     printf("Running p_run(%d,%d,%d,%d,%d, argv,%d)\n", prog, team, start,size,nargs,flags);
     p_program_t *progptr = p_program_table_global.progptr[prog];
     p_team_t *teamptr    = p_team_table_global.teamptr[team];
@@ -44,15 +46,11 @@ int p_run(int prog, int team, int start, int size,
     char * argv[16];//FIX!
     switch(type){
     case EPIPHANY:
-	break;
     case FPGA:
-        break;  
     case GPU:
-        break;  
-    case SMP:		
-	 break;
+    case SMP:
     case GRID:
-        break;	
+	    break;
     case DEMO:
 	for(i=0;i<nargs;i++){
 	    argv[i]=args[i];
@@ -63,8 +61,8 @@ int p_run(int prog, int team, int start, int size,
 	for(i=start;i<(size+start);i++){
 	    child_pid[i]=fork();
 	    if (child_pid[i] == 0) {
-		execve(path,elf,argv);//executing		
-		exit;
+		execve(path,elf,argv); //executing
+		exit();
 	    } 
 	}	 	 
 	//Waiting for all children to finish. Right way?
@@ -73,7 +71,7 @@ int p_run(int prog, int team, int start, int size,
 	}       
         break;	
     default:
-        return(1);
+        return -ENOSYS;
     }
-         
+	return -ENOSYS;
 }
