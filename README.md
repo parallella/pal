@@ -1,6 +1,8 @@
 PAL: The Parallel Architectures Library
 ========================================
 
+[![Build Status](https://travis-ci.org/parallella/pal.svg?branch=master)](https://travis-ci.org/parallella/pal)
+
 The Parallel Architectures Library (PAL) is a compact C library with optimized routines for vector math, synchronization, and multi-processor communication.
 
 ## Content
