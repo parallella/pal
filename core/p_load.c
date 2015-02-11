@@ -3,33 +3,46 @@
  * Loads a program from a file into an object in memory and prepares the program
  * for execution.
  *
- * @param dev       Pointer to object containing device information 
- *
+ * @param dev       Pointer to object containing device information
  * @param file      File name of executable to load.
- *
  * @param function  Name of function within 'prog' to run
+ * @param flags     Optional flags
  *
- * @return          Returns 0 if successful.
+ * @return          Returns 0 if successful. Negative value indicates error.
  *
  */
 #include <stdio.h>
+#include <string.h>
+#include <errno.h>
 #include "pal_core.h"
 #include "pal_core_private.h"
-int p_load (int dev, char *file, char *function, int flags){
+int p_load (p_dev_t *dev, p_program_t *prog, char *file, char *function,
+        int flags)
+{
+
+#if _P_DEBUG
     printf("Running p_load(%d,%s,%s,%d)\n",dev,file, function, flags);
+#endif
 
-    int index=p_program_table_global.size;
-    p_dev_t *devptr= p_dev_table_global.devptr[dev];
-    p_program_t *prog;
+#if 0
+    /* We don't own the string so copy */
+    prog->name = strdup(file);
 
-    //Creating a program structure
-    prog = (p_program_t *) malloc(sizeof(p_program_t));    
-    prog->devptr=devptr;
-    prog->name=file;
+    if (!prog->name)
+        return -ENOMEM;
 
-    //Writing into global table
-    p_program_table_global.progptr[index] = prog; 
-    p_program_table_global.size = p_program_table_global.size + 1; 
-  
-    return(index);
+    /* Creating a program structure */
+    prog->dev = dev;
+
+    dev->progs.tail->next = prog;
+    dev->progs.tail = prog;
+    prog->next = NULL;
+
+
+    return 0;
+#endif
+
+    return -ENOSYS;
+
 }
+
