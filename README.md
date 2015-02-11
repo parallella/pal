@@ -48,7 +48,7 @@ Instructions for contributing can be found [HERE](CONTRIBUTING.md).
 **Manager Code**  
 
 ``` c
-#include "pal_core.h"
+#include "pal_base.h"
 #include <stdio.h>
 #define N 16
 int main (int argc, char *argv[]){
@@ -105,39 +105,39 @@ These program flow functions are used to manage the system and to execute progra
 
 FUNCTION     | NOTES
 ------------ | -------------
-[p_init()](src/core/p_init.c)            | initialize the run time
-[p_query()](src/core/p_query.c)          | query a device object
-[p_load()](src/core/p_load.c)            | load binary elf file into memory
-[p_run()](src/core/p_run.c)              | run a program on a team of processor
-[p_open()](src/core/p_open.c)            | open a team of processors
-[p_append()](src/core/p_append.c)        | add members to team
-[p_remove()](src/core/p_remove.c)        | remove members from team
-[p_close()](src/core/p_close.c)          | close a team of processors
-[p_barrier()](src/core/p_barrier.c)      | team barrier
-[p_wait()](src/core/p_wait.c)            | wait for team to finish
-[p_fence()](src/core/p_fence.c)          | memory fence
-[p_finalize()](src/core/p_finalize.c)    | cleans up run time
+[p_init()](src/base/p_init.c)            | initialize the run time
+[p_query()](src/base/p_query.c)          | query a device object
+[p_load()](src/base/p_load.c)            | load binary elf file into memory
+[p_run()](src/base/p_run.c)              | run a program on a team of processor
+[p_open()](src/base/p_open.c)            | open a team of processors
+[p_append()](src/base/p_append.c)        | add members to team
+[p_remove()](src/base/p_remove.c)        | remove members from team
+[p_close()](src/base/p_close.c)          | close a team of processors
+[p_barrier()](src/base/p_barrier.c)      | team barrier
+[p_wait()](src/base/p_wait.c)            | wait for team to finish
+[p_fence()](src/base/p_fence.c)          | memory fence
+[p_finalize()](src/base/p_finalize.c)    | cleans up run time
 
 ##MEMORY ALLOCATION  
 These functions are used for creating memory objects. The function returns a unique integer for each new memory object. This integer can then be used by functions like p_read() and p_write() to access data within the memory object.  
 
 FUNCTION     | NOTES
 ------------ | -------------
-[p_malloc()](src/core/p_malloc.c)        | allocate memory on local processor
-[p_rmalloc()](src/core/p_rmalloc.c)      | allocate memory on remote processor
-[p_free()](src/core/p_free.c)            | free memory
+[p_malloc()](src/base/p_malloc.c)        | allocate memory on local processor
+[p_rmalloc()](src/base/p_rmalloc.c)      | allocate memory on remote processor
+[p_free()](src/base/p_free.c)            | free memory
 
 ##DATA MOVEMENT  
 The data movement functions move blocks of data between opaque memory objects and locations specified by pointers. The memory object is specified by a simple integer. The exception is the p_memcpy function which copies blocks of bytes within a shared memory architecture only.
 
 FUNCTION     | NOTES
 ------------ | -------------
-[p_broadcast()](src/core/p_broadcast.c) | broadcast operation
-[p_gather()](src/core/p_gather.c)       | gather operation
-[p_memcpy()](src/core/p_memcpy.c)       | fast memcpy()
-[p_read()](src/core/p_read.c)           | read from a memory object
-[p_scatter()](src/core/p_scatter.c)     | scatter operation
-[p_write()](src/core/p_write.c)         | write to a memory object
+[p_broadcast()](src/base/p_broadcast.c) | broadcast operation
+[p_gather()](src/base/p_gather.c)       | gather operation
+[p_memcpy()](src/base/p_memcpy.c)       | fast memcpy()
+[p_read()](src/base/p_read.c)           | read from a memory object
+[p_scatter()](src/base/p_scatter.c)     | scatter operation
+[p_write()](src/base/p_write.c)         | write to a memory object
 
 
 ##SYNCHRONIZATION  
@@ -146,17 +146,17 @@ The synchronization functions are useful for program sequencing and resource loc
 
 FUNCTION     | NOTES
 ------------ | -------------
-[p_mutex_lock()](src/core/p_mutex_lock.c)           | lock a mutex
-[p_mutex_trylock()](src/core/p_mutex_trylock.c)     | try locking a mutex once
-[p_mutex_unlock()](src/core/p_mutex_unlock.c)       | unlock (clear) a mutex
-[p_mutex_init()](src/core/p_mutex_init.c)           | initialize a mutex
-[p_atomic_add()](src/core/p_atomic_add.c)           | atomic fetch and add
-[p_atomic_sub()](src/core/p_atomic_sub.c)           | atomic fetch and sub
-[p_atomic_and()](src/core/p_atomic_and.c)           | atomic fetch and 'and'
-[p_atomic_xor()](src/core/p_atomic_xor.c)           | atomic fetch and 'xor'
-[p_atomic_or()](src/core/p_atomic_or.c)             | atomic fetch and 'or'
-[p_atomic_swap()](src/core/p_atomic_swap.c)         | atomic exchange
-[p_atomic_compswap()](src/core/p_atomic_compswap.c) | atomic compare and exchange
+[p_mutex_lock()](src/base/p_mutex_lock.c)           | lock a mutex
+[p_mutex_trylock()](src/base/p_mutex_trylock.c)     | try locking a mutex once
+[p_mutex_unlock()](src/base/p_mutex_unlock.c)       | unlock (clear) a mutex
+[p_mutex_init()](src/base/p_mutex_init.c)           | initialize a mutex
+[p_atomic_add()](src/base/p_atomic_add.c)           | atomic fetch and add
+[p_atomic_sub()](src/base/p_atomic_sub.c)           | atomic fetch and sub
+[p_atomic_and()](src/base/p_atomic_and.c)           | atomic fetch and 'and'
+[p_atomic_xor()](src/base/p_atomic_xor.c)           | atomic fetch and 'xor'
+[p_atomic_or()](src/base/p_atomic_or.c)             | atomic fetch and 'or'
+[p_atomic_swap()](src/base/p_atomic_swap.c)         | atomic exchange
+[p_atomic_compswap()](src/base/p_atomic_compswap.c) | atomic compare and exchange
 
 ##MATH  
 The math funtions are single threaded vectorized functions intended to run on a single processor. Math functions use pointers for input/output arguments and take in a separate variable to indicate the size of the vectors. Speed and size is a priority and some liberties have been taken with respect to accuracy and safety. 
@@ -206,7 +206,7 @@ FUNCTION     | NOTES
 ##DSP  
 The digital signal processing (dsp) funtions are similar to the math functions
 in that they are single threaded vectorized functions intended to run on a 
-single core. Also, just like the math functions they take in pointers for 
+single base. Also, just like the math functions they take in pointers for 
 input/output arguments and a separate variable to indicate the size of the 
 vectors. Speed and size is a priority and some liberties have been taken with 
 respect to accuracy and safety.
