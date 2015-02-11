@@ -16,18 +16,18 @@ int main(int argc, char **argv)
     int status, myid, i, all;
 
     // Pointers to dynamic objects
-    p_dev_t *dev0; // device information
+    p_dev_t *dev0;      // device information
     p_program_t *prog0; // program to execute
-    p_team_t *team0; // working team
-    p_mem_t *mem0; // memory object (input)
-    p_mem_t *mem1; // memory object (output)
+    p_team_t *team0;    // working team
+    p_mem_t *mem0;      // memory object (input)
+    p_mem_t *mem1;      // memory object (output)
 
     // Setting arguments
 
     // Initialize memory/team
-    dev0 = p_init(type, 0); // initialize system
-    all = p_query(dev0, NODES); // find # of device nodes
-    prog0 = p_load(dev0, elf); // load executable file
+    dev0 = p_init(type, 0);       // initialize system
+    all = p_query(dev0, NODES);   // find # of device nodes
+    prog0 = p_load(dev0, elf);    // load executable file
     team0 = p_open(dev0, 0, all); // open a team
 
     // Allocate memory
@@ -45,7 +45,7 @@ int main(int argc, char **argv)
     status = p_barrier(team0);
 
     // Cleanup
-    status = p_free(mem0); // free memory
-    status = p_close(team0); // close the team
+    status = p_free(mem0);     // free memory
+    status = p_close(team0);   // close the team
     status = p_finalize(dev0); // close down the device
 }

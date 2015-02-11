@@ -22,7 +22,7 @@ int p_malloc(int team, size_t size)
     printf("Running p_malloc(%d,%d)\n", team, (int)size);
     p_mem_t *mem;
 
-    switch (0) { // FIX!
+    switch (0) {   // FIX!
     case EPIPHANY: // shared memory model
         break;
     case FPGA: // shared memory model

@@ -61,7 +61,7 @@ void p_sobel3x3_32f(float *x, int rows, int cols, float *r)
             *pr = sqrtf(Dx * Dx + Dy * Dy) /
                   8; // optimize: get rid of  divide by 8 and sqrt
             //*pr = (fabs(Dx) + fabs(Dy)) * reciprocal[8]; //(slightly faster
-            //alternative)
+            // alternative)
             px += 1 - 3 * cols; // advance mask matrix in one column, get rid of
                                 // integer multiply?
             pr++;
