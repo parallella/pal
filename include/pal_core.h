@@ -11,28 +11,24 @@
  ***********************************************************************
  */
 
-#define EPIPHANY  0x01
-#define GRID      0x02
-#define SMP       0x03
-#define FPGA      0x04
-#define GPU       0x05
-#define DEMO      0x06
+#define P_DEV_EPIPHANY  0x01
+#define P_DEV_GRID      0x02
+#define P_DEV_SMP       0x03
+#define P_DEV_FPGA      0x04
+#define P_DEV_GPU       0x05
+#define P_DEV_DEMO      0x06
 
 /*
  ***********************************************************************
  * FLAGS
  ***********************************************************************
  */
-#define ASYNC      0x01
-#define METAL      0x02
-#define LINUX      0x04
-#define SOURCE     0x08
-#define BIN        0x10
-
-#define DEFAULT    0
-#define STANDARD   0
-#define SUCCESS    0
-#define ERROR     -1
+#define P_OPT_DEFAULT    0
+#define P_OPT_ASYNC      0x01
+#define P_OPT_METAL      0x02
+#define P_OPT_LINUX      0x04
+#define P_OPT_SOURCE     0x08
+#define P_OPT_BIN        0x10
 
 /*
  ***********************************************************************
@@ -40,20 +36,20 @@
  ***********************************************************************
  */
 
-#define TYPE           0
-#define NODES          1
-#define TOPOLOGY       2
-#define ROWS           3
-#define COLS           4
-#define PLANES         5
-#define CHIPROWS       6
-#define CHIPCOLS       7
-#define SIMD           8
-#define MEMSIZE        9
-#define MEMBASE        10
-#define VERSION        11
-#define MEMARCH        12
-#define WHOAMI         13
+#define P_QUERY_TYPE           0
+#define P_QUERY_NODES          1
+#define P_QUERY_TOPOLOGY       2
+#define P_QUERY_ROWS           3
+#define P_QUERY_COLS           4
+#define P_QUERY_PLANES         5
+#define P_QUERY_CHIPROWS       6
+#define P_QUERY_CHIPCOLS       7
+#define P_QUERY_SIMD           8
+#define P_QUERY_MEMSIZE        9
+#define P_QUERY_MEMBASE        10
+#define P_QUERY_VERSION        11
+#define P_QUERY_MEMARCH        12
+#define P_QUERY_WHOAMI         13
 
 /*
  ***********************************************************************
@@ -236,3 +232,5 @@ struct p_dev_table p_dev_table_global;
 struct p_team_table p_team_table_global;
 struct p_program_table p_program_table_global;
 struct p_mem_table p_mem_table_global;
+
+#endif // _PAL_CORE_H_
