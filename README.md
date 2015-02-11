@@ -105,39 +105,39 @@ These program flow functions are used to manage the system and to execute progra
 
 FUNCTION     | NOTES
 ------------ | -------------
-[p_init()](core/p_init.c)            | initialize the run time
-[p_query()](core/p_query.c)          | query a device object
-[p_load()](core/p_load.c)            | load binary elf file into memory
-[p_run()](core/p_run.c)              | run a program on a team of processor
-[p_open()](core/p_open.c)            | open a team of processors
-[p_append()](core/p_append.c)        | add members to team
-[p_remove()](core/p_remove.c)        | remove members from team
-[p_close()](core/p_close.c)          | close a team of processors
-[p_barrier()](core/p_barrier.c)      | team barrier
-[p_wait()](core/p_wait.c)            | wait for team to finish
-[p_fence()](core/p_fence.c)          | memory fence
-[p_finalize()](core/p_finalize.c)    | cleans up run time
+[p_init()](src/core/p_init.c)            | initialize the run time
+[p_query()](src/core/p_query.c)          | query a device object
+[p_load()](src/core/p_load.c)            | load binary elf file into memory
+[p_run()](src/core/p_run.c)              | run a program on a team of processor
+[p_open()](src/core/p_open.c)            | open a team of processors
+[p_append()](src/core/p_append.c)        | add members to team
+[p_remove()](src/core/p_remove.c)        | remove members from team
+[p_close()](src/core/p_close.c)          | close a team of processors
+[p_barrier()](src/core/p_barrier.c)      | team barrier
+[p_wait()](src/core/p_wait.c)            | wait for team to finish
+[p_fence()](src/core/p_fence.c)          | memory fence
+[p_finalize()](src/core/p_finalize.c)    | cleans up run time
 
 ##MEMORY ALLOCATION  
 These functions are used for creating memory objects. The function returns a unique integer for each new memory object. This integer can then be used by functions like p_read() and p_write() to access data within the memory object.  
 
 FUNCTION     | NOTES
 ------------ | -------------
-[p_malloc()](core/p_malloc.c)        | allocate memory on local processor
-[p_rmalloc()](core/p_rmalloc.c)      | allocate memory on remote processor
-[p_free()](core/p_free.c)            | free memory
+[p_malloc()](src/core/p_malloc.c)        | allocate memory on local processor
+[p_rmalloc()](src/core/p_rmalloc.c)      | allocate memory on remote processor
+[p_free()](src/core/p_free.c)            | free memory
 
 ##DATA MOVEMENT  
 The data movement functions move blocks of data between opaque memory objects and locations specified by pointers. The memory object is specified by a simple integer. The exception is the p_memcpy function which copies blocks of bytes within a shared memory architecture only.
 
 FUNCTION     | NOTES
 ------------ | -------------
-[p_broadcast()](core/p_broadcast.c) | broadcast operation
-[p_gather()](core/p_gather.c)       | gather operation
-[p_memcpy()](core/p_memcpy.c)       | fast memcpy()
-[p_read()](core/p_read.c)           | read from a memory object
-[p_scatter()](core/p_scatter.c)     | scatter operation
-[p_write()](core/p_write.c)         | write to a memory object
+[p_broadcast()](src/core/p_broadcast.c) | broadcast operation
+[p_gather()](src/core/p_gather.c)       | gather operation
+[p_memcpy()](src/core/p_memcpy.c)       | fast memcpy()
+[p_read()](src/core/p_read.c)           | read from a memory object
+[p_scatter()](src/core/p_scatter.c)     | scatter operation
+[p_write()](src/core/p_write.c)         | write to a memory object
 
 
 ##SYNCHRONIZATION  
@@ -146,62 +146,62 @@ The synchronization functions are useful for program sequencing and resource loc
 
 FUNCTION     | NOTES
 ------------ | -------------
-[p_mutex_lock()](core/p_mutex_lock.c)           | lock a mutex
-[p_mutex_trylock()](core/p_mutex_trylock.c)     | try locking a mutex once
-[p_mutex_unlock()](core/p_mutex_unlock.c)       | unlock (clear) a mutex
-[p_mutex_init()](core/p_mutex_init.c)           | initialize a mutex
-[p_atomic_add()](core/p_atomic_add.c)           | atomic fetch and add
-[p_atomic_sub()](core/p_atomic_sub.c)           | atomic fetch and sub
-[p_atomic_and()](core/p_atomic_and.c)           | atomic fetch and 'and'
-[p_atomic_xor()](core/p_atomic_xor.c)           | atomic fetch and 'xor'
-[p_atomic_or()](core/p_atomic_or.c)             | atomic fetch and 'or'
-[p_atomic_swap()](core/p_atomic_swap.c)         | atomic exchange
-[p_atomic_compswap()](core/p_atomic_compswap.c) | atomic compare and exchange
+[p_mutex_lock()](src/core/p_mutex_lock.c)           | lock a mutex
+[p_mutex_trylock()](src/core/p_mutex_trylock.c)     | try locking a mutex once
+[p_mutex_unlock()](src/core/p_mutex_unlock.c)       | unlock (clear) a mutex
+[p_mutex_init()](src/core/p_mutex_init.c)           | initialize a mutex
+[p_atomic_add()](src/core/p_atomic_add.c)           | atomic fetch and add
+[p_atomic_sub()](src/core/p_atomic_sub.c)           | atomic fetch and sub
+[p_atomic_and()](src/core/p_atomic_and.c)           | atomic fetch and 'and'
+[p_atomic_xor()](src/core/p_atomic_xor.c)           | atomic fetch and 'xor'
+[p_atomic_or()](src/core/p_atomic_or.c)             | atomic fetch and 'or'
+[p_atomic_swap()](src/core/p_atomic_swap.c)         | atomic exchange
+[p_atomic_compswap()](src/core/p_atomic_compswap.c) | atomic compare and exchange
 
 ##MATH  
 The math funtions are single threaded vectorized functions intended to run on a single processor. Math functions use pointers for input/output arguments and take in a separate variable to indicate the size of the vectors. Speed and size is a priority and some liberties have been taken with respect to accuracy and safety. 
 
 FUNCTION     | NOTES
 ------------ | -------------
-[p_abs()](math/p_abs.c)           | absolute value
-[p_absdiff()](math/p_absdiff.c)   | absolute difference
-[p_add()](math/p_add.c)           | add
-[p_acos()](math/p_acos.c)         | arc cosine
-[p_acosh()](math/p_acosh.c)       | arc hyperbolic cosine
-[p_asin()](math/p_asin.c)         | arc sine
-[p_asinh()](math/p_asinh.c)       | arc hyperbolic sine
-[p_cbrt()](math/p_cbrt.c)         | cubic root
-[p_cos()](math/p_cos.c)           | cosine
-[p_cosh()](math/p_cosh.c)         | hyperbolic cosine 
-[p_div()](math/p_div.c)           | division
-[p_dot()](math/p_dot.c)           | dot product
-[p_exp()](math/p_div.c)           | expontial
-[p_ftoi()](math/p_ftoi.c)         | float to integer conversion
-[p_itof()](math/p_itof.c)         | integer to float conversion
-[p_inv()](math/p_inv.c)           | inverse
-[p_invcbrt()](math/p_invcbrt.c)   | inverse cube root
-[p_invsqrt()](math/p_invsqrt.c)   | inverse square root
-[p_ln()](math/p_ln.c)             | natural log
-[p_log10()](math/p_log10.c)       | denary log
-[p_max()](math/p_max.c)           | finds max val
-[p_min()](math/p_min.c)           | finds min val
-[p_mean()](math/p_mean.c)         | mean operation
-[p_median()](math/p_mean.c)       | finds middle value
-[p_mode()](math/p_mode.c)         | finds most common value
-[p_mul()](math/p_mul.c)           | multiplication
-[p_popcount()](math/p_popcount.c) | count the number of bits set
-[p_pow()](math/p_pow.c)           | element raised to a power
-[p_rand()](math/p_rand.c)         | random number generator
-[p_randinit()](math/p_rand.c)     | initialize random number generator
-[p_sort()](math/p_sort.c)         | heap sort
-[p_sin()](math/p_sin.c)           | sine
-[p_sinh()](math/p_sinh.c)         | hyperbolic sine
-[p_sqrt()](math/p_sqrt.c)         | square root
-[p_sub()](math/p_sub.c)           | subtract
-[p_sum()](math/p_sum.c)           | sum of all vector elements
-[p_sumsq()](math/p_sumsq.c)       | sum of all vector squared elements 
-[p_tan()](math/p_tan.c)           | tangent
-[p_tanh()](math/p_tanh.c)         | hyperbolic tangent
+[p_abs()](src/math/p_abs.c)           | absolute value
+[p_absdiff()](src/math/p_absdiff.c)   | absolute difference
+[p_add()](src/math/p_add.c)           | add
+[p_acos()](src/math/p_acos.c)         | arc cosine
+[p_acosh()](src/math/p_acosh.c)       | arc hyperbolic cosine
+[p_asin()](src/math/p_asin.c)         | arc sine
+[p_asinh()](src/math/p_asinh.c)       | arc hyperbolic sine
+[p_cbrt()](src/math/p_cbrt.c)         | cubic root
+[p_cos()](src/math/p_cos.c)           | cosine
+[p_cosh()](src/math/p_cosh.c)         | hyperbolic cosine 
+[p_div()](src/math/p_div.c)           | division
+[p_dot()](src/math/p_dot.c)           | dot product
+[p_exp()](src/math/p_div.c)           | expontial
+[p_ftoi()](src/math/p_ftoi.c)         | float to integer conversion
+[p_itof()](src/math/p_itof.c)         | integer to float conversion
+[p_inv()](src/math/p_inv.c)           | inverse
+[p_invcbrt()](src/math/p_invcbrt.c)   | inverse cube root
+[p_invsqrt()](src/math/p_invsqrt.c)   | inverse square root
+[p_ln()](src/math/p_ln.c)             | natural log
+[p_log10()](src/math/p_log10.c)       | denary log
+[p_max()](src/math/p_max.c)           | finds max val
+[p_min()](src/math/p_min.c)           | finds min val
+[p_mean()](src/math/p_mean.c)         | mean operation
+[p_median()](src/math/p_mean.c)       | finds middle value
+[p_mode()](src/math/p_mode.c)         | finds most common value
+[p_mul()](src/math/p_mul.c)           | multiplication
+[p_popcount()](src/math/p_popcount.c) | count the number of bits set
+[p_pow()](src/math/p_pow.c)           | element raised to a power
+[p_rand()](src/math/p_rand.c)         | random number generator
+[p_randinit()](src/math/p_rand.c)     | initialize random number generator
+[p_sort()](src/math/p_sort.c)         | heap sort
+[p_sin()](src/math/p_sin.c)           | sine
+[p_sinh()](src/math/p_sinh.c)         | hyperbolic sine
+[p_sqrt()](src/math/p_sqrt.c)         | square root
+[p_sub()](src/math/p_sub.c)           | subtract
+[p_sum()](src/math/p_sum.c)           | sum of all vector elements
+[p_sumsq()](src/math/p_sumsq.c)       | sum of all vector squared elements 
+[p_tan()](src/math/p_tan.c)           | tangent
+[p_tanh()](src/math/p_tanh.c)         | hyperbolic tangent
 
 ##DSP  
 The digital signal processing (dsp) funtions are similar to the math functions
@@ -213,14 +213,14 @@ respect to accuracy and safety.
 
 FUNCTION     | NOTES
 ------------ | -------------
-[p_acorr()](dsp/p_acorr.c)   | autocorrelation (r[j] = sum ( x[j+k] * x[k] ), k=0..(n-j-1))
-[p_conv()](dsp/p_conv.c)     | convolution: r[j] = sum ( h[k] * x[j-k), k=0..(nh-1)
-[p_xcorr()](dsp/p_xcorr.c)   | correlation: r[j] = sum ( x[j+k] * y[k]), k=0..(nx+ny-1)
-[p_fir()](dsp/p_fir.c)       | FIR filter direct form: r[j] = sum ( h[k] * x [j-k]), k=0..(nh-1)
-[p_firdec()](dsp/p_firdec.c) | FIR filter with decimation: r[j] = sum ( h[k] * x [j*D-k]), k=0..(nh-1)
-[p_firint()](dsp/p_firint.c) | FIR filter with inerpolation: r[j] = sum ( h[k] * x [j*D-k]), k=0..(nh-1)
-[p_firsym()](dsp/p_firsym.c) | FIR symmetric form
-[p_iir()](dsp/p_iir.c)       | IIR filter
+[p_acorr()](src/dsp/p_acorr.c)   | autocorrelation (r[j] = sum ( x[j+k] * x[k] ), k=0..(n-j-1))
+[p_conv()](src/dsp/p_conv.c)     | convolution: r[j] = sum ( h[k] * x[j-k), k=0..(nh-1)
+[p_xcorr()](src/dsp/p_xcorr.c)   | correlation: r[j] = sum ( x[j+k] * y[k]), k=0..(nx+ny-1)
+[p_fir()](src/dsp/p_fir.c)       | FIR filter direct form: r[j] = sum ( h[k] * x [j-k]), k=0..(nh-1)
+[p_firdec()](src/dsp/p_firdec.c) | FIR filter with decimation: r[j] = sum ( h[k] * x [j*D-k]), k=0..(nh-1)
+[p_firint()](src/dsp/p_firint.c) | FIR filter with inerpolation: r[j] = sum ( h[k] * x [j*D-k]), k=0..(nh-1)
+[p_firsym()](src/dsp/p_firsym.c) | FIR symmetric form
+[p_iir()](src/dsp/p_iir.c)       | IIR filter
 
 ##IMAGE PROCESSING  
 The image processing functions work on 2D arrays of data and use the same
@@ -228,16 +228,16 @@ argument passing conventions as the dsp and math functions.
 
 FUNCTION     | NOTES
 ------------ | -------------
-[p_box3x3()](image/p_box3x3.c)         | box filter (3x3)
-[p_conv2d()](image/p_conv2d.c)         | 2d convolution
-[p_gauss3x3()](image/p_gauss3x3.c)     | gaussian blur filter (3x3)
-[p_median3x3()](image/p_median3x3.c)   | median filter (3x3)
-[p_laplace3x3()](image/p_laplace3x3.c) | laplace filter (3x3)
-[p_prewitt3x3()](image/p_prewitt3x3.c) | prewitt filter (3x3)
-[p_sad8x8()](image/p_sad8x8.c)         | sum of absolute differences (8x8)
-[p_sad16x16()](image/p_sad16x16.c)     | sum of absolute differences (16x16)
-[p_sobel3x3()](image/p_sobel3x3.c)     | sobel filter (3x3)
-[p_scharr3x3()](image/p_scharr3x3.c)   | scharr filter (3x3)
+[p_box3x3()](src/image/p_box3x3.c)         | box filter (3x3)
+[p_conv2d()](src/image/p_conv2d.c)         | 2d convolution
+[p_gauss3x3()](src/image/p_gauss3x3.c)     | gaussian blur filter (3x3)
+[p_median3x3()](src/image/p_median3x3.c)   | median filter (3x3)
+[p_laplace3x3()](src/image/p_laplace3x3.c) | laplace filter (3x3)
+[p_prewitt3x3()](src/image/p_prewitt3x3.c) | prewitt filter (3x3)
+[p_sad8x8()](src/image/p_sad8x8.c)         | sum of absolute differences (8x8)
+[p_sad16x16()](src/image/p_sad16x16.c)     | sum of absolute differences (16x16)
+[p_sobel3x3()](src/image/p_sobel3x3.c)     | sobel filter (3x3)
+[p_scharr3x3()](src/image/p_scharr3x3.c)   | scharr filter (3x3)
 
 ##FFT  
 
