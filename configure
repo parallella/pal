@@ -585,7 +585,7 @@ PACKAGE_STRING='pal 0.3'
 PACKAGE_BUGREPORT='support@adapteva.com'
 PACKAGE_URL=''
 
-ac_unique_file="src/core/p_init.c"
+ac_unique_file="src/base/p_init.c"
 # Factoring default headers for most tests.
 ac_includes_default="\
 #include <stdio.h>

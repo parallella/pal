@@ -3,7 +3,7 @@
 
 AC_PREREQ([2.69])
 AC_INIT([pal], [0.3], [support@adapteva.com])
-AC_CONFIG_SRCDIR([src/core/p_init.c])
+AC_CONFIG_SRCDIR([src/base/p_init.c])
 AC_CONFIG_HEADERS([config.h])
 
 AM_INIT_AUTOMAKE
