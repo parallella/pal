@@ -30,3 +30,6 @@
 
 # Emacs
 *~
+
+# Autotools
+autom4te.cache
