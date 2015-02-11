@@ -107,7 +107,10 @@ int p_run(int prog, int team, int start, int count,
 	  int nargs, void *args[], int flags);
 
 /*Execution barrier*/
-int p_barrier(int team);
+int p_barrier(p_team_t team);
+
+/* Wait for a team */
+int p_wait(p_team_t team);
 
 /*Create a local memory object*/
 int p_malloc(int team, size_t size);
