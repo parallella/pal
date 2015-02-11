@@ -75,8 +75,8 @@ int main (int argc, char *argv[]){
 	args[0]=&argbuf;
 	status = p_run(prog0, team0, i, 1, nargs, args, 0);
     }
-    p_barrier(team0);    //not needed
-    p_close(team0);      //close team   
+    p_wait(team0);    //wait for team to finish (not needed, p_run()
+                      //blocking by default
     p_finalize(dev0);    //finalize memory
 }
 ```
@@ -109,7 +109,8 @@ FUNCTION     | NOTES
 [p_append()](core/p_append.c)        | add members to team
 [p_remove()](core/p_remove.c)        | remove members from team
 [p_close()](core/p_close.c)          | close a team of processors
-[p_barrier()](core/p_barrier.c)      | wait for team to catch up
+[p_barrier()](core/p_barrier.c)      | team barrier
+[p_wait()](core/p_wait.c)            | wait for team to finish
 [p_fence()](core/p_fence.c)          | memory fence
 [p_finalize()](core/p_finalize.c)    | cleans up run time
 
