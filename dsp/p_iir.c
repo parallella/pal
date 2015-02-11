@@ -1,14 +1,14 @@
 /**
- * Computes a cascaded IIR filter of 'nb' biquad sections using 32-bit 
- * coefficients and 32-bit delay buffers. Each biquad section is implemented 
- * using Direct-form II. 
+ * Computes a cascaded IIR filter of 'nb' biquad sections using 32-bit
+ * coefficients and 32-bit delay buffers. Each biquad section is implemented
+ * using Direct-form II.
  *
  * @param x    Pointer an input vector with 'nx' elements
  *
  * @param h    Pointer to vector containing '5*nb' filter coefficient
- *            
+ *
  * @param dbuf Pointer to delay line buffer
- *             Each biquad has 3 consecutive delay line elements     
+ *             Each biquad has 3 consecutive delay line elements
  *
  * @param nb   Number of biquads in filter
  *
@@ -20,9 +20,9 @@
  *
  */
 
-void p_iir_32f (const float* x, const float* h, float* dbuf, int nb, int nr, float* r ){
-    
-    
+void p_iir_32f(const float *x, const float *h, float *dbuf, int nb, int nr,
+               float *r)
+{
+
     /*PLACE CODE HERE*/
-    
 }

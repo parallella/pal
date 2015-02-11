@@ -1,5 +1,5 @@
 /**
- * Computes the raw full-length linear cross correlation of vectors x and y and 
+ * Computes the raw full-length linear cross correlation of vectors x and y and
  * stores the result in vector r. Normalization is done outside this function.
  *
  * @param x   Pointer an input vector of floats of 'nx' elements
@@ -16,8 +16,8 @@
  *
  */
 
-void p_xcorr_32f (float* x, float* y, int nx, int ny, float* r ){
+void p_xcorr_32f(float *x, float *y, int nx, int ny, float *r)
+{
 
-/*PLACE CODE HERE*/
-
+    /*PLACE CODE HERE*/
 }

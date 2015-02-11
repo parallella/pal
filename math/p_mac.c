@@ -1,6 +1,6 @@
 /**
  *
- * Element wise multiply accumulate: c += a * b' 
+ * Element wise multiply accumulate: c += a * b'
  *
  * @param a     Pointer to input vector
  *
@@ -9,16 +9,16 @@
  * @param c     Pointer to output vector
  *
  * @param n     Size of 'a' and 'c' vector.
- *       
+ *
  * @return      None
  *
  */
 
-void p_mac_32f (float* a, float* b,  float* c, int n ){
+void p_mac_32f(float *a, float *b, float *c, int n)
+{
 
     int i;
-    for(i=0;i<n;i++){
-        *(c+i) += *(a+i) * *(b+i);
+    for (i = 0; i < n; i++) {
+        *(c + i) += *(a + i) * *(b + i);
     }
-
 }

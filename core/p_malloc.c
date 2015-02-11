@@ -7,8 +7,8 @@
  *              a finite amount of memory.
  *
  * @param size  Total amount of memory to allocate
- *       
- * @return      Returns a pointer to the memory buffer 
+ *
+ * @return      Returns a pointer to the memory buffer
  *              Returns NULL on error
  */
 #include <stddef.h>
@@ -16,32 +16,33 @@
 #include "pal_core.h"
 #include "pal_core_private.h"
 
-int p_malloc (int team, size_t size){
-    
-    printf("Running p_malloc(%d,%d)\n", team, (int) size);
+int p_malloc(int team, size_t size)
+{
+
+    printf("Running p_malloc(%d,%d)\n", team, (int)size);
     p_mem_t *mem;
 
-    switch(0){//FIX!	
-    case EPIPHANY://shared memory model
-	break;
-    case FPGA://shared memory model
-        break;  
-    case GPU://shared memory model
-        break;  
-    case SMP://heap (thread model)
-	/*
-	mem=malloc(sizeof(p_mem_t));            
-	mem->mutex  = 23;
-	mem->takeit = 0;
-	mem->gotit  = 0;
-	mem->size   = size;
-	mem->memptr = malloc(size);
-	break;
-	*/
-    case GRID://file+IP (rcp?)
-	break;
+    switch (0) { // FIX!
+    case EPIPHANY: // shared memory model
+        break;
+    case FPGA: // shared memory model
+        break;
+    case GPU: // shared memory model
+        break;
+    case SMP: // heap (thread model)
+    /*
+    mem=malloc(sizeof(p_mem_t));
+    mem->mutex  = 23;
+    mem->takeit = 0;
+    mem->gotit  = 0;
+    mem->size   = size;
+    mem->memptr = malloc(size);
+    break;
+    */
+    case GRID: // file+IP (rcp?)
+        break;
     default:
-	return(1);
+        return (1);
     }
-    return(0);    
+    return (0);
 }

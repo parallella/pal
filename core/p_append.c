@@ -4,7 +4,7 @@
  *
  * @param team  Team number
  *
- * @param start Index of first processor from 'dev' (referenced by 'team') 
+ * @param start Index of first processor from 'dev' (referenced by 'team')
  *              to be added to the existing team
  *
  * @param size  Total number of processors to add.(following 'start')
@@ -16,8 +16,9 @@
 #include "pal_core.h"
 #include "pal_core_private.h"
 
-int p_append (int team, int start, int size){
-    printf("Running p_append(p_team_t,%d,%d)\n", start, size);    
-    //need to implement
-    return(0);
+int p_append(int team, int start, int size)
+{
+    printf("Running p_append(p_team_t,%d,%d)\n", start, size);
+    // need to implement
+    return (0);
 }

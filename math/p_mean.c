@@ -7,16 +7,17 @@
  * @param c     Pointer to output vector
  *
  * @param n     Size of 'a' and 'c' vector.
- *       
+ *
  * @return      None
  *
  */
-void p_mean_32f (float* a, float* c, int n ){
+void p_mean_32f(float *a, float *c, int n)
+{
 
     int i;
-    *(c+i) = 0.0f;
-    for(i=0;i<n;i++){
-	*(c+i)   += *(a+i);	
+    *(c + i) = 0.0f;
+    for (i = 0; i < n; i++) {
+        *(c + i) += *(a + i);
     }
-    *(c+i) = *(c+i)/n;
+    *(c + i) = *(c + i) / n;
 }

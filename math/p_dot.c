@@ -10,15 +10,16 @@
  * @param c     Pointer to output vector
  *
  * @param n     Size of 'a', 'b'
- *       
+ *
  * @return      None
  *
  */
-void p_dot_32f (float* a,  float* b,  float* c, int n ){
+void p_dot_32f(float *a, float *b, float *c, int n)
+{
 
     int i;
-    *c=0.0f;
-    for(i=0;i<n;i++){
-	*c += *(a+i) * *(b+i);
-    }  
+    *c = 0.0f;
+    for (i = 0; i < n; i++) {
+        *c += *(a + i) * *(b + i);
+    }
 }

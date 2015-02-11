@@ -8,15 +8,16 @@
  * @param c     Pointer to output vector
  *
  * @param n     Size of 'a' and 'c' vector.
- *       
+ *
  * @return      None
  *
  */
 #include <math.h>
-void p_sin_32f ( float* a, float* c, int n ){
+void p_sin_32f(float *a, float *c, int n)
+{
 
     int i;
-    for(i=0;i<n;i++){
-	*(c+i)=sinf(*(a+i));
+    for (i = 0; i < n; i++) {
+        *(c + i) = sinf(*(a + i));
     }
 }

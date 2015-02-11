@@ -7,11 +7,9 @@
  * @param c     Pointer to output vector
  *
  * @param n     Size of 'a' and 'c' vector.
- *       
+ *
  * @return      None
  *
  */
 #include <math.h>
-void p_itof (int* a, float* c, int n ){
-
-}
+void p_itof(int *a, float *c, int n) {}

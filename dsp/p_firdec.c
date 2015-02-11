@@ -1,8 +1,8 @@
 /**
- * Computes a decimating FIR filter (direct-form) on input data 'x' using 
- * coefficient stored in 'h' and places result in 'r'. This function 
- * retains the address of the delay filter memory containing the previous 
- * delayed values to allow consecutive processing of blocks. 
+ * Computes a decimating FIR filter (direct-form) on input data 'x' using
+ * coefficient stored in 'h' and places result in 'r'. This function
+ * retains the address of the delay filter memory containing the previous
+ * delayed values to allow consecutive processing of blocks.
  *
  * @param x     Pointer to input vector of 'n' elements
  *
@@ -21,9 +21,9 @@
  * @return      None
  *
  */
-void p_firdec_32f (const float* x, const float* h, float* dbuf, int nx, int nh, int df, float* r ){
+void p_firdec_32f(const float *x, const float *h, float *dbuf, int nx, int nh,
+                  int df, float *r)
+{
 
-
-/*PLACE CODE HERE*/
-
+    /*PLACE CODE HERE*/
 }

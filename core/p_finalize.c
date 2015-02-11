@@ -1,6 +1,6 @@
 /**
  *
- * Cleans up/finalizes the run time for device 'dev'. Should be called before 
+ * Cleans up/finalizes the run time for device 'dev'. Should be called before
  * exiting the main program.
  *
  * @param dev   Device object desriptor (int)
@@ -12,7 +12,8 @@
 #include "pal_core.h"
 #include "pal_core_private.h"
 
-int p_finalize (int dev){
+int p_finalize(int dev)
+{
     printf("Running p_finalize(%d)\n", dev);
-    return(0);
+    return (0);
 }

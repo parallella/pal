@@ -4,31 +4,30 @@
 #include <stdlib.h>
 #include <stdint.h>
 
-
 /*
  ***********************************************************************
  * DEVICE TYPE
  ***********************************************************************
  */
 
-#define P_DEV_EPIPHANY  0x01
-#define P_DEV_GRID      0x02
-#define P_DEV_SMP       0x03
-#define P_DEV_FPGA      0x04
-#define P_DEV_GPU       0x05
-#define P_DEV_DEMO      0x06
+#define P_DEV_EPIPHANY 0x01
+#define P_DEV_GRID 0x02
+#define P_DEV_SMP 0x03
+#define P_DEV_FPGA 0x04
+#define P_DEV_GPU 0x05
+#define P_DEV_DEMO 0x06
 
 /*
  ***********************************************************************
  * FLAGS
  ***********************************************************************
  */
-#define P_OPT_DEFAULT    0
-#define P_OPT_ASYNC      0x01
-#define P_OPT_METAL      0x02
-#define P_OPT_LINUX      0x04
-#define P_OPT_SOURCE     0x08
-#define P_OPT_BIN        0x10
+#define P_OPT_DEFAULT 0
+#define P_OPT_ASYNC 0x01
+#define P_OPT_METAL 0x02
+#define P_OPT_LINUX 0x04
+#define P_OPT_SOURCE 0x08
+#define P_OPT_BIN 0x10
 
 /*
  ***********************************************************************
@@ -36,20 +35,20 @@
  ***********************************************************************
  */
 
-#define P_QUERY_TYPE           0
-#define P_QUERY_NODES          1
-#define P_QUERY_TOPOLOGY       2
-#define P_QUERY_ROWS           3
-#define P_QUERY_COLS           4
-#define P_QUERY_PLANES         5
-#define P_QUERY_CHIPROWS       6
-#define P_QUERY_CHIPCOLS       7
-#define P_QUERY_SIMD           8
-#define P_QUERY_MEMSIZE        9
-#define P_QUERY_MEMBASE        10
-#define P_QUERY_VERSION        11
-#define P_QUERY_MEMARCH        12
-#define P_QUERY_WHOAMI         13
+#define P_QUERY_TYPE 0
+#define P_QUERY_NODES 1
+#define P_QUERY_TOPOLOGY 2
+#define P_QUERY_ROWS 3
+#define P_QUERY_COLS 4
+#define P_QUERY_PLANES 5
+#define P_QUERY_CHIPROWS 6
+#define P_QUERY_CHIPCOLS 7
+#define P_QUERY_SIMD 8
+#define P_QUERY_MEMSIZE 9
+#define P_QUERY_MEMBASE 10
+#define P_QUERY_VERSION 11
+#define P_QUERY_MEMARCH 12
+#define P_QUERY_WHOAMI 13
 
 /*
  ***********************************************************************
@@ -100,11 +99,11 @@ p_ref_t p_close(p_team_t *team);
 
 /* Loads a program from the file system into memory */
 p_prog_t p_load(p_dev_t *dev, char *file, char *function, int flags,
-        p_prog_t* prog);
+                p_prog_t *prog);
 
 /* Run a program on N processors */
-p_ref_t p_run(p_prog_t *prog, p_team_t *team, int start, int count,
-        int nargs, void *args[], int flags);
+p_ref_t p_run(p_prog_t *prog, p_team_t *team, int start, int count, int nargs,
+              void *args[], int flags);
 
 /*Execution barrier*/
 int p_barrier(p_team_t team);
@@ -147,14 +146,12 @@ ssize_t p_read(int mem, void *dst, size_t nb, int flags);
 ssize_t p_broadcast(int *mlist[], int mcount, void *src, size_t nb, int flags);
 
 /*Scatters data from a local array to a list of remote memory objects*/
-ssize_t p_scatter(int *mlist[], int mcount,
-		  void *suf, size_t scount,
-		  int disp[], int flags);
+ssize_t p_scatter(int *mlist[], int mcount, void *suf, size_t scount,
+                  int disp[], int flags);
 
 /*Scatters data from a local array to a list of remote memory objects*/
-ssize_t p_gather(int *mlist[], int mcount,
-		 void *dbuf, size_t dcount,
-		 int disp[], int flags);
+ssize_t p_gather(int *mlist[], int mcount, void *dbuf, size_t dcount,
+                 int disp[], int flags);
 
 /*Specialized low level shared memory memcpy interface (non-blocking)*/
 ssize_t p_memcpy(void *dst, void *src, size_t nb, int flags);
@@ -204,26 +201,29 @@ int p_atomic_swap_u32(p_atom_t *atom, uint32_t *input);
 /*atomic compare and swap*/
 int p_atomic_compswap_u32(p_atom_t *atom, uint32_t *input, uint32_t expected);
 
-
 /*
  ***********************************************************************
  * Global system variables (will be replaced with O/S real time
  ***********************************************************************
  */
 
-struct p_dev_table {
+struct p_dev_table
+{
     p_dev_t *devptr[16];
     int size;
 };
-struct p_team_table {
+struct p_team_table
+{
     p_team_t *teamptr[16];
     int size;
 };
-struct p_program_table {
+struct p_program_table
+{
     p_program_t *progptr[16];
     int size;
 };
-struct p_mem_table {
+struct p_mem_table
+{
     p_mem_t *memptr[16];
     int size;
 };

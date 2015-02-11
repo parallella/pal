@@ -8,11 +8,9 @@
  * @param c     Pointer to output vector
  *
  * @param n     Size of 'a' and 'c' vector.
- *       
+ *
  * @return      None
  *
  */
 #include <math.h>
-void p_sincos_32f ( const float* a, float* c, float* z ){
-
-}
+void p_sincos_32f(const float *a, float *c, float *z) {}

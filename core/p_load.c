@@ -16,12 +16,12 @@
 #include <errno.h>
 #include "pal_core.h"
 #include "pal_core_private.h"
-int p_load (p_dev_t *dev, p_program_t *prog, char *file, char *function,
-        int flags)
+int p_load(p_dev_t *dev, p_program_t *prog, char *file, char *function,
+           int flags)
 {
 
 #if _P_DEBUG
-    printf("Running p_load(%d,%s,%s,%d)\n",dev,file, function, flags);
+    printf("Running p_load(%d,%s,%s,%d)\n", dev, file, function, flags);
 #endif
 
 #if 0
@@ -43,6 +43,4 @@ int p_load (p_dev_t *dev, p_program_t *prog, char *file, char *function,
 #endif
 
     return -ENOSYS;
-
 }
-

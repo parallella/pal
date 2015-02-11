@@ -1,8 +1,8 @@
 /**
- * Computes a interpolating FIR filter (direct-form) on input data 'x' using 
- * coefficient stored in 'h' and places result in 'r'. This function 
- * retains the address of the delay filter memory containing the previous 
- * delayed values to allow consecutive processing of blocks. 
+ * Computes a interpolating FIR filter (direct-form) on input data 'x' using
+ * coefficient stored in 'h' and places result in 'r'. This function
+ * retains the address of the delay filter memory containing the previous
+ * delayed values to allow consecutive processing of blocks.
  *
  * @param x       Pointer to input vector of 'nx' elements
  *
@@ -23,9 +23,9 @@
  *
  */
 
+void p_firint_32f(float *x, float *h, float *dbuf, int nx, int nh, int ifactor,
+                  float *r)
+{
 
-void p_firint_32f (float* x, float* h, float* dbuf, int nx, int nh, int ifactor, float* r){
-
-/*PLACE CODE HERE*/
-
+    /*PLACE CODE HERE*/
 }

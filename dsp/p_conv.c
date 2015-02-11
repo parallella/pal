@@ -1,7 +1,7 @@
 /**
 
  * Computes the convolution of two vectors 'x' and 'h', and places the
- * results in vector 'r'. 
+ * results in vector 'r'.
  *
  * @param x       Pointer to input vector of size 'nr+nh-1' elements
  *
@@ -16,8 +16,8 @@
  * @return        None
  *
  */
-void p_conv_32f (float* x, float* h, int nx, int nh, float* r){
+void p_conv_32f(float *x, float *h, int nx, int nh, float *r)
+{
 
-/*PLACE CODE HERE*/
-
+    /*PLACE CODE HERE*/
 }

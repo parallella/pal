@@ -1,20 +1,21 @@
 /**
  *
- * Calculates the cube root of the input vector 'a'. 
+ * Calculates the cube root of the input vector 'a'.
  *
  * @param a     Pointer to input vector
  *
  * @param c     Pointer to output vector
  *
  * @param n     Size of 'a' and 'c' vector.
- *       
+ *
  * @return      None
  *
  */
-void p_cbrt_32f (float* a, float* c, int n ){
+void p_cbrt_32f(float *a, float *c, int n)
+{
 
     int i;
-    for(i=0;i<n;i++){
-	*(c+i)=cbtrf(*(a+i));
+    for (i = 0; i < n; i++) {
+        *(c + i) = cbtrf(*(a + i));
     }
 }

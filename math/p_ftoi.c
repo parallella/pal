@@ -7,11 +7,8 @@
  * @param c     Pointer to output vector
  *
  * @param n     Size of 'a' and 'c' vector.
- *       
+ *
  * @return      None
  *
  */
-void p_ftoi (float* a, int* c, int n  ){
-
-
-}
+void p_ftoi(float *a, int *c, int n) {}

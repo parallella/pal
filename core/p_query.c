@@ -38,9 +38,9 @@
  *        CHIPCOLS - Number of cols on a single chip
  *        SIMD     - Vector size at each node
  *        MEMSIZE  - Local memory size at each node
- *        MEMBASE  - Memory offset of first node 
+ *        MEMBASE  - Memory offset of first node
  *        VERSION  - Unique platform version "tag"
- *        WHOAMI   - Returns index of current node 
+ *        WHOAMI   - Returns index of current node
  *
  * @return      Value of property being queried
  *
@@ -48,11 +48,12 @@
 #include "pal_core.h"
 #include "pal_core_private.h"
 #include <stdio.h>
-int p_query (int dev, int prop){
-    printf("Running p_query(%d,%d)\n",dev, prop);
+int p_query(int dev, int prop)
+{
+    printf("Running p_query(%d,%d)\n", dev, prop);
 
     int res;
-    p_dev_t *devptr= p_dev_table_global.devptr[dev];    
-    res=devptr->property[NODES];         
+    p_dev_t *devptr = p_dev_table_global.devptr[dev];
+    res = devptr->property[NODES];
     return (res);
 }

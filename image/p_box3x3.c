@@ -6,47 +6,47 @@
  * M =|1 1 1| * 1/9
  *    |1 1 1|
  *
- * @param x    Pointer to input image, a 2D array of size 'rows' x 'cols' 
- * 
+ * @param x    Pointer to input image, a 2D array of size 'rows' x 'cols'
+ *
  * @param rows Number of rows in input image
- * 
+ *
  * @param cols Number of columns in input image
  *
  * @param r    Pointer to output image
  *
  */
 
-void p_box3x3_32f (float* x,  int rows, int cols, float* r){
+void p_box3x3_32f(float *x, int rows, int cols, float *r)
+{
 
-    
     int ia, ja;
     float E;
     float *px, *pr;
-    
+
     px = x;
     pr = r;
-    
-    for (ia=1; ia<=(rows-2); ia++){
-	for (ja=1; ja<=(cols-2); ja++){
-	    E = 0;	    
-	    E += (*px++);     
-	    E += (*px++);     
-	    E += (*px++);     
-	    px += cols - 3;
-	    E += (*px++);     
-	    E += (*px++);     
-	    E += (*px++);     
-	    px += cols - 3;
-	    E += (*px++);     
-	    E += (*px++);     
-	    E += (*px++);     
-	    px += cols - 3;	    
-	    *pr = E / 9; //multiply by (1/9) constant instead	    
-	    px += 1 - 3 * cols; // advance mask matrix in one column.
-	    pr++;
-	}
-	px = px + 2; //advance pointer to the beginning of next row.
+
+    for (ia = 1; ia <= (rows - 2); ia++) {
+        for (ja = 1; ja <= (cols - 2); ja++) {
+            E = 0;
+            E += (*px++);
+            E += (*px++);
+            E += (*px++);
+            px += cols - 3;
+            E += (*px++);
+            E += (*px++);
+            E += (*px++);
+            px += cols - 3;
+            E += (*px++);
+            E += (*px++);
+            E += (*px++);
+            px += cols - 3;
+            *pr = E / 9; // multiply by (1/9) constant instead
+            px += 1 - 3 * cols; // advance mask matrix in one column.
+            pr++;
+        }
+        px = px + 2; // advance pointer to the beginning of next row.
     }
-    
+
     return;
 }

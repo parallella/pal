@@ -11,7 +11,8 @@
 #include "pal_core.h"
 #include "pal_core_private.h"
 
-int p_wait (p_team_t *team){
+int p_wait(p_team_t *team)
+{
 
     printf("Running p_wait\n");
 

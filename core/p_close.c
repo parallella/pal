@@ -11,7 +11,8 @@
 #include "pal_core.h"
 #include "pal_core_private.h"
 
-int p_close (int team){
+int p_close(int team)
+{
     printf("Running p_close (%d)\n", team);
-    return(0);
+    return (0);
 }

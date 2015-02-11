@@ -7,18 +7,19 @@
  * @param c     Pointer to output vector
  *
  * @param n     Size of 'a' and 'c' vector.
- *       
+ *
  * @return      None
  *
  */
 
-void p_max_32f (float* a, float* c, int* index, int n ){
+void p_max_32f(float *a, float *c, int *index, int n)
+{
     int i;
     *c = 3.40282346638528860e+38;
-    for(i=0;i<n;i++){
-	if(*(a+i) > *c){
-	    *(index) = i;
-	    *(c+i) = *(a+i);
-	}
+    for (i = 0; i < n; i++) {
+        if (*(a + i) > *c) {
+            *(index) = i;
+            *(c + i) = *(a + i);
+        }
     }
 }
