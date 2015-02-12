@@ -636,6 +636,7 @@ ac_header_list=
 ac_subst_vars='am__EXEEXT_FALSE
 am__EXEEXT_TRUE
 LTLIBOBJS
+AM_CPPFLAGS
 LIBOBJS
 ALLOCA
 CXXCPP
@@ -17040,7 +17041,12 @@ fi
 done
 
 
-ac_config_files="$ac_config_files Makefile src/Makefile src/base/Makefile"
+ac_config_files="$ac_config_files Makefile src/Makefile src/base/Makefile src/base/examples/Makefile"
+
+
+# Easiest way to include header files globally
+AM_CPPFLAGS='-I$(top_srcdir)/include'
+
 
 cat >confcache <<\_ACEOF
 # This file is a shell script that caches the results of configure
@@ -18149,6 +18155,7 @@ do
     "Makefile") CONFIG_FILES="$CONFIG_FILES Makefile" ;;
     "src/Makefile") CONFIG_FILES="$CONFIG_FILES src/Makefile" ;;
     "src/base/Makefile") CONFIG_FILES="$CONFIG_FILES src/base/Makefile" ;;
+    "src/base/examples/Makefile") CONFIG_FILES="$CONFIG_FILES src/base/examples/Makefile" ;;
 
   *) as_fn_error $? "invalid argument: \`$ac_config_target'" "$LINENO" 5;;
   esac
