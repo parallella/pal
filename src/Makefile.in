@@ -230,6 +230,7 @@ top_builddir = @top_builddir@
 top_srcdir = @top_srcdir@
 AUTOMAKE_OPTIONS = foreign
 SUBDIRS = base
+EXTRA_DIST = blas dsp fft image math wrappers
 all: all-recursive
 
 .SUFFIXES:

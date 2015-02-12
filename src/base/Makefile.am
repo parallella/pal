@@ -1,5 +1,6 @@
 AUTOMAKE_OPTIONS = foreign
 SUBDIRS = examples
+EXTRA_DIST = epiphany
 
 lib_LTLIBRARIES = libpal.la
 libpal_la_SOURCES = \
@@ -35,7 +36,8 @@ libpal_la_SOURCES = \
     p_rmalloc.c \
     p_run.c \
     p_wait.c \
-    p_write.c
+    p_write.c \
+    pal_base_private.h
 
 # Disable temporarily until API is determined
 #    p_scatter.c \
