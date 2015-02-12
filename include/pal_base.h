@@ -22,12 +22,12 @@
  * FLAGS
  ***********************************************************************
  */
-#define P_OPT_DEFAULT 0
-#define P_OPT_ASYNC 0x01
-#define P_OPT_METAL 0x02
-#define P_OPT_LINUX 0x04
-#define P_OPT_SOURCE 0x08
-#define P_OPT_BIN 0x10
+#define P_FLAG_DEFAULT 0
+#define P_FLAG_ASYNC 0x01
+#define P_FLAG_METAL 0x02
+#define P_FLAG_LINUX 0x04
+#define P_FLAG_SOURCE 0x08
+#define P_FLAG_BIN 0x10
 
 /*
  ***********************************************************************
