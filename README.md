@@ -161,7 +161,7 @@ FUNCTION     | NOTES
 [p_atomic_compswap()](src/base/p_atomic_compswap.c) | atomic compare and exchange
 
 ##MATH  
-The math funtions are single threaded vectorized functions intended to run on a single processor. Math functions use pointers for input/output arguments and take in a separate variable to indicate the size of the vectors. Speed and size is a priority and some liberties have been taken with respect to accuracy and safety. 
+The math functions are single threaded vectorized functions intended to run on a single processor. Math functions use pointers for input/output arguments and take in a separate variable to indicate the size of the vectors. Speed and size is a priority and some liberties have been taken with respect to accuracy and safety. 
 
 FUNCTION     | NOTES
 ------------ | -------------
@@ -174,10 +174,10 @@ FUNCTION     | NOTES
 [p_asinh()](src/math/p_asinh.c)       | arc hyperbolic sine
 [p_cbrt()](src/math/p_cbrt.c)         | cubic root
 [p_cos()](src/math/p_cos.c)           | cosine
-[p_cosh()](src/math/p_cosh.c)         | hyperbolic cosine 
+[p_cosh()](src/math/p_cosh.c)         | hyperbolic cosine
 [p_div()](src/math/p_div.c)           | division
 [p_dot()](src/math/p_dot.c)           | dot product
-[p_exp()](src/math/p_div.c)           | expontial
+[p_exp()](src/math/p_div.c)           | exponential
 [p_ftoi()](src/math/p_ftoi.c)         | float to integer conversion
 [p_itof()](src/math/p_itof.c)         | integer to float conversion
 [p_inv()](src/math/p_inv.c)           | inverse
@@ -206,7 +206,7 @@ FUNCTION     | NOTES
 [p_tanh()](src/math/p_tanh.c)         | hyperbolic tangent
 
 ##DSP  
-The digital signal processing (dsp) funtions are similar to the math functions
+The digital signal processing (dsp) functions are similar to the math functions
 in that they are single threaded vectorized functions intended to run on a 
 single base. Also, just like the math functions they take in pointers for 
 input/output arguments and a separate variable to indicate the size of the 
