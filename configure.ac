@@ -51,7 +51,7 @@ AC_FUNC_MALLOC
 AC_FUNC_MMAP
 AC_CHECK_FUNCS([bzero fesetround floor gettimeofday memset modf munmap pow rint sqrt strdup strerror strtol])
 
-AC_CONFIG_FILES([Makefile src/Makefile src/base/Makefile])
+AC_CONFIG_FILES([Makefile src/Makefile src/base/Makefile src/base/examples/Makefile])
 
 # Easiest way to include header files globally
 AC_SUBST([AM_CPPFLAGS], ['-I$(top_srcdir)/include'])
