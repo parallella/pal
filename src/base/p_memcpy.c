@@ -21,7 +21,7 @@
  */
 #include <stddef.h>
 #include "pal_base.h"
-#include "pal_private.h"
+#include "pal_base_private.h"
 
 ssize_t p_memcpy(void *dst, void *src, size_t nb, int flags)
 {

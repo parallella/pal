@@ -178,28 +178,28 @@ int p_mutex_unlock(p_mutex_t *mp);
 int p_mutex_destroy(p_mutex_t *mp);
 
 /*atomic fetch and add*/
-int p_atomic_add_u32(p_atom_t *atom, uint32_t n);
+int p_atomic_add_u32(p_atom_t atom, uint32_t n);
 
 /*atomic fetch and subtract*/
-int p_atomic_sub_u32(p_atom_t *atom, uint32_t n);
+int p_atomic_sub_u32(p_atom_t atom, uint32_t n);
 
 /*atomic fetch and logical 'and'*/
-int p_atomic_and_u32(p_atom_t *atom, uint32_t n);
+int p_atomic_and_u32(p_atom_t atom, uint32_t n);
 
 /*atomic fetch and logical 'xor'*/
-int p_atomic_xor_u32(p_atom_t *atom, uint32_t n);
+int p_atomic_xor_u32(p_atom_t atom, uint32_t n);
 
 /*atomic fetch and logical 'or'*/
-int p_atomic_or_u32(p_atom_t *atom, uint32_t n);
+int p_atomic_or_u32(p_atom_t atom, uint32_t n);
 
 /*atomic fetch and logical 'nand'*/
-int p_atomic_nand_u32(p_atom_t *atom, uint32_t n);
+int p_atomic_nand_u32(p_atom_t atom, uint32_t n);
 
 /*atomic swap*/
-int p_atomic_swap_u32(p_atom_t *atom, uint32_t *input);
+int p_atomic_swap_u32(p_atom_t atom, uint32_t *input);
 
 /*atomic compare and swap*/
-int p_atomic_compswap_u32(p_atom_t *atom, uint32_t *input, uint32_t expected);
+int p_atomic_compswap_u32(p_atom_t atom, uint32_t *input, uint32_t expected);
 
 /*
  ***********************************************************************

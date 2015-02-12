@@ -1,5 +1,5 @@
 #include "pal_base.h"
-#include "pal_private.h"
+#include "pal_base_private.h"
 
 /*This is the generic version of an atomic exchange. It stores the contents of
  * *val into *ptr. The original value of *ptr is copied into *ret*/

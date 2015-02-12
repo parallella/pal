@@ -9,9 +9,9 @@
  *
  */
 #include "pal_base.h"
-#include "pal_private.h"
+#include "pal_base_private.h"
 
-int p_fence(int mem)
+int p_fence(p_mem_t mem)
 {
     printf("Running p_fence(%d)\n", mem);
     return (0);

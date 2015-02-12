@@ -9,11 +9,12 @@
  *
  * @param size  Total number of processors to remove. (following 'start')
  *
- * @return      Returns 0 if successful.
+ * @return      Returns reference to team if successful. Negative value
+ *              indicates error.
  *
  */
 
 #include "pal_base.h"
 #include "pal_base_private.h"
 
-int p_remove(p_team_t *team, int start, int size) { return (0); }
+p_team_t p_remove(p_team_t team, int start, int size) { return (0); }

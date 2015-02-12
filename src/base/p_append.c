@@ -9,14 +9,15 @@
  *
  * @param size  Total number of processors to add.(following 'start')
  *
- * @return      Returns 0 if successful.
+ * @return      Returns reference to team if successfull. Negative number
+ *              indicates error.
  *
  */
 #include <stdio.h>
 #include "pal_base.h"
 #include "pal_base_private.h"
 
-int p_append(int team, int start, int size)
+p_team_t p_append(p_team_t team, int start, int size)
 {
     printf("Running p_append(p_team_t,%d,%d)\n", start, size);
     // need to implement
