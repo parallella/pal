@@ -2,7 +2,8 @@
 # Process this file with autoconf to produce a configure script.
 
 AC_PREREQ([2.69])
-AC_INIT([Parallel Architectures Library], [0.3], [https://github.com/parallella/pal/issues], [pal],
+AC_INIT([Parallel Architectures Library], [0.3],
+        [https://github.com/parallella/pal/issues], [pal],
         [https://github.com/parallella/pal])
 
 AC_CONFIG_SRCDIR([src/base/p_init.c])
@@ -15,7 +16,13 @@ AM_INIT_AUTOMAKE
 LT_INIT
 
 # Checks for programs.
+AC_PROG_CXX
+AC_PROG_AWK
 AC_PROG_CC
+AC_PROG_CPP
+AC_PROG_INSTALL
+AC_PROG_LN_S
+AC_PROG_MAKE_SET
 
 # Checks for libraries.
 
