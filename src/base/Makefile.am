@@ -2,6 +2,9 @@ AUTOMAKE_OPTIONS = foreign
 SUBDIRS = examples
 EXTRA_DIST = epiphany
 
+# examples depends on this
+BUILT_SOURCES = libpal.la
+
 lib_LTLIBRARIES = libpal.la
 libpal_la_SOURCES = \
     p_append.c \
@@ -43,6 +46,4 @@ libpal_la_SOURCES = \
 #    p_scatter.c \
 #    p_broadcast.c \
 #
-
-libpal_la_LDFLAGS = -lm
 

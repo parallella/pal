@@ -101,9 +101,6 @@ am_libpal_la_OBJECTS = p_append.lo p_atomic_add.lo p_atomic_and.lo \
 	p_read.lo p_remove.lo p_rmalloc.lo p_run.lo p_wait.lo \
 	p_write.lo
 libpal_la_OBJECTS = $(am_libpal_la_OBJECTS)
-libpal_la_LINK = $(LIBTOOL) --tag=CC $(AM_LIBTOOLFLAGS) \
-	$(LIBTOOLFLAGS) --mode=link $(CCLD) $(AM_CFLAGS) $(CFLAGS) \
-	$(libpal_la_LDFLAGS) $(LDFLAGS) -o $@
 DEFAULT_INCLUDES = -I.@am__isrc@ -I$(top_builddir)
 depcomp = $(SHELL) $(top_srcdir)/depcomp
 am__depfiles_maybe = depfiles
@@ -288,6 +285,9 @@ top_srcdir = @top_srcdir@
 AUTOMAKE_OPTIONS = foreign
 SUBDIRS = examples
 EXTRA_DIST = epiphany
+
+# examples depends on this
+BUILT_SOURCES = libpal.la
 lib_LTLIBRARIES = libpal.la
 libpal_la_SOURCES = \
     p_append.c \
@@ -325,13 +325,8 @@ libpal_la_SOURCES = \
     p_write.c \
     pal_base_private.h
 
-
-# Disable temporarily until API is determined
-#    p_scatter.c \
-#    p_broadcast.c \
-#
-libpal_la_LDFLAGS = -lm
-all: all-recursive
+all: $(BUILT_SOURCES)
+	$(MAKE) $(AM_MAKEFLAGS) all-recursive
 
 .SUFFIXES:
 .SUFFIXES: .c .lo .o .obj
@@ -398,7 +393,7 @@ clean-libLTLIBRARIES:
 	  rm -f "$${dir}/so_locations"; \
 	done
 libpal.la: $(libpal_la_OBJECTS) $(libpal_la_DEPENDENCIES) $(EXTRA_libpal_la_DEPENDENCIES) 
-	$(libpal_la_LINK) -rpath $(libdir) $(libpal_la_OBJECTS) $(libpal_la_LIBADD) $(LIBS)
+	$(LINK) -rpath $(libdir) $(libpal_la_OBJECTS) $(libpal_la_LIBADD) $(LIBS)
 
 mostlyclean-compile:
 	-rm -f *.$(OBJEXT)
@@ -658,14 +653,16 @@ distdir: $(DISTFILES)
 	  fi; \
 	done
 check-am: all-am
-check: check-recursive
+check: $(BUILT_SOURCES)
+	$(MAKE) $(AM_MAKEFLAGS) check-recursive
 all-am: Makefile $(LTLIBRARIES)
 installdirs: installdirs-recursive
 installdirs-am:
 	for dir in "$(DESTDIR)$(libdir)"; do \
 	  test -z "$$dir" || $(MKDIR_P) "$$dir"; \
 	done
-install: install-recursive
+install: $(BUILT_SOURCES)
+	$(MAKE) $(AM_MAKEFLAGS) install-recursive
 install-exec: install-exec-recursive
 install-data: install-data-recursive
 uninstall: uninstall-recursive
@@ -695,6 +692,7 @@ distclean-generic:
 maintainer-clean-generic:
 	@echo "This command is intended for maintainers to use"
 	@echo "it deletes files that may require special tools to rebuild."
+	-test -z "$(BUILT_SOURCES)" || rm -f $(BUILT_SOURCES)
 clean: clean-recursive
 
 clean-am: clean-generic clean-libLTLIBRARIES clean-libtool \
@@ -766,8 +764,9 @@ ps-am:
 
 uninstall-am: uninstall-libLTLIBRARIES
 
-.MAKE: $(RECURSIVE_CLEAN_TARGETS) $(RECURSIVE_TARGETS) ctags-recursive \
-	install-am install-strip tags-recursive
+.MAKE: $(RECURSIVE_CLEAN_TARGETS) $(RECURSIVE_TARGETS) all check \
+	ctags-recursive install install-am install-strip \
+	tags-recursive
 
 .PHONY: $(RECURSIVE_CLEAN_TARGETS) $(RECURSIVE_TARGETS) CTAGS GTAGS \
 	all all-am check check-am clean clean-generic \
@@ -785,6 +784,11 @@ uninstall-am: uninstall-libLTLIBRARIES
 	pdf pdf-am ps ps-am tags tags-recursive uninstall uninstall-am \
 	uninstall-libLTLIBRARIES
 
+
+# Disable temporarily until API is determined
+#    p_scatter.c \
+#    p_broadcast.c \
+#
 
 # Tell versions [3.59,3.63) of GNU make to not export all variables.
 # Otherwise a system limit (for SysV at least) may be exceeded.
