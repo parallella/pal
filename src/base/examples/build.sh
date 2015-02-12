@@ -1,6 +1,8 @@
 #!/bin/bash
 
-gcc simple_example.c \
+set -e
+
+gcc -I../../../include simple_example.c \
 ../p_init.c \
 ../p_query.c \
 ../p_load.c \
@@ -13,10 +15,10 @@ gcc simple_example.c \
 ../p_run.c \
 ../p_free.c \
 ../p_finalize.c \
--o simple_example.elf -I/home/aolofsson/Work_all/Work_december/pal/include
+-o simple_example.elf
 
 #Task compilation
 gcc hello_task.c -o hello_task.elf
-gcc sine_task.c ../../math/p_sin.c -o sine_task.elf -I/home/aolofsson/Work_all/Work_december/pal/include -lm
+gcc -I../../../include sine_task.c ../../math/p_sin.c -o sine_task.elf -lm
 
 

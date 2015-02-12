@@ -64,7 +64,7 @@ typedef p_ref_t p_program_table_t;
 typedef p_ref_t p_mem_table_t;
 typedef p_ref_t p_dev_t;
 typedef p_ref_t p_team_t;
-typedef p_ref_t p_program_t;
+typedef p_ref_t p_prog_t;
 typedef p_ref_t p_symbol_t;
 typedef p_ref_t p_event_t;
 typedef p_ref_t p_mem_t;
@@ -80,29 +80,28 @@ typedef p_ref_t p_mutex_attr_t;
  */
 
 /*Initialize device run time*/
-p_dev_t p_init(p_dev_t *dev, int type, int flags);
+p_dev_t p_init(int type, int flags);
 
 /*Finalize device run time*/
-p_ref_t p_finalize(p_dev_t *dev);
+int p_finalize(p_dev_t dev);
 
 /*Open a team of processors*/
-p_team_t p_open(p_dev_t *dev, int start, int count);
+p_team_t p_open(p_dev_t dev, int start, int count);
 
 /*Add team members*/
-p_team_t p_append(p_team_t *team, int start, int count);
+p_team_t p_append(p_team_t team, int start, int count);
 
 /*Remove team members*/
-p_team_t p_remove(p_team_t *team, int start, int count);
+p_team_t p_remove(p_team_t team, int start, int count);
 
 /*Close a team of processors*/
-p_ref_t p_close(p_team_t *team);
+int p_close(p_team_t team);
 
 /* Loads a program from the file system into memory */
-p_prog_t p_load(p_dev_t *dev, char *file, char *function, int flags,
-                p_prog_t *prog);
+p_prog_t p_load(p_dev_t dev, char *file, char *function, int flags);
 
 /* Run a program on N processors */
-p_ref_t p_run(p_prog_t *prog, p_team_t *team, int start, int count, int nargs,
+int p_run(p_prog_t prog, p_team_t team, int start, int count, int nargs,
               void *args[], int flags);
 
 /*Execution barrier*/
@@ -137,20 +136,21 @@ int p_query(p_dev_t dev, int property);
  */
 
 /*Writes to a global memory address from a local address*/
-ssize_t p_write(int mem, const void *src, size_t nb, int flags);
+ssize_t p_write(p_mem_t mem, const void *src, size_t nb, int flags);
 
 /*Reads from a global memory address */
-ssize_t p_read(int mem, void *dst, size_t nb, int flags);
+ssize_t p_read(p_mem_t mem, void *dst, off_t offset, size_t nb, int flags);
 
 /*Broadcasts an array based to a list of destination pointers*/
-ssize_t p_broadcast(int *mlist[], int mcount, void *src, size_t nb, int flags);
+ssize_t p_broadcast(p_mem_t *mlist[], int mcount, void *src, size_t nb,
+                    int flags);
 
 /*Scatters data from a local array to a list of remote memory objects*/
-ssize_t p_scatter(int *mlist[], int mcount, void *suf, size_t scount,
+ssize_t p_scatter(p_mem_t *mlist[], int mcount, void *suf, size_t scount,
                   int disp[], int flags);
 
 /*Scatters data from a local array to a list of remote memory objects*/
-ssize_t p_gather(int *mlist[], int mcount, void *dbuf, size_t dcount,
+ssize_t p_gather(p_mem_t *mlist[], int mcount, void *dbuf, size_t dcount,
                  int disp[], int flags);
 
 /*Specialized low level shared memory memcpy interface (non-blocking)*/
@@ -219,7 +219,7 @@ struct p_team_table
 };
 struct p_program_table
 {
-    p_program_t *progptr[16];
+    p_prog_t *progptr[16];
     int size;
 };
 struct p_mem_table

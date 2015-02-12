@@ -23,18 +23,22 @@
 #include <unistd.h>
 #include <stdio.h>
 #include <stdlib.h>
+#include <sys/types.h>
+#include <sys/wait.h>
+
 #include "pal_base.h"
 #include "pal_base_private.h"
 
-int p_run(int prog, int team, int start, int size, int nargs, void *args[],
+int p_run(p_prog_t prog, p_team_t team, int start, int size, int nargs, void *args[],
           int flags)
 {
 
     /* TODO: Clean me up please */
 
-    printf("Running p_run(%d,%d,%d,%d,%d, argv,%d)\n", prog, team, start, size,
-           nargs, flags);
-    p_program_t *progptr = p_program_table_global.progptr[prog];
+    printf("Running p_run(%ld,%ld,%d,%d,%d, argv,%d)\n", prog, team, start,
+            size, nargs, flags);
+#if 0
+    struct p_prog *progptr = p_prog_table_global.progptr[prog];
     p_team_t *teamptr = p_team_table_global.teamptr[team];
     p_dev_t *devptr = progptr->devptr;
     int type = devptr->property[TYPE];
@@ -47,13 +51,13 @@ int p_run(int prog, int team, int start, int size, int nargs, void *args[],
 
     char *argv[16]; // FIX!
     switch (type) {
-    case EPIPHANY:
-    case FPGA:
-    case GPU:
-    case SMP:
-    case GRID:
+    case P_DEV_EPIPHANY:
+    case P_DEV_FPGA:
+    case P_DEV_GPU:
+    case P_DEV_SMP:
+    case P_DEV_GRID:
         break;
-    case DEMO:
+    case P_DEV_DEMO:
         for (i = 0; i < nargs; i++) {
             argv[i] = args[i];
         }
@@ -64,7 +68,7 @@ int p_run(int prog, int team, int start, int size, int nargs, void *args[],
             child_pid[i] = fork();
             if (child_pid[i] == 0) {
                 execve(path, elf, argv); // executing
-                exit();
+                exit(0);
             }
         }
         // Waiting for all children to finish. Right way?
@@ -76,5 +80,6 @@ int p_run(int prog, int team, int start, int size, int nargs, void *args[],
     default:
         return -ENOSYS;
     }
+#endif
     return -ENOSYS;
 }

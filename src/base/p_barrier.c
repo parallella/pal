@@ -12,10 +12,10 @@
 #include "pal_base.h"
 #include "pal_base_private.h"
 
-int p_barrier(int team)
+int p_barrier(p_team_t team)
 {
 
-    printf("Running p_barrier(%d)\n", team);
+    printf("Running p_barrier(%ld)\n", team);
 
     /*PUT CODE HERE*/
     // 1.Every processor on the team runs this function

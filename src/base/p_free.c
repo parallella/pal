@@ -11,8 +11,8 @@
 #include "pal_base.h"
 #include "pal_base_private.h"
 
-int p_free(int mem)
+int p_free(p_mem_t mem)
 {
-    printf("Running p_free(%d)\n", mem);
+    printf("Running p_free(%ld)\n", mem);
     return (0);
 }

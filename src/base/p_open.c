@@ -9,16 +9,17 @@
  *
  * @param size  Total number of processors in team.
  *
- * @return      Returns 0 if successful.
+ * @return      Returns a reference. Negative value indicates error.
  *
  */
 #include <stdio.h>
 #include "pal_base.h"
 #include "pal_base_private.h"
-int p_open(int dev, int start, int count)
+p_team_t p_open(p_dev_t dev, int start, int count)
 {
-    printf("Running p_open(%d,%d,%d)\n", dev, start, count);
+    printf("Running p_open(%ld,%d,%d)\n", dev, start, count);
 
+#if 0
     int index = p_team_table_global.size;
     p_dev_t *devptr = p_dev_table_global.devptr[dev];
     p_team_t *team;
@@ -29,4 +30,7 @@ int p_open(int dev, int start, int count)
     team->statptr = malloc(count * sizeof(unsigned char));
     p_team_table_global.size = p_team_table_global.size + 1;
     return (index);
+#endif
+    return -ENOSYS;
+
 }

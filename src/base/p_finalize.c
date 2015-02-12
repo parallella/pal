@@ -12,8 +12,8 @@
 #include "pal_base.h"
 #include "pal_base_private.h"
 
-int p_finalize(int dev)
+int p_finalize(p_dev_t dev)
 {
-    printf("Running p_finalize(%d)\n", dev);
+    printf("Running p_finalize(%ld)\n", dev);
     return (0);
 }

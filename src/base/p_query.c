@@ -48,12 +48,16 @@
 #include "pal_base.h"
 #include "pal_base_private.h"
 #include <stdio.h>
-int p_query(int dev, int prop)
+int p_query(p_dev_t dev, int prop)
 {
-    printf("Running p_query(%d,%d)\n", dev, prop);
+    printf("Running p_query(%ld,%d)\n", dev, prop);
 
+#if 0
     int res;
-    p_dev_t *devptr = p_dev_table_global.devptr[dev];
-    res = devptr->property[NODES];
+    struct p_dev *devptr = p_dev_table_global.devptr[dev];
+    res = devptr->property[P_QUERY_NODES];
     return (res);
+#endif
+
+    return -ENOSYS;
 }

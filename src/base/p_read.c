@@ -14,7 +14,7 @@
  *
  * @param dst   Address to copy the memory block to
  *
- * @return      Returns number of bytes read.
+ * @return      Returns number of bytes read. Negative value indicates error.
  *
  */
 #include <stddef.h>
@@ -23,9 +23,9 @@
 #include "pal_base.h"
 #include "pal_base_private.h"
 
-size_t p_read(int mem, void *dst, off_t offset, size_t nb, int flags)
+ssize_t p_read(p_mem_t mem, void *dst, off_t offset, size_t nb, int flags)
 {
-    printf("Running p_read(%d,%d,%d,%p)\n", mem, (int)nb, flags, dst);
+    printf("Running p_read(%ld,%d,%d,%p)\n", mem, (int)nb, flags, dst);
     // memcpy(dst, mem->memptr,nb);
-    return (0);
+    return -ENOSYS;
 }

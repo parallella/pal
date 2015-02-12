@@ -17,7 +17,7 @@ int main(int argc, char **argv)
 
     // Pointers to dynamic objects
     p_dev_t *dev0;      // device information
-    p_program_t *prog0; // program to execute
+    p_prog_t *prog0; // program to execute
     p_team_t *team0;    // working team
     p_mem_t *mem0;      // memory object (input)
     p_mem_t *mem1;      // memory object (output)
@@ -25,10 +25,10 @@ int main(int argc, char **argv)
     // Setting arguments
 
     // Initialize memory/team
-    dev0 = p_init(type, 0);       // initialize system
-    all = p_query(dev0, NODES);   // find # of device nodes
-    prog0 = p_load(dev0, elf);    // load executable file
-    team0 = p_open(dev0, 0, all); // open a team
+    dev0 = p_init(type, 0);            // initialize system
+    all = p_query(dev0, P_PROP_NODES); // find # of device nodes
+    prog0 = p_load(dev0, elf);         // load executable file
+    team0 = p_open(dev0, 0, all);      // open a team
 
     // Allocate memory
     mem0 = p_malloc(team0, N * sizeof(float)); // allocate local memory object

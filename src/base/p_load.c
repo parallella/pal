@@ -8,7 +8,7 @@
  * @param function  Name of function within 'prog' to run
  * @param flags     Optional flags
  *
- * @return          Returns 0 if successful. Negative value indicates error.
+ * @return          Returns a reference. Negative value indicates error.
  *
  */
 #include <stdio.h>
@@ -16,8 +16,7 @@
 #include <errno.h>
 #include "pal_base.h"
 #include "pal_base_private.h"
-int p_load(p_dev_t *dev, p_program_t *prog, char *file, char *function,
-           int flags)
+p_prog_t p_load(p_dev_t dev, char *file, char *function, int flags)
 {
 
 #if _P_DEBUG
