@@ -8,7 +8,11 @@ AC_INIT([Parallel Architectures Library], [0.3], [https://github.com/parallella/
 AC_CONFIG_SRCDIR([src/base/p_init.c])
 AC_CONFIG_HEADERS([config.h])
 
+AC_CONFIG_MACRO_DIR([m4])
+
 AM_INIT_AUTOMAKE
+
+LT_INIT
 
 # Checks for programs.
 AC_PROG_CC
