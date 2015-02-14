@@ -201,36 +201,4 @@ int p_atomic_swap_u32(p_atom_t atom, uint32_t *input);
 /*atomic compare and swap*/
 int p_atomic_compswap_u32(p_atom_t atom, uint32_t *input, uint32_t expected);
 
-/*
- ***********************************************************************
- * Global system variables (will be replaced with O/S real time
- ***********************************************************************
- */
-
-struct p_dev_table
-{
-    p_dev_t *devptr[16];
-    int size;
-};
-struct p_team_table
-{
-    p_team_t *teamptr[16];
-    int size;
-};
-struct p_program_table
-{
-    p_prog_t *progptr[16];
-    int size;
-};
-struct p_mem_table
-{
-    p_mem_t *memptr[16];
-    int size;
-};
-
-struct p_dev_table p_dev_table_global;
-struct p_team_table p_team_table_global;
-struct p_program_table p_program_table_global;
-struct p_mem_table p_mem_table_global;
-
 #endif // _PAL_CORE_H_
