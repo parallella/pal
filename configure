@@ -17041,7 +17041,7 @@ fi
 done
 
 
-ac_config_files="$ac_config_files Makefile src/Makefile src/base/Makefile src/base/examples/Makefile"
+ac_config_files="$ac_config_files Makefile src/Makefile src/base/Makefile examples/Makefile examples/base/Makefile"
 
 
 # Easiest way to include header files globally
@@ -18155,7 +18155,8 @@ do
     "Makefile") CONFIG_FILES="$CONFIG_FILES Makefile" ;;
     "src/Makefile") CONFIG_FILES="$CONFIG_FILES src/Makefile" ;;
     "src/base/Makefile") CONFIG_FILES="$CONFIG_FILES src/base/Makefile" ;;
-    "src/base/examples/Makefile") CONFIG_FILES="$CONFIG_FILES src/base/examples/Makefile" ;;
+    "examples/Makefile") CONFIG_FILES="$CONFIG_FILES examples/Makefile" ;;
+    "examples/base/Makefile") CONFIG_FILES="$CONFIG_FILES examples/base/Makefile" ;;
 
   *) as_fn_error $? "invalid argument: \`$ac_config_target'" "$LINENO" 5;;
   esac

@@ -1,9 +1,9 @@
 AUTOMAKE_OPTIONS = foreign
-SUBDIRS = examples
+#SUBDIRS = examples
 EXTRA_DIST = epiphany
 
 # examples depends on this
-BUILT_SOURCES = libpal.la
+#BUILT_SOURCES = libpal.la
 
 lib_LTLIBRARIES = libpal.la
 libpal_la_SOURCES = \

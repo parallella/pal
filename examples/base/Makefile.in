@@ -53,7 +53,7 @@ build_triplet = @build@
 host_triplet = @host@
 noinst_PROGRAMS = hello_task$(EXEEXT) simple_example$(EXEEXT) \
 	sine_task$(EXEEXT)
-subdir = src/base/examples
+subdir = examples/base
 DIST_COMMON = $(srcdir)/Makefile.am $(srcdir)/Makefile.in
 ACLOCAL_M4 = $(top_srcdir)/aclocal.m4
 am__aclocal_m4_deps = $(top_srcdir)/configure.ac
@@ -67,11 +67,11 @@ PROGRAMS = $(noinst_PROGRAMS)
 am_hello_task_OBJECTS = hello_task.$(OBJEXT)
 hello_task_OBJECTS = $(am_hello_task_OBJECTS)
 hello_task_LDADD = $(LDADD)
-hello_task_DEPENDENCIES = ../libpal.la
+hello_task_DEPENDENCIES = $(top_srcdir)/src/base/libpal.la
 am_simple_example_OBJECTS = simple_example.$(OBJEXT)
 simple_example_OBJECTS = $(am_simple_example_OBJECTS)
 simple_example_LDADD = $(LDADD)
-simple_example_DEPENDENCIES = ../libpal.la
+simple_example_DEPENDENCIES = $(top_srcdir)/src/base/libpal.la
 am_sine_task_OBJECTS = sine_task.$(OBJEXT) p_sin.$(OBJEXT)
 sine_task_OBJECTS = $(am_sine_task_OBJECTS)
 sine_task_DEPENDENCIES =
@@ -221,10 +221,10 @@ top_build_prefix = @top_build_prefix@
 top_builddir = @top_builddir@
 top_srcdir = @top_srcdir@
 AUTOMAKE_OPTIONS = foreign
-LDADD = ../libpal.la
+LDADD = $(top_srcdir)/src/base/libpal.la
 hello_task_SOURCES = hello_task.c
 simple_example_SOURCES = simple_example.c
-sine_task_SOURCES = sine_task.c ../../math/p_sin.c
+sine_task_SOURCES = sine_task.c $(top_srcdir)/src/math/p_sin.c
 sine_task_LDADD = -lm
 all: all-am
 
@@ -239,9 +239,9 @@ $(srcdir)/Makefile.in:  $(srcdir)/Makefile.am  $(am__configure_deps)
 	      exit 1;; \
 	  esac; \
 	done; \
-	echo ' cd $(top_srcdir) && $(AUTOMAKE) --foreign src/base/examples/Makefile'; \
+	echo ' cd $(top_srcdir) && $(AUTOMAKE) --foreign examples/base/Makefile'; \
 	$(am__cd) $(top_srcdir) && \
-	  $(AUTOMAKE) --foreign src/base/examples/Makefile
+	  $(AUTOMAKE) --foreign examples/base/Makefile
 .PRECIOUS: Makefile
 Makefile: $(srcdir)/Makefile.in $(top_builddir)/config.status
 	@case '$?' in \
@@ -311,19 +311,19 @@ distclean-compile:
 @AMDEP_TRUE@@am__fastdepCC_FALSE@	DEPDIR=$(DEPDIR) $(CCDEPMODE) $(depcomp) @AMDEPBACKSLASH@
 @am__fastdepCC_FALSE@	$(LTCOMPILE) -c -o $@ $<
 
-p_sin.o: ../../math/p_sin.c
-@am__fastdepCC_TRUE@	$(CC) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(AM_CFLAGS) $(CFLAGS) -MT p_sin.o -MD -MP -MF $(DEPDIR)/p_sin.Tpo -c -o p_sin.o `test -f '../../math/p_sin.c' || echo '$(srcdir)/'`../../math/p_sin.c
+p_sin.o: $(top_srcdir)/src/math/p_sin.c
+@am__fastdepCC_TRUE@	$(CC) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(AM_CFLAGS) $(CFLAGS) -MT p_sin.o -MD -MP -MF $(DEPDIR)/p_sin.Tpo -c -o p_sin.o `test -f '$(top_srcdir)/src/math/p_sin.c' || echo '$(srcdir)/'`$(top_srcdir)/src/math/p_sin.c
 @am__fastdepCC_TRUE@	$(am__mv) $(DEPDIR)/p_sin.Tpo $(DEPDIR)/p_sin.Po
-@AMDEP_TRUE@@am__fastdepCC_FALSE@	source='../../math/p_sin.c' object='p_sin.o' libtool=no @AMDEPBACKSLASH@
+@AMDEP_TRUE@@am__fastdepCC_FALSE@	source='$(top_srcdir)/src/math/p_sin.c' object='p_sin.o' libtool=no @AMDEPBACKSLASH@
 @AMDEP_TRUE@@am__fastdepCC_FALSE@	DEPDIR=$(DEPDIR) $(CCDEPMODE) $(depcomp) @AMDEPBACKSLASH@
-@am__fastdepCC_FALSE@	$(CC) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(AM_CFLAGS) $(CFLAGS) -c -o p_sin.o `test -f '../../math/p_sin.c' || echo '$(srcdir)/'`../../math/p_sin.c
+@am__fastdepCC_FALSE@	$(CC) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(AM_CFLAGS) $(CFLAGS) -c -o p_sin.o `test -f '$(top_srcdir)/src/math/p_sin.c' || echo '$(srcdir)/'`$(top_srcdir)/src/math/p_sin.c
 
-p_sin.obj: ../../math/p_sin.c
-@am__fastdepCC_TRUE@	$(CC) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(AM_CFLAGS) $(CFLAGS) -MT p_sin.obj -MD -MP -MF $(DEPDIR)/p_sin.Tpo -c -o p_sin.obj `if test -f '../../math/p_sin.c'; then $(CYGPATH_W) '../../math/p_sin.c'; else $(CYGPATH_W) '$(srcdir)/../../math/p_sin.c'; fi`
+p_sin.obj: $(top_srcdir)/src/math/p_sin.c
+@am__fastdepCC_TRUE@	$(CC) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(AM_CFLAGS) $(CFLAGS) -MT p_sin.obj -MD -MP -MF $(DEPDIR)/p_sin.Tpo -c -o p_sin.obj `if test -f '$(top_srcdir)/src/math/p_sin.c'; then $(CYGPATH_W) '$(top_srcdir)/src/math/p_sin.c'; else $(CYGPATH_W) '$(srcdir)/$(top_srcdir)/src/math/p_sin.c'; fi`
 @am__fastdepCC_TRUE@	$(am__mv) $(DEPDIR)/p_sin.Tpo $(DEPDIR)/p_sin.Po
-@AMDEP_TRUE@@am__fastdepCC_FALSE@	source='../../math/p_sin.c' object='p_sin.obj' libtool=no @AMDEPBACKSLASH@
+@AMDEP_TRUE@@am__fastdepCC_FALSE@	source='$(top_srcdir)/src/math/p_sin.c' object='p_sin.obj' libtool=no @AMDEPBACKSLASH@
 @AMDEP_TRUE@@am__fastdepCC_FALSE@	DEPDIR=$(DEPDIR) $(CCDEPMODE) $(depcomp) @AMDEPBACKSLASH@
-@am__fastdepCC_FALSE@	$(CC) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(AM_CFLAGS) $(CFLAGS) -c -o p_sin.obj `if test -f '../../math/p_sin.c'; then $(CYGPATH_W) '../../math/p_sin.c'; else $(CYGPATH_W) '$(srcdir)/../../math/p_sin.c'; fi`
+@am__fastdepCC_FALSE@	$(CC) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(AM_CFLAGS) $(CFLAGS) -c -o p_sin.obj `if test -f '$(top_srcdir)/src/math/p_sin.c'; then $(CYGPATH_W) '$(top_srcdir)/src/math/p_sin.c'; else $(CYGPATH_W) '$(srcdir)/$(top_srcdir)/src/math/p_sin.c'; fi`
 
 mostlyclean-libtool:
 	-rm -f *.lo
