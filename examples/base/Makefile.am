@@ -1,6 +1,6 @@
 AUTOMAKE_OPTIONS = foreign
 
-LDADD = $(top_srcdir)/src/base/libpal.la
+LDADD = $(top_builddir)/src/base/libpal.la
 
 noinst_PROGRAMS = hello_task simple_example sine_task
 
