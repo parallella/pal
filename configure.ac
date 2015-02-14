@@ -51,7 +51,11 @@ AC_FUNC_MALLOC
 AC_FUNC_MMAP
 AC_CHECK_FUNCS([bzero fesetround floor gettimeofday memset modf munmap pow rint sqrt strdup strerror strtol])
 
-AC_CONFIG_FILES([Makefile src/Makefile src/base/Makefile examples/Makefile
+AC_CONFIG_FILES([Makefile
+                 include/Makefile
+                 src/Makefile
+                 src/base/Makefile
+                 examples/Makefile
                  examples/base/Makefile])
 
 # Easiest way to include header files globally

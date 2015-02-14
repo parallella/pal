@@ -17041,7 +17041,7 @@ fi
 done
 
 
-ac_config_files="$ac_config_files Makefile src/Makefile src/base/Makefile examples/Makefile examples/base/Makefile"
+ac_config_files="$ac_config_files Makefile include/Makefile src/Makefile src/base/Makefile examples/Makefile examples/base/Makefile"
 
 
 # Easiest way to include header files globally
@@ -18153,6 +18153,7 @@ do
     "depfiles") CONFIG_COMMANDS="$CONFIG_COMMANDS depfiles" ;;
     "libtool") CONFIG_COMMANDS="$CONFIG_COMMANDS libtool" ;;
     "Makefile") CONFIG_FILES="$CONFIG_FILES Makefile" ;;
+    "include/Makefile") CONFIG_FILES="$CONFIG_FILES include/Makefile" ;;
     "src/Makefile") CONFIG_FILES="$CONFIG_FILES src/Makefile" ;;
     "src/base/Makefile") CONFIG_FILES="$CONFIG_FILES src/base/Makefile" ;;
     "examples/Makefile") CONFIG_FILES="$CONFIG_FILES examples/Makefile" ;;
