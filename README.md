@@ -134,7 +134,6 @@ The data movement functions move blocks of data between opaque memory objects an
 
 FUNCTION     | NOTES
 ------------ | -------------
-[p_broadcast()](src/base/p_broadcast.c) | broadcast operation
 [p_gather()](src/base/p_gather.c)       | gather operation
 [p_memcpy()](src/base/p_memcpy.c)       | fast memcpy()
 [p_read()](src/base/p_read.c)           | read from a memory object
