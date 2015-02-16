@@ -17,6 +17,9 @@
 #define P_DEV_GPU 0x05
 #define P_DEV_DEMO 0x06
 
+#define P_DEV_FIRST P_DEV_EPIPHANY
+#define P_DEV_LAST P_DEV_DEMO
+
 /*
  ***********************************************************************
  * FLAGS

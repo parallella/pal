@@ -104,7 +104,7 @@ am_libpal_la_OBJECTS = p_append.lo p_atomic_add.lo p_atomic_and.lo \
 	p_mutex_destroy.lo p_mutex_init.lo p_mutex_lock.lo \
 	p_mutex_trylock.lo p_mutex_unlock.lo p_open.lo p_query.lo \
 	p_read.lo p_remove.lo p_rmalloc.lo p_run.lo p_wait.lo \
-	p_write.lo p_get_err.lo
+	p_write.lo boilerplate.lo p_get_err.lo
 libpal_la_OBJECTS = $(am_libpal_la_OBJECTS)
 DEFAULT_INCLUDES = -I.@am__isrc@ -I$(top_builddir)
 depcomp = $(SHELL) $(top_srcdir)/config/depcomp
@@ -291,6 +291,7 @@ libpal_la_SOURCES = \
     p_wait.c \
     p_write.c \
     pal_base_private.h \
+    boilerplate.c \
     p_get_err.c
 
 all: all-am
@@ -368,6 +369,7 @@ mostlyclean-compile:
 distclean-compile:
 	-rm -f *.tab.c
 
+@AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/boilerplate.Plo@am__quote@
 @AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/p_append.Plo@am__quote@
 @AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/p_atomic_add.Plo@am__quote@
 @AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/p_atomic_and.Plo@am__quote@

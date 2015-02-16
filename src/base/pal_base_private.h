@@ -59,31 +59,70 @@ struct p_mutex
  ***********************************************************************
  */
 
-struct p_dev_table
-{
-    p_dev_t *devptr[16];
-    int size;
-};
-struct p_team_table
-{
-    p_team_t *teamptr[16];
-    int size;
-};
-struct p_program_table
-{
-    p_prog_t *progptr[16];
-    int size;
-};
-struct p_mem_table
-{
-    p_mem_t *memptr[16];
-    int size;
+struct dev_op;
+struct dev;
+struct rank_range;
+struct team;
+struct prog;
+struct pal_global;
+
+struct dev_ops {
+    p_dev_t (*init) (struct dev *, int);
+    void (*fini) (struct dev *);
+
+    int (*query) (struct dev *);
+    struct team *(*open) (struct dev *);
+    int (*wait) (struct dev *, struct team *);
 };
 
-struct p_dev_table p_dev_table_global;
-struct p_team_table p_team_table_global;
-struct p_program_table p_program_table_global;
-struct p_mem_table p_mem_table_global;
+struct dev {
+    struct dev_ops *dev_ops;
+    void *dev_data;
+};
+
+struct rank_range {
+    int first;
+    int n;
+};
+
+struct team {
+    struct team *next;
+    struct dev *dev; // Support only one device per team (at leat for now)
+    struct rank_range *ranges;
+    size_t ranges_size;
+};
+
+struct prog {
+    struct prog *next;
+    struct dev *dev;
+    char *name; // Must be '\0' terminated
+    char *path; // Must be '\0' terminated
+    char *buf;
+    size_t buf_size;
+};
+
+struct pal_global {
+    struct dev devs[P_DEV_LAST+1];
+    struct team *teams_head;
+    struct team *teams_tail;
+    struct prog *progs_head;
+    struct prog *progs_tail;
+#if 0
+    struct symbol *symbols_head;
+    struct symbol *symbols_tail;
+    struct event *events_head;
+    struct event *events_tail;
+    struct mem *mems_head;
+    struct mem *mems_tail;
+    struct atom *atoms_head;
+    struct atom *atoms_tail;
+    struct mutex *mutexes_head;
+    struct mutex *mutexes_tail;
+#endif
+};
+
+extern struct pal_global __pal_global;
+
 
 /*
  ***********************************************************************
