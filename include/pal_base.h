@@ -56,7 +56,7 @@
  ***********************************************************************
  */
 
-typedef int64_t p_ref_t;
+typedef void * p_ref_t;
 typedef p_ref_t p_dev_table_t;
 
 typedef p_ref_t p_team_table_t;
