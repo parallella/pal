@@ -13,9 +13,12 @@ AC_CONFIG_AUX_DIR([config])
 
 AC_CONFIG_MACRO_DIR([config/m4])
 
-
-
 AM_INIT_AUTOMAKE
+
+# Support silent build rules. Disable by either passing --disable-silent-rules
+# to configure or passing V=1 to make.
+AM_SILENT_RULES([yes])
+
 
 LT_INIT
 
