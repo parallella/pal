@@ -17,9 +17,8 @@
 #include "pal_base_private.h"
 p_team_t p_open(p_dev_t dev, int start, int count)
 {
-    printf("Running p_open(%ld,%d,%d)\n", dev, start, count);
-
 #if 0
+    printf("Running p_open(%ld,%d,%d)\n", dev, start, count);
     int index = p_team_table_global.size;
     p_dev_t *devptr = p_dev_table_global.devptr[dev];
     p_team_t *team;
@@ -31,6 +30,6 @@ p_team_t p_open(p_dev_t dev, int start, int count)
     p_team_table_global.size = p_team_table_global.size + 1;
     return (index);
 #endif
-    return -ENOSYS;
+    return p_ref_err(ENOSYS);
 
 }

@@ -40,7 +40,8 @@ libpal_la_SOURCES = \
     p_run.c \
     p_wait.c \
     p_write.c \
-    pal_base_private.h
+    pal_base_private.h \
+    p_get_err.c
 
 # Disable temporarily until API is determined
 #    p_scatter.c \

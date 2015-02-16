@@ -50,7 +50,7 @@
 #include <stdio.h>
 int p_query(p_dev_t dev, int prop)
 {
-    printf("Running p_query(%ld,%d)\n", dev, prop);
+    printf("Running p_query(%p,%d)\n", dev, prop);
 
 #if 0
     int res;

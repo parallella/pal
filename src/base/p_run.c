@@ -35,7 +35,7 @@ int p_run(p_prog_t prog, p_team_t team, int start, int size, int nargs, void *ar
 
     /* TODO: Clean me up please */
 
-    printf("Running p_run(%ld,%ld,%d,%d,%d, argv,%d)\n", prog, team, start,
+    printf("Running p_run(%p,%p,%d,%d,%d, argv,%d)\n", prog, team, start,
             size, nargs, flags);
 #if 0
     struct p_prog *progptr = p_prog_table_global.progptr[prog];

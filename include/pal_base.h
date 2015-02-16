@@ -201,4 +201,11 @@ int p_atomic_swap_u32(p_atom_t atom, uint32_t *input);
 /*atomic compare and swap*/
 int p_atomic_compswap_u32(p_atom_t atom, uint32_t *input, uint32_t expected);
 
+/*
+ ***********************************************************************
+ * Error handling
+ ***********************************************************************
+ */
+int p_get_err(p_ref_t ref);
+
 #endif // _PAL_CORE_H_

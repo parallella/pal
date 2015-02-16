@@ -1,5 +1,6 @@
 #include <errno.h>
 #include <stdint.h>
+#include <stdbool.h>
 
 // TEMPORARY HACK!!
 struct p_dev
@@ -84,3 +85,36 @@ struct p_team_table p_team_table_global;
 struct p_program_table p_program_table_global;
 struct p_mem_table p_mem_table_global;
 
+/*
+ ***********************************************************************
+ * Error handling
+ ***********************************************************************
+ */
+
+/* Equivalent to generic Linux Kernel implementation of passing error codes
+ * through pointers. This restricts us from returning pointers in the
+ * upper-most 4096 byte address range, which should be fine considering it is
+ * reserved for stack on most systems. Another option would be to use the
+ * lowest bit to indicate error conditions.
+ */
+
+#define P_REF_ERR_MAX 4095
+
+/* Convert an error code to a reference */
+static inline p_ref_t p_ref_err(const int err)
+{
+    return (p_ref_t) ((intptr_t) -err);
+}
+
+static inline bool p_ref_is_err(const p_ref_t ref)
+{
+    return (((uintptr_t) ref) >= ((uintptr_t) -P_REF_ERR_MAX));
+}
+
+static inline int p_ref_get_err(const p_ref_t ref)
+{
+    if (p_ref_is_err(ref))
+        return (int) ((intptr_t) ref);
+    else
+        return 0;
+}

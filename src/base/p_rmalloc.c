@@ -20,5 +20,5 @@
 p_mem_t p_rmalloc(p_team_t team, int pid, size_t size)
 {
     printf("Running p_rmalloc(p_team_t,%d,%d)\n", pid, (int)size);
-    return -ENOSYS;
+    return p_ref_err(ENOSYS);
 }

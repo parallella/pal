@@ -104,7 +104,7 @@ am_libpal_la_OBJECTS = p_append.lo p_atomic_add.lo p_atomic_and.lo \
 	p_mutex_destroy.lo p_mutex_init.lo p_mutex_lock.lo \
 	p_mutex_trylock.lo p_mutex_unlock.lo p_open.lo p_query.lo \
 	p_read.lo p_remove.lo p_rmalloc.lo p_run.lo p_wait.lo \
-	p_write.lo
+	p_write.lo p_get_err.lo
 libpal_la_OBJECTS = $(am_libpal_la_OBJECTS)
 DEFAULT_INCLUDES = -I.@am__isrc@ -I$(top_builddir)
 depcomp = $(SHELL) $(top_srcdir)/config/depcomp
@@ -290,7 +290,8 @@ libpal_la_SOURCES = \
     p_run.c \
     p_wait.c \
     p_write.c \
-    pal_base_private.h
+    pal_base_private.h \
+    p_get_err.c
 
 all: all-am
 
@@ -381,6 +382,7 @@ distclean-compile:
 @AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/p_finalize.Plo@am__quote@
 @AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/p_free.Plo@am__quote@
 @AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/p_gather.Plo@am__quote@
+@AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/p_get_err.Plo@am__quote@
 @AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/p_getaddr.Plo@am__quote@
 @AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/p_getsymbol.Plo@am__quote@
 @AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/p_init.Plo@am__quote@

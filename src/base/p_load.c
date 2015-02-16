@@ -20,7 +20,7 @@ p_prog_t p_load(p_dev_t dev, char *file, char *function, int flags)
 {
 
 #if _P_DEBUG
-    printf("Running p_load(%d,%s,%s,%d)\n", dev, file, function, flags);
+    printf("Running p_load(%p,%s,%s,%d)\n", dev, file, function, flags);
 #endif
 
 #if 0
@@ -41,5 +41,5 @@ p_prog_t p_load(p_dev_t dev, char *file, char *function, int flags)
     return 0;
 #endif
 
-    return -ENOSYS;
+    return p_ref_err(ENOSYS);
 }
