@@ -13,7 +13,11 @@ AC_CONFIG_AUX_DIR([config])
 
 AC_CONFIG_MACRO_DIR([config/m4])
 
-AM_INIT_AUTOMAKE
+# Support cross compilation
+AC_CANONICAL_BUILD
+AC_CANONICAL_HOST
+
+AM_INIT_AUTOMAKE([-Wall -Werror])
 
 # Support silent build rules. Disable by either passing --disable-silent-rules
 # to configure or passing V=1 to make.
