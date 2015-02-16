@@ -17052,7 +17052,7 @@ ac_config_files="$ac_config_files Makefile include/Makefile src/Makefile src/bas
 
 
 # Easiest way to include header files globally
-AM_CPPFLAGS='-I$(top_srcdir)/include'
+AM_CPPFLAGS='-I$(top_srcdir)/include -I$(top_builddir)'
 
 
 cat >confcache <<\_ACEOF

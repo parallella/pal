@@ -63,6 +63,6 @@ AC_CONFIG_FILES([Makefile
                  examples/base/Makefile])
 
 # Easiest way to include header files globally
-AC_SUBST([AM_CPPFLAGS], ['-I$(top_srcdir)/include'])
+AC_SUBST([AM_CPPFLAGS], ['-I$(top_srcdir)/include -I$(top_builddir)'])
 
 AC_OUTPUT
