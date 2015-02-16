@@ -1,6 +1,6 @@
-ACLOCAL_AMFLAGS = -I m4
+ACLOCAL_AMFLAGS = -I config/m4
 AUTOMAKE_OPTIONS = foreign
 SUBDIRS = src examples include
 
-EXTRA_DIST = m4 include bootstrap CHANGELOG.md CODING-STYLE.md \
+EXTRA_DIST = config include bootstrap CHANGELOG.md CODING-STYLE.md \
              CONTRIBUTING.md LICENSE QUESTIONS.md README.md

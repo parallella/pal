@@ -102,7 +102,7 @@ am_libpal_la_OBJECTS = p_append.lo p_atomic_add.lo p_atomic_and.lo \
 	p_write.lo
 libpal_la_OBJECTS = $(am_libpal_la_OBJECTS)
 DEFAULT_INCLUDES = -I.@am__isrc@ -I$(top_builddir)
-depcomp = $(SHELL) $(top_srcdir)/depcomp
+depcomp = $(SHELL) $(top_srcdir)/config/depcomp
 am__depfiles_maybe = depfiles
 am__mv = mv -f
 COMPILE = $(CC) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) \

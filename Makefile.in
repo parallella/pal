@@ -53,8 +53,9 @@ host_triplet = @host@
 subdir = .
 DIST_COMMON = $(am__configure_deps) $(srcdir)/Makefile.am \
 	$(srcdir)/Makefile.in $(srcdir)/config.h.in \
-	$(top_srcdir)/configure AUTHORS config.guess config.sub \
-	depcomp install-sh ltmain.sh missing
+	$(top_srcdir)/configure AUTHORS config/config.guess \
+	config/config.sub config/depcomp config/install-sh \
+	config/ltmain.sh config/missing
 ACLOCAL_M4 = $(top_srcdir)/aclocal.m4
 am__aclocal_m4_deps = $(top_srcdir)/configure.ac
 am__configure_deps = $(am__aclocal_m4_deps) $(CONFIGURE_DEPENDENCIES) \
@@ -247,10 +248,10 @@ target_alias = @target_alias@
 top_build_prefix = @top_build_prefix@
 top_builddir = @top_builddir@
 top_srcdir = @top_srcdir@
-ACLOCAL_AMFLAGS = -I m4
+ACLOCAL_AMFLAGS = -I config/m4
 AUTOMAKE_OPTIONS = foreign
 SUBDIRS = src examples include
-EXTRA_DIST = m4 include bootstrap CHANGELOG.md CODING-STYLE.md \
+EXTRA_DIST = config include bootstrap CHANGELOG.md CODING-STYLE.md \
              CONTRIBUTING.md LICENSE QUESTIONS.md README.md
 
 all: config.h
