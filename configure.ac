@@ -83,7 +83,8 @@ AC_ARG_ENABLE([device_epiphany],
                              [Enable Epiphany device]))
 AM_CONDITIONAL([ENABLE_DEV_EPIPHANY],
                [test "x$enable_device_epiphany" = "xyes"])
-# Ensure toolchain is present
+# Ensure Epiphany toolchain, libraries, and headers are present.
+# Dependency on Epiphany libs/headers will go away later, this will do for now.
 AS_IF([test "x$enable_device_epiphany" = "xyes"],
       [AC_MSG_NOTICE([checking for Epiphany toolchain...])
        AC_CHECK_PROG(have_epiphany_ar,      epiphany-elf-ar,      yes)
@@ -114,11 +115,33 @@ AS_IF([test "x$enable_device_epiphany" = "xyes"],
              AC_SUBST([EPIPHANY_RANLIB],  [epiphany-elf-ranlib])
              AC_SUBST([EPIPHANY_STRIP],   [epiphany-elf-strip]),
              [AC_MSG_ERROR([Epiphany toolchain not found])])
-
        AC_MSG_NOTICE([Epiphany toolchain found])
+
+
+       AC_MSG_NOTICE([checking for Epiphany libraries...])
+       lib_help_str="You probably need to pass in:
+./configure LDFLAGS\"-L/opt/adapteva/esdk/tools/host.armv7l/lib\" ..."
+       AC_CHECK_LIB([e-hal], e_init, [],
+                    [AC_MSG_ERROR([$lib_help_str])])
+
+       AC_CHECK_LIB([e-loader], e_load_group, [],
+                    [AC_MSG_ERROR([$lib_help_str])])
+       AC_MSG_NOTICE([Epiphany libraries found])
+
+
+       AC_MSG_NOTICE([checking for Epiphany headers...])
+       inc_help_str="You probably need to pass in:
+./configure CPPFLAGS\"-I/opt/adapteva/esdk/tools/host.armv7l/include\" ..."
+       AC_CHECK_HEADER([e-hal.h], [], [AC_MSG_ERROR([$inc_help_str])])
+
+       AC_CHECK_HEADER([e-loader.h], [], [AC_MSG_ERROR([$inc_help_str])])
+       AC_MSG_NOTICE([Epiphany headers found])
+
+
        #AC_SUBST([ENABLE_DEV_EPIPHANY], [yes])
        AC_DEFINE([ENABLE_DEV_EPIPHANY], [1], [Epiphany device support])
        ])
+
 
 
 # Easiest way to include header files globally
