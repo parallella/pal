@@ -32,4 +32,9 @@
 *~
 
 # Autotools
-autom4te.cache
+/autom4te.cache
+Makefile.in
+/configure
+/config.h.in
+/config
+/aclocal.m4

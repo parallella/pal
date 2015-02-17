@@ -1,7 +1,12 @@
 #                                               -*- Autoconf -*-
 # Process this file with autoconf to produce a configure script.
 
-AC_PREREQ([2.69])
+
+
+# Needed for autoconf 2.64
+m4_pattern_allow([AC_CHECK_HEADER_STDBOOL])
+
+AC_PREREQ([2.64])
 AC_INIT([Parallel Architectures Library], [0.3],
         [https://github.com/parallella/pal/issues], [pal],
         [https://github.com/parallella/pal])
