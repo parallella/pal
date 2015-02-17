@@ -11,7 +11,7 @@ static void dev_fini(struct dev *dev)
 {
 }
 
-static int dev_query(struct dev *dev)
+static int dev_query(struct dev *dev, int property)
 {
     return -ENOSYS;
 }

@@ -70,7 +70,7 @@ struct dev_ops {
     p_dev_t (*init) (struct dev *, int);
     void (*fini) (struct dev *);
 
-    int (*query) (struct dev *);
+    int (*query) (struct dev *, int);
     struct team *(*open) (struct dev *);
     int (*wait) (struct dev *, struct team *);
 };
