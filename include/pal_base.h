@@ -37,16 +37,16 @@
  ***********************************************************************
  */
 
-#define P_PROP_TYPE 0
-#define P_PROP_NODES 1
-#define P_PROP_TOPOLOGY 2
+#define P_PROP_TYPE 0     // Type of device
+#define P_PROP_NODES 1    // Number of nodes on devices
+#define P_PROP_TOPOLOGY 2 // E.g., 2 == 2D mesh
 #define P_PROP_ROWS 3
 #define P_PROP_COLS 4
 #define P_PROP_PLANES 5
 #define P_PROP_CHIPROWS 6
 #define P_PROP_CHIPCOLS 7
-#define P_PROP_SIMD 8
-#define P_PROP_MEMSIZE 9
+#define P_PROP_SIMD 8     // 1 if device supports SIMD
+#define P_PROP_MEMSIZE 9  // Memory size per node
 #define P_PROP_MEMBASE 10
 #define P_PROP_VERSION 11
 #define P_PROP_MEMARCH 12
