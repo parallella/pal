@@ -637,6 +637,26 @@ ac_subst_vars='am__EXEEXT_FALSE
 am__EXEEXT_TRUE
 LTLIBOBJS
 AM_CPPFLAGS
+EPIPHANY_STRIP
+EPIPHANY_RANLIB
+EPIPHANY_OBJDUMP
+EPIPHANY_NM
+EPIPHANY_LD
+EPIPHANY_CXXCPP
+EPIPHANY_CXX
+EPIPHANY_CPP
+EPIPHANY_CC
+EPIPHANY_AR
+have_epiphany_strip
+have_epiphany_ranlib
+have_epiphany_objdump
+have_epiphany_nm
+have_epiphany_ld
+have_epiphany_cxx
+have_epiphany_cc
+have_epiphany_ar
+ENABLE_DEV_EPIPHANY_FALSE
+ENABLE_DEV_EPIPHANY_TRUE
 LIBOBJS
 ALLOCA
 CXXCPP
@@ -770,6 +790,7 @@ enable_dependency_tracking
 with_gnu_ld
 with_sysroot
 enable_libtool_lock
+enable_device_epiphany
 '
       ac_precious_vars='build_alias
 host_alias
@@ -1411,6 +1432,8 @@ Optional Features:
   --disable-dependency-tracking  speeds up one-time build
   --enable-dependency-tracking   do not reject slow dependency extractors
   --disable-libtool-lock  avoid locking (might break parallel builds)
+  --enable-device-epiphany
+                          Enable Epiphany device
 
 Optional Packages:
   --with-PACKAGE[=ARG]    use PACKAGE [ARG=yes]
@@ -17098,7 +17121,365 @@ fi
 done
 
 
-ac_config_files="$ac_config_files Makefile include/Makefile src/Makefile src/base/Makefile examples/Makefile examples/base/Makefile"
+ac_config_files="$ac_config_files Makefile include/Makefile src/Makefile src/base/Makefile src/base/devices/Makefile src/base/devices/epiphany/Makefile examples/Makefile examples/base/Makefile"
+
+
+
+# Epiphany device support
+# Check whether --enable-device_epiphany was given.
+if test "${enable_device_epiphany+set}" = set; then :
+  enableval=$enable_device_epiphany;
+fi
+
+ if test "x$enable_device_epiphany" = "xyes"; then
+  ENABLE_DEV_EPIPHANY_TRUE=
+  ENABLE_DEV_EPIPHANY_FALSE='#'
+else
+  ENABLE_DEV_EPIPHANY_TRUE='#'
+  ENABLE_DEV_EPIPHANY_FALSE=
+fi
+
+# Ensure toolchain is present
+if test "x$enable_device_epiphany" = "xyes"; then :
+  { $as_echo "$as_me:${as_lineno-$LINENO}: checking for Epiphany toolchain..." >&5
+$as_echo "$as_me: checking for Epiphany toolchain..." >&6;}
+       # Extract the first word of "epiphany-elf-ar", so it can be a program name with args.
+set dummy epiphany-elf-ar; ac_word=$2
+{ $as_echo "$as_me:${as_lineno-$LINENO}: checking for $ac_word" >&5
+$as_echo_n "checking for $ac_word... " >&6; }
+if ${ac_cv_prog_have_epiphany_ar+:} false; then :
+  $as_echo_n "(cached) " >&6
+else
+  if test -n "$have_epiphany_ar"; then
+  ac_cv_prog_have_epiphany_ar="$have_epiphany_ar" # Let the user override the test.
+else
+as_save_IFS=$IFS; IFS=$PATH_SEPARATOR
+for as_dir in $PATH
+do
+  IFS=$as_save_IFS
+  test -z "$as_dir" && as_dir=.
+    for ac_exec_ext in '' $ac_executable_extensions; do
+  if as_fn_executable_p "$as_dir/$ac_word$ac_exec_ext"; then
+    ac_cv_prog_have_epiphany_ar="yes"
+    $as_echo "$as_me:${as_lineno-$LINENO}: found $as_dir/$ac_word$ac_exec_ext" >&5
+    break 2
+  fi
+done
+  done
+IFS=$as_save_IFS
+
+fi
+fi
+have_epiphany_ar=$ac_cv_prog_have_epiphany_ar
+if test -n "$have_epiphany_ar"; then
+  { $as_echo "$as_me:${as_lineno-$LINENO}: result: $have_epiphany_ar" >&5
+$as_echo "$have_epiphany_ar" >&6; }
+else
+  { $as_echo "$as_me:${as_lineno-$LINENO}: result: no" >&5
+$as_echo "no" >&6; }
+fi
+
+
+       # Extract the first word of "epiphany-elf-gcc", so it can be a program name with args.
+set dummy epiphany-elf-gcc; ac_word=$2
+{ $as_echo "$as_me:${as_lineno-$LINENO}: checking for $ac_word" >&5
+$as_echo_n "checking for $ac_word... " >&6; }
+if ${ac_cv_prog_have_epiphany_cc+:} false; then :
+  $as_echo_n "(cached) " >&6
+else
+  if test -n "$have_epiphany_cc"; then
+  ac_cv_prog_have_epiphany_cc="$have_epiphany_cc" # Let the user override the test.
+else
+as_save_IFS=$IFS; IFS=$PATH_SEPARATOR
+for as_dir in $PATH
+do
+  IFS=$as_save_IFS
+  test -z "$as_dir" && as_dir=.
+    for ac_exec_ext in '' $ac_executable_extensions; do
+  if as_fn_executable_p "$as_dir/$ac_word$ac_exec_ext"; then
+    ac_cv_prog_have_epiphany_cc="yes"
+    $as_echo "$as_me:${as_lineno-$LINENO}: found $as_dir/$ac_word$ac_exec_ext" >&5
+    break 2
+  fi
+done
+  done
+IFS=$as_save_IFS
+
+fi
+fi
+have_epiphany_cc=$ac_cv_prog_have_epiphany_cc
+if test -n "$have_epiphany_cc"; then
+  { $as_echo "$as_me:${as_lineno-$LINENO}: result: $have_epiphany_cc" >&5
+$as_echo "$have_epiphany_cc" >&6; }
+else
+  { $as_echo "$as_me:${as_lineno-$LINENO}: result: no" >&5
+$as_echo "no" >&6; }
+fi
+
+
+       # Extract the first word of "epiphany-elf-g++", so it can be a program name with args.
+set dummy epiphany-elf-g++; ac_word=$2
+{ $as_echo "$as_me:${as_lineno-$LINENO}: checking for $ac_word" >&5
+$as_echo_n "checking for $ac_word... " >&6; }
+if ${ac_cv_prog_have_epiphany_cxx+:} false; then :
+  $as_echo_n "(cached) " >&6
+else
+  if test -n "$have_epiphany_cxx"; then
+  ac_cv_prog_have_epiphany_cxx="$have_epiphany_cxx" # Let the user override the test.
+else
+as_save_IFS=$IFS; IFS=$PATH_SEPARATOR
+for as_dir in $PATH
+do
+  IFS=$as_save_IFS
+  test -z "$as_dir" && as_dir=.
+    for ac_exec_ext in '' $ac_executable_extensions; do
+  if as_fn_executable_p "$as_dir/$ac_word$ac_exec_ext"; then
+    ac_cv_prog_have_epiphany_cxx="yes"
+    $as_echo "$as_me:${as_lineno-$LINENO}: found $as_dir/$ac_word$ac_exec_ext" >&5
+    break 2
+  fi
+done
+  done
+IFS=$as_save_IFS
+
+fi
+fi
+have_epiphany_cxx=$ac_cv_prog_have_epiphany_cxx
+if test -n "$have_epiphany_cxx"; then
+  { $as_echo "$as_me:${as_lineno-$LINENO}: result: $have_epiphany_cxx" >&5
+$as_echo "$have_epiphany_cxx" >&6; }
+else
+  { $as_echo "$as_me:${as_lineno-$LINENO}: result: no" >&5
+$as_echo "no" >&6; }
+fi
+
+
+       # Extract the first word of "epiphany-elf-ld", so it can be a program name with args.
+set dummy epiphany-elf-ld; ac_word=$2
+{ $as_echo "$as_me:${as_lineno-$LINENO}: checking for $ac_word" >&5
+$as_echo_n "checking for $ac_word... " >&6; }
+if ${ac_cv_prog_have_epiphany_ld+:} false; then :
+  $as_echo_n "(cached) " >&6
+else
+  if test -n "$have_epiphany_ld"; then
+  ac_cv_prog_have_epiphany_ld="$have_epiphany_ld" # Let the user override the test.
+else
+as_save_IFS=$IFS; IFS=$PATH_SEPARATOR
+for as_dir in $PATH
+do
+  IFS=$as_save_IFS
+  test -z "$as_dir" && as_dir=.
+    for ac_exec_ext in '' $ac_executable_extensions; do
+  if as_fn_executable_p "$as_dir/$ac_word$ac_exec_ext"; then
+    ac_cv_prog_have_epiphany_ld="yes"
+    $as_echo "$as_me:${as_lineno-$LINENO}: found $as_dir/$ac_word$ac_exec_ext" >&5
+    break 2
+  fi
+done
+  done
+IFS=$as_save_IFS
+
+fi
+fi
+have_epiphany_ld=$ac_cv_prog_have_epiphany_ld
+if test -n "$have_epiphany_ld"; then
+  { $as_echo "$as_me:${as_lineno-$LINENO}: result: $have_epiphany_ld" >&5
+$as_echo "$have_epiphany_ld" >&6; }
+else
+  { $as_echo "$as_me:${as_lineno-$LINENO}: result: no" >&5
+$as_echo "no" >&6; }
+fi
+
+
+       # Extract the first word of "epiphany-elf-nm", so it can be a program name with args.
+set dummy epiphany-elf-nm; ac_word=$2
+{ $as_echo "$as_me:${as_lineno-$LINENO}: checking for $ac_word" >&5
+$as_echo_n "checking for $ac_word... " >&6; }
+if ${ac_cv_prog_have_epiphany_nm+:} false; then :
+  $as_echo_n "(cached) " >&6
+else
+  if test -n "$have_epiphany_nm"; then
+  ac_cv_prog_have_epiphany_nm="$have_epiphany_nm" # Let the user override the test.
+else
+as_save_IFS=$IFS; IFS=$PATH_SEPARATOR
+for as_dir in $PATH
+do
+  IFS=$as_save_IFS
+  test -z "$as_dir" && as_dir=.
+    for ac_exec_ext in '' $ac_executable_extensions; do
+  if as_fn_executable_p "$as_dir/$ac_word$ac_exec_ext"; then
+    ac_cv_prog_have_epiphany_nm="yes"
+    $as_echo "$as_me:${as_lineno-$LINENO}: found $as_dir/$ac_word$ac_exec_ext" >&5
+    break 2
+  fi
+done
+  done
+IFS=$as_save_IFS
+
+fi
+fi
+have_epiphany_nm=$ac_cv_prog_have_epiphany_nm
+if test -n "$have_epiphany_nm"; then
+  { $as_echo "$as_me:${as_lineno-$LINENO}: result: $have_epiphany_nm" >&5
+$as_echo "$have_epiphany_nm" >&6; }
+else
+  { $as_echo "$as_me:${as_lineno-$LINENO}: result: no" >&5
+$as_echo "no" >&6; }
+fi
+
+
+       # Extract the first word of "epiphany-elf-objdump", so it can be a program name with args.
+set dummy epiphany-elf-objdump; ac_word=$2
+{ $as_echo "$as_me:${as_lineno-$LINENO}: checking for $ac_word" >&5
+$as_echo_n "checking for $ac_word... " >&6; }
+if ${ac_cv_prog_have_epiphany_objdump+:} false; then :
+  $as_echo_n "(cached) " >&6
+else
+  if test -n "$have_epiphany_objdump"; then
+  ac_cv_prog_have_epiphany_objdump="$have_epiphany_objdump" # Let the user override the test.
+else
+as_save_IFS=$IFS; IFS=$PATH_SEPARATOR
+for as_dir in $PATH
+do
+  IFS=$as_save_IFS
+  test -z "$as_dir" && as_dir=.
+    for ac_exec_ext in '' $ac_executable_extensions; do
+  if as_fn_executable_p "$as_dir/$ac_word$ac_exec_ext"; then
+    ac_cv_prog_have_epiphany_objdump="yes"
+    $as_echo "$as_me:${as_lineno-$LINENO}: found $as_dir/$ac_word$ac_exec_ext" >&5
+    break 2
+  fi
+done
+  done
+IFS=$as_save_IFS
+
+fi
+fi
+have_epiphany_objdump=$ac_cv_prog_have_epiphany_objdump
+if test -n "$have_epiphany_objdump"; then
+  { $as_echo "$as_me:${as_lineno-$LINENO}: result: $have_epiphany_objdump" >&5
+$as_echo "$have_epiphany_objdump" >&6; }
+else
+  { $as_echo "$as_me:${as_lineno-$LINENO}: result: no" >&5
+$as_echo "no" >&6; }
+fi
+
+
+       # Extract the first word of "epiphany-elf-ranlib", so it can be a program name with args.
+set dummy epiphany-elf-ranlib; ac_word=$2
+{ $as_echo "$as_me:${as_lineno-$LINENO}: checking for $ac_word" >&5
+$as_echo_n "checking for $ac_word... " >&6; }
+if ${ac_cv_prog_have_epiphany_ranlib+:} false; then :
+  $as_echo_n "(cached) " >&6
+else
+  if test -n "$have_epiphany_ranlib"; then
+  ac_cv_prog_have_epiphany_ranlib="$have_epiphany_ranlib" # Let the user override the test.
+else
+as_save_IFS=$IFS; IFS=$PATH_SEPARATOR
+for as_dir in $PATH
+do
+  IFS=$as_save_IFS
+  test -z "$as_dir" && as_dir=.
+    for ac_exec_ext in '' $ac_executable_extensions; do
+  if as_fn_executable_p "$as_dir/$ac_word$ac_exec_ext"; then
+    ac_cv_prog_have_epiphany_ranlib="yes"
+    $as_echo "$as_me:${as_lineno-$LINENO}: found $as_dir/$ac_word$ac_exec_ext" >&5
+    break 2
+  fi
+done
+  done
+IFS=$as_save_IFS
+
+fi
+fi
+have_epiphany_ranlib=$ac_cv_prog_have_epiphany_ranlib
+if test -n "$have_epiphany_ranlib"; then
+  { $as_echo "$as_me:${as_lineno-$LINENO}: result: $have_epiphany_ranlib" >&5
+$as_echo "$have_epiphany_ranlib" >&6; }
+else
+  { $as_echo "$as_me:${as_lineno-$LINENO}: result: no" >&5
+$as_echo "no" >&6; }
+fi
+
+
+       # Extract the first word of "epiphany-elf-strip", so it can be a program name with args.
+set dummy epiphany-elf-strip; ac_word=$2
+{ $as_echo "$as_me:${as_lineno-$LINENO}: checking for $ac_word" >&5
+$as_echo_n "checking for $ac_word... " >&6; }
+if ${ac_cv_prog_have_epiphany_strip+:} false; then :
+  $as_echo_n "(cached) " >&6
+else
+  if test -n "$have_epiphany_strip"; then
+  ac_cv_prog_have_epiphany_strip="$have_epiphany_strip" # Let the user override the test.
+else
+as_save_IFS=$IFS; IFS=$PATH_SEPARATOR
+for as_dir in $PATH
+do
+  IFS=$as_save_IFS
+  test -z "$as_dir" && as_dir=.
+    for ac_exec_ext in '' $ac_executable_extensions; do
+  if as_fn_executable_p "$as_dir/$ac_word$ac_exec_ext"; then
+    ac_cv_prog_have_epiphany_strip="yes"
+    $as_echo "$as_me:${as_lineno-$LINENO}: found $as_dir/$ac_word$ac_exec_ext" >&5
+    break 2
+  fi
+done
+  done
+IFS=$as_save_IFS
+
+fi
+fi
+have_epiphany_strip=$ac_cv_prog_have_epiphany_strip
+if test -n "$have_epiphany_strip"; then
+  { $as_echo "$as_me:${as_lineno-$LINENO}: result: $have_epiphany_strip" >&5
+$as_echo "$have_epiphany_strip" >&6; }
+else
+  { $as_echo "$as_me:${as_lineno-$LINENO}: result: no" >&5
+$as_echo "no" >&6; }
+fi
+
+
+
+       if test "x$have_epiphany_ar"      = "xyes" -a \
+                   "x$have_epiphany_cc"      = "xyes" -a \
+                   "x$have_epiphany_cxx"     = "xyes" -a \
+                   "x$have_epiphany_ld"      = "xyes" -a \
+                   "x$have_epiphany_nm"      = "xyes" -a \
+                   "x$have_epiphany_objdump" = "xyes" -a \
+                   "x$have_epiphany_ranlib"  = "xyes" -a \
+                   "x$have_epiphany_strip"   = "xyes"; then :
+  EPIPHANY_AR=epiphany-elf-ar
+
+             EPIPHANY_CC=epiphany-elf-gcc
+
+             EPIPHANY_CPP="epiphany-elf-gcc -E"
+
+             EPIPHANY_CXX=epiphany-elf-g++
+
+             EPIPHANY_CXXCPP="epiphany-elf-g++ -E"
+
+             EPIPHANY_LD=epiphany-elf-ld
+
+             EPIPHANY_NM="epiphany-elf-nm -B"
+
+             EPIPHANY_OBJDUMP=epiphany-elf-objdump
+
+             EPIPHANY_RANLIB=epiphany-elf-ranlib
+
+             EPIPHANY_STRIP=epiphany-elf-strip
+
+else
+  as_fn_error $? "Epiphany toolchain not found" "$LINENO" 5
+fi
+
+       { $as_echo "$as_me:${as_lineno-$LINENO}: Epiphany toolchain found" >&5
+$as_echo "$as_me: Epiphany toolchain found" >&6;}
+       #AC_SUBST([ENABLE_DEV_EPIPHANY], [yes])
+
+$as_echo "#define ENABLE_DEV_EPIPHANY 1" >>confdefs.h
+
+
+fi
 
 
 # Easiest way to include header files globally
@@ -17236,6 +17617,10 @@ Usually this means the macro was only invoked conditionally." "$LINENO" 5
 fi
 if test -z "${am__fastdepCC_TRUE}" && test -z "${am__fastdepCC_FALSE}"; then
   as_fn_error $? "conditional \"am__fastdepCC\" was never defined.
+Usually this means the macro was only invoked conditionally." "$LINENO" 5
+fi
+if test -z "${ENABLE_DEV_EPIPHANY_TRUE}" && test -z "${ENABLE_DEV_EPIPHANY_FALSE}"; then
+  as_fn_error $? "conditional \"ENABLE_DEV_EPIPHANY\" was never defined.
 Usually this means the macro was only invoked conditionally." "$LINENO" 5
 fi
 
@@ -18213,6 +18598,8 @@ do
     "include/Makefile") CONFIG_FILES="$CONFIG_FILES include/Makefile" ;;
     "src/Makefile") CONFIG_FILES="$CONFIG_FILES src/Makefile" ;;
     "src/base/Makefile") CONFIG_FILES="$CONFIG_FILES src/base/Makefile" ;;
+    "src/base/devices/Makefile") CONFIG_FILES="$CONFIG_FILES src/base/devices/Makefile" ;;
+    "src/base/devices/epiphany/Makefile") CONFIG_FILES="$CONFIG_FILES src/base/devices/epiphany/Makefile" ;;
     "examples/Makefile") CONFIG_FILES="$CONFIG_FILES examples/Makefile" ;;
     "examples/base/Makefile") CONFIG_FILES="$CONFIG_FILES examples/base/Makefile" ;;
 
