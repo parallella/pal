@@ -1,3 +1,5 @@
+#pragma once
+
 /*
  ****************************************************************
  * 1D: Filters, Convolution, Correlation Functions

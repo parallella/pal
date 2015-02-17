@@ -1,3 +1,5 @@
+#pragma once
+
 /*Standard math constants*/
 #define M_E 2.71828182845904523540        /* e */
 #define M_LOG2E 1.44269504088896340740    /* log 2e */

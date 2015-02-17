@@ -1,3 +1,5 @@
+#pragma once
+
 /*
  ****************************************************************
  * Image Processing Functions (raw/native format)
