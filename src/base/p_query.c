@@ -1,3 +1,6 @@
+#include "pal_base.h"
+#include "pal_base_private.h"
+
 /**
  *
  * Queries a PAL object,returning an integer
@@ -45,19 +48,13 @@
  * @return      Value of property being queried
  *
  */
-#include "pal_base.h"
-#include "pal_base_private.h"
-#include <stdio.h>
 int p_query(p_dev_t dev, int prop)
 {
-    printf("Running p_query(%p,%d)\n", dev, prop);
+    struct dev *pdev;
 
-#if 0
-    int res;
-    struct p_dev *devptr = p_dev_table_global.devptr[dev];
-    res = devptr->property[P_QUERY_NODES];
-    return (res);
-#endif
+    if (!dev)
+        return -EINVAL;
 
-    return -ENOSYS;
+    pdev = (struct dev *) dev;
+    return pdev->dev_ops->query(pdev, prop);
 }
