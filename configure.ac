@@ -66,8 +66,55 @@ AC_CONFIG_FILES([Makefile
                  include/Makefile
                  src/Makefile
                  src/base/Makefile
+                 src/base/devices/Makefile
+                 src/base/devices/epiphany/Makefile
                  examples/Makefile
                  examples/base/Makefile])
+
+
+# Epiphany device support
+AC_ARG_ENABLE([device_epiphany],
+              AS_HELP_STRING([--enable-device-epiphany],
+                             [Enable Epiphany device]))
+AM_CONDITIONAL([ENABLE_DEV_EPIPHANY],
+               [test "x$enable_device_epiphany" = "xyes"])
+# Ensure toolchain is present
+AS_IF([test "x$enable_device_epiphany" = "xyes"],
+      [AC_MSG_NOTICE([checking for Epiphany toolchain...])
+       AC_CHECK_PROG(have_epiphany_ar,      epiphany-elf-ar,      yes)
+       AC_CHECK_PROG(have_epiphany_cc,      epiphany-elf-gcc,     yes)
+       AC_CHECK_PROG(have_epiphany_cxx,     epiphany-elf-g++,     yes)
+       AC_CHECK_PROG(have_epiphany_ld,      epiphany-elf-ld,      yes)
+       AC_CHECK_PROG(have_epiphany_nm,      epiphany-elf-nm,      yes)
+       AC_CHECK_PROG(have_epiphany_objdump, epiphany-elf-objdump, yes)
+       AC_CHECK_PROG(have_epiphany_ranlib,  epiphany-elf-ranlib,  yes)
+       AC_CHECK_PROG(have_epiphany_strip,   epiphany-elf-strip,   yes)
+
+       AS_IF([test "x$have_epiphany_ar"      = "xyes" -a \
+                   "x$have_epiphany_cc"      = "xyes" -a \
+                   "x$have_epiphany_cxx"     = "xyes" -a \
+                   "x$have_epiphany_ld"      = "xyes" -a \
+                   "x$have_epiphany_nm"      = "xyes" -a \
+                   "x$have_epiphany_objdump" = "xyes" -a \
+                   "x$have_epiphany_ranlib"  = "xyes" -a \
+                   "x$have_epiphany_strip"   = "xyes"],
+             AC_SUBST([EPIPHANY_AR],      [epiphany-elf-ar])
+             AC_SUBST([EPIPHANY_CC],      [epiphany-elf-gcc])
+             AC_SUBST([EPIPHANY_CPP],     ["epiphany-elf-gcc -E"])
+             AC_SUBST([EPIPHANY_CXX],     [epiphany-elf-g++])
+             AC_SUBST([EPIPHANY_CXXCPP],  ["epiphany-elf-g++ -E"])
+             AC_SUBST([EPIPHANY_LD],      [epiphany-elf-ld])
+             AC_SUBST([EPIPHANY_NM],      ["epiphany-elf-nm -B"])
+             AC_SUBST([EPIPHANY_OBJDUMP], [epiphany-elf-objdump])
+             AC_SUBST([EPIPHANY_RANLIB],  [epiphany-elf-ranlib])
+             AC_SUBST([EPIPHANY_STRIP],   [epiphany-elf-strip]),
+             [AC_MSG_ERROR([Epiphany toolchain not found])])
+
+       AC_MSG_NOTICE([Epiphany toolchain found])
+       #AC_SUBST([ENABLE_DEV_EPIPHANY], [yes])
+       AC_DEFINE([ENABLE_DEV_EPIPHANY], [1], [Epiphany device support])
+       ])
+
 
 # Easiest way to include header files globally
 AC_SUBST([AM_CPPFLAGS], ['-I$(top_srcdir)/include -I$(top_builddir)'])

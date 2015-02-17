@@ -1,8 +1,28 @@
 
 #include <stdio.h>
 #include <string.h>
+#include "config.h"
 #include "pal_base.h"
 #include "pal_base_private.h"
+
+#if ENABLE_DEV_EPIPHANY
+extern struct dev_ops __pal_dev_epiphany_ops;
+#endif
+#if ENABLE_DEV_GRID
+extern struct dev_ops __pal_dev_grid_ops;
+#endif
+#if ENABLE_DEV_SMP
+extern struct dev_ops __pal_dev_smp_ops;
+#endif
+#if ENABLE_DEV_FPGA
+extern struct dev_ops __pal_dev_fpga_ops;
+#endif
+#if ENABLE_DEV_GPU
+extern struct dev_ops __pal_dev_gpu_ops;
+#endif
+#if ENABLE_DEV_DEMO
+extern struct dev_ops __pal_dev_demo_ops;
+#endif
 
 #define DEFINE_DEV(Ops) { .dev_ops = Ops, .dev_data = NULL }
 

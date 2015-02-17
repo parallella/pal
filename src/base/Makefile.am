@@ -1,5 +1,5 @@
 AUTOMAKE_OPTIONS = foreign
-#SUBDIRS = examples
+SUBDIRS = devices
 EXTRA_DIST = epiphany
 
 # examples depends on this
@@ -43,6 +43,8 @@ libpal_la_SOURCES = \
     pal_base_private.h \
     boilerplate.c \
     p_get_err.c
+
+libpal_la_LIBADD = devices/libdevices.la
 
 # Disable temporarily until API is determined
 #    p_scatter.c \
