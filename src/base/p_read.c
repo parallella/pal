@@ -1,3 +1,9 @@
+#include <stddef.h>
+#include <stdio.h>
+#include <string.h>
+#include "pal_base.h"
+#include "pal_base_private.h"
+
 /**
  *
  * Copies the content of 'mem' into the area pointed to by the 'dst' pointer.
@@ -17,15 +23,9 @@
  * @return      Returns number of bytes read. Negative value indicates error.
  *
  */
-#include <stddef.h>
-#include <stdio.h>
-#include <string.h>
-#include "pal_base.h"
-#include "pal_base_private.h"
-
 ssize_t p_read(p_mem_t mem, void *dst, off_t offset, size_t nb, int flags)
 {
-    printf("Running p_read(%ld,%d,%d,%p)\n", mem, (int)nb, flags, dst);
+    printf("Running p_read(%p,%d,%d,%p)\n", mem, (int)nb, flags, dst);
     // memcpy(dst, mem->memptr,nb);
     return -ENOSYS;
 }

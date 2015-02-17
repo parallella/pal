@@ -11,8 +11,11 @@ int main(int argc, char *argv[])
     void *args[nargs];
     char argbuf[20];
 
-    // Integer index into opaque structures
-    int dev0, prog0, team0, mem[4];
+    // References as opaque structures
+    p_dev_t dev0;
+    p_prog_t prog0;
+    p_team_t team0;
+    p_mem_t mem[4];
 
     // Execution setup
     dev0 = p_init(P_DEV_DEMO, 0);        // initialize device and team
@@ -29,4 +32,6 @@ int main(int argc, char *argv[])
     p_barrier(team0); // not needed
     p_close(team0);   // close team
     p_finalize(dev0); // finalize memory
+
+    return 0;
 }

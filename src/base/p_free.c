@@ -1,3 +1,7 @@
+#include <stdio.h>
+#include "pal_base.h"
+#include "pal_base_private.h"
+
 /**
  *
  * Frees up resources occupied by 'mem'.
@@ -7,12 +11,9 @@
  * @return    Returns 0 if successful.
  *
  */
-#include <stdio.h>
-#include "pal_base.h"
-#include "pal_base_private.h"
 
 int p_free(p_mem_t mem)
 {
-    printf("Running p_free(%ld)\n", mem);
+    printf("Running p_free(%p)\n", mem);
     return (0);
 }

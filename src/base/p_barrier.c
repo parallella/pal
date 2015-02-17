@@ -15,7 +15,7 @@
 int p_barrier(p_team_t team)
 {
 
-    printf("Running p_barrier(%ld)\n", team);
+    printf("Running p_barrier(%p)\n", team);
 
     /*PUT CODE HERE*/
     // 1.Every processor on the team runs this function

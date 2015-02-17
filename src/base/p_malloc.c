@@ -1,3 +1,8 @@
+#include <stddef.h>
+#include <stdio.h>
+#include "pal_base.h"
+#include "pal_base_private.h"
+
 /**
  *
  * Dynamically allocates contiguous memory buffer on the local node.
@@ -11,15 +16,11 @@
  * @return      Returns a pointer to the memory buffer
  *              Returns NULL on error
  */
-#include <stddef.h>
-#include <stdio.h>
-#include "pal_base.h"
-#include "pal_base_private.h"
-
 p_mem_t p_malloc(p_team_t team, size_t size)
 {
 
-    printf("Running p_malloc(%ld,%d)\n", team, (int)size);
+    printf("Running p_malloc(%p,%d)\n", team, (int)size);
+#if 0
     p_mem_t *mem;
 
     switch (0) {   // FIX!
@@ -44,5 +45,6 @@ p_mem_t p_malloc(p_team_t team, size_t size)
     default:
         return (1);
     }
-    return (0);
+#endif
+    return p_ref_err(ENOSYS);
 }
