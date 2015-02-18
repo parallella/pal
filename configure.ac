@@ -63,7 +63,7 @@ AC_TYPE_UINT64_T
 # Checks for library functions.
 AC_FUNC_ALLOCA
 AC_FUNC_FORK
-AC_FUNC_MALLOC
+#AC_FUNC_MALLOC # Don't do it. Assume GNU libc compatible malloc.
 AC_FUNC_MMAP
 AC_CHECK_FUNCS([bzero fesetround floor gettimeofday memset modf munmap pow rint sqrt strdup strerror strtol])
 
