@@ -103,8 +103,8 @@ int p_close(p_team_t team);
 p_prog_t p_load(p_dev_t dev, char *file, char *function, int flags);
 
 /* Run a program on N processors */
-int p_run(p_prog_t prog, p_team_t team, int start, int count, int nargs,
-              void *args[], int flags);
+int p_run(p_prog_t prog, p_team_t team, int start, int count, int argn,
+              char *args[], int flags);
 
 /*Execution barrier*/
 int p_barrier(p_team_t team);

@@ -8,7 +8,7 @@ int main(int argc, char *argv[])
     char *file = "./hello_task.elf";
     char *func = "main";
     int status, i, all, nargs = 1;
-    void *args[nargs];
+    char *args[nargs];
     char argbuf[20];
 
     // References as opaque structures
@@ -26,10 +26,10 @@ int main(int argc, char *argv[])
     // Running program
     for (i = 0; i < all; i++) {
         sprintf(argbuf, "%d", i); // string args needed to run main asis
-        args[0] = &argbuf;
+        args[0] = argbuf;
         status = p_run(prog0, team0, i, 1, nargs, args, 0);
     }
-    p_barrier(team0); // not needed
+    p_wait(team0);    // not needed
     p_close(team0);   // close team
     p_finalize(dev0); // finalize memory
 

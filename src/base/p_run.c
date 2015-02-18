@@ -29,8 +29,8 @@
 #include "pal_base.h"
 #include "pal_base_private.h"
 
-int p_run(p_prog_t prog, p_team_t team, int start, int size, int nargs, void *args[],
-          int flags)
+int p_run(p_prog_t prog, p_team_t team, int start, int size, int argn,
+        char *args[], int flags)
 {
 
     /* TODO: Clean me up please */

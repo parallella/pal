@@ -56,10 +56,10 @@ Instructions for contributing can be found [HERE](CONTRIBUTING.md).
 int main (int argc, char *argv[]){
 
     //Stack variables
+    int status, i, all, nargs=1;
     char *file="./hello_task.elf";
     char *func="main";
-    int status, i, all, nargs=1;
-    void* args[nargs];
+    char *args[nargs];
     char argbuf[20];
 
     // Handles to opaque structures
@@ -77,7 +77,7 @@ int main (int argc, char *argv[]){
     //Running program
     for(i=0;i<all;i++){
         sprintf(argbuf, "%d", i); //string args needed to run main asis
-        args[0]=&argbuf;
+        args[0]=argbuf;
         p_run(prog0, team0, i, 1, nargs, args, 0);
     }
     p_wait(team0);    //wait for team to finish (not needed, p_run()
