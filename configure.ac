@@ -22,14 +22,13 @@ AC_CONFIG_MACRO_DIR([config/m4])
 AC_CANONICAL_BUILD
 AC_CANONICAL_HOST
 
-AM_INIT_AUTOMAKE([-Wall -Werror])
+AM_INIT_AUTOMAKE([subdir-objects -Wall -Werror])
 
 # Support silent build rules. Disable by either passing --disable-silent-rules
 # to configure or passing V=1 to make.
 AM_SILENT_RULES([yes])
 
 
-LT_INIT
 
 # Checks for programs.
 AC_PROG_CXX
@@ -39,6 +38,9 @@ AC_PROG_CPP
 AC_PROG_INSTALL
 AC_PROG_LN_S
 AC_PROG_MAKE_SET
+AM_PROG_AR
+
+LT_INIT
 
 # Checks for libraries.
 
