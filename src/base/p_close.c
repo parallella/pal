@@ -14,5 +14,8 @@
 int p_close(p_team_t team)
 {
     printf("Running p_close (%p)\n", team);
-    return (0);
+
+    // NO-OP for now
+
+    return 0;
 }

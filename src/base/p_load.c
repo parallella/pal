@@ -1,3 +1,9 @@
+#include <stdio.h>
+#include <string.h>
+#include <errno.h>
+#include "pal_base.h"
+#include "pal_base_private.h"
+
 /**
  *
  * Loads a program from a file into an object in memory and prepares the program
@@ -11,35 +17,27 @@
  * @return          Returns a reference. Negative value indicates error.
  *
  */
-#include <stdio.h>
-#include <string.h>
-#include <errno.h>
-#include "pal_base.h"
-#include "pal_base_private.h"
 p_prog_t p_load(p_dev_t dev, char *file, char *function, int flags)
 {
+    size_t len;
+    struct prog *prog = malloc(sizeof(*prog));
 
-#if _P_DEBUG
-    printf("Running p_load(%p,%s,%s,%d)\n", dev, file, function, flags);
-#endif
+    if (!prog)
+        return p_ref_err(ENOMEM);
 
-#if 0
-    /* We don't own the string so copy */
-    prog->name = strdup(file);
+    len = strnlen(file, 4096);
+    if (len == 4096)
+        return p_ref_err(ENAMETOOLONG);
 
-    if (!prog->name)
-        return -ENOMEM;
+    prog->path = strndup(file, len);;
 
-    /* Creating a program structure */
-    prog->dev = dev;
+    if (!prog->path)
+        return p_ref_err(ENOMEM);
 
-    dev->progs.tail->next = prog;
-    dev->progs.tail = prog;
-    prog->next = NULL;
+    strncpy(prog->path, file, len+1);
 
+    return prog;
 
-    return 0;
-#endif
-
-    return p_ref_err(ENOSYS);
+    // TODO: Load into memory etc.
+    // TODO: Add to global prog table. We're leaking memory here people.
 }

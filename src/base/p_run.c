@@ -10,7 +10,7 @@
  *
  * @param size      Total number of processors within team to run
  *
- * @param argn      Number of arguments to be supplied to 'function'
+ * @param nargs      Number of arguments to be supplied to 'function'
  *
  * @param args      An array of pointers to function arguments
  *
@@ -32,54 +32,20 @@
 int p_run(p_prog_t prog, p_team_t team, int start, int size, int nargs,
         char *args[], int flags)
 {
+    int err;
 
-    /* TODO: Clean me up please */
+    struct team *pteam = (struct team *) team;
+    struct dev *pdev = pteam->dev;
+    struct prog *pprog = (struct prog *) prog;
 
-    printf("Running p_run(%p,%p,%d,%d,%d, argv,%d)\n", prog, team, start,
-            size, nargs, flags);
-#if 0
-    struct p_prog *progptr = p_prog_table_global.progptr[prog];
-    p_team_t *teamptr = p_team_table_global.teamptr[team];
-    p_dev_t *devptr = progptr->devptr;
-    int type = devptr->property[TYPE];
+    err = pdev->dev_ops->run(pdev, pteam, pprog, start, size, nargs, args,
+            flags);
 
-    pid_t child_pid[16]; // FIX!!
-    int wpid, i, status = 0;
+    if (err)
+        return err;
 
-    char *const elf[] = {progptr->name, NULL};
-    char *path = progptr->name;
+    if (!(flags & 1)) // Bogus non blocking check
+        return p_wait((p_team_t) team); // Inconsistent with flags to this function
 
-    char *argv[16]; // FIX!
-    switch (type) {
-    case P_DEV_EPIPHANY:
-    case P_DEV_FPGA:
-    case P_DEV_GPU:
-    case P_DEV_SMP:
-    case P_DEV_GRID:
-        break;
-    case P_DEV_DEMO:
-        for (i = 0; i < nargs; i++) {
-            argv[i] = args[i];
-        }
-        for (i = nargs; i < 16; i++) {
-            argv[i] = NULL;
-        }
-        for (i = start; i < (size + start); i++) {
-            child_pid[i] = fork();
-            if (child_pid[i] == 0) {
-                execve(path, elf, argv); // executing
-                exit(0);
-            }
-        }
-        // Waiting for all children to finish. Right way?
-        for (i = start; i < (start + size); i++) {
-            while (0 < waitpid(child_pid[i], NULL, 0))
-                ;
-        }
-        break;
-    default:
-        return -ENOSYS;
-    }
-#endif
-    return -ENOSYS;
+    return 0;
 }

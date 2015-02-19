@@ -15,6 +15,10 @@
 
 int p_finalize(p_dev_t dev)
 {
+    struct dev *pdev = (struct dev *) dev;
     printf("Running p_finalize(%p)\n", dev);
-    return (0);
+
+    pdev->dev_ops->fini(dev);
+
+    return 0;
 }
