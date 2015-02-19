@@ -13,7 +13,8 @@
  *
  */
 #include <math.h>
-void p_sin_32f(float *a, float *c, int n)
+#include "pal_math.h"
+void p_sin_f32(float *a, float *c, int n)
 {
 
     int i;
