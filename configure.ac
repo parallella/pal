@@ -75,6 +75,7 @@ AC_CONFIG_FILES([Makefile
                  src/base/Makefile
                  src/base/devices/Makefile
                  src/base/devices/epiphany/Makefile
+                 src/math/Makefile
                  examples/Makefile
                  examples/base/Makefile])
 
