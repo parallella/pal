@@ -7,4 +7,5 @@
 struct epiphany_dev_data {
     bool opened;
     e_epiphany_t dev;
+    e_mem_t ctrl;
 };

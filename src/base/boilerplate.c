@@ -4,6 +4,10 @@
 #include "config.h"
 #include "pal_base.h"
 #include "pal_base_private.h"
+#if __epiphany__
+#include "devices/epiphany/ctrl.h"
+#include <e-lib.h>
+#endif
 
 #if ENABLE_DEV_EPIPHANY
 extern struct dev_ops __pal_dev_epiphany_ops;
@@ -72,14 +76,36 @@ struct pal_global __pal_global = {
 #undef DEFINE_DEV
 
 __attribute__((constructor))
-static void __pal_init()
+void __pal_init()
 {
+#if __epiphany__
+    /* Platform specifics should probably go into separate file ? */
+    // Assume team is entire chip
+    const uint32_t coreid = e_get_coreid();
+    const uint32_t row = e_group_config.core_row;
+    const uint32_t col = e_group_config.core_col;
+    const uint32_t rank = row * e_group_config.group_cols + col;
+    struct epiphany_ctrl_mem *ctrl =
+        (struct epiphany_ctrl_mem *) CTRL_MEM_EADDR;
+    ctrl->status[rank] = STATUS_RUNNING;
+#else
     /* NO-OP for now */
+#endif
 }
 
 __attribute__((destructor))
-static void __pal_fini()
+void __pal_fini()
 {
+#if __epiphany__
+    // Assume team is entire chip
+    const uint32_t coreid = e_get_coreid();
+    const uint32_t row = e_group_config.core_row;
+    const uint32_t col = e_group_config.core_col;
+    const uint32_t rank = row * e_group_config.group_cols + col;
+    struct epiphany_ctrl_mem *ctrl =
+        (struct epiphany_ctrl_mem *) CTRL_MEM_EADDR;
+    ctrl->status[rank] = STATUS_DONE;
+#else
     struct team *team, *next_team;
     struct prog *prog, *next_prog;
 
@@ -98,5 +124,6 @@ static void __pal_fini()
     }
 
     memset(&__pal_global, 0, sizeof(struct pal_global));
+#endif
 }
 

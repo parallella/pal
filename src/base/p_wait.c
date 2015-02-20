@@ -13,8 +13,11 @@
 
 int p_wait(p_team_t team)
 {
-
+    struct team *pteam = (struct team *) team;
     printf("Running p_wait\n");
 
-    return -ENOSYS;
+    if (p_ref_is_err(team))
+        return -EINVAL;
+
+    return pteam->dev->dev_ops->wait(pteam->dev, pteam);
 }

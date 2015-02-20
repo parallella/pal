@@ -79,6 +79,9 @@ AC_CONFIG_FILES([Makefile
                  examples/Makefile
                  examples/base/Makefile])
 
+# Epiphany host support
+AM_CONDITIONAL([HOST_IS_EPIPHANY],
+               [test "x$host_cpu" = "xepiphany"])
 
 # Epiphany device support
 AC_ARG_ENABLE([device_epiphany],

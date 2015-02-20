@@ -5,6 +5,10 @@ EXTRA_DIST = epiphany
 # examples depends on this
 #BUILT_SOURCES = libpal.la
 
+if HOST_IS_EPIPHANY
+    MAYBE_EPIPHANY_LIBS = -le-lib
+endif
+
 noinst_LTLIBRARIES = libpal-base.la
 libpal_base_la_SOURCES = \
     p_append.c \
@@ -44,7 +48,7 @@ libpal_base_la_SOURCES = \
     boilerplate.c \
     p_get_err.c
 
-libpal_base_la_LIBADD = devices/libdevices.la
+libpal_base_la_LIBADD = $(MAYBE_EPIPHANY_LIBS) devices/libdevices.la
 
 # Disable temporarily until API is determined
 #    p_scatter.c \
