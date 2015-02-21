@@ -1,0 +1,19 @@
+ver. 1.0.3
+-------
+files in dc/include are changed not to have semicolons after method definitions.
+tinymt32.c is changed to use c99 constant macro.
+tinymt32.h comments are changed.
+
+ver. 1.0.2
+-------
+random_util.hpp in dc/include is changed not to include openssl
+header.
+header files in tinymt are changed to fit including from C++.
+
+ver. 1.0.1
+-------
+fix small bugs in check64.c and parse_opt.cpp.
+
+ver. 1.0
+-------
+start
