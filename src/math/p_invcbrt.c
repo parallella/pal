@@ -16,6 +16,6 @@ void p_invcbrt_32f(float *a, float *c, int n)
 {
     int i;
     for (i = 0; i < n; i++) {
-        *(c + i) = 1.0f / cbtrf(*(a + i));
+        *(c + i) = 1.0f / cbrtf(*(a + i));
     }
 }

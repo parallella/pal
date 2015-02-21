@@ -16,6 +16,6 @@ void p_cbrt_32f(float *a, float *c, int n)
 
     int i;
     for (i = 0; i < n; i++) {
-        *(c + i) = cbtrf(*(a + i));
+        *(c + i) = cbrtf(*(a + i));
     }
 }
