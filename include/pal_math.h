@@ -208,9 +208,10 @@ void p_min_f32(float *a, float *c, int *index, int n);
 void p_sort_32f(float *a, float *c, int n);
 void p_sort_u32(int *a, int *c, int n);
 
-/*generate random number*/
-void p_rand_init();
-void p_rand();
+/* seed pseudo-random number generator */
+void p_srand(unsigned int seed);
+/* generate random number */
+int  p_rand();
 
 /*population count*/
 void p_popcount_u32(unsigned int *a, unsigned int *c, int n);
