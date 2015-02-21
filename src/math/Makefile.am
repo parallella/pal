@@ -1,6 +1,10 @@
 SUBDIRS =
 EXTRA_DIST = \
     msun \
+    test
+
+noinst_LTLIBRARIES = libpal-math.la
+libpal_math_la_SOURCES = \
     p_abs.c \
     p_absdiff.c \
     p_acos.c \
@@ -34,6 +38,7 @@ EXTRA_DIST = \
     p_popcount.c \
     p_pow.c \
     p_rand.c \
+    p_sin.c \
     p_sincos.c \
     p_sinh.c \
     p_sort.c \
@@ -43,10 +48,9 @@ EXTRA_DIST = \
     p_sumsq.c \
     p_tan.c \
     p_tanh.c \
-    test
+    tinymt/tinymt32.c \
+    tinymt/tinymt32.h
 
-noinst_LTLIBRARIES = libpal-math.la
-libpal_math_la_SOURCES = p_sin.c
 libpal_math_la_LIBADD = -lm
 
 
