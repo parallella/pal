@@ -3,7 +3,8 @@ language: c
 script:
     - ./bootstrap
     - ./configure
-    - make
+    - echo Build using $(nproc) parallel jobs
+    - make -j$(nproc)
     - make check
     - make distcheck
 
