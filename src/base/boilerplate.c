@@ -70,7 +70,9 @@ struct pal_global __pal_global = {
     .teams_head = NULL,
     .teams_tail = NULL,
     .progs_head = NULL,
-    .progs_tail = NULL
+    .progs_tail = NULL,
+
+    .random = { 0 }
 };
 
 #undef DEFINE_DEV

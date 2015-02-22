@@ -1,5 +1,9 @@
 /* A tiny random number generator is needed */
 
+
+#include "pal_base.h"
+#include "../base/pal_base_private.h"
+
 /* Use TinyMT PRNG */
 #include "tinymt/tinymt32.h"
 
@@ -12,7 +16,7 @@
  */
 void p_srand(unsigned int seed)
 {
-    /* Implement me */
+    tinymt32_init(&__pal_global.random, seed);
 }
 
 /**
@@ -24,7 +28,5 @@ void p_srand(unsigned int seed)
  */
 int p_rand()
 {
-    /* Implement me */
-
-    return 4; // Verified w/ dice.
+    return (int) tinymt32_generate_uint32(&__pal_global.random);
 }

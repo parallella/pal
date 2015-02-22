@@ -4,6 +4,7 @@
 #include <stdint.h>
 #include <stdbool.h>
 #include <stddef.h>
+#include "../math/tinymt/tinymt32.h"
 
 // TEMPORARY HACK!!
 struct p_dev
@@ -123,6 +124,7 @@ struct pal_global {
     struct mutex *mutexes_head;
     struct mutex *mutexes_tail;
 #endif
+    tinymt32_t random; // PRNG state
 };
 
 extern struct pal_global __pal_global;
