@@ -52,7 +52,7 @@ int p_query(p_dev_t dev, int prop)
 {
     struct dev *pdev;
 
-    if (!dev)
+    if (p_ref_is_err(dev))
         return -EINVAL;
 
     pdev = (struct dev *) dev;

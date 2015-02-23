@@ -21,6 +21,9 @@ p_team_t p_open(p_dev_t dev, int start, int count)
     struct dev *pdev = (struct dev *) dev;
     struct team *team;
 
+    if (p_ref_is_err(dev))
+        return p_ref_err(EINVAL);
+
     team = malloc(sizeof(*team));
     if (!team)
         return p_ref_err(ENOMEM);

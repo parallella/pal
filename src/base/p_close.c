@@ -15,6 +15,10 @@ int p_close(p_team_t team)
 {
     printf("Running p_close (%p)\n", team);
 
+    if (p_ref_is_err(team))
+            return -EINVAL;
+
+
     // NO-OP for now
 
     return 0;

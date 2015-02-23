@@ -20,8 +20,12 @@
 p_prog_t p_load(p_dev_t dev, char *file, char *function, int flags)
 {
     size_t len;
-    struct prog *prog = malloc(sizeof(*prog));
+    struct prog *prog;
 
+    if (p_ref_is_err(dev))
+        return p_ref_err(EINVAL);
+
+    prog = malloc(sizeof(*prog));
     if (!prog)
         return p_ref_err(ENOMEM);
 
