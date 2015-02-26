@@ -14,7 +14,7 @@
  *
  */
 
-void p_conv2d_32f(float *x, float *m, int rows, int cols, int msize, float *r)
+void p_conv2d_f32(float *x, float *m, float *r, int rows, int cols, int msize)
 {
 
     /*PLACE CODE HERE*/
