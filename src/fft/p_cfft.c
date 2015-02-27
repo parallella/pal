@@ -1,1 +1,5 @@
-void p_cfft(float *complex a, int n, int isign, float *wsave);
+#include <complex.h>
+void p_cfft(float _Complex *a, int n, int isign, float *wsave)
+{
+    /* TODO: Implement me */
+}
