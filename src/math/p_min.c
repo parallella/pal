@@ -1,3 +1,5 @@
+#include <pal.h>
+
 /**
  *
  * Finds the minimum value in vector 'a'. Returns the max value and the index

@@ -1,3 +1,5 @@
+#include <pal.h>
+
 /**
  *
  * A barrier for 'team'. The barrier is initialized when the team is

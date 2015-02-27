@@ -1,3 +1,5 @@
+#include <pal.h>
+
 /*
  * A 3x3 gauss smoothing filter with the following convolution matrix
  *

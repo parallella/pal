@@ -1,3 +1,5 @@
+#include <pal.h>
+
 /**
  *
  * Calculate exponent (e^a), where e is the base of the natural logarithm

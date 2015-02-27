@@ -1,3 +1,5 @@
+#include <pal.h>
+
 /**
  *
  * Calculates the hyperbolic cosine of the vector 'a'. Angles are specified

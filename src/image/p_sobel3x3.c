@@ -1,3 +1,5 @@
+#include <pal.h>
+
 /**
  * A Sobel 3x3 convolution filter (m) with the Sobel operators defined as:
  *

@@ -1,3 +1,5 @@
+#include <pal.h>
+
 /**
  *
  * Add members to an existing team of processors.

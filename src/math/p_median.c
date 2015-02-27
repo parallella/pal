@@ -1,3 +1,5 @@
+#include <pal.h>
+
 /**
  *
  * Calculates the median value of input vector 'a'.

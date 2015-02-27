@@ -1,3 +1,5 @@
+#include <pal.h>
+
 /**
  *
  * Calculates the natural logarithm of 'a', (where the base is 'e'=2.71828)

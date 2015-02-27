@@ -1,3 +1,5 @@
+#include <pal.h>
+
 /**
  * Computes the raw full-length linear cross correlation of vectors x and y and
  * stores the result in vector r. Normalization is done outside this function.

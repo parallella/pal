@@ -1,3 +1,5 @@
+#include <pal.h>
+
 /**
  *
  * calculates the inverse hyperbolic sine of 'a'. The function does not check

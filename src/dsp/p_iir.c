@@ -1,3 +1,5 @@
+#include <pal.h>
+
 /**
  * Computes a cascaded IIR filter of 'nb' biquad sections using 32-bit
  * coefficients and 32-bit delay buffers. Each biquad section is implemented

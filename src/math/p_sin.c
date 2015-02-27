@@ -1,3 +1,5 @@
+#include <pal.h>
+
 /**
  *
  * Compute the sine of the vector 'a'. Angles are specified in radians.

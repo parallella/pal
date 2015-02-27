@@ -1,3 +1,5 @@
+#include <pal.h>
+
 /*
  *
  * FUNCTION:

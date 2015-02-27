@@ -1,3 +1,5 @@
+#include <pal.h>
+
 /**
  *
  * Calculates the inverse hyperbolic cosine of 'a'. Input values must be > 1.

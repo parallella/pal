@@ -1,3 +1,5 @@
+#include <pal.h>
+
 /**
  *
  * Calculates the inverse cube root of the input vector 'a'.

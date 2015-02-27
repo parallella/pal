@@ -1,3 +1,5 @@
+#include <pal.h>
+
 /**
  *
  * Calculates the sum of the square of all of the elements vector 'a'.

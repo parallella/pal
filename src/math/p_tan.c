@@ -1,3 +1,5 @@
+#include <pal.h>
+
 /**
  *
  * Calculates the tangent of the input vector 'a'.

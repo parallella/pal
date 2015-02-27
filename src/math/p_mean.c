@@ -1,3 +1,5 @@
+#include <pal.h>
+
 /**
  *
  * Calculates the mean of input vector 'a'.

@@ -1,3 +1,5 @@
+#include <pal.h>
+
 /**
  *
  * Sorts an array of values

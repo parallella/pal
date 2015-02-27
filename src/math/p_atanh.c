@@ -1,3 +1,5 @@
+#include <pal.h>
+
 /**
  *
  * Calculates inverse tangent (arc tangent) of the input value. The function

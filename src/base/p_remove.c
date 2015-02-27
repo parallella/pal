@@ -1,3 +1,5 @@
+#include <pal.h>
+
 /**
  *
  * Remove members from an existing team of processors.

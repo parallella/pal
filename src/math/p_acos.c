@@ -1,3 +1,5 @@
+#include <pal.h>
+
 /**
  *
  * Computes the inverse cosine (arc cosine) of the input vector 'a'. Input

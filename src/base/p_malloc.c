@@ -1,3 +1,5 @@
+#include <pal.h>
+
 #include <stddef.h>
 #include <stdio.h>
 #include "pal_base.h"

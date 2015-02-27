@@ -1,3 +1,5 @@
+#include <pal.h>
+
 /**
  *
  * Compute the absolute value of the vector 'a'.

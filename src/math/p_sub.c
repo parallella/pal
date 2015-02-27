@@ -1,3 +1,5 @@
+#include <pal.h>
+
 /**
  *
  * Element wise vector subtraction: c=a-b

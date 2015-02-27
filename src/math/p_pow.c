@@ -1,3 +1,5 @@
+#include <pal.h>
+
 /**
  *
  * Calculate 'a' raised to the exponent 'b'

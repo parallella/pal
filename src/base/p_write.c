@@ -1,3 +1,5 @@
+#include <pal.h>
+
 /**
  *
  * Copies a block pointed to by 'src' into the memory objecct

@@ -1,3 +1,5 @@
+#include <pal.h>
+
 /**
  *
  * Calculates the mode value of input vector 'a'.

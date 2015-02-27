@@ -1,3 +1,5 @@
+#include <pal.h>
+
 /**
  *
  * Calculates the inverse tangent (arc tangent) of b/a. Stability not guaranteed

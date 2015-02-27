@@ -1,3 +1,5 @@
+#include <pal.h>
+
 /**
  *
  * Calculates the sum of all elements vector 'a'.

@@ -1,3 +1,5 @@
+#include <pal.h>
+
 /*
  * A Prewitt 3x3 convolution filter (m) with the Prewitt operators defined as:
  *

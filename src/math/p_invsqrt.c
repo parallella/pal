@@ -1,3 +1,5 @@
+#include <pal.h>
+
 /**
  *
  * Calculates the inverse square root of the input vector 'a'.

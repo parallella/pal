@@ -1,3 +1,5 @@
+#include <pal.h>
+
 /**
  *
  * Runs(launches) the program 'prog' on all of the members of 'team'.

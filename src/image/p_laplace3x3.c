@@ -1,3 +1,5 @@
+#include <pal.h>
+
 /**
  * A Laplace 3x3 convolution filter (m) with the Laplace operators defined as:
  *

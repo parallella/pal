@@ -1,3 +1,5 @@
+#include <pal.h>
+
 /**
  *
  * Element wise division c = a / b.

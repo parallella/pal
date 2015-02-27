@@ -1,3 +1,5 @@
+#include <pal.h>
+
 /**
  *
  * Closes down a team, freeing any allocated resources.

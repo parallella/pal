@@ -1,3 +1,5 @@
+#include <pal.h>
+
 /**
  *
  * Calculates the dot product between vectors 'a' and 'b', producing

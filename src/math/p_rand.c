@@ -1,3 +1,5 @@
+#include <pal.h>
+
 /* A tiny random number generator is needed */
 
 

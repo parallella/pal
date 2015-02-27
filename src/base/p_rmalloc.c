@@ -1,3 +1,5 @@
+#include <pal.h>
+
 /**
  *
  * Dynamically allocates contiguous memory buffers at any node within

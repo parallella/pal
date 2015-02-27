@@ -1,3 +1,5 @@
+#include <pal.h>
+
 /**
  *
  * Converts integer values in 'a' to floating point values.

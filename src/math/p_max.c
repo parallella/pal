@@ -1,3 +1,5 @@
+#include <pal.h>
+
 /**
  *
  * Finds the maximum value in vector 'a'. Returns the index of the max

@@ -1,3 +1,5 @@
+#include <pal.h>
+
 /*
  * A Scharr 3x3 convolution filter with the following convolution matrix:
  *

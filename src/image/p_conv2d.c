@@ -1,3 +1,5 @@
+#include <pal.h>
+
 /** Convolution on input image 'x' with a square kernel 'm' of size 'msize'.
  *
  * @param x     Pointer to input image, a 2D array of size 'rows' x 'cols'

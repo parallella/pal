@@ -1,3 +1,5 @@
+#include <pal.h>
+
 /**
  *
  * Calculates the base 10 logarithm of 'a'.

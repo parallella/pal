@@ -1,3 +1,5 @@
+#include <pal.h>
+
 /**
  * Computes a decimating FIR filter (direct-form) on input data 'x' using
  * coefficient stored in 'h' and places result in 'r'. This function

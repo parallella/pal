@@ -1,3 +1,5 @@
+#include <pal.h>
+
 /*
  * A 3x3 box filter (aka a moving average filter)
  * Basically a convolution with a 3x3 coefficient matrix all set to ones.

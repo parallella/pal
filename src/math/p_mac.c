@@ -1,3 +1,5 @@
+#include <pal.h>
+
 /**
  *
  * Element wise multiply accumulate: c += a * b'

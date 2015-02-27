@@ -1,3 +1,5 @@
+#include <pal.h>
+
 /**
  *
  * Computes a FIR filter (direct-form) with 'h' symmetric coefficients

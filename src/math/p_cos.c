@@ -1,3 +1,5 @@
+#include <pal.h>
+
 /**
  *
  * Compute the cosine of the vector 'a'. Angles are specified in radians.

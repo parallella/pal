@@ -1,3 +1,5 @@
+#include <pal.h>
+
 /*
  * This function returns a scalar sum of the absolute differences between the
  * source block 'x' and an 16×16 region pointed to in the reference image 'm'.

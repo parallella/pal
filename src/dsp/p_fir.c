@@ -1,3 +1,5 @@
+#include <pal.h>
+
 /**
  * Computes a FIR filter (direct-form) on input data in vector 'x' using the
  * coefficients stored in vector 'h'. This function maintains the array

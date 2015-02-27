@@ -1,3 +1,5 @@
+#include <pal.h>
+
 /**
  *
  * Compute an element wise absolute difference of two vectors 'a' and 'b'.

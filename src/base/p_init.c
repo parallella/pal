@@ -1,3 +1,5 @@
+#include <pal.h>
+
 /**
  *
  * Initalizes the loader run time system information based on the device type

@@ -1,3 +1,5 @@
+#include <pal.h>
+
 /*
  * A median 3x3 filter.
  *

@@ -1,3 +1,5 @@
+#include <pal.h>
+
 /**
  *
  * Wait for all processes in team to finish.

@@ -1,3 +1,5 @@
+#include <pal.h>
+
 /**
  *
  * Caclulates the inverse sine (arc sine) of the argument 'a'. Arguments must be

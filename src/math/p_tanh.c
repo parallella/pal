@@ -1,3 +1,5 @@
+#include <pal.h>
+
 /**
  *
  * Calculates the hyperbolic tangent of the input vector 'a'.

@@ -1,3 +1,5 @@
+#include <pal.h>
+
 /**
 
  * Computes the convolution of two vectors 'x' and 'h', and places the

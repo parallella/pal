@@ -1,3 +1,5 @@
+#include <pal.h>
+
 /**
  *
  * Element wise vector addition between input vectors 'a' and 'b'

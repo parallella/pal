@@ -1,3 +1,5 @@
+#include <pal.h>
+
 #include <math.h>
 
 /**

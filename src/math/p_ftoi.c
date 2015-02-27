@@ -1,3 +1,5 @@
+#include <pal.h>
+
 /**
  *
  * Converts a floating point values in 'a' to signed integer values.

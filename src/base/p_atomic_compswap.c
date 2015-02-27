@@ -1,3 +1,5 @@
+#include <pal.h>
+
 
 /*atomic compare and exchange.This compares the contents of *atom with the
  * contents of *expected and if equal, writes 'desired' into *atom. If they are

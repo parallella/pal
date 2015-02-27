@@ -1,3 +1,5 @@
+#include <pal.h>
+
 /**
  *
  * Element wise inversion (reciprocal) of elements in 'a'.

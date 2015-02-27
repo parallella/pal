@@ -1,3 +1,5 @@
+#include <pal.h>
+
 /**
  *
  * Computes auto-correlation of the vector 'x' and the first 'nr' points of the

@@ -1,3 +1,5 @@
+#include <pal.h>
+
 /**
  *
  * Counts the number of bits set in 'a'.
@@ -11,4 +13,7 @@
  * @return      None
  *
  */
-void p_popcount_u32(unsigned int *a, unsigned int *c) {}
+void p_popcount_u32(unsigned int *a, unsigned int *c, int n)
+{
+    /* Implement me */
+}
