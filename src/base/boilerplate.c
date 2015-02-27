@@ -72,7 +72,15 @@ struct pal_global __pal_global = {
     .progs_head = NULL,
     .progs_tail = NULL,
 
-    .random = { 0 }
+/* We might want to use another PRNG for some platforms */
+#ifdef TINYMT32_H
+    .random = {
+        .status = {0},
+        .mat1 = 0,
+        .mat2 = 0,
+        .tmat = 0
+    }
+#endif
 };
 
 #undef DEFINE_DEV

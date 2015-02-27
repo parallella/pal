@@ -1,3 +1,5 @@
+#include <math.h>
+
 /**
  *
  * Calculates the cube root of the input vector 'a'.

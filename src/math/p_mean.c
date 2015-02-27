@@ -14,7 +14,7 @@
 void p_mean_32f(float *a, float *c, int n)
 {
 
-    int i;
+    int i = 0;
     *(c + i) = 0.0f;
     for (i = 0; i < n; i++) {
         *(c + i) += *(a + i);
