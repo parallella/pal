@@ -14,7 +14,7 @@
  *
  */
 
-void p_sum_32f(float *a, float *c, int n)
+void p_sum_f32(float *a, float *c, int n)
 {
 
     int i = 0;

@@ -16,7 +16,7 @@
  *
  */
 #include <math.h>
-void p_pow_32f(float *a, float *b, float *c, int n)
+void p_pow_f32(float *a, float *b, float *c, int n)
 {
 
     int i;

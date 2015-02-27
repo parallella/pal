@@ -15,7 +15,7 @@
  *
  */
 #include <math.h>
-void p_atan2_32f(float *a, float *b, float *c, int n)
+void p_atan2_f32(float *a, float *b, float *c, int n)
 {
 
     int i;

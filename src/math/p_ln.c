@@ -14,7 +14,7 @@
  *
  */
 #include <math.h>
-void p_ln_32f(float *a, float *c, int n)
+void p_ln_f32(float *a, float *c, int n)
 {
 
     int i;

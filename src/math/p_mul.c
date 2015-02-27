@@ -14,7 +14,7 @@
  *
  */
 
-void p_mul_32f(float *a, float *b, float *c, int n)
+void p_mul_f32(float *a, float *b, float *c, int n)
 {
 
     int i;

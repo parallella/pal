@@ -16,7 +16,7 @@
  * @return      None
  *
  */
-void p_dot_32f(float *a, float *b, float *c, int n)
+void p_dot_f32(float *a, float *b, float *c, int n)
 {
 
     int i;

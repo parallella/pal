@@ -209,7 +209,7 @@ void p_min_f32(float *a, float *c, int *index, int n);
  */
 
 /*sort an array*/
-void p_sort_32f(float *a, float *c, int n);
+void p_sort_f32(float *a, float *c, int n);
 void p_sort_u32(int *a, int *c, int n);
 
 /* seed pseudo-random number generator */

@@ -15,7 +15,7 @@
  *
  */
 #include <math.h>
-void p_acosh_32f(float *a, float *c, int n)
+void p_acosh_f32(float *a, float *c, int n)
 {
 
     int i;

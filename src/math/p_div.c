@@ -16,7 +16,7 @@
  *
  */
 
-void p_div_32f(float *a, float *b, float *c, int n)
+void p_div_f32(float *a, float *b, float *c, int n)
 {
 
     int i;
