@@ -4,7 +4,9 @@
  *
  * Element wise vector multiplication between input vectors 'a' and 'b'
  *
- * @param a     Pointer to input vector
+ * @param a     Pointer to first input vector
+ *
+ * @param b     Pointer to second input vector
  *
  * @param c     Pointer to output vector
  *

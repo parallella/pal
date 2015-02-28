@@ -14,7 +14,7 @@
  */
 
 /*auto correlation: r[j] = sum ( x[j+k] * x[k] ), k=0..(n-j-1) */
-void p_acorr_f32(float *x, int nx, float *r);
+void p_acorr_f32(float *x, int nx, float *r, int nr);
 
 /*convolution: r[j] = sum ( h[k] * x[j-k), k=0..(nh-1) */
 void p_conv_f32(float *x, float *h, int nx, int nh, float *r);

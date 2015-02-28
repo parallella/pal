@@ -140,7 +140,7 @@ void p_pow_f32(float *a, float *b, float *c, int n);
 void p_sin_f32(float *a, float *c, int n);
 
 /*computes sin and cos of a: c = sin ( a ),  z = cos ( a ) */
-void p_sincos_f32(float *a, float *c, float *z);
+void p_sincos_f32(float *a, float *c, float *z, int n);
 
 /*hyperbolic Sine: c = sinh ( a ) */
 void p_sinh_f32(float *a, float *c, int n);

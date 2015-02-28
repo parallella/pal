@@ -13,7 +13,7 @@
  *
  * @param start Index of first processor within 'dev' to include in team
  *
- * @param size  Total number of processors in team.
+ * @param count Total number of processors in team.
  *
  * @return      Returns a reference. Negative value indicates error.
  *

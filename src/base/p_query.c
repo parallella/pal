@@ -5,11 +5,13 @@
 
 /**
  *
- * Queries a PAL object,returning an integer
+ * Queries a PAL device,returning an integer
  * The object can be of type pal_dev_t, pal_mem_t, or pal_team_t.
  * Valid queries should never return '0'.
  *
- * @param obj  Device object to query
+ * @todo Currently we only support querying devices.
+ *
+ * @param dev  Device to query
  *
  * @param prop Property to query
  *

@@ -11,16 +11,18 @@
  * Copies the content of 'mem' into the area pointed to by the 'dst' pointer.
  *
  *
- * @param mem   Pointer to a memory object created with p_malloc();
+ * @param mem      Pointer to a memory object created with p_malloc();
  *
- * @param nb    Number of bytes to copy
+ * @param dst      Address to copy the memory block to
  *
- * @param flags Bitmask field indicating runtime options
+ * @param offset   Offset (in bytes) relative to start of buffer.
  *
- *        ASYNC: Specifies asynchronous (non-blocking) operation.
- *               The default is blocking
+ * @param nb       Number of bytes to copy
  *
- * @param dst   Address to copy the memory block to
+ * @param flags    Bitmask field indicating runtime options
+ *                 ASYNC: Specifies asynchronous (non-blocking) operation.
+ *                 The default is blocking.
+ *
  *
  * @return      Returns number of bytes read. Negative value indicates error.
  *

@@ -9,16 +9,16 @@
  *
  * @param h       Pointer to 'nh' filter coefficients
  *
- * @param nh      The number of coefficients of the filter
- *
  * @param nr      The number of output samples
+ *
+ * @param nh      The number of coefficients of the filter
  *
  * @param r       Output vector of size 'nr'
  *
  * @return        None
  *
  */
-void p_conv_32f(float *x, float *h, int nx, int nh, float *r)
+void p_conv_32f(float *x, float *h, int nr, int nh, float *r)
 {
 
     /*PLACE CODE HERE*/

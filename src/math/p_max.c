@@ -4,13 +4,15 @@
  *
  * Finds the maximum value in vector 'a'. Returns the index of the max
  *
- * @param a     Pointer to input vector
+ * @param a           Pointer to input vector
  *
- * @param c     Pointer to output scalar
+ * @param c           Pointer to output scalar
  *
- * @param n     Size of 'a' vector.
+ * @param[out] index  Pointer to return index of max
  *
- * @return      None
+ * @param n      Size of 'a' vector.
+ *
+ * @return       None
  *
  */
 
