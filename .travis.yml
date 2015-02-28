@@ -2,7 +2,7 @@ language: c
 
 before_install:
     - sudo apt-get update -qq
-    - sudo apt-get install -qq pkg-config check
+    - sudo apt-get install -qq pkg-config check doxygen
 
 script:
     - ./bootstrap

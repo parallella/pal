@@ -81,7 +81,8 @@ AC_CONFIG_FILES([Makefile
                  src/math/Makefile
                  examples/Makefile
                  examples/base/Makefile
-                 tests/Makefile])
+                 tests/Makefile
+                 doc/Makefile])
 
 # Epiphany host support
 AM_CONDITIONAL([HOST_IS_EPIPHANY],
@@ -176,6 +177,31 @@ AS_IF([test "x${enable_tests}" = "xno"],
       [AC_MSG_RESULT([yes])])
 
 AM_CONDITIONAL(ENABLE_TESTS, [test "x${enable_tests}" != "xno"])
+
+# Documentation
+AC_CHECK_PROGS([DOXYGEN], [doxygen])
+AS_IF([test "x${DOXYGEN}" = "x"],
+      [AC_MSG_WARN([Doxygen not found - continuing without Doxygen support])])
+
+AM_CONDITIONAL([HAVE_DOXYGEN], [test "x${DOXYGEN}" != "x"])
+AM_COND_IF([HAVE_DOXYGEN], [AC_CONFIG_FILES([doc/Doxyfile])])
+
+AC_ARG_ENABLE([doc],
+              [AS_HELP_STRING([--disable-doc],
+                              [Build documentation using doxygen])])
+AC_MSG_CHECKING([whether to build documentation])
+AS_IF([test "x${enable_doc}" = "xyes"],
+      [AS_IF([test "x${DOXYGEN}" = "x"],
+             [AC_MSG_RESULT([error])
+             AC_MSG_ERROR([Cannot build documentation, doxygen not installed])])])
+AS_IF([test "x${enable_doc}" = "x"],
+      [AS_IF([test "x${DOXYGEN}" = "x"], [enable_doc="no"])])
+
+AS_IF([test "x${enable_doc}" = "xno"],
+      [AC_MSG_RESULT([no])],
+      [AC_MSG_RESULT([yes])])
+
+AM_CONDITIONAL(ENABLE_DOC, [test "x${enable_doc}" != "xno"])
 
 
 # Easiest way to include header files globally
