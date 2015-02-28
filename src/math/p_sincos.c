@@ -15,4 +15,4 @@
  *
  */
 #include <math.h>
-void p_sincos_f32(const float *a, float *c, float *z) {}
+void p_sincos_f32(float *a, float *c, float *z) {}
