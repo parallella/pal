@@ -6,9 +6,9 @@
  *
  * @param a     Pointer to input vector
  *
- * @param c     Pointer to output vector
+ * @param c     Pointer to output scalar
  *
- * @param n     Size of 'a' and 'c' vector.
+ * @param n     Size of 'a' vector.
  *
  * @return      None
  *
@@ -21,7 +21,7 @@ void p_max_f32(float *a, float *c, int *index, int n)
     for (i = 0; i < n; i++) {
         if (*(a + i) > *c) {
             *(index) = i;
-            *(c + i) = *(a + i);
+            *c = *(a + i);
         }
     }
 }

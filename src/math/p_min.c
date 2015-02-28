@@ -7,9 +7,9 @@
  *
  * @param a     Pointer to input vector
  *
- * @param c     Pointer to output vector
+ * @param c     Pointer to output scalar
  *
- * @param n     Size of 'a' and 'c' vector.
+ * @param n     Size of 'a' vector.
  *
  * @return      None
  *

@@ -6,9 +6,9 @@
  *
  * @param a     Pointer to input vector
  *
- * @param c     Pointer to output vector
+ * @param c     Pointer to output scalar
  *
- * @param n     Size of 'a' and 'c' vector.
+ * @param n     Size of 'a' vector.
  *
  * @return      None
  *
@@ -17,9 +17,9 @@ void p_mean_f32(float *a, float *c, int n)
 {
 
     int i = 0;
-    *(c + i) = 0.0f;
+    *c = 0.0f;
     for (i = 0; i < n; i++) {
-        *(c + i) += *(a + i);
+        *c += *(a + i);
     }
-    *(c + i) = *(c + i) / n;
+    *c = *c / n;
 }
