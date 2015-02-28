@@ -23,7 +23,7 @@
  * @return      None
  *
  */
-void p_firdec_32f(const float *x, const float *h, float *dbuf, int nx, int nh,
+void p_firdec_f32(const float *x, const float *h, float *dbuf, int nx, int nh,
                   int df, float *r)
 {
 

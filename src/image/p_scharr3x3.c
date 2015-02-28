@@ -25,4 +25,4 @@
  *
  */
 
-void p_scharr3x3_32f(float *x, int rows, int cols, float *r) {}
+void p_scharr3x3_f32(float *x, int rows, int cols, float *r) {}

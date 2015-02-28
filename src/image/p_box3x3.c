@@ -18,7 +18,7 @@
  *
  */
 
-void p_box3x3_32f(float *x, int rows, int cols, float *r)
+void p_box3x3_f32(float *x, int rows, int cols, float *r)
 {
 
     int ia, ja;

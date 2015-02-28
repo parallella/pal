@@ -18,7 +18,7 @@
  *
  */
 
-void p_xcorr_32f(float *x, float *y, int nx, int ny, float *r)
+void p_xcorr_f32(float *x, float *y, int nx, int ny, float *r)
 {
 
     /*PLACE CODE HERE*/

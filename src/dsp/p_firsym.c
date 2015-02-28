@@ -24,7 +24,7 @@
  *
  */
 
-void p_firsym_32f(float *x, float *h, float *dbuf, int nx, int nh, float *r)
+void p_firsym_f32(float *x, float *h, float *dbuf, int nx, int nh, float *r)
 {
 
     /*PLACE CODE HERE*/

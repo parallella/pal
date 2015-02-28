@@ -16,7 +16,7 @@
  *
  */
 
-void p_sad8x8_32f(float *x, float *m, int rows, int cols, float *r)
+void p_sad8x8_f32(float *x, float *m, int rows, int cols, float *r)
 {
 
     /*PLACE CODE HERE*/

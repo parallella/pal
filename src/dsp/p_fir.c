@@ -22,7 +22,7 @@
  *
  */
 
-void p_fir_32f(const float *x, const float *h, float *dbuf, int nx, int nh,
+void p_fir_f32(const float *x, const float *h, float *dbuf, int nx, int nh,
                float *r)
 {
 

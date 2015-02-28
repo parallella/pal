@@ -18,7 +18,7 @@
  * @return        None
  *
  */
-void p_conv_32f(float *x, float *h, int nr, int nh, float *r)
+void p_conv_f32(float *x, float *h, int nr, int nh, float *r)
 {
 
     /*PLACE CODE HERE*/

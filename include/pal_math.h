@@ -169,6 +169,9 @@ void p_sub_f32(float *a, float *b, float *c, int n);
 /*multiply vectors: c =  a[n-1:0] - b[n-1:0]  */
 void p_mul_f32(float *a, float *b, float *c, int n);
 
+/* Element wise multiply accumulate: c += a * b' */
+void p_mac_f32(float *a, float *b, float *c, int n);
+
 /*
  ****************************************************************
  * Vector Reduction Operations
@@ -215,7 +218,7 @@ void p_sort_u32(int *a, int *c, int n);
 /* seed pseudo-random number generator */
 void p_srand(unsigned int seed);
 /* generate random number */
-int  p_rand();
+int p_rand(void);
 
 /*population count*/
 void p_popcount_u32(unsigned int *a, unsigned int *c, int n);

@@ -17,8 +17,7 @@
  *
  */
 
-void p_acorr_32f(const float *x, int nx, float *r, int nr)
+void p_acorr_f32(const float *x, int nx, float *r, int nr)
 {
-
     /*TODO: PLACE CODE HERE*/
 }

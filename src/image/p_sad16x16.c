@@ -15,7 +15,7 @@
  * @param r    Result scalar
  *
  */
-void p_sad16x16_32f(float *x, float *m, int rows, int cols, float *r)
+void p_sad16x16_f32(float *x, float *m, int rows, int cols, float *r)
 {
 
     /*PLACE CODE HERE*/

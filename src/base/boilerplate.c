@@ -9,6 +9,10 @@
 #include <e-lib.h>
 #endif
 
+
+__attribute__((constructor)) void __pal_init(void);
+__attribute__((destructor)) void __pal_fini(void);
+
 #if ENABLE_DEV_EPIPHANY
 extern struct dev_ops __pal_dev_epiphany_ops;
 #endif

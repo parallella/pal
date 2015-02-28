@@ -22,7 +22,7 @@
  *
  */
 
-void p_iir_32f(const float *x, const float *h, float *dbuf, int nb, int nr,
+void p_iir_f32(const float *x, const float *h, float *dbuf, int nb, int nr,
                float *r)
 {
 

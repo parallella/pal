@@ -25,7 +25,7 @@
  *
  */
 
-void p_firint_32f(float *x, float *h, float *dbuf, int nx, int nh, int ifactor,
+void p_firint_f32(float *x, float *h, float *dbuf, int nx, int nh, int ifactor,
                   float *r)
 {
 

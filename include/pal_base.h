@@ -204,6 +204,12 @@ int p_atomic_swap_u32(p_atom_t atom, uint32_t *input);
 /*atomic compare and swap*/
 int p_atomic_compswap_u32(p_atom_t atom, uint32_t *input, uint32_t expected);
 
+/** @todo Add description */
+int p_getaddr(p_mem_t mem);
+/** @todo Add description */
+int p_getsymbol(p_prog_t prog, char *name, p_symbol_t symbol);
+
+
 /*
  ***********************************************************************
  * Error handling
