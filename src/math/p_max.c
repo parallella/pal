@@ -14,7 +14,7 @@
  *
  */
 
-void p_max_32f(float *a, float *c, int *index, int n)
+void p_max_f32(float *a, float *c, int *index, int n)
 {
     int i;
     *c = 3.40282346638528860e+38;

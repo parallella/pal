@@ -15,7 +15,7 @@
  * @return      None
  *
  */
-void p_cbrt_32f(float *a, float *c, int n)
+void p_cbrt_f32(float *a, float *c, int n)
 {
 
     int i;

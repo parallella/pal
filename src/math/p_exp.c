@@ -15,7 +15,7 @@
  *
  */
 #include <math.h>
-void p_exp_32f(const float *a, float *c, int n)
+void p_exp_f32(const float *a, float *c, int n)
 {
 
     int i;

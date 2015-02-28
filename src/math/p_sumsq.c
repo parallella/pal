@@ -14,7 +14,7 @@
  *
  */
 
-void p_sumsq_32f(float *a, float *c, int n)
+void p_sumsq_f32(float *a, float *c, int n)
 {
 
     int i = 0;

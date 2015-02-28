@@ -14,7 +14,7 @@
  *
  */
 
-void p_add_32f(float *a, float *b, float *c, int n)
+void p_add_f32(float *a, float *b, float *c, int n)
 {
 
     int i;

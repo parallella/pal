@@ -14,7 +14,7 @@
  * @return      None
  *
  */
-void p_min_32f(float *a, float *c, int *index, int n)
+void p_min_f32(float *a, float *c, int *index, int n)
 {
 
     int i;

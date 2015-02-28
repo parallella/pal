@@ -14,7 +14,7 @@
  *
  */
 #include <math.h>
-void p_invsqrt_32f(float *a, float *c, int n)
+void p_invsqrt_f32(float *a, float *c, int n)
 {
     int i;
     for (i = 0; i < n; i++) {

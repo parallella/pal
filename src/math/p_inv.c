@@ -14,7 +14,7 @@
  *
  */
 #include <math.h>
-void p_inv_32f(float *a, float *c, int n)
+void p_inv_f32(float *a, float *c, int n)
 {
     int i;
     for (i = 0; i < n; i++) {

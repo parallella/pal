@@ -15,7 +15,7 @@
  *
  */
 #include <math.h>
-void p_asinh_32f(float *a, float *c, int n)
+void p_asinh_f32(float *a, float *c, int n)
 {
 
     int i;

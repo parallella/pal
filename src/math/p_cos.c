@@ -15,7 +15,7 @@
  *
  */
 #include <math.h>
-void p_cos_32f(float *a, float *c, int n)
+void p_cos_f32(float *a, float *c, int n)
 {
 
     int i;

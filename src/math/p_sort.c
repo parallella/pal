@@ -13,6 +13,6 @@
  * @return      None
  *
  */
-void p_sort_32f(float *a, float *c, int n) {}
+void p_sort_f32(float *a, float *c, int n) {}
 
 void p_sort_u32(int *a, int *c, int n) {}

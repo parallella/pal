@@ -14,7 +14,7 @@
  *
  */
 #include <math.h>
-void p_log10_32f(float *a, float *c, int n)
+void p_log10_f32(float *a, float *c, int n)
 {
 
     int i;

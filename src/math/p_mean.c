@@ -13,7 +13,7 @@
  * @return      None
  *
  */
-void p_mean_32f(float *a, float *c, int n)
+void p_mean_f32(float *a, float *c, int n)
 {
 
     int i = 0;

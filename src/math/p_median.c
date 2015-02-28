@@ -14,4 +14,4 @@
  *
  */
 
-void p_median_32f(float *a, float *c, int n) {}
+void p_median_f32(float *a, float *c, int n) {}
