@@ -14,7 +14,7 @@
  *
  */
 #include <math.h>
-void p_abs_f32(const float *a, float *c, int n)
+void p_abs_f32(float *a, float *c, int n)
 {
 
     int i;
