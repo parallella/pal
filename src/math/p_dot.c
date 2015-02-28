@@ -9,7 +9,7 @@
  *
  * @param b     Pointer to input vector
  *
- * @param c     Pointer to output vector
+ * @param c     Pointer to output scalar
  *
  * @param n     Size of 'a', 'b'
  *
