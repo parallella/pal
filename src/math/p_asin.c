@@ -3,7 +3,7 @@
 /**
  *
  * Caclulates the inverse sine (arc sine) of the argument 'a'. Arguments must be
- * in the range −1 to 1. The function does not check for illegal input values.
+ * in the range -1 to 1. The function does not check for illegal input values.
  * Results are in the range -pi/2 to pi/2.
  *
  * @param a     Pointer to input vector

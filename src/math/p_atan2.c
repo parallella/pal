@@ -3,7 +3,7 @@
 /**
  *
  * Calculates the inverse tangent (arc tangent) of b/a. Stability not guaranteed
- * for 'a' values near 0. Results are in the range of −pi to pi.
+ * for 'a' values near 0. Results are in the range of -pi to pi.
  *
  * @param a     Pointer to denominator input vector
  *

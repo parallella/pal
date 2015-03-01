@@ -3,7 +3,7 @@
 /**
  *
  * Computes the inverse cosine (arc cosine) of the input vector 'a'. Input
- * values to acos must be in the range −1 to 1. The result values are in the
+ * values to acos must be in the range -1 to 1. The result values are in the
  * range 0 to pi. The function does not check for illegal input values.
  *
  * @param a     Pointer to input vector
