@@ -17,4 +17,35 @@
  *
  */
 
-void p_gauss3x3_f32(float *x, int rows, int cols, float *r) {}
+void p_gauss3x3_f32(float *x, int rows, int cols, float *r)
+{
+    int i, j;
+    float *px, *pr;
+    float P;
+
+    px = x;
+    pr = r;
+
+    for (i = 1; i < (cols - 1); i++) {
+        for (j = 1; j < (rows - 1); j++) {
+            P = 0;
+            P += (*px++);
+            P += (*px++) * 2;
+            P += (*px++);
+            px += cols - 3;
+            P += (*px++) * 2;
+            P += (*px++) * 4;
+            P += (*px++) * 2;
+            px += cols - 3;
+            P += (*px++);
+            P += (*px++) * 2;
+            P += (*px++);
+            px -= 2 + 2 * cols;
+            *pr = P * 0.0625;
+            pr++;
+        }
+        px = px + 2;
+    }
+
+    return;
+}
