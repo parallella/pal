@@ -4,3 +4,10 @@ To add a new function to test suite
 3.) Add a .dat file with comma separate columns. The last column contains
     the expected results
 
+STILL TODO:
+sort
+max
+min
+sincos
+mode
+
