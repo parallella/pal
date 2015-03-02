@@ -25,15 +25,15 @@ The Parallel Architectures Library (PAL) is a compact C library with optimized r
 
 ----------------------------------------------------------------------
 ##Why?
-As hard as we tried we could not find libraries that were a perfect fit for our design criteria. There a a number of projects and commercial products that offer most of the functionality of PAL but all of the existing offerings were either far too bulky or had the wrong license. In essence, the goal of the PAL effort is to provide extensions to the standard set of C libraries to address the trend towards massive multi-processor parallelism and SIMD computing. 
+Any sane and informed person knows that the future of all of computing is massively parallel. Unfortunately the energy needed to escape the current "von Neumann potential well" seems to be approaching infinity. The legacy programming stack is so effective and so easy to use that developers and companies simply cannot afford to choose a better (parallel) solution. To make parallel computing ubiqutous we need to rewrite the whole stack from scratch, including: algorithms, run-times, standard libraries, and applications. The goal of the PAL project is to establish the lowest layer a this brave new parallel programming stack.
 
 ##Design Goals
 
-* **Fast** (Super fast..but not always safe)
-* **Compact** (as small as possible to fit with processors that have less than <<32KB of RAM)
-* **Scalable** (thread and data scalable, limited only by the amount of local memory)
-* **Portable across platforms** (deployable across different ISAs and system architectures)
-* **Permissive license** (Apache 2.0 license to maximize overall use)
+* **Fast** (Super fast but no "belt AND suspenders")
+* **Compact** (Small enough to work for memory limited processors with <32KB RAM)
+* **Scalable** (Thread and data scalable)
+* **Portable** (Portable acress ISAs and system arcitectures)
+* **Permissive** (Apache 2.0 license to maximize industry adoption)
 
 ##License
 The PAL source code is licensed under the Apache License, Version 2.0. 
@@ -43,7 +43,6 @@ See LICENSE for full license text unless otherwise specified.
 Our goal is to make PAL a broad community project from day one. Some of these functions are tricky, but the biggest challenge with the PAL library is really the volume of simple functions.  The good news is that if just 100 people contribute one function each, we'll be done in a couple of days! If you know C, your are ready to contribute!!
 
 Instructions for contributing can be found [HERE](CONTRIBUTING.md). 
-
 
 ##A Simple Example
 
