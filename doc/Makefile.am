@@ -18,8 +18,8 @@ html-local: doxyfile.stamp
 all-local: html-local
 
 install-html-local:
-	$(mkinstalldirs) $(DESTDIR)/$(htmldir)/html
-	find html -type f -exec $(INSTALL_DATA) '{}' $(DESTDIR)$(htmldir)/html ';'
+	find html -type d -exec $(mkinstalldirs) $(DESTDIR)$(htmldir)/'{}' ';'
+	find html -type f -exec $(INSTALL_DATA) '{}' $(DESTDIR)$(htmldir)/'{}' ';'
 
 uninstall-local:
 	rm -rf $(DESTDIR)$(htmldir)/html
