@@ -32,7 +32,7 @@ Any sane and informed person knows that the future of all of computing is massiv
 * **Fast** (Super fast but no "belt AND suspenders")
 * **Compact** (Small enough to work for memory limited processors with <32KB RAM)
 * **Scalable** (Thread and data scalable)
-* **Portable** (Portable acress ISAs and system arcitectures)
+* **Portable** (Portable across different ISAs and systems)
 * **Permissive** (Apache 2.0 license to maximize industry adoption)
 
 ##License
@@ -40,7 +40,7 @@ The PAL source code is licensed under the Apache License, Version 2.0.
 See LICENSE for full license text unless otherwise specified.
 
 ##Contribution
-Our goal is to make PAL a broad community project from day one. Some of these functions are tricky, but the biggest challenge with the PAL library is really the volume of simple functions.  The good news is that if just 100 people contribute one function each, we'll be done in a couple of days! If you know C, your are ready to contribute!!
+Our goal is to make PAL a broad community project from day one. If just 100 people contribute one function each, we'll be done in a couple of days! If you know C, your are ready to contribute!!
 
 Instructions for contributing can be found [HERE](CONTRIBUTING.md). 
 
