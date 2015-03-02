@@ -1,0 +1,6 @@
+To add a new function to test suite
+1.) Add line to run.sh with correct arguments
+2.) Make sure entry is in test_main
+3.) Add a .dat file with comma separate columns. The last column contains
+    the expected results
+
