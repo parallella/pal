@@ -2,4 +2,10 @@
 
 set -e
 
-gcc -o $1.elf -I../../include test_$1.c ../$1.c
+gcc -o test_main.elf \
+    test_main.c \
+    ../p_add.c \
+    ../p_mul.c \
+    ../p_sub.c \
+    -I../../../include
+
