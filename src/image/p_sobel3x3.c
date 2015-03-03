@@ -60,8 +60,8 @@ void p_sobel3x3_f32(float *x, int rows, int cols, float *r)
             Dy += (*px++);
             px += cols - 3;
 
-            *pr = sqrtf(Dx * Dx + Dy * Dy) /
-                  8; // optimize: get rid of  divide by 8 and sqrt
+            *pr = sqrtf(Dx * Dx + Dy * Dy) *
+                  M_DIV8; // optimize: get rid of sqrt
             //*pr = (fabs(Dx) + fabs(Dy)) * reciprocal[8]; //(slightly faster
             // alternative)
             px += 1 - 3 * cols; // advance mask matrix in one column, get rid of

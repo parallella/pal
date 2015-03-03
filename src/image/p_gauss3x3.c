@@ -41,7 +41,7 @@ void p_gauss3x3_f32(float *x, int rows, int cols, float *r)
             P += (*px++) * 2;
             P += (*px++);
             px -= 2 + 2 * cols;
-            *pr = P * 0.0625;
+            *pr = P * M_DIV16;
             pr++;
         }
         px = px + 2;

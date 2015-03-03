@@ -43,7 +43,7 @@ void p_box3x3_f32(float *x, int rows, int cols, float *r)
             E += (*px++);
             E += (*px++);
             px += cols - 3;
-            *pr = E / 9;        // multiply by (1/9) constant instead
+            *pr = E * M_DIV9;
             px += 1 - 3 * cols; // advance mask matrix in one column.
             pr++;
         }
