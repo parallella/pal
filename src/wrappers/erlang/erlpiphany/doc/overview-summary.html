@@ -1,0 +1,403 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN">
+<html>
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+<title>Erlpiphany: Erlang Interface to the Epiphany SDK
+</title>
+<link rel="stylesheet" type="text/css" href="stylesheet.css" title="EDoc">
+</head>
+<body bgcolor="white">
+<div class="navbar"><a name="#navbar_top"></a><table width="100%" border="0" cellspacing="0" cellpadding="2" summary="navigation bar"><tr><td><a href="overview-summary.html" target="overviewFrame">Overview</a></td><td><a href="http://www.erlang.org/"><img src="erlang.png" align="right" border="0" alt="erlang logo"></a></td></tr></table></div>
+<h1>Erlpiphany: Erlang Interface to the Epiphany SDK
+</h1>
+<p>Copyright © (C) 2015</p>
+<p><b>Version:</b> 1.0.1</p>
+<p><b>Introduced in:</b> January 2015</p>
+<p><b>Authors:</b> Mark A Fleming (<a href="mailto:mark_fleming@ieee.org"><tt>mark_fleming@ieee.org</tt></a>).</p>
+<p>Erlpiphany is the Erlang interface to the Epiphany eHAL library. With it
+an Erlang node can communicate with the Epiphany chip on a Parallella
+board to initiate and interact with parallel programs running on the
+Epiphany.</p>
+
+<h3><a name="Contents">Contents</a></h3>
+
+<ol>
+  <li><a href="#Introduction">Introduction</a></li>
+  <li><a href="#Building_Erlpiphany">Building Erlpiphany</a></li>
+  <li><a href="#Using_Erlpiphany">Using Erlpiphany</a></li>
+</ol>
+
+<h3><a name="Introduction">Introduction</a></h3>
+
+<p>Erlang provides several means of communicating with resources external to
+an Erlang node. An Erlang Port is a mechanism similar to the C
+function 'execv()' that can spawn an external program and communicate
+with the program via its standard input and output. Although simple to
+use, the programmer is responsible for converting ("marshalling")
+Erlang terms to a byte stream sent to the program and reassembling the
+result byte stream into Erlang terms.
+By using the
+'ei' library one can create a linked in loadable library that replaces
+the external program and communicates via the Port.
+A loadable library of routines will execute much faster, but a fault in the
+library code can crash the Erlang node.</p>
+
+<p>An Erlang node can also incorporate external C libraries by creating a
+Natively Implemented Functions (NIF) loadable library.
+With a NIF implementation there is no need to manually translate Erlang terms
+to and from a byte stream as with a Port implementation.
+A NIF library is well suited to providing a straightforward
+interface to a foreign library of functions. However, like a loadable Port
+implementation, a fault in the library code can bring down the Erlang node.</p>
+
+<p>Finally, an Erlang node can communicate with a node implemented in a
+different language, such as Java or C. The Erlang 'ei' library
+provides a means of creating a node written in C, or C-node, that can
+communicate with other Erlang nodes using standard message passing or
+remote procedure calls. The 'jinterface' library provides the same
+capability for Java programs. A node implementation isolates an Erlang node
+from any library fault while providing rapid communication.</p>
+
+<p>The <b>Erlpiphany</b> application provides a NIF library that acts as
+a wrapper for the eHAL Epiphany library.
+The application includes a set of C functions in 'c_src/ehal.c' that
+provide the NIF interface
+and the corresponding 'src/ehal.erl' module
+that provides an Erlang function for each eHAL library function. More
+information can be found in the 'ehal' documentation page.</p>
+
+
+<h4><a name="Epiphany SDK Library">Epiphany SDK Library</a></h4><p>
+The NIF library implementation provides wrapper
+functions to access the Epiphany eHAL library.
+Every effort has been made to hew to the name and
+argument list convention of the original C functions. This was done to
+simplify the porting of C code to Erlang, to maintain familiarity as
+much as possible for the experienced SDK user, and to avoid the usual
+temptation to "improve" the original source arrangement.</p>
+
+<p>Many of the SDK's defined values and enumerations can be found in the
+Erlang 'include/ehal.hrl' file. The file defines macros to represent
+such constants as E_REG_CONFIG (use ?E_REG_CONFIG).
+A small deviation from the SDK standard is to use the atoms
+'true', 'false', 'ok' and 'error' in place of the defined integer values
+E_TRUE, E_FALSE, E_OK and E_ERR respectively.</p>
+
+<p>Module functions use the Erlang convention of returning the atoms
+'ok' and 'error' or the tuple '{ok, Result}'.
+For example the 'e_open/4' function returns '{ok, Dev}' while the 'e_read/5'
+function returns '{ok, {Ssize, Data}}'.</p>
+
+<p>The correspondence between Epiphany SDK C functions and Erlang functions is 
+shown in the next table.</p>
+
+<table border="1" summary="reference syntax">
+  <tr><th>C Function</th><th>Erlang Function</th><th>Erlang Return</th></tr>
+  <tr>
+    <td><code>e_init(char *hdf)</code></td>
+    <td><code>e_init(String|0)</code></td>
+    <td><code>ok | error</code></td></tr>
+  <tr>
+    <td><code>e_get_platform_info(e_platform_t *platform)</code></td>
+    <td><code>e_get_platform_info()</code></td>
+    <td><code>{ok, Platform} | error</code></td></tr>
+  <tr>
+    <td><code>e_finalize()</code></td>
+    <td><code>e_finalize()</code></td>
+    <td><code>ok | error</code></td></tr>
+  <tr>
+    <td><code>e_open(e_epiphany_t *dev, unsigned row, unsigned col, unsigned rows, unsigned cols)</code></td>
+    <td><code>e_open(Row, Col, Rows, Cols)</code></td>
+    <td><code>{ok, Dev} | error</code></td></tr>
+  <tr>
+    <td><code>e_close(e_epiphany_t *dev)</code></td>
+    <td><code>e_close(Dev)</code></td>
+    <td><code>ok | error</code></td></tr>
+  <tr>
+    <td><code>e_alloc(e_mem_t *mbuf, off_t base, size_t size)</code></td>
+    <td><code>e_alloc(Base, Size)</code></td>
+    <td><code>{ok, Mbuf} | error</code></td></tr>
+  <tr>
+    <td><code>e_free(e_mem_t *mbuf)</code></td>
+    <td><code>e_free(Mbuf)</code></td>
+    <td><code>ok | error</code></td></tr>
+  <tr>
+    <td><code>e_read(void *dev, unsigned row, unsigned col, off_t from_addr, void *buf, size_t size)</code></td>
+    <td><code>e_read(Dev|Mbuf, Row, Col, From_addr, Size)</code></td>
+    <td><code>{ok, {Ssize, Data}} | error</code></td></tr>
+  <tr>
+    <td><code>e_write(void *dev, unsigned row, unsigned col, off_t to_addr, const void *buf, size_t size)</code></td>
+    <td><code>e_write(Dev|Mbuf, Row, Col, To_addr, Buf, Size)</code></td>
+    <td><code>{ok, Ssize} | error</code></td></tr>
+  <tr>
+    <td><code>e_reset_system()</code></td>
+    <td><code>e_reset_system()</code></td>
+    <td><code>ok | error</code></td></tr>
+  <tr>
+    <td><code>e_reset_group(e_epiphany_t *dev)</code></td>
+    <td><code>e_reset_group(Dev)</code></td>
+    <td><code>ok | error</code></td></tr>
+  <tr>
+    <td><code>e_start(e_epiphany_t *dev, unsigned row, unsigned col)</code></td>
+    <td><code>e_start(Dev, Row, Col)</code></td>
+    <td><code>ok | error</code></td></tr>
+  <tr>
+    <td><code>e_start_group(e_epiphany_t *dev)</code></td>
+    <td><code>e_start_group(Dev)</code></td>
+    <td><code>ok | error</code></td></tr>
+  <tr>
+    <td><code>e_signal(e_epiphany_t *dev, unsigned row, unsigned col)</code></td>
+    <td><code>e_signal(Dev, Row, Col)</code></td>
+    <td><code>ok | error</code></td></tr>
+  <tr>
+    <td><code>e_halt(e_epiphany_t *dev, unsigned row, unsigned col)</code></td>
+    <td><code>e_halt(Dev, Row, Col)</code></td>
+    <td><code>ok | error</code></td></tr>
+  <tr>
+    <td><code>e_resume(e_epiphany_t *dev, unsigned row, unsigned col)</code></td>
+    <td><code>e_resume(Dev, Row, Col)</code></td>
+    <td><code>ok | error</code></td></tr>
+  <tr>
+    <td><code>e_load(char *executable, e_epiphany_t *dev, unsigned row, unsigned col, e_bool_t start)</code></td>
+    <td><code>e_load(String, Dev, Row, Col, true|false)</code></td>
+    <td><code>ok | error</code></td></tr>
+  <tr>
+    <td><code>e_load_group(char *executable, e_epiphany_t *dev, unsigned row, unsigned col, unsigned rows, unsigned cols, e_bool_t start</code></td>
+    <td><code>e_load_group(String, Dev, Row, Col, Rows, Cols, true|false)</code></td>
+    <td><code>ok | error</code></td></tr>
+  <tr>
+    <td><code>e_get_num_from_coords(e_epiphany_t *dev, unsigned row,
+unsigned col)</code></td>
+    <td><code>e_get_num_from_coords(Dev, Row, Col)</code></td>
+    <td><code>{ok, Corenum} | error</code></td></tr>
+  <tr>
+    <td><code>e_get_coords_from_num(e_epiphany_t *dev, unsigned corenum,
+unsigned *row, unsigned *col)</code></td>
+    <td><code>e_get_coords_from_num(Dev, Row, Corenum)</code></td>
+    <td><code>{ok, {Row, Col}} | error</code></td></tr>
+  <tr>
+    <td><code>e_is_addr_on_chip(void *addr)</code></td>
+    <td><code>e_is_addr_on_Chip(Addr)</code></td>
+    <td><code>true | false</code></td></tr>
+  <tr>
+    <td><code>e_is_addr_on_group(e_epiphany_t *dev, void *addr)</code></td>
+    <td><code>e_is_addr_on_group(Dev, Addr)</code></td>
+    <td><code>true | false</code></td></tr>
+  <tr>
+    <td><code>e_set_host_verbosity(e_hal_diag_t verbose)</code></td>
+    <td><code>e_set_host_verbosity(Verbose)</code></td>
+    <td><code>{ok, PreviousLevel} | error</code></td></tr>
+  <tr>
+    <td><code>e_set_loader_verbosity(e_loader_diag_t verbose)</code></td>
+    <td><code>e_set_loader_verbosity(Verbose)</code></td>
+    <td><code>{ok, PreviousLevel} | error</code></td></tr>
+</table>
+
+<p>In general, Erlang integer terms are used wherever an integer is used
+in an SDK function and an Erlang list of characters is used for an SDK
+string. The Erlang string does not need to be null terminated.</p>
+
+<p>Where structures are used or returned by an SDK function, the
+corresponding Erlang function uses a binary term. This allows the Erlang
+programmer to pass around the structure without concern for its size
+or content. The exception to this rule is the <code>e_platform_t</code> structure
+returned by the <code>get_platform_info()</code> function. The Erlang function
+returns a list of key-value tuples, where the key is the platform
+structure member name.
+Thus, <code>platform.row</code> is represented as <code>{row, Row}</code> in a list. </p>
+
+<p>When dealing with memory buffers for the <code>e_read</code> and <code>e_write</code> SDK
+functions, the Erlang functions also use binaries. Consult the Erlang
+documentation for information on constructing and disassembling
+binaries. Examples are given in the Erlpiphany 'ehal' module
+documentation as well.</p>
+
+<h4><a name="NIF Library">NIF Library</a></h4>
+
+<p>The 'src/ehal.erl' module provides the Erlang interface to the
+Epiphany SDK eHAL function set. The module is compiled to a BEAM file
+that is kept in the 'ebin' directory.
+More detail for each function and its arguments can be found in the
+'ehal' module documentation.</p>
+
+<p>The C code that implements the link to the Epiphany eHAL library can
+be found in the c_src directory. The code is compiled to a loadable
+library <code>ehal.so</code> and kept in the 'priv' directory.
+A module that uses the library should include both the 'ebin' and
+'priv' directories in its load path by using the <code>code:add_path/1</code>
+function.</p>
+
+<h3><a name="Building Erlpiphany">Building Erlpiphany</a></h3><p>
+This release of Erlpiphany was built and tested using the current
+version of Erlang (<a href="http://www.erlang.org" target="_top"><tt>http://www.erlang.org</tt></a>) available at the time,
+OTP 17.4. The resulting NIF library was also tested using the version
+of Erlang available as an Ubuntu package.</p>
+
+<p>To build the Erlpiphany package, download the source from github,
+change to the root directory and simply type 'make' to compile all
+files and place the results in their corresponding directories.
+As currently distributed, all code and examples have been compiled, so
+a build is not strictly necessary unless a change is made to the
+source.</p>
+
+
+<h4><a name="Examples">Examples</a></h4>
+
+<p>The 'examples' directory contains a number of example programs
+supplied with the Epiphany SDK. For each of the examples, a
+corresponding Erlang program has been written to
+communicate with the Epiphany chip. As a quick introduction, try the
+following commands to run the hello_world example:</p>
+
+<pre>   
+cd examples/hello_world
+./run.sh
+./runerl.sh</pre>
+
+<p>The first command runs the standard C main program.
+The second command will run the Erlang version of the hello_world
+program by setting up the environment variables and then running the
+eScript <code>runerl.escript</code> in the Debug directory.</p>
+
+Example programs currently include
+<ol>
+  <li><b>Hello World</b> A simple program that selects a random eCore,
+    loads a program, and verifies program operation. The Erlang
+    version <code>hello_world.erl</code>
+    duplicates the original C program functionality.</li>
+  <li><b>Dot Product</b> Creates a workgroup containing all eCores on
+    an Epiphany chip and loads a program to compute a vector cross
+    product on each core in parallel. The <code>main.erl</code> program
+    replicates the original C program main behavior, while the
+    <code>dotproduct.erl</code> program launches a separate Erlang process per
+    eCore to load a program and compute cross products.
+    The parent process prints the order in which each eCore process
+    returns its eCore result.</li>
+</ol>
+
+
+<h3><a name="Using Erlpiphany">Using Erlpiphany</a></h3><p>
+Once you've examined and run the example Erlang programs, the next
+step is to develop and operate programs of your own.</p>
+
+<h4><a name="Scripting">Scripting</a></h4><p>
+Scripting is the simplest approach to programming an Epiphany chip
+with Erlang.
+The scripts directory in examples provides a starting point for
+scripting. You can write Erlang eScripts that access the eHAL library
+directly as shown in the <code>scripts/info.escript</code> file. To invoke the
+script, type</p>
+
+<p><b><pre>  ./escript.sh ./info.escript</pre></b></p>
+
+<p>to run the program and print out the Platform info list. The eScript
+itself is quite simple.</p>
+
+<pre>   
+#!/usr/bin/env escript
+%% -*- erlang -*-
+main([]) -&gt;
+    code:add_path("/home/linaro/Work/erlpiphany"),
+    code:add_path("/home/linaro/Work/erlpiphany/ebin"),
+    code:add_path("/home/linaro/Work/erlpiphany/priv"),
+    application:load(erlpiphany),
+    ok = ehal:e_init(0),
+    ok = ehal:e_reset_system(),
+    {ok, Platform} = ehal:e_get_platform_info(),
+    io:format("Platform info: ~p~n", [Platform]),
+    ok = ehal:e_finalize().</pre>
+
+<p>The two add_path/1 calls establish the location of the erlpiphany
+application and the <code>ehal.beam</code> file respectively. the call to
+application:load/1 insures that the ehal NIF loadable library is
+available when the Erlang <code>hello_world</code> program is invoked.</p>
+
+<p>For Erlang to find the <code>e-hal.so</code> loadable library and access the
+Epiphany chip, the Erlang eScript program must be run as root with
+certain established environment variables.</p>
+
+<p>Just as shell scripts are used to launch pre-compiled C
+programs, Erlang scripts ("eScripts") can also be used to run Erlang
+modules compiled to BEAM files. One such example script can be found
+in the Hello World example, as shown below.</p>
+
+<pre>   
+#!/usr/bin/env escript
+%% -*- erlang -*-
+main([]) -&gt;
+  code:add_path("/home/linaro/Work/erlpiphany"),
+  code:add_path("/home/linaro/Work/erlpiphany/ebin"),
+  application:load(erlpiphany),
+  hello_world:main().</pre>
+
+
+<h4><a name="Establishing Node Communication">Establishing Node Communication</a></h4><p>
+Erlang eScripts are useful for quick prototyping but have their
+limitations in terms of speed. For more complex applications, you'll
+need to develop one or more Erlang modules.</p>
+
+<p>To develop and test an Epiphany application you'll need to start an
+Erlang node as root. This can be done using the <code>rooterl.sh</code> script,
+as in</p>
+
+<p><b><pre>  rooterl.sh -cookie mysecret -sname ehal_node</pre></b></p>
+
+<p>Rather than setting the node cookie on the command line, you can put
+the text in <code>~/.erlang.cookie</code> so that all of your Erlang nodes use
+the same cookie value. To insure the root Erlang node uses the same
+cookie file, you'll need to use the command</p>
+
+<p><b><pre>  rooterl.sh -cookie /home/linaro/.erlang.cookie -sname ehal_node</pre></b></p>
+
+<p>Try running the above command in the scripts directory to start a root
+Erlang node, then start a node in another window with the command</p>
+
+<p><b><pre>  erl -sname linaro</pre></b></p>
+
+<p>In the 'examples/scripts' directory type the folowing commands in your
+Erlang 'linaro' node</p>
+
+<p><code><b>   (linaro@linaro-nano)1&gt; net_adm:world().</b><br>
+   ['linaro@linaro-nano', 'ehal_node@linaro-nano']<br>
+<b>   (linaro@linaro-nano)2&gt; rpc:call('ehal_node@linaro-nano', os, cmd, ["./info.escript"]).</b></code></p>
+
+<p>The net_adm:world/0 command establishes communication with all Erlang
+nodes running on the Parallella board that use the same security
+cookie. You can connect to nodes on remote hosts by putting the host
+names in the file <code>~/.host.names</code> with each host name on a separate
+line, surrounded by single quotes and terminated with a
+period. Another way to connect is to use the net_adm:world_list/1 to
+specify one or more hosts as in</p>
+
+<p><b><pre>  net_adm:world_list(['mynotebook', 'workstation.domain.org']).</pre></b></p>
+
+<p>Notice the rpc call returns the same output as when the command is run
+in the bash shell. You can use this approach to run eScripts that act
+as wrappers for larger programs you develop. You can also use this
+remote procedure call to invoke Erlang functions on the Parallella
+board from your workstation.</p>
+
+
+<h4><a name="Invoking Commands">Invoking Commands</a></h4>
+
+<p>Lets try running an example program that has already been developed
+and compiled. Using your local Erlang node and the root Erlang node
+running in the scripts directory, use the following commands to access
+and run the hello world demo.</p>
+
+<p><code><b>('linaro@linaro-nano'&gt;3 rpc:call('ehal_node@linaro-nano', file, set_cwd,
+["../hello-world/Debug"]).</b><br>
+  ok<br>
+<b>('linaro@linaro-nano'&gt;4 rpc:call('ehal_node@linaro-nano', hello_world, main, []).</b></code></p>
+
+<p>Notice you get the expected hello world demo output on your local
+console. Once you have a working Erlpiphany application, you can
+invoke the application remotely from your workstation after starting
+and connecting to a root Erlang node running on your Parallella board.</p>
+
+
+<hr>
+<div class="navbar"><a name="#navbar_bottom"></a><table width="100%" border="0" cellspacing="0" cellpadding="2" summary="navigation bar"><tr><td><a href="overview-summary.html" target="overviewFrame">Overview</a></td><td><a href="http://www.erlang.org/"><img src="erlang.png" align="right" border="0" alt="erlang logo"></a></td></tr></table></div>
+<p><i>Generated by EDoc, Feb 26 2015, 01:21:18.</i></p>
+</body>
+</html>

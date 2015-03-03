@@ -1,0 +1,568 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN">
+<html>
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+<title>Module ehal</title>
+<link rel="stylesheet" type="text/css" href="stylesheet.css" title="EDoc">
+</head>
+<body bgcolor="white">
+<div class="navbar"><a name="#navbar_top"></a><table width="100%" border="0" cellspacing="0" cellpadding="2" summary="navigation bar"><tr><td><a href="overview-summary.html" target="overviewFrame">Overview</a></td><td><a href="http://www.erlang.org/"><img src="erlang.png" align="right" border="0" alt="erlang logo"></a></td></tr></table></div>
+<hr>
+
+<h1>Module ehal</h1>
+<ul class="index"><li><a href="#description">Description</a></li><li><a href="#types">Data Types</a></li><li><a href="#index">Function Index</a></li><li><a href="#functions">Function Details</a></li></ul>
+   This is the Erlang interface to the Epiphany eHAL NIF loadable library.
+<p>Copyright © (C) 2015</p>
+
+<p><b>Version:</b> 1.0.1</p>
+<p><b>Authors:</b> Mark A Fleming (<a href="mailto:mark_fleming@ieee.org"><tt>mark_fleming@ieee.org</tt></a>).</p>
+
+<h2><a name="description">Description</a></h2>
+   This is the Erlang interface to the Epiphany eHAL NIF loadable library.
+   If the module is not in the current working directory, use
+   <pre>      code:add_path("path to module directory")</pre><p>   
+to include the module directory in the Erlang node search path.</p>
+  
+   <h3><a name="Introduction">Introduction</a></h3><p>   
+This module provides an Erlang interface to the Epiphany SDK eHAL   
+function set. Every effort has been made to hew to the name and   
+argument list order of the original C functions. This was done to   
+simplify the porting of C code to Erlang, to maintain familiarity as   
+much as possible for the experienced SDK user, and to avoid the usual   
+temptation to "improve" the original source arrangement.</p>
+  
+   <h3><a name="Erlang_Term_Conventions">Erlang Term Conventions</a></h3><p>   
+All SDK C structure values are represented as Erlang binaries. This is   
+done to isolate Erlang code from any changes to the SDK structure   
+definitions.   
+An Erlang program will just pass these binary blobs around, leaving it up   
+to the NIF functions to transform them to and from the corresponding   
+C structures.   
+An experienced programmer can use the bit syntax to prize apart the   
+binary into the corresponding structure members.</p>
+  
+   <p>Data written to or read from an eCore internal memory or Epiphany
+   external memory is also represented as a binary. Erlang has a number
+   of ways to convert between regular Erlang terms and binaries.
+   For example, <code>list_to_binary("Hello World")</code> can be used to put a
+   string in binary format and <code>binary_to_list(Bin)</code> can do the reverse.
+   More detail can be found in <code>erlang(3)</code></p>
+  
+   <p>Many of the SDK's defined values and enumerations can be found in the   
+Erlang 'ehal.hrl' include file. The file defines macros to represent   
+such constants as E_REG_CONFIG (use ?E_REG_CONFIG).   
+A small deviation from the SDK standard was to use the boolean atoms   
+'true', 'false', 'ok' and 'error' in place of the defined integer values   
+E_TRUE, E_FALSE, E_OK and E_ERR respectively.</p>
+  
+   <p>Module functions use the Erlang convention of returning the atoms
+   'ok' and 'error' or the tuple '{ok, Result}'. For example, most of
+   the SDK C functions return a success flag and use pointer
+   arguments to return other values.
+   In Erlang, the 'e_open/4' function returns '{ok, Dev}' for the
+   <code>e_epiphany_t</code> structure returned by the corresponding C function.</p>
+  
+  
+<h2><a name="types">Data Types</a></h2>
+
+<h3 class="typedecl"><a name="type-epiphany_dev">epiphany_dev()</a></h3>
+<p><tt>epiphany_dev() = binary()</tt></p>
+
+
+<h3 class="typedecl"><a name="type-epiphany_mem">epiphany_mem()</a></h3>
+<p><tt>epiphany_mem() = binary()</tt></p>
+
+
+<h3 class="typedecl"><a name="type-platform_data">platform_data()</a></h3>
+<p><tt>platform_data() = {row, integer()} | {col, integer()} | {rows, integer()} | {cols, integer()} | {version, string()} | {regs_base, integer()} | {num_chips, integer()} | {num_emems, integer()}</tt></p>
+
+
+<h3 class="typedecl"><a name="type-platform_info">platform_info()</a></h3>
+<p><tt>platform_info() = [<a href="#type-platform_data">platform_data()</a>]</tt></p>
+
+
+<h2><a name="index">Function Index</a></h2>
+<table width="100%" border="1" cellspacing="0" cellpadding="2" summary="function index"><tr><td valign="top"><a href="#e_alloc-2">e_alloc/2</a></td><td>
+   This function defines a buffer in external memory of size 'Size'
+   bytes starting at offset 'Base' bytes from the beginning of external
+   memory.</td></tr>
+<tr><td valign="top"><a href="#e_close-1">e_close/1</a></td><td>
+   This function closes the eCode workgroup and releases resources
+   allocated by the e_open function.</td></tr>
+<tr><td valign="top"><a href="#e_finalize-0">e_finalize/0</a></td><td>
+   This function finalizes the connection to the Epiphany chip and
+   releases resources allocated by the e_init function.</td></tr>
+<tr><td valign="top"><a href="#e_free-1">e_free/1</a></td><td>
+   This function releases the resources allocated by the
+   e_alloc/2 function.</td></tr>
+<tr><td valign="top"><a href="#e_get_coords_from_num-2">e_get_coords_from_num/2</a></td><td>
+   This function converts a workgroup's core number to the core
+   coordinate relative to the workgroup origin.</td></tr>
+<tr><td valign="top"><a href="#e_get_num_from_coords-3">e_get_num_from_coords/3</a></td><td>
+   This function converts a workgroup's core coordinate to the core
+   number within the workgroup.</td></tr>
+<tr><td valign="top"><a href="#e_get_platform_info-0">e_get_platform_info/0</a></td><td>
+   This function returns information about the Epiphany platform as
+   a list of tuples of the form {attribute, Value}.</td></tr>
+<tr><td valign="top"><a href="#e_halt-3">e_halt/3</a></td><td>
+   This function halts a workgroup core's program execution.</td></tr>
+<tr><td valign="top"><a href="#e_init-1">e_init/1</a></td><td>
+   This function initializes the HAL data structures, and establishes
+   a connection to the Epiphany platform.</td></tr>
+<tr><td valign="top"><a href="#e_is_addr_on_chip-1">e_is_addr_on_chip/1</a></td><td>
+   This function returns <code>true</code> if the given 32-bit address is within
+   the Epiphany's physical address space, or <code>false</code> otherwise.</td></tr>
+<tr><td valign="top"><a href="#e_is_addr_on_group-2">e_is_addr_on_group/2</a></td><td>
+   This function returns <code>true</code> if the given 32-bit address is within
+   the workgroup cores physical address space, or <code>false</code> otherwise.</td></tr>
+<tr><td valign="top"><a href="#e_load-5">e_load/5</a></td><td>   
+This function loads a program into a workgroup core.</td></tr>
+<tr><td valign="top"><a href="#e_load_group-7">e_load_group/7</a></td><td>   
+This function loads a program into a subgroup of a workgroup's   
+cores.</td></tr>
+<tr><td valign="top"><a href="#e_open-4">e_open/4</a></td><td>
+   This function defines a eCore workgroup.</td></tr>
+<tr><td valign="top"><a href="#e_read-5">e_read/5</a></td><td>
+   This function reads data from a workgroup eCore local memory if Dev
+   is of type <code>e_epiphany_t</code> or from an external memory buffer if Dev
+   is of type <code>e_mem_t</code>.</td></tr>
+<tr><td valign="top"><a href="#e_reset_group-1">e_reset_group/1</a></td><td>
+   This function performs a soft reset of a eCore workgroup.</td></tr>
+<tr><td valign="top"><a href="#e_reset_system-0">e_reset_system/0</a></td><td>
+   This function performs a full hardware reset of the Epiphany
+   platform, including the Epiphany chip and FPGA glue logic.</td></tr>
+<tr><td valign="top"><a href="#e_resume-3">e_resume/3</a></td><td>
+   This function resumes a workgroup core's program execution that
+   was previously halted with a call to e_halt.</td></tr>
+<tr><td valign="top"><a href="#e_set_host_verbosity-1">e_set_host_verbosity/1</a></td><td>
+   This function sets the verbosity level of eHAL function calls.</td></tr>
+<tr><td valign="top"><a href="#e_set_loader_verbosity-1">e_set_loader_verbosity/1</a></td><td>
+   This function sets the verbosity level of program loader function
+   calls.</td></tr>
+<tr><td valign="top"><a href="#e_signal-3">e_signal/3</a></td><td>
+   This function sends a soft interrupt to a workgroup core.</td></tr>
+<tr><td valign="top"><a href="#e_start-3">e_start/3</a></td><td>
+   This function starts a core, normally after a program has been
+   loaded.</td></tr>
+<tr><td valign="top"><a href="#e_start_group-1">e_start_group/1</a></td><td>
+   This function starts all cores in a workgroup, normally after a
+   program has been loaded.</td></tr>
+<tr><td valign="top"><a href="#e_write-6">e_write/6</a></td><td>
+   This function writes data to a workgroup core local memory if Dev
+   is of type <code>e_epiphany_t</code> or to an external memory buffer if Dev
+   is of type <code>e_mem_t</code>.</td></tr>
+<tr><td valign="top"><a href="#init-0">init/0</a></td><td>
+   Search for and load the NIF loadable library.</td></tr>
+</table>
+
+<h2><a name="functions">Function Details</a></h2>
+
+<h3 class="function"><a name="e_alloc-2">e_alloc/2</a></h3>
+<div class="spec">
+<p><tt>e_alloc(Base, Size) -&gt; {ok, Mbuf::<a href="#type-epiphany_mem">epiphany_mem()</a>} | error</tt>
+<ul class="definitions"><li><tt>Base = integer()</tt></li><li><tt>Size = integer()</tt></li></ul></p>
+</div><p>
+   This function defines a buffer in external memory of size 'Size'
+   bytes starting at offset 'Base' bytes from the beginning of external
+   memory. If successful, a binary (e_mem_t structure) is returned
+   that can be used in subsequent read and write operations.
+   <h4><a name="See_Also">See Also</a></h4><p>
+   <a href="http://www.adapteva.com/docs/epiphany_sdk_ref.pdf">
+   Epiphany SDK Reference</a></p>
+  
+   <a href="http://www.adapteva.com/all-documents/">
+   External Documentation Archive</a></p>
+
+<h3 class="function"><a name="e_close-1">e_close/1</a></h3>
+<div class="spec">
+<p><tt>e_close(Dev) -&gt; ok | error</tt>
+<ul class="definitions"><li><tt>Dev = <a href="#type-epiphany_dev">epiphany_dev()</a></tt></li></ul></p>
+</div><p>
+   This function closes the eCode workgroup and releases resources
+   allocated by the e_open function. This function should be used
+   before re-allocating an eCore member to a new workgroup.
+   <h4><a name="See_Also">See Also</a></h4><p>
+   <a href="http://www.adapteva.com/docs/epiphany_sdk_ref.pdf">
+   Epiphany SDK Reference</a></p>
+  
+   <a href="http://www.adapteva.com/all-documents/">
+   External Documentation Archive</a></p>
+
+<h3 class="function"><a name="e_finalize-0">e_finalize/0</a></h3>
+<div class="spec">
+<p><tt>e_finalize() -&gt; ok | error</tt><br></p>
+</div><p>
+   This function finalizes the connection to the Epiphany chip and
+   releases resources allocated by the e_init function.
+   <h4><a name="See_Also">See Also</a></h4><p>
+   <a href="http://www.adapteva.com/docs/epiphany_sdk_ref.pdf">
+   Epiphany SDK Reference</a></p>
+  
+   <a href="http://www.adapteva.com/all-documents/">
+   External Documentation Archive</a></p>
+
+<h3 class="function"><a name="e_free-1">e_free/1</a></h3>
+<div class="spec">
+<p><tt>e_free(Mbuf) -&gt; ok | error</tt>
+<ul class="definitions"><li><tt>Mbuf = <a href="#type-epiphany_mem">epiphany_mem()</a></tt></li></ul></p>
+</div><p>
+   This function releases the resources allocated by the
+   e_alloc/2 function.
+   <h4><a name="See_Also">See Also</a></h4><p>
+   <a href="http://www.adapteva.com/docs/epiphany_sdk_ref.pdf">
+   Epiphany SDK Reference</a></p>
+  
+   <a href="http://www.adapteva.com/all-documents/">
+   External Documentation Archive</a></p>
+
+<h3 class="function"><a name="e_get_coords_from_num-2">e_get_coords_from_num/2</a></h3>
+<div class="spec">
+<p><tt>e_get_coords_from_num(Dev, Corenum) -&gt; {ok, {Row::integer(), Col::integer()}} | error</tt>
+<ul class="definitions"><li><tt>Dev = <a href="#type-epiphany_dev">epiphany_dev()</a></tt></li><li><tt>Corenum = integer()</tt></li></ul></p>
+</div><p>
+   This function converts a workgroup's core number to the core
+   coordinate relative to the workgroup origin.
+   <h4><a name="See_Also">See Also</a></h4><p>
+   <a href="http://www.adapteva.com/docs/epiphany_sdk_ref.pdf">
+   Epiphany SDK Reference</a></p>
+  
+   <a href="http://www.adapteva.com/all-documents/">
+   External Documentation Archive</a></p>
+
+<h3 class="function"><a name="e_get_num_from_coords-3">e_get_num_from_coords/3</a></h3>
+<div class="spec">
+<p><tt>e_get_num_from_coords(Dev, Row, Col) -&gt; {ok, integer()} | error</tt>
+<ul class="definitions"><li><tt>Dev = <a href="#type-epiphany_dev">epiphany_dev()</a></tt></li><li><tt>Row = integer()</tt></li><li><tt>Col = integer()</tt></li></ul></p>
+</div><p>
+   This function converts a workgroup's core coordinate to the core
+   number within the workgroup.
+   <h4><a name="See_Also">See Also</a></h4><p>
+   <a href="http://www.adapteva.com/docs/epiphany_sdk_ref.pdf">
+   Epiphany SDK Reference</a></p>
+  
+   <a href="http://www.adapteva.com/all-documents/">
+   External Documentation Archive</a></p>
+
+<h3 class="function"><a name="e_get_platform_info-0">e_get_platform_info/0</a></h3>
+<div class="spec">
+<p><tt>e_get_platform_info() -&gt; {ok, Plat::<a href="#type-platform_info">platform_info()</a>} | error</tt><br></p>
+</div><p><p>
+   This function returns information about the Epiphany platform as
+   a list of tuples of the form {attribute, Value}.
+   Valid attributes at this time are:
+   <br> row, col, rows, cols, version, num_chips, num_emems, regs_base</p>
+  
+   Use lists:keyfind/2 to extract a desired key-value pair.
+  </p>
+
+<h3 class="function"><a name="e_halt-3">e_halt/3</a></h3>
+<div class="spec">
+<p><tt>e_halt(Dev, Row, Col) -&gt; ok | error</tt>
+<ul class="definitions"><li><tt>Dev = <a href="#type-epiphany_dev">epiphany_dev()</a></tt></li><li><tt>Row = integer()</tt></li><li><tt>Col = integer()</tt></li></ul></p>
+</div><p>
+   This function halts a workgroup core's program execution.
+   The Row and Col eCore coordinate is relative to the
+   workgroup given as Dev.
+   <h4><a name="See_Also">See Also</a></h4><p>
+   <a href="http://www.adapteva.com/docs/epiphany_sdk_ref.pdf">
+   Epiphany SDK Reference</a></p>
+  
+   <a href="http://www.adapteva.com/all-documents/">
+   External Documentation Archive</a></p>
+
+<h3 class="function"><a name="e_init-1">e_init/1</a></h3>
+<div class="spec">
+<p><tt>e_init(HDF) -&gt; ok | error</tt>
+<ul class="definitions"><li><tt>HDF = string() | 0</tt></li></ul></p>
+</div><p>
+   This function initializes the HAL data structures, and establishes
+   a connection to the Epiphany platform.
+   The platform parameters are read from a Hardware Description File
+   (HDF), whose path is given as the function argument.
+   If the HDF argument is a 0 value or empty string, the function will
+   use environment variable information (EPIPHANY_HDF or EPIPHANY_HOME)
+   to try to locate the default HDF file.
+   <h4><a name="See_Also">See Also</a></h4><p>
+   <a href="http://www.adapteva.com/docs/epiphany_sdk_ref.pdf">
+   Epiphany SDK Reference</a></p>
+  
+   <a href="http://www.adapteva.com/all-documents/">
+   External Documentation Archive</a></p>
+
+<h3 class="function"><a name="e_is_addr_on_chip-1">e_is_addr_on_chip/1</a></h3>
+<div class="spec">
+<p><tt>e_is_addr_on_chip(Addr) -&gt; true | false</tt>
+<ul class="definitions"><li><tt>Addr = integer()</tt></li></ul></p>
+</div><p>
+   This function returns <code>true</code> if the given 32-bit address is within
+   the Epiphany's physical address space, or <code>false</code> otherwise.
+   <h4><a name="See_Also">See Also</a></h4><p>
+   <a href="http://www.adapteva.com/docs/epiphany_sdk_ref.pdf">
+   Epiphany SDK Reference</a></p>
+  
+   <a href="http://www.adapteva.com/all-documents/">
+   External Documentation Archive</a></p>
+
+<h3 class="function"><a name="e_is_addr_on_group-2">e_is_addr_on_group/2</a></h3>
+<div class="spec">
+<p><tt>e_is_addr_on_group(Dev, Addr) -&gt; true | false</tt>
+<ul class="definitions"><li><tt>Dev = <a href="#type-epiphany_dev">epiphany_dev()</a></tt></li><li><tt>Addr = integer()</tt></li></ul></p>
+</div><p>
+   This function returns <code>true</code> if the given 32-bit address is within
+   the workgroup cores physical address space, or <code>false</code> otherwise.
+   <h4><a name="See_Also">See Also</a></h4><p>
+   <a href="http://www.adapteva.com/docs/epiphany_sdk_ref.pdf">
+   Epiphany SDK Reference</a></p>
+  
+   <a href="http://www.adapteva.com/all-documents/">
+   External Documentation Archive</a></p>
+
+<h3 class="function"><a name="e_load-5">e_load/5</a></h3>
+<div class="spec">
+<p><tt>e_load(Program, Dev, Row, Col, Start) -&gt; ok | error</tt>
+<ul class="definitions"><li><tt>Program = string()</tt></li><li><tt>Dev = <a href="#type-epiphany_dev">epiphany_dev()</a></tt></li><li><tt>Row = integer()</tt></li><li><tt>Col = integer()</tt></li><li><tt>Start = true | false</tt></li></ul></p>
+</div><p><p>   
+This function loads a program into a workgroup core. The Program   
+string points to a file in SREC format. The Row and Col address of   
+the core is relative to the workgroup's origin. When   
+the Start value is 'true', the program is launched after it is   
+loaded. The function also accepts a null or zero Program parameter.</p>
+  
+   Program load should only be performed when a core is in an idle or
+   halt state, ideally after a e_reset_system/0 or e_reset_group/1.
+   <h4><a name="See_Also">See Also</a></h4><p>
+   <a href="http://www.adapteva.com/docs/epiphany_sdk_ref.pdf">
+   Epiphany SDK Reference</a></p>
+  
+   <a href="http://www.adapteva.com/all-documents/">
+   External Documentation Archive</a></p>
+
+<h3 class="function"><a name="e_load_group-7">e_load_group/7</a></h3>
+<div class="spec">
+<p><tt>e_load_group(Program, Dev, Row, Col, Rows, Cols, Start) -&gt; ok | error</tt>
+<ul class="definitions"><li><tt>Program = string()</tt></li><li><tt>Dev = <a href="#type-epiphany_dev">epiphany_dev()</a></tt></li><li><tt>Row = integer()</tt></li><li><tt>Col = integer()</tt></li><li><tt>Rows = integer()</tt></li><li><tt>Cols = integer()</tt></li><li><tt>Start = true | false</tt></li></ul></p>
+</div><p><p>   
+This function loads a program into a subgroup of a workgroup's   
+cores. The Program string points to a file in SREC format.   
+The Row and Col address of the core group is relative to the   
+workgroup's origin. The range of cores in the subgroup   
+is given by Rows and Cols.   
+When the Start value is 'true', the program is launched after it is   
+loaded.</p>
+  
+   Program load should only be performed when a core is in an idle or
+   halt state, ideally after a e_reset_system/0 or e_reset_group/1.
+   <h4><a name="See_Also">See Also</a></h4><p>
+   <a href="http://www.adapteva.com/docs/epiphany_sdk_ref.pdf">
+   Epiphany SDK Reference</a></p>
+  
+   <a href="http://www.adapteva.com/all-documents/">
+   External Documentation Archive</a></p>
+
+<h3 class="function"><a name="e_open-4">e_open/4</a></h3>
+<div class="spec">
+<p><tt>e_open(Row, Col, Rows, Cols) -&gt; {ok, Dev::<a href="#type-epiphany_dev">epiphany_dev()</a>} | error</tt>
+<ul class="definitions"><li><tt>Row = integer()</tt></li><li><tt>Col = integer()</tt></li><li><tt>Rows = integer()</tt></li><li><tt>Cols = integer()</tt></li></ul></p>
+</div><p>
+   This function defines a eCore workgroup. The Row and Col
+   parameters defines
+   the workgroup origin relative to the platform origin and the Rows
+   and Cols parameters gives the workgroup size.
+   The function returns a binary (e_epiphany_t structure) that can
+   be used in subsequent calls to reference the workgroup.
+   The e_get_platform_info/0 function can be used to determine the
+   size of the Epiphany chip in rows and columns.
+   <h4><a name="See_Also">See Also</a></h4><p>
+   <a href="http://www.adapteva.com/docs/epiphany_sdk_ref.pdf">
+   Epiphany SDK Reference</a></p>
+  
+   <a href="http://www.adapteva.com/all-documents/">
+   External Documentation Archive</a></p>
+
+<h3 class="function"><a name="e_read-5">e_read/5</a></h3>
+<div class="spec">
+<p><tt>e_read(Dev, Row, Col, From, Size) -&gt; {ok, {Ssize::integer(), Data::binary()}} | error</tt>
+<ul class="definitions"><li><tt>Dev = <a href="#type-epiphany_dev">epiphany_dev()</a> | <a href="#type-epiphany_mem">epiphany_mem()</a></tt></li><li><tt>Row = integer()</tt></li><li><tt>Col = integer()</tt></li><li><tt>From = integer()</tt></li><li><tt>Size = integer()</tt></li></ul></p>
+</div><p><p>
+   This function reads data from a workgroup eCore local memory if Dev
+   is of type <code>e_epiphany_t</code> or from an external memory buffer if Dev
+   is of type <code>e_mem_t</code>. If successful, a tuple containing the number   
+of bytes read and a binary of the data read is returned. If   
+accessing the core local registers, use one of the register symbol   
+macros in ehal.hrl as the From offset.</p>
+  
+   The From argument specifies an offset from the base of the eCore
+   internal memory or from the external memory buffer. The Row and Col
+   arguments specify a particular eCore when reading from local
+   memory and are ignored when reading from external memory.
+   <h4><a name="See_Also">See Also</a></h4><p>
+   <a href="http://www.adapteva.com/docs/epiphany_sdk_ref.pdf">
+   Epiphany SDK Reference</a></p>
+  
+   <a href="http://www.adapteva.com/all-documents/">
+   External Documentation Archive</a></p>
+
+<h3 class="function"><a name="e_reset_group-1">e_reset_group/1</a></h3>
+<div class="spec">
+<p><tt>e_reset_group(Dev) -&gt; ok | error</tt>
+<ul class="definitions"><li><tt>Dev = <a href="#type-epiphany_dev">epiphany_dev()</a></tt></li></ul></p>
+</div><p>
+   This function performs a soft reset of a eCore workgroup. See SDK
+   documentation for cautions on using this function.
+   <h4><a name="See_Also">See Also</a></h4><p>
+   <a href="http://www.adapteva.com/docs/epiphany_sdk_ref.pdf">
+   Epiphany SDK Reference</a></p>
+  
+   <a href="http://www.adapteva.com/all-documents/">
+   External Documentation Archive</a></p>
+
+<h3 class="function"><a name="e_reset_system-0">e_reset_system/0</a></h3>
+<div class="spec">
+<p><tt>e_reset_system() -&gt; ok | error</tt><br></p>
+</div><p>
+   This function performs a full hardware reset of the Epiphany
+   platform, including the Epiphany chip and FPGA glue logic.
+   <h4><a name="See_Also">See Also</a></h4><p>
+   <a href="http://www.adapteva.com/docs/epiphany_sdk_ref.pdf">
+   Epiphany SDK Reference</a></p>
+  
+   <a href="http://www.adapteva.com/all-documents/">
+   External Documentation Archive</a></p>
+
+<h3 class="function"><a name="e_resume-3">e_resume/3</a></h3>
+<div class="spec">
+<p><tt>e_resume(Dev, Row, Col) -&gt; ok | error</tt>
+<ul class="definitions"><li><tt>Dev = <a href="#type-epiphany_dev">epiphany_dev()</a></tt></li><li><tt>Row = integer()</tt></li><li><tt>Col = integer()</tt></li></ul></p>
+</div><p>
+   This function resumes a workgroup core's program execution that
+   was previously halted with a call to e_halt.
+   The Row and Col eCore coordinate is relative
+   to the workgroup given as Dev.
+   <h4><a name="See_Also">See Also</a></h4><p>
+   <a href="http://www.adapteva.com/docs/epiphany_sdk_ref.pdf">
+   Epiphany SDK Reference</a></p>
+  
+   <a href="http://www.adapteva.com/all-documents/">
+   External Documentation Archive</a></p>
+
+<h3 class="function"><a name="e_set_host_verbosity-1">e_set_host_verbosity/1</a></h3>
+<div class="spec">
+<p><tt>e_set_host_verbosity(Level) -&gt; integer()</tt>
+<ul class="definitions"><li><tt>Level = integer()</tt></li></ul></p>
+</div><p>
+   This function sets the verbosity level of eHAL function calls.
+   The old diagnostic level is returned.
+   Diagnostic levels are defined by the macros ?H_D0 to ?H_D4 in the
+   'ehal.hrl' include file. Level ?H_D0 means no diagnostics and each
+   remaining level provides more detailed diagnostics.
+   <h4><a name="See_Also">See Also</a></h4><p>
+   <a href="http://www.adapteva.com/docs/epiphany_sdk_ref.pdf">
+   Epiphany SDK Reference</a></p>
+  
+   <a href="http://www.adapteva.com/all-documents/">
+   External Documentation Archive</a></p>
+
+<h3 class="function"><a name="e_set_loader_verbosity-1">e_set_loader_verbosity/1</a></h3>
+<div class="spec">
+<p><tt>e_set_loader_verbosity(Level) -&gt; integer()</tt>
+<ul class="definitions"><li><tt>Level = integer()</tt></li></ul></p>
+</div><p>
+   This function sets the verbosity level of program loader function
+   calls. The old diagnostic level is returned.
+   Diagnostic levels are defined by the macros ?L_D0 to ?L_D4 in the
+   'ehal.hrl' include file. Level ?L_D0 means no diagnostics and each
+   remaining level provides more detailed diagnostics.
+   <h4><a name="See_Also">See Also</a></h4><p>
+   <a href="http://www.adapteva.com/docs/epiphany_sdk_ref.pdf">
+   Epiphany SDK Reference</a></p>
+  
+   <a href="http://www.adapteva.com/all-documents/">
+   External Documentation Archive</a></p>
+
+<h3 class="function"><a name="e_signal-3">e_signal/3</a></h3>
+<div class="spec">
+<p><tt>e_signal(Dev, Row, Col) -&gt; ok | error</tt>
+<ul class="definitions"><li><tt>Dev = <a href="#type-epiphany_dev">epiphany_dev()</a></tt></li><li><tt>Row = integer()</tt></li><li><tt>Col = integer()</tt></li></ul></p>
+</div><p>
+   This function sends a soft interrupt to a workgroup core.
+   The Row and Col eCore coordinate is relative to the
+   workgroup given as Dev.
+   <h4><a name="See_Also">See Also</a></h4><p>
+   <a href="http://www.adapteva.com/docs/epiphany_sdk_ref.pdf">
+   Epiphany SDK Reference</a></p>
+  
+   <a href="http://www.adapteva.com/all-documents/">
+   External Documentation Archive</a></p>
+
+<h3 class="function"><a name="e_start-3">e_start/3</a></h3>
+<div class="spec">
+<p><tt>e_start(Dev, Row, Col) -&gt; ok | error</tt>
+<ul class="definitions"><li><tt>Dev = <a href="#type-epiphany_dev">epiphany_dev()</a></tt></li><li><tt>Row = integer()</tt></li><li><tt>Col = integer()</tt></li></ul></p>
+</div><p>
+   This function starts a core, normally after a program has been
+   loaded. The Row and Col eCore coordinate is relative to the
+   workgroup given as Dev.
+   <h4><a name="See_Also">See Also</a></h4><p>
+   <a href="http://www.adapteva.com/docs/epiphany_sdk_ref.pdf">
+   Epiphany SDK Reference</a></p>
+  
+   <a href="http://www.adapteva.com/all-documents/">
+   External Documentation Archive</a></p>
+
+<h3 class="function"><a name="e_start_group-1">e_start_group/1</a></h3>
+<div class="spec">
+<p><tt>e_start_group(Dev) -&gt; ok | error</tt>
+<ul class="definitions"><li><tt>Dev = <a href="#type-epiphany_dev">epiphany_dev()</a></tt></li></ul></p>
+</div><p>
+   This function starts all cores in a workgroup, normally after a
+   program has been loaded.
+   <h4><a name="See_Also">See Also</a></h4><p>
+   <a href="http://www.adapteva.com/docs/epiphany_sdk_ref.pdf">
+   Epiphany SDK Reference</a></p>
+  
+   <a href="http://www.adapteva.com/all-documents/">
+   External Documentation Archive</a></p>
+
+<h3 class="function"><a name="e_write-6">e_write/6</a></h3>
+<div class="spec">
+<p><tt>e_write(Dev, Row, Col, To, Buf, Size) -&gt; {ok, Ssize::integer()} | error</tt>
+<ul class="definitions"><li><tt>Dev = <a href="#type-epiphany_dev">epiphany_dev()</a> | <a href="#type-epiphany_mem">epiphany_mem()</a></tt></li><li><tt>Row = integer()</tt></li><li><tt>Col = integer()</tt></li><li><tt>To = integer()</tt></li><li><tt>Buf = binary()</tt></li><li><tt>Size = integer()</tt></li></ul></p>
+</div><p><p>
+   This function writes data to a workgroup core local memory if Dev
+   is of type <code>e_epiphany_t</code> or to an external memory buffer if Dev
+   is of type <code>e_mem_t</code>. If successful, the number of bytes written   
+is returned. If accessing the core local registers, use one of the   
+register symbol macros in ehal.hrl as the To offset.</p>
+  
+   <p>Data is passed to this function in the form of a binary. A binary   
+can be created from common Erlang terms using such functions as   
+atom_to_binary/2, float_to_binary/1, integer_to_binary/1   
+or list_to_binary/1. Use size/1 to get the size of a binary.</p>
+  
+   Since any character sequence within single
+   quotes is an Erlang atom, atom_to_binary/2 is one method of
+   encoding strings, for example
+   <br> atom_to_binary('Hello, World!', latin1)
+   <br> See erlang(3) for more details and examples.
+   <h4><a name="See_Also">See Also</a></h4><p>
+   <a href="http://www.adapteva.com/docs/epiphany_sdk_ref.pdf">
+   Epiphany SDK Reference</a></p>
+  
+   <a href="http://www.adapteva.com/all-documents/">
+   External Documentation Archive</a></p>
+
+<h3 class="function"><a name="init-0">init/0</a></h3>
+<div class="spec">
+<p><tt>init() -&gt; ok | error</tt><br></p>
+</div><p>
+   Search for and load the NIF loadable library.
+   This function is automatically called with the module is loaded.
+   The library should be in the erlpiphany priv directory, which is
+   searched first. If not found, check the default search paths for
+   the library, and lastly, check the current working directory.</p>
+<hr>
+
+<div class="navbar"><a name="#navbar_bottom"></a><table width="100%" border="0" cellspacing="0" cellpadding="2" summary="navigation bar"><tr><td><a href="overview-summary.html" target="overviewFrame">Overview</a></td><td><a href="http://www.erlang.org/"><img src="erlang.png" align="right" border="0" alt="erlang logo"></a></td></tr></table></div>
+<p><i>Generated by EDoc, Feb 26 2015, 01:21:17.</i></p>
+</body>
+</html>

@@ -1,0 +1,142 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<?fileVersion 4.0.0?>
+
+<cproject storage_type_id="org.eclipse.cdt.core.XmlProjectDescriptionStorage">
+	<storageModule moduleId="org.eclipse.cdt.core.settings">
+		<cconfiguration id="cdt.managedbuild.config.gnu.atdsp.exe.debug.1596660173">
+			<storageModule buildSystemId="org.eclipse.cdt.managedbuilder.core.configurationDataProvider" id="cdt.managedbuild.config.gnu.atdsp.exe.debug.1596660173" moduleId="org.eclipse.cdt.core.settings" name="Debug">
+				<externalSettings/>
+				<extensions>
+					<extension id="org.eclipse.cdt.core.ELF" point="org.eclipse.cdt.core.BinaryParser"/>
+					<extension id="org.eclipse.cdt.core.GmakeErrorParser" point="org.eclipse.cdt.core.ErrorParser"/>
+					<extension id="org.eclipse.cdt.core.CWDLocator" point="org.eclipse.cdt.core.ErrorParser"/>
+					<extension id="org.eclipse.cdt.core.GCCErrorParser" point="org.eclipse.cdt.core.ErrorParser"/>
+					<extension id="org.eclipse.cdt.core.GASErrorParser" point="org.eclipse.cdt.core.ErrorParser"/>
+					<extension id="org.eclipse.cdt.core.GLDErrorParser" point="org.eclipse.cdt.core.ErrorParser"/>
+				</extensions>
+			</storageModule>
+			<storageModule moduleId="cdtBuildSystem" version="4.0.0">
+				<configuration artifactName="e_${ProjName}" buildArtefactType="org.eclipse.cdt.build.core.buildArtefactType.exe" buildProperties="org.eclipse.cdt.build.core.buildType=org.eclipse.cdt.build.core.buildType.debug,org.eclipse.cdt.build.core.buildArtefactType=org.eclipse.cdt.build.core.buildArtefactType.exe" cleanCommand="rm -rf" description="" id="cdt.managedbuild.config.gnu.atdsp.exe.debug.1596660173" name="Debug" parent="cdt.managedbuild.config.gnu.atdsp.exe.debug">
+					<folderInfo id="cdt.managedbuild.config.gnu.atdsp.exe.debug.1596660173." name="/" resourcePath="">
+						<toolChain id="cdt.managedbuild.toolchain.gnu.atdsp.exe.debug.23386870" name="Epiphany" superClass="cdt.managedbuild.toolchain.gnu.atdsp.exe.debug">
+							<targetPlatform archList="all" id="cdt.managedbuild.target.gnu.platform.atdsp.exe.debug.1658642634" name="%PlatformName.Dbg" osList="all" superClass="cdt.managedbuild.target.gnu.platform.atdsp.exe.debug"/>
+							<builder buildPath="${workspace_loc:/hello_world/Debug}" id="cdt.managedbuild.target.gnu.builder.atdsp.exe.debug.1226308657" keepEnvironmentInBuildfile="false" managedBuildOn="true" name="Gnu Make Builder" superClass="cdt.managedbuild.target.gnu.builder.atdsp.exe.debug"/>
+							<tool id="cdt.managedbuild.tool.gnu.assembler.atdsp.exe.debug.823956500" name="Epiphany Assembler" superClass="cdt.managedbuild.tool.gnu.assembler.atdsp.exe.debug">
+								<inputType id="cdt.managedbuild.tool.gnu.assembler.input.906363617" superClass="cdt.managedbuild.tool.gnu.assembler.input"/>
+							</tool>
+							<tool id="cdt.managedbuild.tool.gnu.archiver.atdsp.base.1774376821" name="Epiphany Archiver" superClass="cdt.managedbuild.tool.gnu.archiver.atdsp.base"/>
+							<tool id="cdt.managedbuild.tool.gnu.c.compiler.atdsp.exe.debug.1135339667" name="Epiphany Compiler" superClass="cdt.managedbuild.tool.gnu.c.compiler.atdsp.exe.debug">
+								<option defaultValue="gnu.c.optimization.level.none" id="gnu.c.compiler.atdsp.exe.debug.option.optimization.level.324723255" name="Optimization Level" superClass="gnu.c.compiler.atdsp.exe.debug.option.optimization.level" valueType="enumerated"/>
+								<option id="gnu.c.compiler.atdsp.exe.debug.option.debugging.level.1150031975" name="Debug Level" superClass="gnu.c.compiler.atdsp.exe.debug.option.debugging.level" value="gnu.c.debugging.level.max" valueType="enumerated"/>
+								<inputType id="cdt.managedbuild.tool.gnu.c.compiler.input.1742777350" superClass="cdt.managedbuild.tool.gnu.c.compiler.input"/>
+							</tool>
+							<tool id="cdt.managedbuild.tool.gnu.c.linker.atdsp.exe.debug.1879842799" name="Epiphany Linker" superClass="cdt.managedbuild.tool.gnu.c.linker.atdsp.exe.debug">
+								<option id="com.adapteva.cdt.epiphany.project.option.ldf.1512732104" name="Select LDF" superClass="com.adapteva.cdt.epiphany.project.option.ldf" value="${EPIPHANY_HOME}/bsps/zed_E16G3_512mb/fast.ldf" valueType="string"/>
+								<inputType id="cdt.managedbuild.tool.gnu.c.linker.input.846816993" superClass="cdt.managedbuild.tool.gnu.c.linker.input">
+									<additionalInput kind="additionalinputdependency" paths="$(USER_OBJS)"/>
+									<additionalInput kind="additionalinput" paths="$(LIBS)"/>
+								</inputType>
+							</tool>
+							<tool id="cdt.managedbuild.tool.gnu.c.objcopy.atdsp.base.1528267665" name="Epiphany Objcopy" superClass="cdt.managedbuild.tool.gnu.c.objcopy.atdsp.base"/>
+						</toolChain>
+					</folderInfo>
+					<fileInfo id="cdt.managedbuild.config.gnu.atdsp.exe.debug.1596660173.2129748906" name="hello_world.c" rcbsApplicability="disable" resourcePath="src/hello_world.c" toolsToInvoke="cdt.managedbuild.tool.gnu.c.compiler.atdsp.exe.debug.1135339667.827768769">
+						<tool id="cdt.managedbuild.tool.gnu.c.compiler.atdsp.exe.debug.1135339667.827768769" name="Epiphany Compiler" superClass="cdt.managedbuild.tool.gnu.c.compiler.atdsp.exe.debug.1135339667">
+							<option id="gnu.c.compiler.option.include.paths.1089821905" name="Include paths (-I)" superClass="gnu.c.compiler.option.include.paths" valueType="includePath">
+								<listOptionValue builtIn="false" value="/opt/adapteva/esdk.4.13.03.30/tools/host/include"/>
+							</option>
+							<inputType id="cdt.managedbuild.tool.gnu.c.compiler.input.821500571" superClass="cdt.managedbuild.tool.gnu.c.compiler.input"/>
+						</tool>
+					</fileInfo>
+					<sourceEntries>
+						<entry excluding="src/hello_world.c" flags="VALUE_WORKSPACE_PATH|RESOLVED" kind="sourcePath" name=""/>
+					</sourceEntries>
+				</configuration>
+			</storageModule>
+			<storageModule moduleId="org.eclipse.cdt.core.externalSettings"/>
+		</cconfiguration>
+		<cconfiguration id="cdt.managedbuild.config.gnu.atdsp.exe.release.822383771">
+			<storageModule buildSystemId="org.eclipse.cdt.managedbuilder.core.configurationDataProvider" id="cdt.managedbuild.config.gnu.atdsp.exe.release.822383771" moduleId="org.eclipse.cdt.core.settings" name="Release">
+				<externalSettings/>
+				<extensions>
+					<extension id="org.eclipse.cdt.core.ELF" point="org.eclipse.cdt.core.BinaryParser"/>
+					<extension id="org.eclipse.cdt.core.GmakeErrorParser" point="org.eclipse.cdt.core.ErrorParser"/>
+					<extension id="org.eclipse.cdt.core.CWDLocator" point="org.eclipse.cdt.core.ErrorParser"/>
+					<extension id="org.eclipse.cdt.core.GCCErrorParser" point="org.eclipse.cdt.core.ErrorParser"/>
+					<extension id="org.eclipse.cdt.core.GASErrorParser" point="org.eclipse.cdt.core.ErrorParser"/>
+					<extension id="org.eclipse.cdt.core.GLDErrorParser" point="org.eclipse.cdt.core.ErrorParser"/>
+				</extensions>
+			</storageModule>
+			<storageModule moduleId="cdtBuildSystem" version="4.0.0">
+				<configuration artifactName="${ProjName}" buildArtefactType="org.eclipse.cdt.build.core.buildArtefactType.exe" buildProperties="org.eclipse.cdt.build.core.buildType=org.eclipse.cdt.build.core.buildType.release,org.eclipse.cdt.build.core.buildArtefactType=org.eclipse.cdt.build.core.buildArtefactType.exe" cleanCommand="rm -rf" description="" id="cdt.managedbuild.config.gnu.atdsp.exe.release.822383771" name="Release" parent="cdt.managedbuild.config.gnu.atdsp.exe.release">
+					<folderInfo id="cdt.managedbuild.config.gnu.atdsp.exe.release.822383771." name="/" resourcePath="">
+						<toolChain id="cdt.managedbuild.toolchain.gnu.atdsp.exe.release.460678969" name="Epiphany" superClass="cdt.managedbuild.toolchain.gnu.atdsp.exe.release">
+							<targetPlatform id="cdt.managedbuild.target.gnu.platform.atdsp.exe.release.1078845147" name="%PlatformName.Dbg" superClass="cdt.managedbuild.target.gnu.platform.atdsp.exe.release"/>
+							<builder buildPath="${workspace_loc:/hello_world/Release}" id="cdt.managedbuild.target.gnu.builder.atdsp.exe.release.1819687109" keepEnvironmentInBuildfile="false" managedBuildOn="true" name="Gnu Make Builder" superClass="cdt.managedbuild.target.gnu.builder.atdsp.exe.release"/>
+							<tool id="cdt.managedbuild.tool.gnu.assembler.atdsp.exe.release.1811319711" name="Epiphany Assembler" superClass="cdt.managedbuild.tool.gnu.assembler.atdsp.exe.release">
+								<inputType id="cdt.managedbuild.tool.gnu.assembler.input.23469198" superClass="cdt.managedbuild.tool.gnu.assembler.input"/>
+							</tool>
+							<tool id="cdt.managedbuild.tool.gnu.archiver.atdsp.base.121477190" name="Epiphany Archiver" superClass="cdt.managedbuild.tool.gnu.archiver.atdsp.base"/>
+							<tool id="cdt.managedbuild.tool.gnu.c.compiler.atdsp.exe.release.591631771" name="Epiphany Compiler" superClass="cdt.managedbuild.tool.gnu.c.compiler.atdsp.exe.release">
+								<option defaultValue="gnu.c.optimization.level.most" id="gnu.c.compiler.atdsp.exe.release.option.optimization.level.2009612512" name="Optimization Level" superClass="gnu.c.compiler.atdsp.exe.release.option.optimization.level" valueType="enumerated"/>
+								<option id="gnu.c.compiler.atdsp.exe.release.option.debugging.level.1261234888" name="Debug Level" superClass="gnu.c.compiler.atdsp.exe.release.option.debugging.level" value="gnu.c.debugging.level.none" valueType="enumerated"/>
+								<inputType id="cdt.managedbuild.tool.gnu.c.compiler.input.1674339323" superClass="cdt.managedbuild.tool.gnu.c.compiler.input"/>
+							</tool>
+							<tool id="cdt.managedbuild.tool.gnu.c.linker.atdsp.exe.release.1212153012" name="Epiphany Linker" superClass="cdt.managedbuild.tool.gnu.c.linker.atdsp.exe.release">
+								<inputType id="cdt.managedbuild.tool.gnu.c.linker.input.2136461495" superClass="cdt.managedbuild.tool.gnu.c.linker.input">
+									<additionalInput kind="additionalinputdependency" paths="$(USER_OBJS)"/>
+									<additionalInput kind="additionalinput" paths="$(LIBS)"/>
+								</inputType>
+							</tool>
+							<tool id="cdt.managedbuild.tool.gnu.c.objcopy.atdsp.base.165106944" name="Epiphany Objcopy" superClass="cdt.managedbuild.tool.gnu.c.objcopy.atdsp.base"/>
+						</toolChain>
+					</folderInfo>
+					<fileInfo id="cdt.managedbuild.config.gnu.atdsp.exe.release.822383771.101857593" name="hello_world.c" rcbsApplicability="disable" resourcePath="src/hello_world.c" toolsToInvoke="cdt.managedbuild.tool.gnu.c.compiler.atdsp.exe.release.591631771.1297475981">
+						<tool id="cdt.managedbuild.tool.gnu.c.compiler.atdsp.exe.release.591631771.1297475981" name="Epiphany Compiler" superClass="cdt.managedbuild.tool.gnu.c.compiler.atdsp.exe.release.591631771">
+							<option id="gnu.c.compiler.option.include.paths.1773392630" name="Include paths (-I)" superClass="gnu.c.compiler.option.include.paths" valueType="includePath">
+								<listOptionValue builtIn="false" value="/opt/adapteva/esdk.4.13.03.30/tools/host/include"/>
+							</option>
+							<inputType id="cdt.managedbuild.tool.gnu.c.compiler.input.1029633087" superClass="cdt.managedbuild.tool.gnu.c.compiler.input"/>
+						</tool>
+					</fileInfo>
+					<sourceEntries>
+						<entry excluding="src/hello_world.c" flags="VALUE_WORKSPACE_PATH|RESOLVED" kind="sourcePath" name=""/>
+					</sourceEntries>
+				</configuration>
+			</storageModule>
+			<storageModule moduleId="org.eclipse.cdt.core.externalSettings"/>
+		</cconfiguration>
+	</storageModule>
+	<storageModule moduleId="cdtBuildSystem" version="4.0.0">
+		<project id="hello_world.cdt.managedbuild.target.gnu.atdsp.exe.377574882" name="Epiphany Executable (Single Core)" projectType="cdt.managedbuild.target.gnu.atdsp.exe"/>
+	</storageModule>
+	<storageModule moduleId="scannerConfiguration">
+		<autodiscovery enabled="true" problemReportingEnabled="true" selectedProfileId=""/>
+		<scannerConfigBuildInfo instanceId="cdt.managedbuild.config.gnu.atdsp.exe.debug.1596660173;cdt.managedbuild.config.gnu.atdsp.exe.debug.1596660173.;cdt.managedbuild.tool.gnu.c.compiler.atdsp.exe.debug.1135339667;cdt.managedbuild.tool.gnu.c.compiler.input.1742777350">
+			<autodiscovery enabled="true" problemReportingEnabled="true" selectedProfileId="org.eclipse.cdt.managedbuilder.core.GCCManagedMakePerProjectProfileC"/>
+			<profile id="org.eclipse.cdt.managedbuilder.core.GCCManagedMakePerProjectProfileC">
+				<buildOutputProvider>
+					<openAction enabled="true" filePath=""/>
+					<parser enabled="true"/>
+				</buildOutputProvider>
+				<scannerInfoProvider id="specsFile">
+					<runAction arguments="-E -P -v -dD ${plugin_state_location}/specs.c" command="e-gcc" useDefault="true"/>
+					<parser enabled="true"/>
+				</scannerInfoProvider>
+			</profile>
+		</scannerConfigBuildInfo>
+		<scannerConfigBuildInfo instanceId="cdt.managedbuild.config.gnu.atdsp.exe.release.822383771;cdt.managedbuild.config.gnu.atdsp.exe.release.822383771.;cdt.managedbuild.tool.gnu.c.compiler.atdsp.exe.release.591631771;cdt.managedbuild.tool.gnu.c.compiler.input.1674339323">
+			<autodiscovery enabled="true" problemReportingEnabled="true" selectedProfileId="org.eclipse.cdt.managedbuilder.core.GCCManagedMakePerProjectProfileC"/>
+			<profile id="org.eclipse.cdt.managedbuilder.core.GCCManagedMakePerProjectProfileC">
+				<buildOutputProvider>
+					<openAction enabled="true" filePath=""/>
+					<parser enabled="true"/>
+				</buildOutputProvider>
+				<scannerInfoProvider id="specsFile">
+					<runAction arguments="-E -P -v -dD ${plugin_state_location}/specs.c" command="e-gcc" useDefault="true"/>
+					<parser enabled="true"/>
+				</scannerInfoProvider>
+			</profile>
+		</scannerConfigBuildInfo>
+	</storageModule>
+</cproject>
