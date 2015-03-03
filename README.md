@@ -25,7 +25,7 @@ The Parallel Architectures Library (PAL) is a compact C library with optimized r
 
 ----------------------------------------------------------------------
 ##Why?
-Any sane and informed person knows that the future of all of computing is massively parallel. Unfortunately the energy needed to escape the current "von Neumann potential well" seems to be approaching infinity. The legacy programming stack is so effective and so easy to use that developers and companies simply cannot afford to choose a better (parallel) solution. To make parallel computing ubiqutous we need to rewrite the whole stack from scratch, including: algorithms, run-times, standard libraries, and applications. The goal of the PAL project is to establish the lowest layer a this brave new parallel programming stack.
+Any sane and informed person knows that the future of computing is massively parallel. Unfortunately the energy needed to escape the current "von Neumann potential well" seems to be approaching infinity. The legacy programming stack is so effective and so easy to use that developers and companies simply cannot afford to choose the better (parallel) solution. To make parallel computing ubiquitous our only choice is to rewrite the whole software stack from scratch, including: algorithms, run-times, libraries, and applications. The goal of the Parallel Architectures Library project is to establish the lowest layer of this brave new programming stack.
 
 ##Design Goals
 
