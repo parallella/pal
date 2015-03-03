@@ -57,7 +57,7 @@ void p_prewitt3x3_f32(float *x, int rows, int cols, float *r)
             Gx += (*px);
             Gy += (*px++);
             px += cols - 3;
-            *pr = sqrtf(Gx * Gx + Gy * Gy) / 6;
+            *pr = sqrtf(Gx * Gx + Gy * Gy) * M_DIV6;
             px += 1 - 3 * cols; // advance mask matrix in one column.
             pr++;
         }
