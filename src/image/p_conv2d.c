@@ -18,6 +18,32 @@
 
 void p_conv2d_f32(float *x, float *m, float *r, int rows, int cols, int msize)
 {
+    int i, j, k;
+    float P, part;
+    float *px, *pm, *pr;
 
-    /*PLACE CODE HERE*/
+    px = x;
+    pm = m;
+    pr = r;
+
+    for (i = msize * 0.5; i < (rows - msize * 0.5); i++) {
+        for (j = msize * 0.5; j < (cols - msize * 0.5); j++) {
+            P = 0.0f;
+            pm = m;
+            for (k = 0; k < msize; k++) {
+                p_dot_f32(px, pm, &part, msize);
+                P += part;
+                px += cols;
+                pm += msize;
+            }
+            *pr = P;
+            pr++;
+            // move image pointer one index forward compared to
+            // the position from before `for` loop
+            px += 1 - msize * cols;
+        }
+        // move image pointer to the beginning of line
+        // beneath the current line
+        px += (int)(msize * 0.5) * 2;
+    }
 }
