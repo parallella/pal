@@ -1,2 +1,0 @@
-#!/bin/bash
-sudo echo -e "ehal_test:util_test().\r\n" | erl
