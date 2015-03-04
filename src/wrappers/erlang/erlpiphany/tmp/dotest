@@ -1,6 +1,0 @@
-#!/usr/bin/env escript
-%% -*- erlang -*-
-%%! -smp enable -sname ehal_test
-main([]) ->
-    code:load_abs(list_to_atom("./ehal.beam")),
-    ehal_test:xmem_test().
