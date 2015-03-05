@@ -49,7 +49,7 @@ Instructions for contributing can be found [HERE](CONTRIBUTING.md).
 
 Install Pre-requisites:
 ``` bash
-$ sudo apt-get install libtool build-essential autoconf
+$ sudo apt-get install libtool build-essential pkg-config autoconf doxygen check
 ```
 
 Build Sequence:
@@ -65,40 +65,42 @@ $ make
 **Manager Code**  
 
 ``` c
-#include "pal_base.h"
+#include <pal.h>
 #include <stdio.h>
 #define N 16
-int main (int argc, char *argv[]){
+int main(int argc, char *argv[])
+{
 
-    //Stack variables
-    int status, i, all, nargs=1;
-    char *file="./hello_task.elf";
-    char *func="main";
+    // Stack variables
+    char *file = "./hello_task.elf";
+    char *func = "main";
+    int status, i, all, nargs = 1;
     char *args[nargs];
     char argbuf[20];
 
-    // Handles to opaque structures
+    // References as opaque structures
     p_dev_t dev0;
     p_prog_t prog0;
     p_team_t team0;
     p_mem_t mem[4];
 
-    //Execution setup
-    dev0 = p_init(P_DEMO, 0);            // initialize device and team
+    // Execution setup
+    dev0 = p_init(P_DEV_DEMO, 0);        // initialize device and team
     prog0 = p_load(dev0, file, func, 0); // load a program from file system
-    all = p_query(dev0, P_NODES, all);   // find number of nodes in system
-    p_open(dev0, &team0, 0, all);        // create a team
+    all = p_query(dev0, P_PROP_NODES);   // find number of nodes in system
+    team0 = p_open(dev0, 0, all);        // create a team
 
-    //Running program
-    for(i=0;i<all;i++){
-        sprintf(argbuf, "%d", i); //string args needed to run main asis
-        args[0]=argbuf;
-        p_run(prog0, team0, i, 1, nargs, args, 0);
+    // Running program
+    for (i = 0; i < all; i++) {
+        sprintf(argbuf, "%d", i); // string args needed to run main asis
+        args[0] = argbuf;
+        status = p_run(prog0, team0, i, 1, nargs, args, 0);
     }
-    p_wait(team0);    //wait for team to finish (not needed, p_run()
-                      //blocking by default
-    p_close(team0);   //close team
-    p_finalize(dev0); //finalize memory
+    p_wait(team0);    // not needed
+    p_close(team0);   // close team
+    p_finalize(dev0); // finalize memory
+
+    return 0;
 }
 ```
 
@@ -119,7 +121,7 @@ PAL LIBRARY API REFERENCE
 ##SYNTAX 
 
 ##PROGRAM FLOW  
-These program flow functions are used to manage the system and to execute programs. All opaque objects are referenced with simple integers. 
+These program flow functions are used to manage the system and to execute programs. All PAL objects are referenced via handles (opaque objects). [p_get_err()](src/base/p_get_err.c) should be used to check if a returned handle signals an error condition.
 
 FUNCTION     | NOTES
 ------------ | -------------
@@ -138,7 +140,8 @@ FUNCTION     | NOTES
 [p_get_err()](src/base/p_get_err.c)      | get error code (if any).
 
 ##MEMORY ALLOCATION  
-These functions are used for creating memory objects. The function returns a unique integer for each new memory object. This integer can then be used by functions like p_read() and p_write() to access data within the memory object.  
+These functions are used for creating memory objects.
+The functions return a unique PAL handle for each new memory object. This handle can then be used by functions like p_read() and p_write() to access data within the memory object.  
 
 FUNCTION     | NOTES
 ------------ | -------------
@@ -147,7 +150,7 @@ FUNCTION     | NOTES
 [p_free()](src/base/p_free.c)            | free memory
 
 ##DATA MOVEMENT  
-The data movement functions move blocks of data between opaque memory objects and locations specified by pointers. The memory object is specified by a simple integer. The exception is the p_memcpy function which copies blocks of bytes within a shared memory architecture only.
+The data movement functions move blocks of data between opaque memory objects and locations specified by pointers. The memory object is specified by a PAL handle returned by a previous API call. The exception is the p_memcpy function which copies blocks of bytes within a shared memory architecture only.
 
 FUNCTION     | NOTES
 ------------ | -------------
