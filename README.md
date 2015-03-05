@@ -47,9 +47,10 @@ Instructions for contributing can be found [HERE](CONTRIBUTING.md).
 
 ##Build Instructions
 
-The build system is based on autotools and has the following pre-reguisites:
-* libtool
-* build-essential
+Install Pre-requisites:
+``` bash
+$ sudo apt-get install libtool build-essential autoconf
+```
 
 Build Sequence:
 
