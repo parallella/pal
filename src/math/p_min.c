@@ -18,12 +18,18 @@
  */
 void p_min_f32(float *a, float *c, int *index, int n)
 {
-    int i;
-    *c = *a;
+    float min;
+    int i, pos;
+
+    min = *a;
+    pos = 0;
+
     for (i = 1; i < n; i++) {
-        if (*(a + i) < *c) {
-            *(index) = i;
-            *c = *(a + i);
+        if (*(a + i) < min) {
+            pos = i;
+            min = *(a + i);
         }
     }
+    *c = min;
+    *index = pos;
 }
