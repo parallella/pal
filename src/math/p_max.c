@@ -19,8 +19,8 @@
 void p_max_f32(float *a, float *c, int *index, int n)
 {
     int i;
-    *c = 3.40282346638528860e+38;
-    for (i = 0; i < n; i++) {
+    *c = *a;
+    for (i = 1; i < n; i++) {
         if (*(a + i) > *c) {
             *(index) = i;
             *c = *(a + i);
