@@ -11,7 +11,7 @@ The Parallel Architectures Library (PAL) is a compact C library with optimized r
 3.  [License](#license)  
 4.  [Contribution Wanted!](#contribution)  
 5.  [A Simple Example](#a-simple-example)
-6.  [Build Instructions](installation-instructions)
+6.  [Build Instructions](#build-instructions)
 7.  [Library API reference](#library-api-reference)  
 7.0 [Syntax](#syntax)  
 7.1 [Program Flow](#program-flow)  
