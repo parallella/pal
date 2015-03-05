@@ -18,12 +18,18 @@
 
 void p_max_f32(float *a, float *c, int *index, int n)
 {
-    int i;
-    *c = 3.40282346638528860e+38;
-    for (i = 0; i < n; i++) {
-        if (*(a + i) > *c) {
-            *(index) = i;
-            *c = *(a + i);
+    float max;
+    int i, pos;
+
+    max = *a;
+    pos = 0;
+
+    for (i = 1; i < n; i++) {
+        if (*(a + i) > max) {
+            pos = i;
+            max = *(a + i);
         }
     }
+    *c = max;
+    *index = pos;
 }
