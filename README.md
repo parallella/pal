@@ -54,7 +54,7 @@ The build system is based on autotools and has the following pre-reguisites:
 Build Sequence:
 
 ``` bash
-$ bootstrap
+$ ./bootstrap
 $ ./configure
 $ make
 ```
