@@ -11,17 +11,18 @@ The Parallel Architectures Library (PAL) is a compact C library with optimized r
 3.  [License](#license)  
 4.  [Contribution Wanted!](#contribution)  
 5.  [A Simple Example](#a-simple-example)
-6.  [Library API reference](#library-api-reference)  
-6.0 [Syntax](#syntax)  
-6.1 [Program Flow](#program-flow)  
-6.2 [Data Movement](#data-movement)  
-6.3 [Synchronization](#synchronization)  
-6.3 [Basic Math](#math)  
-6.5 [Basic DSP](#dsp)  
-6.4 [Image Processing](#image-processing)  
-6.6 [FFT (FFTW)](#fft)  
-6.7 [Linar Algebra (BLAS)](#blas)  
-6.8 [System Calls](#system-calls)  
+6.  [Build Instructions](installation-instructions)
+7.  [Library API reference](#library-api-reference)  
+7.0 [Syntax](#syntax)  
+7.1 [Program Flow](#program-flow)  
+7.2 [Data Movement](#data-movement)  
+7.3 [Synchronization](#synchronization)  
+7.3 [Basic Math](#math)  
+7.5 [Basic DSP](#dsp)  
+7.4 [Image Processing](#image-processing)  
+7.6 [FFT (FFTW)](#fft)  
+7.7 [Linar Algebra (BLAS)](#blas)  
+7.8 [System Calls](#system-calls)  
 
 ----------------------------------------------------------------------
 ##Why?
@@ -43,6 +44,20 @@ See LICENSE for full license text unless otherwise specified.
 Our goal is to make PAL a broad community project from day one. If just 100 people contribute one function each, we'll be done in a couple of days! If you know C, your are ready to contribute!!
 
 Instructions for contributing can be found [HERE](CONTRIBUTING.md). 
+
+##Build Instructions
+
+The build system is based on autotools and has the following pre-reguisites:
+* libtool
+* build-essential
+
+Build Sequence:
+
+``` bash
+$ bootstrap
+$ ./configure
+$ make
+```
 
 ##A Simple Example
 
@@ -100,6 +115,7 @@ int main(int argc, char* argv[]){
 
 PAL LIBRARY API REFERENCE
 ========================================
+##SYNTAX 
 
 ##PROGRAM FLOW  
 These program flow functions are used to manage the system and to execute programs. All opaque objects are referenced with simple integers. 
