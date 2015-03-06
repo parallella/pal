@@ -6,19 +6,24 @@
  *
  * @param x   Pointer an input vector of floats of 'nx' elements
  *
- * @param y   Pointer an input vector of floats of 'ny' elements
+ * @param y     Pointer an input vector of floats of 'ny' elements
  *
- * @param r   Pointer an output vector of floats of 'ny+ny-1' elements
+ * @param r     Pointer an output vector of floats of 'ny+ny-1' elements
  *
- * @param nx  Number of elements in vector 'x'
+ * @param nx    Number of elements in vector 'x'
  *
- * @param ny  Number of elements in vector 'y'
+ * @param ny    Number of elements in vector 'y'
  *
- * @return    None
+ * @param p     Number of processor to use (task parallelism)
+ *
+ * @param team  Team to work with 
+ *
+ * @return      None
  *
  */
 
-void p_xcorr_f32(float *x, float *y, float *r, int nx, int ny)
+void p_xcorr_f32(float *x, float *y, float *r, int nx, int ny,
+		 int p, p_team_t team)
 {
 
     /*PLACE CODE HERE*/
