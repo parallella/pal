@@ -7,11 +7,17 @@ The Parallel Architectures Library (PAL) is a compact C library with optimized r
 
 ## Content
 1.  [Why?](#why)
+
 2.  [Design goals](#design-goals)  
+
 3.  [License](#license)  
+
 4.  [Contribution Wanted!](#contribution)  
+
 5.  [A Simple Example](#a-simple-example)
+
 6.  [Build Instructions](#build-instructions)
+
 7.  [Library API reference](#library-api-reference)  
 7.0 [Syntax](#syntax)  
 7.1 [Program Flow](#program-flow)  
@@ -23,6 +29,8 @@ The Parallel Architectures Library (PAL) is a compact C library with optimized r
 7.6 [FFT (FFTW)](#fft)  
 7.7 [Linar Algebra (BLAS)](#blas)  
 7.8 [System Calls](#system-calls)  
+
+8   [Benchmarking](#benchmarking)  
 
 ----------------------------------------------------------------------
 ##Why?
@@ -272,3 +280,5 @@ FUNCTION     | NOTES
 
 * Bionic libc implementation as starting point..
 
+BENCHMARKING
+========================================
