@@ -3,7 +3,7 @@ PAL: The Parallel Architectures Library
 
 [![Build Status](https://travis-ci.org/parallella/pal.svg?branch=master)](https://travis-ci.org/parallella/pal)
 
-The Parallel Architectures Library (PAL) is a compact C library with optimized routines for vector math, synchronization, and multi-processor communication.
+The Parallel Architectures Library (PAL) is a compact C library with optimized routines for math, synchronization, and inter-processor communication.
 
 ## Content
 1.  [Why?](#why)
@@ -69,6 +69,7 @@ $ make
 ```
 
 ##A Simple Example
+The following sample shows how to use PAL launch a simple task on a remote processor within the system. The program flow should be familiar to anyone who has used accelerator programming frameworks. 
 
 **Manager Code**  
 
@@ -129,7 +130,7 @@ PAL LIBRARY API REFERENCE
 ##SYNTAX 
 
 ##PROGRAM FLOW  
-These program flow functions are used to manage the system and to execute programs. All PAL objects are referenced via handles (opaque objects). [p_get_err()](src/base/p_get_err.c) should be used to check if a returned handle signals an error condition.
+These program flow functions are used to manage the system and to execute programs. All PAL objects are referenced via handles (opaque objects).
 
 FUNCTION     | NOTES
 ------------ | -------------
@@ -188,7 +189,7 @@ FUNCTION     | NOTES
 [p_atomic_compswap()](src/base/p_atomic_compswap.c) | atomic compare and exchange
 
 ##MATH  
-The math functions are single threaded vectorized functions intended to run on a single processor. Math functions use pointers for input/output arguments and take in a separate variable to indicate the size of the vectors. Speed and size is a priority and some liberties have been taken with respect to accuracy and safety. 
+The math functions replace the traditional math lib functions and extend them to include support for data as well as task parallelism. 
 
 FUNCTION     | NOTES
 ------------ | -------------
@@ -233,12 +234,7 @@ FUNCTION     | NOTES
 [p_tanh()](src/math/p_tanh.c)         | hyperbolic tangent
 
 ##DSP  
-The digital signal processing (dsp) functions are similar to the math functions
-in that they are single threaded vectorized functions intended to run on a 
-single base. Also, just like the math functions they take in pointers for 
-input/output arguments and a separate variable to indicate the size of the 
-vectors. Speed and size is a priority and some liberties have been taken with 
-respect to accuracy and safety.
+The digital signal processing (DSP) functions follow the same convention as the math function set.
 
 FUNCTION     | NOTES
 ------------ | -------------
@@ -252,8 +248,7 @@ FUNCTION     | NOTES
 [p_iir()](src/dsp/p_iir.c)       | IIR filter
 
 ##IMAGE PROCESSING  
-The image processing functions work on 2D arrays of data and use the same
-argument passing conventions as the dsp and math functions. 
+The image processing functions follow the same convention as the math function set.
 
 FUNCTION     | NOTES
 ------------ | -------------
