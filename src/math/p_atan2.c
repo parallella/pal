@@ -13,11 +13,15 @@
  *
  * @param n     Size of 'a' and 'c' vector.
  *
+ * @param p     Number of processor to use (task parallelism)
+ *
+ * @param team  Team to work with 
+ *
  * @return      None
  *
  */
 #include <math.h>
-void p_atan2_f32(float *a, float *b, float *c, int n)
+void p_atan2_f32(float *a, float *b, float *c, int n, int p, p_team_t team)
 {
 
     int i;

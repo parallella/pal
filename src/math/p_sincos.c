@@ -14,12 +14,16 @@
  * @param z     Pointer to cosine output vector
  *
  * @param n     Size of 'a' and 'c' vector.
+ * 
+ * @param p     Number of processor to use (task parallelism)
+ *
+ * @param team  Team to work with 
  *
  * @return      None
  *
  */
 #include <math.h>
-void p_sincos_f32(float *a, float *c, float *z, int n)
+void p_sincos_f32(float *a, float *c, float *z, int n, int p, p_team_t team)
 {
     /* TODO: Implement me */
 }

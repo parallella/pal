@@ -12,11 +12,15 @@
  *
  * @param n      Size of 'a' vector.
  *
+ * @param p     Number of processor to use (task parallelism)
+ *
+ * @param team  Team to work with 
+ *
  * @return       None
  *
  */
 
-void p_max_f32(float *a, float *c, int *index, int n)
+void p_max_f32(float *a, float *c, int *index, int n, int p, p_team_t team)
 {
     float max;
     int i, pos;

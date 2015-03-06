@@ -21,6 +21,7 @@ void p_conv2d_f32(float *x, float *m, float *r, int rows, int cols, int msize)
     int i, j, k;
     float P, part;
     float *px, *pm, *pr;
+    p_team_t team;
 
     px = x;
     pm = m;
@@ -31,7 +32,7 @@ void p_conv2d_f32(float *x, float *m, float *r, int rows, int cols, int msize)
             P = 0.0f;
             pm = m;
             for (k = 0; k < msize; k++) {
-                p_dot_f32(px, pm, &part, msize);
+                p_dot_f32(px, pm, &part, msize, 0, team);
                 P += part;
                 px += cols;
                 pm += msize;

@@ -13,10 +13,14 @@
  *
  * @param n     Size of 'a', 'b'
  *
+ * @param p     Number of processor to use (task parallelism)
+ *
+ * @param team  Team to work with 
+ *
  * @return      None
  *
  */
-void p_dot_f32(float *a, float *b, float *c, int n)
+void p_dot_f32(float *a, float *b, float *c, int n, int p, p_team_t team )
 {
 
     int i;

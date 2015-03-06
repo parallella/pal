@@ -12,11 +12,15 @@
  * @param[out] index  Pointer to return index of min
  *
  * @param n           Size of 'a' vector.
+ * 
+ * @param p           Number of processor to use (task parallelism)
+ *
+ * @param team        Team to work with 
  *
  * @return            None
  *
  */
-void p_min_f32(float *a, float *c, int *index, int n)
+void p_min_f32(float *a, float *c, int *index, int n, int p, p_team_t team)
 {
     float min;
     int i, pos;
