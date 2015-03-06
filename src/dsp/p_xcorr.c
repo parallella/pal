@@ -8,17 +8,17 @@
  *
  * @param y   Pointer an input vector of floats of 'ny' elements
  *
+ * @param r   Pointer an output vector of floats of 'ny+ny-1' elements
+ *
  * @param nx  Number of elements in vector 'x'
  *
  * @param ny  Number of elements in vector 'y'
  *
- * @param r   Pointer an output vector of floats of 'ny+ny-1' elements
- *
- * @return    Returns 0 if successful.
+ * @return    None
  *
  */
 
-void p_xcorr_f32(float *x, float *y, int nx, int ny, float *r)
+void p_xcorr_f32(float *x, float *y, float *r, int nx, int ny)
 {
 
     /*PLACE CODE HERE*/

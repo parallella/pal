@@ -12,19 +12,18 @@
  *
  * @param h     Pointer to first half of symmetric filter coefficients.
  *
- * @param dbuf  Pointer to delay buffer of length 2*nh+2
+ * @param r     Pointer to result vector
  *
  * @param nx    The number of input (and output) samples
  *
  * @param nh    The number of coefficients of the filter.
  *
- * @param r     Pointer to result vector
- *
- * @return      None
+  * @return      None
  *
  */
 
-void p_firsym_f32(float *x, float *h, float *dbuf, int nx, int nh, float *r)
+void p_firsym_f32(float *x, float *h, float *r, 
+		  int nx, int nh)
 {
 
     /*PLACE CODE HERE*/

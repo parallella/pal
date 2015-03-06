@@ -10,22 +10,21 @@
  *
  * @param h     Pointer to filter coefficients.
  *
- * @param dbuf  Pointer to delay buffer of length nh+2
- *
- * @param nh    The number of coefficients of the filter.
+ * @param r     Pointer to result vector of size nx/d.
  *
  * @param nx    The number of input samples
  *
- * @param df    Decimation factor. (1 output sample per 'd' input samples)
+ * @param nh    The number of coefficients of the filter.
  *
- * @param r     Pointer to result vector of size nx/d.
+ * @param df    Decimation factor. (1 output sample per 'd' input samples)
  *
  * @return      None
  *
  */
-void p_firdec_f32(const float *x, const float *h, float *dbuf, int nx, int nh,
-                  int df, float *r)
+void p_firdec_f32(float *x, float *h, float *r, 
+		  int nx, int nh, int df)
 {
 
     /*PLACE CODE HERE*/
+
 }

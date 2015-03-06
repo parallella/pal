@@ -10,7 +10,7 @@
  *
  * @param h       Pointer to 'nh' filter coefficients
  *
- * @param dbuf    Pointer to delay buffer of length (nh/ifactor) + 1
+ * @param r       Output vector of size 'nx*ifactor'
  *
  * @param nx      The number of input samples
 
@@ -19,14 +19,12 @@
  * @param ifactor Interpolation factor. 'ifactor' output samples produced
  *                for every 1 input sample
  *
- * @param r       Output vector of size 'nx*ifactor'
- *
  * @return        None
  *
  */
 
-void p_firint_f32(float *x, float *h, float *dbuf, int nx, int nh, int ifactor,
-                  float *r)
+void p_firint_f32(float *x, float *h, float *r, 
+		  int nx, int nh, int ifactor)
 {
 
     /*PLACE CODE HERE*/
