@@ -18,10 +18,11 @@
  */
 void p_dot_f32(float *a, float *b, float *c, int n)
 {
-
+    float tmp = 0.0f;
     int i;
-    *c = 0.0f;
+
     for (i = 0; i < n; i++) {
-        *c += *(a + i) * *(b + i);
+        tmp += *(a + i) * *(b + i);
     }
+    *c = tmp;
 }
