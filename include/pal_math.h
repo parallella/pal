@@ -227,5 +227,5 @@ void p_srand(unsigned int seed);
 int p_rand(void);
 
 /*population count*/
-void p_popcount_u32(unsigned int *a, unsigned int *c, int n, int p, p_team_t team);
-void p_popcount_u64(unsigned int *a, unsigned int *c, int n, int p, p_team_t team);
+void p_popcount_u32(uint32_t *a, uint32_t *c, int n, int p, p_team_t team);
+void p_popcount_u64(uint64_t *a, uint64_t *c, int n, int p, p_team_t team);
