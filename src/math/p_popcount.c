@@ -39,6 +39,21 @@ void p_popcount_u32(uint32_t *a, uint32_t *c, int n, int p, p_team_t team)
 
 void p_popcount_u64(uint64_t *a, uint64_t *c, int n, int p, p_team_t team)
 {
-    /* Implement me */
+    static const uint64_t A[] = {0x5555555555555555, 0x3333333333333333,
+                                 0x0f0f0f0f0f0f0f0f, 0x0101010101010101};
+    uint64_t *pa, *pc;
+    uint64_t tmp;
+    int i;
+
+    pa = a;
+    pc = c;
+
+    for (i = 0; i < n; i++) {
+        tmp = *pa - ((*pa >> 1) & A[0]);
+        tmp = (tmp & A[1]) + ((tmp >> 2) & A[1]);
+        *pc = ((tmp + (tmp >> 4)) & A[2]) * A[3] >> 56;
+        pc++;
+        pa++;
+    }
 }
 
