@@ -22,8 +22,8 @@
  * @return      None
  *
  */
-#include <math.h>
 void p_sincos_f32(float *a, float *c, float *z, int n, int p, p_team_t team)
 {
-    /* TODO: Implement me */
+    p_sin_f32(a, c, n, 0, team);
+    p_cos_f32(a, z, n, 0, team);
 }
