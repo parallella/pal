@@ -6,7 +6,7 @@ the next section.
 The Linux Kernel Coding Style guidelines can be obtained from here:  
 https://www.kernel.org/doc/Documentation/CodingStyle  
 
-The Google Style Guide should also be used for guidance: 
+The Google Style Guide should also be used for guidance:  
 http://google-styleguide.googlecode.com/svn/trunk/cppguide.html#Function_Parameter_Ordering
 
 In case of conflict, Linux wins. 
