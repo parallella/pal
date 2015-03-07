@@ -18,7 +18,8 @@
  *
  */
 
-void p_box3x3_f32(float *x, int rows, int cols, float *r)
+void p_box3x3_f32(float *x, float *r, int rows, int cols,
+		  int p, p_team_t team)
 {
 
     int ia, ja;

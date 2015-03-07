@@ -7,17 +7,23 @@
  * LA3 =  | -1  4 -1 |
  *        |  0 -1  0 |
  *
- * @param x    Pointer to input image, a 2D array of size 'rows' x 'cols'
+ * @param x     Pointer to input image, a 2D array of size 'rows' x 'cols'
  *
- * @param rows Number of rows in input image
+ * @param r     Pointer to output image
  *
- * @param cols Number of columns in input image
+ * @param rows  Number of rows in input image
  *
- * @param r    Pointer to output image
+ * @param cols  Number of columns in input image
  *
+ * @param p     Number of processor to use (task parallelism)
+ *
+ * @param team  Team to work with 
+ *
+ * @return      None
  *
  */
-void p_laplace3x3_f32(float *x, int rows, int cols, float *r)
+void p_laplace3x3_f32(float *x, float *r, int rows, int cols,
+		      int p, p_team_t team)
 {
 
     int ia, ja;

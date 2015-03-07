@@ -6,22 +6,29 @@
  *
  * @param m     Pointer to convlution kernel
  *
+ * @param r     Pointer to output image
+ *
  * @param rows  Number of rows in input image
  *
  * @param cols  Number of columns in input image
  *
  * @param msize Size of convolution kernel
  *
- * @param r     Pointer to output image
+ * @param p     Number of processor to use (task parallelism)
+ *
+ * @param team  Team to work with 
+ *
+ * @return      None
  *
  */
 
-void p_conv2d_f32(float *x, float *m, float *r, int rows, int cols, int msize)
+void p_conv2d_f32(float *x, float *m, float *r, int rows, int cols, int msize,
+		  int p, p_team_t team)
+
 {
     int i, j, k;
     float P, part;
     float *px, *pm, *pr;
-    p_team_t team;
 
     px = x;
     pm = m;
