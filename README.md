@@ -271,106 +271,20 @@ FUNCTION     | NOTES
 
 ##BLAS  
 
-* A port of the BLIS library
+* A port of the BLIS library?
 
 ##SYSTEM CALLS
 
-* Bionic libc implementation as starting point..
-
-STATUS REPORT
-========================================
-
-FUNCTION     | STATUS         | RESERVED
------------- | -------------- | ---------
-[p_init()] | draft | ola
-[p_query()] | draft | ola
-[p_load()] | draft | ola
-[p_run()] | draft | ola
-[p_open()] | draft | ola
-[p_append()] | draft | ola
-[p_remove()] | draft | ola
-[p_close()] | draft | ola
-[p_barrier()] | draft | ola
-[p_wait()] | draft | ola
-[p_fence()] | draft | ola
-[p_finalize()] | draft | ola
-[p_get_err()] | draft | ola
-[p_malloc()] | draft | 
-[p_rmalloc()] | draft | 
-[p_free()] | draft | ola
-[p_gather()] | draft | 
-[p_memcpy()] | draft | 
-[p_read()] | draft | 
-[p_scatter()] | draft | 
-[p_write()] | draft | 
-[p_mutex_lock()] | draft | 
-[p_mutex_trylock()] | draft | 
-[p_mutex_unlock()] | draft | 
-[p_mutex_init()] | draft | 
-[p_atomic_add()] | draft | 
-[p_atomic_sub()] | draft | 
-[p_atomic_and()] | draft | 
-[p_atomic_xor()] | draft | 
-[p_atomic_or()] | draft | 
-[p_atomic_swap()] | draft | 
-[p_atomic_compswap()] | draft | 
-[p_abs()] | draft | 
-[p_absdiff()] | draft | 
-[p_add()] | draft | 
-[p_acos()] | draft | 
-[p_acosh()] | draft | 
-[p_asin()] | draft | 
-[p_asinh()] | draft | 
-[p_cbrt()] | draft | 
-[p_cos()] | draft | 
-[p_cosh()] | draft | 
-[p_div()] | draft | 
-[p_dot()] | draft | 
-[p_exp()] | draft | 
-[p_ftoi()] | draft | 
-[p_itof()] | draft | 
-[p_inv()] | draft | 
-[p_invcbrt()] | draft | 
-[p_invsqrt()] | draft | 
-[p_ln()] | draft | 
-[p_log10()] | draft | 
-[p_max()] | draft | 
-[p_min()] | draft | 
-[p_mean()] | draft | 
-[p_median()] | draft | 
-[p_mode()] | draft | 
-[p_mul()] | draft | 
-[p_popcount()] | draft | 
-[p_pow()] | draft | 
-[p_rand()] | draft | 
-[p_randinit()] | draft | 
-[p_sort()] | draft | 
-[p_sin()] | draft | 
-[p_sinh()] | draft | 
-[p_sqrt()] | draft | 
-[p_sub()] | draft | 
-[p_sum()] | draft | 
-[p_sumsq()] | draft | 
-[p_tan()] | draft | 
-[p_tanh()] | draft | 
-[p_acorr()] | not | 
-[p_conv()] | not | 
-[p_xcorr()] | not | 
-[p_fir()] | not | 
-[p_firdec()] | not | 
-[p_firint()] | not | 
-[p_firsym()] | not | 
-[p_iir()] | not | 
-[p_box3x3()] | draft | 
-[p_conv2d()] | draft | 
-[p_gauss3x3()] | draft | 
-[p_median3x3()] | not | 
-[p_laplace3x3()] | draft | 
-[p_prewitt3x3()] | draft | 
-[p_sad8x8()] | not | 
-[p_sad16x16()] | not | 
-[p_sobel3x3()] | draft | 
-[p_scharr3x3()] | not | 
+* TBD
 
 BENCHMARKING
 ========================================
+E=Epiphany  
+X=x86  
+A=ARM  
+CC=Clock cycles  
+  
+FUNCTION  | E-CC     | E-SIZE   | A-CC     | A-SIZE   | X-CC     |X-SIZE    |   
+----------|----------|----------|----------|----------|----------|----------|  
+p_add()   | TBD      | TBD      | TBD      | TBD      | TBD      | TBD      |  
+...       | ...      | ...      | ...      | ...      | ...      | ...      |  
