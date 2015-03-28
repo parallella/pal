@@ -30,7 +30,7 @@ The Parallel Architectures Library (PAL) is a compact C library with optimized r
 7.7 [Linar Algebra (BLAS)](#blas)  
 7.8 [System Calls](#system-calls)  
 
-8   [Library Status Report](#status)  
+8   [Status Report](#status-report)  
 
 9   [Benchmarking](#benchmarking)  
 
@@ -134,8 +134,8 @@ PAL LIBRARY API REFERENCE
 ##PROGRAM FLOW  
 These program flow functions are used to manage the system and to execute programs. All PAL objects are referenced via handles (opaque objects).
 
-FUNCTION     | NOTES
------------- | -------------
+FUNCTION     | NOTES         
+------------ | ------------- 
 [p_init()](src/base/p_init.c)            | initialize the run time
 [p_query()](src/base/p_query.c)          | query a device object
 [p_load()](src/base/p_load.c)            | load binary elf file into memory
@@ -154,8 +154,8 @@ FUNCTION     | NOTES
 These functions are used for creating memory objects.
 The functions return a unique PAL handle for each new memory object. This handle can then be used by functions like p_read() and p_write() to access data within the memory object.  
 
-FUNCTION     | NOTES
------------- | -------------
+FUNCTION     | NOTES        | STATUS
+------------ | -------------|-----------
 [p_malloc()](src/base/p_malloc.c)        | allocate memory on local processor
 [p_rmalloc()](src/base/p_rmalloc.c)      | allocate memory on remote processor
 [p_free()](src/base/p_free.c)            | free memory
@@ -193,47 +193,47 @@ FUNCTION     | NOTES
 ##MATH  
 The math functions replace the traditional math lib functions and extend them to include support for data as well as task parallelism. 
 
-FUNCTION     | NOTES
------------- | -------------
-[p_abs()](src/math/p_abs.c)           | absolute value
-[p_absdiff()](src/math/p_absdiff.c)   | absolute difference
-[p_add()](src/math/p_add.c)           | add
-[p_acos()](src/math/p_acos.c)         | arc cosine
-[p_acosh()](src/math/p_acosh.c)       | arc hyperbolic cosine
-[p_asin()](src/math/p_asin.c)         | arc sine
-[p_asinh()](src/math/p_asinh.c)       | arc hyperbolic sine
-[p_cbrt()](src/math/p_cbrt.c)         | cubic root
-[p_cos()](src/math/p_cos.c)           | cosine
-[p_cosh()](src/math/p_cosh.c)         | hyperbolic cosine
-[p_div()](src/math/p_div.c)           | division
-[p_dot()](src/math/p_dot.c)           | dot product
-[p_exp()](src/math/p_div.c)           | exponential
-[p_ftoi()](src/math/p_ftoi.c)         | float to integer conversion
-[p_itof()](src/math/p_itof.c)         | integer to float conversion
-[p_inv()](src/math/p_inv.c)           | inverse
-[p_invcbrt()](src/math/p_invcbrt.c)   | inverse cube root
-[p_invsqrt()](src/math/p_invsqrt.c)   | inverse square root
-[p_ln()](src/math/p_ln.c)             | natural log
-[p_log10()](src/math/p_log10.c)       | denary log
-[p_max()](src/math/p_max.c)           | finds max val
-[p_min()](src/math/p_min.c)           | finds min val
-[p_mean()](src/math/p_mean.c)         | mean operation
-[p_median()](src/math/p_mean.c)       | finds middle value
-[p_mode()](src/math/p_mode.c)         | finds most common value
-[p_mul()](src/math/p_mul.c)           | multiplication
-[p_popcount()](src/math/p_popcount.c) | count the number of bits set
-[p_pow()](src/math/p_pow.c)           | element raised to a power
-[p_rand()](src/math/p_rand.c)         | random number generator
-[p_randinit()](src/math/p_rand.c)     | initialize random number generator
-[p_sort()](src/math/p_sort.c)         | heap sort
-[p_sin()](src/math/p_sin.c)           | sine
-[p_sinh()](src/math/p_sinh.c)         | hyperbolic sine
-[p_sqrt()](src/math/p_sqrt.c)         | square root
-[p_sub()](src/math/p_sub.c)           | subtract
-[p_sum()](src/math/p_sum.c)           | sum of all vector elements
-[p_sumsq()](src/math/p_sumsq.c)       | sum of all vector squared elements 
-[p_tan()](src/math/p_tan.c)           | tangent
-[p_tanh()](src/math/p_tanh.c)         | hyperbolic tangent
+FUNCTION     | NOTES         
+------------ | ------------- 
+[p_abs()](src/math/p_abs.c)           | absolute value  
+[p_absdiff()](src/math/p_absdiff.c)   | absolute difference  
+[p_add()](src/math/p_add.c)           | add  
+[p_acos()](src/math/p_acos.c)         | arc cosine  
+[p_acosh()](src/math/p_acosh.c)       | arc hyperbolic cosine  
+[p_asin()](src/math/p_asin.c)         | arc sine  
+[p_asinh()](src/math/p_asinh.c)       | arc hyperbolic sine  
+[p_cbrt()](src/math/p_cbrt.c)         | cubic root                    
+[p_cos()](src/math/p_cos.c)           | cosine  
+[p_cosh()](src/math/p_cosh.c)         | hyperbolic cosine  
+[p_div()](src/math/p_div.c)           | division  
+[p_dot()](src/math/p_dot.c)           | dot product  
+[p_exp()](src/math/p_div.c)           | exponential  
+[p_ftoi()](src/math/p_ftoi.c)         | float to  
+[p_itof()](src/math/p_itof.c)         | integer to float conversion  
+[p_inv()](src/math/p_inv.c)           | inverse  
+[p_invcbrt()](src/math/p_invcbrt.c)   | inverse cube root  
+[p_invsqrt()](src/math/p_invsqrt.c)   | inverse square root  
+[p_ln()](src/math/p_ln.c)             | natural log  
+[p_log10()](src/math/p_log10.c)       | denary log  
+[p_max()](src/math/p_max.c)           | finds max val  
+[p_min()](src/math/p_min.c)           | finds min val  
+[p_mean()](src/math/p_mean.c)         | mean operation  
+[p_median()](src/math/p_mean.c)       | finds middle value  
+[p_mode()](src/math/p_mode.c)         | finds most common value  
+[p_mul()](src/math/p_mul.c)           | multiplication  
+[p_popcount()](src/math/p_popcount.c) | count the number of bits set  
+[p_pow()](src/math/p_pow.c)           | element raised to a power  
+[p_rand()](src/math/p_rand.c)         | random number generator  
+[p_randinit()](src/math/p_rand.c)     | init random number generator  
+[p_sort()](src/math/p_sort.c)         | heap sort  
+[p_sin()](src/math/p_sin.c)           | sine  
+[p_sinh()](src/math/p_sinh.c)         | hyperbolic sine  
+[p_sqrt()](src/math/p_sqrt.c)         | square root  
+[p_sub()](src/math/p_sub.c)           | subtract  
+[p_sum()](src/math/p_sum.c)           | sum of all vector elements  
+[p_sumsq()](src/math/p_sumsq.c)       | sum of all squared elements  
+[p_tan()](src/math/p_tan.c)           | tangent  
+[p_tanh()](src/math/p_tanh.c)         | hyperbolic tangent  
 
 ##DSP  
 The digital signal processing (DSP) functions follow the same convention as the math function set.
@@ -254,16 +254,16 @@ The image processing functions follow the same convention as the math function s
 
 FUNCTION     | NOTES
 ------------ | -------------
-[p_box3x3()](src/image/p_box3x3.c)         | box filter (3x3)
-[p_conv2d()](src/image/p_conv2d.c)         | 2d convolution
-[p_gauss3x3()](src/image/p_gauss3x3.c)     | gaussian blur filter (3x3)
-[p_median3x3()](src/image/p_median3x3.c)   | median filter (3x3)
-[p_laplace3x3()](src/image/p_laplace3x3.c) | laplace filter (3x3)
-[p_prewitt3x3()](src/image/p_prewitt3x3.c) | prewitt filter (3x3)
-[p_sad8x8()](src/image/p_sad8x8.c)         | sum of absolute differences (8x8)
-[p_sad16x16()](src/image/p_sad16x16.c)     | sum of absolute differences (16x16)
-[p_sobel3x3()](src/image/p_sobel3x3.c)     | sobel filter (3x3)
-[p_scharr3x3()](src/image/p_scharr3x3.c)   | scharr filter (3x3)
+p_box3x3()](src/image/p_box3x3.c)         | box filter (3x3)
+p_conv2d()](src/image/p_conv2d.c)         | 2d convolution
+p_gauss3x3()](src/image/p_gauss3x3.c)     | gaussian blur filter (3x3)
+p_median3x3()](src/image/p_median3x3.c)   | median filter (3x3)
+p_laplace3x3()](src/image/p_laplace3x3.c) | laplace filter (3x3)
+p_prewitt3x3()](src/image/p_prewitt3x3.c) | prewitt filter (3x3)
+p_sad8x8()](src/image/p_sad8x8.c)         | sum of absolute differences (8x8)
+p_sad16x16()](src/image/p_sad16x16.c)     | sum of absolute differences (16x16)
+p_sobel3x3()](src/image/p_sobel3x3.c)     | sobel filter (3x3)
+p_scharr3x3()](src/image/p_scharr3x3.c)   | scharr filter (3x3)
 
 ##FFT  
 
@@ -279,98 +279,8 @@ FUNCTION     | NOTES
 
 STATUS REPORT
 ========================================
-
-FUNCTION     | STATUS         | RESERVED
------------- | -------------- | ---------
-[p_init()] | draft | ola
-[p_query()] | draft | ola
-[p_load()] | draft | ola
-[p_run()] | draft | ola
-[p_open()] | draft | ola
-[p_append()] | draft | ola
-[p_remove()] | draft | ola
-[p_close()] | draft | ola
-[p_barrier()] | draft | ola
-[p_wait()] | draft | ola
-[p_fence()] | draft | ola
-[p_finalize()] | draft | ola
-[p_get_err()] | draft | ola
-[p_malloc()] | draft | 
-[p_rmalloc()] | draft | 
-[p_free()] | draft | ola
-[p_gather()] | draft | 
-[p_memcpy()] | draft | 
-[p_read()] | draft | 
-[p_scatter()] | draft | 
-[p_write()] | draft | 
-[p_mutex_lock()] | draft | 
-[p_mutex_trylock()] | draft | 
-[p_mutex_unlock()] | draft | 
-[p_mutex_init()] | draft | 
-[p_atomic_add()] | draft | 
-[p_atomic_sub()] | draft | 
-[p_atomic_and()] | draft | 
-[p_atomic_xor()] | draft | 
-[p_atomic_or()] | draft | 
-[p_atomic_swap()] | draft | 
-[p_atomic_compswap()] | draft | 
-[p_abs()] | draft | 
-[p_absdiff()] | draft | 
-[p_add()] | draft | 
-[p_acos()] | draft | 
-[p_acosh()] | draft | 
-[p_asin()] | draft | 
-[p_asinh()] | draft | 
-[p_cbrt()] | draft | 
-[p_cos()] | draft | 
-[p_cosh()] | draft | 
-[p_div()] | draft | 
-[p_dot()] | draft | 
-[p_exp()] | draft | 
-[p_ftoi()] | draft | 
-[p_itof()] | draft | 
-[p_inv()] | draft | 
-[p_invcbrt()] | draft | 
-[p_invsqrt()] | draft | 
-[p_ln()] | draft | 
-[p_log10()] | draft | 
-[p_max()] | draft | 
-[p_min()] | draft | 
-[p_mean()] | draft | 
-[p_median()] | draft | 
-[p_mode()] | draft | 
-[p_mul()] | draft | 
-[p_popcount()] | draft | 
-[p_pow()] | draft | 
-[p_rand()] | draft | 
-[p_randinit()] | draft | 
-[p_sort()] | draft | 
-[p_sin()] | draft | 
-[p_sinh()] | draft | 
-[p_sqrt()] | draft | 
-[p_sub()] | draft | 
-[p_sum()] | draft | 
-[p_sumsq()] | draft | 
-[p_tan()] | draft | 
-[p_tanh()] | draft | 
-[p_acorr()] | not | 
-[p_conv()] | not | 
-[p_xcorr()] | not | 
-[p_fir()] | not | 
-[p_firdec()] | not | 
-[p_firint()] | not | 
-[p_firsym()] | not | 
-[p_iir()] | not | 
-[p_box3x3()] | draft | 
-[p_conv2d()] | draft | 
-[p_gauss3x3()] | draft | 
-[p_median3x3()] | not | 
-[p_laplace3x3()] | draft | 
-[p_prewitt3x3()] | draft | 
-[p_sad8x8()] | not | 
-[p_sad16x16()] | not | 
-[p_sobel3x3()] | draft | 
-[p_scharr3x3()] | not | 
+LINK
 
 BENCHMARKING
 ========================================
+LINK
