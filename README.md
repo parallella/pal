@@ -271,7 +271,7 @@ p_scharr3x3()](src/image/p_scharr3x3.c)   | scharr filter (3x3)
 
 ##BLAS  
 
-* A port of the BLIS library
+* A port of the BLIS library?
 
 ##SYSTEM CALLS
 
@@ -284,3 +284,18 @@ LINK
 BENCHMARKING
 ========================================
 LINK
+=======
+* TBD
+
+BENCHMARKING
+========================================
+E=Epiphany  
+X=x86  
+A=ARM  
+CC=Clock cycles  
+  
+FUNCTION  | E-CC     | E-SIZE   | A-CC     | A-SIZE   | X-CC     |X-SIZE    |   
+----------|----------|----------|----------|----------|----------|----------|  
+p_add()   | TBD      | TBD      | TBD      | TBD      | TBD      | TBD      |  
+...       | ...      | ...      | ...      | ...      | ...      | ...      |  
+

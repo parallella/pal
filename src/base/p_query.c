@@ -26,6 +26,9 @@
  *                   2:x86
  *                   3:ARM
  *                   4:MIPS
+ *        OS       - Operating System
+ *                   1:Bare metal (CRT0)
+ *                   2:Linux
  *        MEMARCH  - Memory architecture
  *                   1:32 bits
  *                   2:64 bits
