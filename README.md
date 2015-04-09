@@ -254,16 +254,16 @@ The image processing functions follow the same convention as the math function s
 
 FUNCTION     | NOTES
 ------------ | -------------
-p_box3x3()](src/image/p_box3x3.c)         | box filter (3x3)
-p_conv2d()](src/image/p_conv2d.c)         | 2d convolution
-p_gauss3x3()](src/image/p_gauss3x3.c)     | gaussian blur filter (3x3)
-p_median3x3()](src/image/p_median3x3.c)   | median filter (3x3)
-p_laplace3x3()](src/image/p_laplace3x3.c) | laplace filter (3x3)
-p_prewitt3x3()](src/image/p_prewitt3x3.c) | prewitt filter (3x3)
-p_sad8x8()](src/image/p_sad8x8.c)         | sum of absolute differences (8x8)
-p_sad16x16()](src/image/p_sad16x16.c)     | sum of absolute differences (16x16)
-p_sobel3x3()](src/image/p_sobel3x3.c)     | sobel filter (3x3)
-p_scharr3x3()](src/image/p_scharr3x3.c)   | scharr filter (3x3)
+[p_box3x3()](src/image/p_box3x3.c)         | box filter (3x3)
+[p_conv2d()](src/image/p_conv2d.c)         | 2d convolution
+[p_gauss3x3()](src/image/p_gauss3x3.c)     | gaussian blur filter (3x3)
+[p_median3x3()](src/image/p_median3x3.c)   | median filter (3x3)
+[p_laplace3x3()](src/image/p_laplace3x3.c) | laplace filter (3x3)
+[p_prewitt3x3()](src/image/p_prewitt3x3.c) | prewitt filter (3x3)
+[p_sad8x8()](src/image/p_sad8x8.c)         | sum of absolute differences (8x8)
+[p_sad16x16()](src/image/p_sad16x16.c)     | sum of absolute differences (16x16)
+[p_sobel3x3()](src/image/p_sobel3x3.c)     | sobel filter (3x3)
+[p_scharr3x3()](src/image/p_scharr3x3.c)   | scharr filter (3x3)
 
 ##FFT  
 
