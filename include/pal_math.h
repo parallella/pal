@@ -17,7 +17,11 @@
 #define M_2_PI 0.63661977236758134308     /* 2/pi */
 #define M_2_SQRTPI 1.12837916709551257390 /* 2/sqrt(pi) */
 #define M_SQRT2 1.41421356237309504880    /* sqrt(2) */
-#define M_1_SQRT2 0.70710678118654752440  /* 1/sqrt(2) */
+#define M_SQRT1_2 0.70710678118654752440  /* 1/sqrt(2) */
+#define HUGE ((float)3.40282347e+38)      /*maximum value of float*/           
+#define MAXFLOAT ((float)3.40282347e+38)  /*maximum value of float*/       
+#define MINFLOAT ((float)1.175494351e-38) /*minimum value of float*/
+
 #endif
 
 /*ADDED MATH CONSTANTS*/
