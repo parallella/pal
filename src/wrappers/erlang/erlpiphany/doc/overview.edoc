@@ -4,7 +4,7 @@
 
 @author  Mark A Fleming <mark_fleming@ieee.org>
 @copyright (C) 2015
-@version 1.0.1
+@version 1.1
 @since January 2015
 @title Erlpiphany: Erlang Interface to the Epiphany SDK
 
@@ -31,7 +31,7 @@ use, the programmer is responsible for converting ("marshalling")
 Erlang terms to a byte stream sent to the program and reassembling the
 result byte stream into Erlang terms.
 By using the
-'ei' library one can create a linked in loadable library that replaces
+'ei' library one can create a linked in <i>port driver</i> that replaces
 the external program and communicates via the Port.
 A loadable library of routines will execute much faster, but a fault in the
 library code can crash the Erlang node.
@@ -245,11 +245,13 @@ following commands to run the hello_world example:
 
 ```
 cd examples/hello_world
+./build.sh
 ./run.sh
 ./runerl.sh'''
 
-The first command runs the standard C main program.
-The second command will run the Erlang version of the hello_world
+The first command compiles both the C and Erlang source files.
+The second command runs the standard C main program.
+The third command will run the Erlang version of the hello_world
 program by setting up the environment variables and then running the
 eScript `runerl.escript' in the Debug directory.
 
@@ -309,8 +311,9 @@ application:load/1 insures that the ehal NIF loadable library is
 available when the Erlang `hello_world' program is invoked.
 
 For Erlang to find the `e-hal.so' loadable library and access the
-Epiphany chip, the Erlang eScript program must be run as root with
-certain established environment variables.
+Epiphany chip, the Erlang eScript program must be run with
+certain established environment variables. These environment variables
+are preestablished in the Linaro parallella account.
 
 Just as shell scripts are used to launch pre-compiled C
 programs, Erlang scripts ("eScripts") can also be used to run Erlang
@@ -334,19 +337,16 @@ limitations in terms of speed. For more complex applications, you'll
 need to develop one or more Erlang modules.
 
 To develop and test an Epiphany application you'll need to start an
-Erlang node as root. This can be done using the `rooterl.sh' script,
+Erlang node.
 as in
 
-<b>```rooterl.sh -cookie mysecret -sname ehal_node'''</b>
+<b>```erl -cookie mysecret -sname ehal_node'''</b>
 
 Rather than setting the node cookie on the command line, you can put
 the text in `~/.erlang.cookie' so that all of your Erlang nodes use
-the same cookie value. To insure the root Erlang node uses the same
-cookie file, you'll need to use the command
+the same cookie value.
 
-<b>```rooterl.sh -cookie /home/linaro/.erlang.cookie -sname ehal_node'''</b>
-
-Try running the above command in the scripts directory to start a root
+Try running the above command in the scripts directory to start an
 Erlang node, then start a node in another window with the command
 
 <b>```erl -sname linaro'''</b>
@@ -379,7 +379,7 @@ board from your workstation.
 
 Lets try remotely running an example program that has already been
 developed and compiled.
-Using your local Erlang node and the root Erlang node
+Using your local Erlang node and the Erlang node
 running in the scripts directory, use the following commands to access
 and run the hello world demo.
 
@@ -391,5 +391,5 @@ and run the hello world demo.
 Notice you get the expected hello world demo output on your local
 console. Once you have a working Erlpiphany application, you can
 invoke the application remotely from your workstation after starting
-and connecting to a root Erlang node running on your Parallella board.
+and connecting to an Erlang node running on your Parallella board.
 

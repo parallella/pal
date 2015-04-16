@@ -25,7 +25,7 @@ all: $(EXES) $(DOCS)
 $(PRIV)/ehal.so: $(CSRC)/ehal.c
 	gcc -o $(PRIV)/ehal.so -fpic -shared $(CSRC)/ehal.c \
 	-I${EPIPHANY_HOME}/tools/host/include	\
-	-L${EPIPHANY_HOME}/tools/host/lib -le-hal
+	-L${EPIPHANY_HOME}/tools/host/lib -le-hal -le-loader
 
 $(EBIN)/%.beam: $(SRC)/%.erl
 	erlc -I$(INCLUDE) -o$(EBIN) $<

@@ -48,6 +48,7 @@ OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 
 // SDK includes
 #include "e-hal.h"
+#include "e-loader.h"
 
 // References to SDK functions
 // 14.2 Platform Configuration Functions
@@ -78,9 +79,9 @@ extern int e_halt(e_epiphany_t *dev, unsigned row, unsigned col);
 extern int e_resume(e_epiphany_t *dev, unsigned row, unsigned col);
 
 // 14.6 Program Load Functions
-extern int e_load(char *executable, e_epiphany_t *dev, unsigned row,
+extern int e_load(const char *executable, e_epiphany_t *dev, unsigned row,
 		  unsigned col, e_bool_t start);
-extern int e_load_group(char *executable, e_epiphany_t *dev, unsigned row,
+extern int e_load_group(const char *executable, e_epiphany_t *dev, unsigned row,
 			unsigned col, unsigned rows, unsigned cols,
 			e_bool_t start);
 
