@@ -3,16 +3,16 @@
 <head>
 <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
 <title>Erlpiphany: Erlang Interface to the Epiphany SDK
-</title>
+</title>
 <link rel="stylesheet" type="text/css" href="stylesheet.css" title="EDoc">
 </head>
 <body bgcolor="white">
 <div class="navbar"><a name="#navbar_top"></a><table width="100%" border="0" cellspacing="0" cellpadding="2" summary="navigation bar"><tr><td><a href="overview-summary.html" target="overviewFrame">Overview</a></td><td><a href="http://www.erlang.org/"><img src="erlang.png" align="right" border="0" alt="erlang logo"></a></td></tr></table></div>
 <h1>Erlpiphany: Erlang Interface to the Epiphany SDK
-</h1>
-<p>Copyright © (C) 2015</p>
-<p><b>Version:</b> 1.0.1</p>
-<p><b>Introduced in:</b> January 2015</p>
+</h1>
+<p>Copyright © (C) 2015</p>
+<p><b>Version:</b> 1.1</p>
+<p><b>Introduced in:</b> January 2015</p>
 <p><b>Authors:</b> Mark A Fleming (<a href="mailto:mark_fleming@ieee.org"><tt>mark_fleming@ieee.org</tt></a>).</p>
 <p>Erlpiphany is the Erlang interface to the Epiphany eHAL library. With it
 an Erlang node can communicate with the Epiphany chip on a Parallella
@@ -37,7 +37,7 @@ use, the programmer is responsible for converting ("marshalling")
 Erlang terms to a byte stream sent to the program and reassembling the
 result byte stream into Erlang terms.
 By using the
-'ei' library one can create a linked in loadable library that replaces
+'ei' library one can create a linked in <i>port driver</i> that replaces
 the external program and communicates via the Port.
 A loadable library of routines will execute much faster, but a fault in the
 library code can crash the Erlang node.</p>
@@ -241,7 +241,7 @@ a build is not strictly necessary unless a change is made to the
 source.</p>
 
 
-<h4><a name="Examples">Examples</a></h4>
+<h4><a name="Example Programs">Example Programs</a></h4>
 
 <p>The 'examples' directory contains a number of example programs
 supplied with the Epiphany SDK. For each of the examples, a
@@ -249,13 +249,14 @@ corresponding Erlang program has been written to
 communicate with the Epiphany chip. As a quick introduction, try the
 following commands to run the hello_world example:</p>
 
-<pre>   
-cd examples/hello_world
+<pre>cd examples/hello_world
+./build.sh
 ./run.sh
 ./runerl.sh</pre>
 
-<p>The first command runs the standard C main program.
-The second command will run the Erlang version of the hello_world
+<p>The first command compiles both the C and Erlang source files.
+The second command runs the standard C main program.
+The third command will run the Erlang version of the hello_world
 program by setting up the environment variables and then running the
 eScript <code>runerl.escript</code> in the Debug directory.</p>
 
@@ -283,18 +284,18 @@ step is to develop and operate programs of your own.</p>
 <h4><a name="Scripting">Scripting</a></h4><p>
 Scripting is the simplest approach to programming an Epiphany chip
 with Erlang.
-The scripts directory in examples provides a starting point for
+The 'examples/scripts' directory provides a starting point for
 scripting. You can write Erlang eScripts that access the eHAL library
 directly as shown in the <code>scripts/info.escript</code> file. To invoke the
 script, type</p>
 
 <p><b><pre>  ./escript.sh ./info.escript</pre></b></p>
 
-<p>to run the program and print out the Platform info list. The eScript
-itself is quite simple.</p>
+<p>to run the program and print out the Platform info list. The
+'escript.sh' file provides all setups needed to run an eScript as
+root. The eScript itself is quite simple.</p>
 
-<pre>   
-#!/usr/bin/env escript
+<pre>#!/usr/bin/env escript
 %% -*- erlang -*-
 main([]) -&gt;
     code:add_path("/home/linaro/Work/erlpiphany"),
@@ -305,7 +306,7 @@ main([]) -&gt;
     ok = ehal:e_reset_system(),
     {ok, Platform} = ehal:e_get_platform_info(),
     io:format("Platform info: ~p~n", [Platform]),
-    ok = ehal:e_finalize().</pre>
+    ok = ehal:e_finalize().</pre>
 
 <p>The two add_path/1 calls establish the location of the erlpiphany
 application and the <code>ehal.beam</code> file respectively. the call to
@@ -313,22 +314,22 @@ application:load/1 insures that the ehal NIF loadable library is
 available when the Erlang <code>hello_world</code> program is invoked.</p>
 
 <p>For Erlang to find the <code>e-hal.so</code> loadable library and access the
-Epiphany chip, the Erlang eScript program must be run as root with
-certain established environment variables.</p>
+Epiphany chip, the Erlang eScript program must be run with
+certain established environment variables. These environment variables
+are preestablished in the Linaro parallella account.</p>
 
 <p>Just as shell scripts are used to launch pre-compiled C
 programs, Erlang scripts ("eScripts") can also be used to run Erlang
 modules compiled to BEAM files. One such example script can be found
 in the Hello World example, as shown below.</p>
 
-<pre>   
-#!/usr/bin/env escript
+<pre>#!/usr/bin/env escript
 %% -*- erlang -*-
 main([]) -&gt;
   code:add_path("/home/linaro/Work/erlpiphany"),
   code:add_path("/home/linaro/Work/erlpiphany/ebin"),
   application:load(erlpiphany),
-  hello_world:main().</pre>
+  hello_world:main().</pre>
 
 
 <h4><a name="Establishing Node Communication">Establishing Node Communication</a></h4><p>
@@ -337,19 +338,16 @@ limitations in terms of speed. For more complex applications, you'll
 need to develop one or more Erlang modules.</p>
 
 <p>To develop and test an Epiphany application you'll need to start an
-Erlang node as root. This can be done using the <code>rooterl.sh</code> script,
+Erlang node.
 as in</p>
 
-<p><b><pre>  rooterl.sh -cookie mysecret -sname ehal_node</pre></b></p>
+<p><b><pre>  erl -cookie mysecret -sname ehal_node</pre></b></p>
 
 <p>Rather than setting the node cookie on the command line, you can put
 the text in <code>~/.erlang.cookie</code> so that all of your Erlang nodes use
-the same cookie value. To insure the root Erlang node uses the same
-cookie file, you'll need to use the command</p>
+the same cookie value.</p>
 
-<p><b><pre>  rooterl.sh -cookie /home/linaro/.erlang.cookie -sname ehal_node</pre></b></p>
-
-<p>Try running the above command in the scripts directory to start a root
+<p>Try running the above command in the scripts directory to start an
 Erlang node, then start a node in another window with the command</p>
 
 <p><b><pre>  erl -sname linaro</pre></b></p>
@@ -380,8 +378,9 @@ board from your workstation.</p>
 
 <h4><a name="Invoking Commands">Invoking Commands</a></h4>
 
-<p>Lets try running an example program that has already been developed
-and compiled. Using your local Erlang node and the root Erlang node
+<p>Lets try remotely running an example program that has already been
+developed and compiled.
+Using your local Erlang node and the Erlang node
 running in the scripts directory, use the following commands to access
 and run the hello world demo.</p>
 
@@ -393,11 +392,11 @@ and run the hello world demo.</p>
 <p>Notice you get the expected hello world demo output on your local
 console. Once you have a working Erlpiphany application, you can
 invoke the application remotely from your workstation after starting
-and connecting to a root Erlang node running on your Parallella board.</p>
+and connecting to an Erlang node running on your Parallella board.</p>
 
 
 <hr>
 <div class="navbar"><a name="#navbar_bottom"></a><table width="100%" border="0" cellspacing="0" cellpadding="2" summary="navigation bar"><tr><td><a href="overview-summary.html" target="overviewFrame">Overview</a></td><td><a href="http://www.erlang.org/"><img src="erlang.png" align="right" border="0" alt="erlang logo"></a></td></tr></table></div>
-<p><i>Generated by EDoc, Feb 26 2015, 01:21:18.</i></p>
+<p><i>Generated by EDoc, Apr 13 2015, 14:58:22.</i></p>
 </body>
 </html>

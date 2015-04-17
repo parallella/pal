@@ -27,7 +27,7 @@ case $(uname -p) in
 esac
 
 # Build HOST side application
-${CROSS_PREFIX}gcc src/main.c -o bin/main.elf -I ${EINCS} -L ${ELIBS} -le-hal #-le-loader
+${CROSS_PREFIX}gcc src/main.c -o bin/main.elf -I ${EINCS} -L ${ELIBS} -le-hal -le-loader -lpthread
 
 # Build DEVICE side program
 e-gcc -O3  -T ${ELDF} src/e_task.c -o bin/e_task.elf -le-lib -lm -ffast-math
@@ -35,5 +35,6 @@ e-gcc -O3  -T ${ELDF} src/e_task.c -o bin/e_task.elf -le-lib -lm -ffast-math
 # Convert ebinary to SREC file
 e-objcopy --srec-forceS3 --output-target srec bin/e_task.elf bin/e_task.srec
 
+# Build Erlang HOST side application
 erlc -o bin src/main.erl
 erlc -o bin src/dotproduct.erl

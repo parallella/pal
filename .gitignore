@@ -39,3 +39,6 @@ Makefile.in
 /config
 /aclocal.m4
 /config.h
+
+# Erlang
+*.beam

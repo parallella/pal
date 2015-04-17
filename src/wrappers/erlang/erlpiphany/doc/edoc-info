@@ -1,4 +1,4 @@
 %% encoding: UTF-8
 {application,erlpiphany}.
 {packages,[]}.
-{modules,[ehal]}.
+{modules,[ehal,erlpiphany_app]}.

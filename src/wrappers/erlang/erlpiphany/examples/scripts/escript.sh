@@ -1,5 +1,5 @@
 #!/bin/bash
-
+# Use this to run an escript as root on the old linaro/linaro distribution
 set -e
 
 ESDK=${EPIPHANY_HOME}
