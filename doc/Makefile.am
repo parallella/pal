@@ -15,9 +15,8 @@ doxyfile.stamp:
 CLEANFILES = doxyfile.stamp
 
 html-local: doxyfile.stamp
-all-local: html-local
 
-install-html-local:
+install-html-local: html-local
 	find html -type d -exec $(mkinstalldirs) $(DESTDIR)$(htmldir)/'{}' ';'
 	find html -type f -exec $(INSTALL_DATA) '{}' $(DESTDIR)$(htmldir)/'{}' ';'
 
