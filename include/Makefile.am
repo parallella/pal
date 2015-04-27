@@ -5,3 +5,5 @@ palinclude_HEADERS = pal.h \
                      pal_fft.h \
                      pal_image.h \
                      pal_math.h
+
+noinst_HEADERS = common.h
