@@ -1,7 +1,6 @@
 SUBDIRS =
 EXTRA_DIST = \
-    msun \
-    test
+    msun
 
 noinst_LTLIBRARIES = libpal-math.la
 libpal_math_la_SOURCES = \

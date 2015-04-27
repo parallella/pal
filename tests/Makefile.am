@@ -1,3 +1,5 @@
+SUBDIRS = math
+
 # TODO: Move to configure.ac. Use expansion in here instead.
 BUILD_CC=gcc
 
@@ -9,10 +11,12 @@ else
     RUNTEST_SRC = runtest.simple.c
 endif
 
-all-local: runtest
+BUILT_SOURCES = runtest
 
 runtest: $(RUNTEST_SRC)
 	$(BUILD_CC) $(BUILD_CFLAGS) $< -o $@ $(BUILD_LDFLAGS)
+
+check-local: runtest
 
 
 clean-local:
