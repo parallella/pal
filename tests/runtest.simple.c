@@ -12,7 +12,7 @@ int main(int argc, char **argv, char **envp)
 
     ret = execve(argv[1], &argv[1], envp);
 
-    fprintf(stderr, "ERROR: %s: fork failed: %d\n", argv[0], ret);
+    fprintf(stderr, "ERROR: %s: execve failed: %d\n", argv[0], ret);
 
     return 1;
 }
