@@ -21,7 +21,7 @@ int p_finalize(p_dev_t dev)
     printf("Running p_finalize(%p)\n", dev);
 
     if (p_ref_is_err(dev))
-        return p_ref_err(EINVAL);
+        return -EINVAL;
 
     pdev->dev_ops->fini(dev);
 

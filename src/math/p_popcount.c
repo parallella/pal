@@ -19,10 +19,10 @@
  */
 void p_popcount_u32(uint32_t *a, uint32_t *c, int n, int p, p_team_t team)
 {
-    static const unsigned int A[] = {0x55555555, 0x33333333,
-                                     0x0f0f0f0f, 0x01010101};
-    unsigned int *pa, *pc;
-    unsigned int tmp;
+    static const uint32_t A[] = {0x55555555, 0x33333333,
+                                 0x0f0f0f0f, 0x01010101};
+    uint32_t *pa, *pc;
+    uint32_t tmp;
     int i;
 
     pa = a;

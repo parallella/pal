@@ -1,10 +1,12 @@
 #pragma once
 
+#include <math.h>
 
 #include "pal_base.h"  //need pal types
 
-/*Standard math constants*/
-#if !(defined __USE_BSD || __USE_XOPEN || __USE_GNU)
+/* Standard math constants. Seems to be in every math.h */
+#if !(defined __USE_BSD || defined __USE_XOPEN || defined __USE_GNU || \
+      defined _NEWLIB_VERSION)
 #define M_E 2.71828182845904523540        /* e */
 #define M_LOG2E 1.44269504088896340740    /* log 2e */
 #define M_LOG10E 0.43429448190325182765   /* log 10e */
@@ -18,17 +20,27 @@
 #define M_2_SQRTPI 1.12837916709551257390 /* 2/sqrt(pi) */
 #define M_SQRT2 1.41421356237309504880    /* sqrt(2) */
 #define M_SQRT1_2 0.70710678118654752440  /* 1/sqrt(2) */
-#define HUGE ((float)3.40282347e+38))     /*maximum value of float*/           
-#define MAXFLOAT ((float)3.40282347e+38)) /*maximum value of float*/       
-#define MINFLOAT ((float)1.175494351e-38))/*minimum value of float*/
+#endif
 
+#ifndef HUGE
+#define HUGE ((float)3.40282347e+38)      /*maximum value of float*/
+#endif
+#ifndef MAXFLOAT
+#define MAXFLOAT ((float)3.40282347e+38)  /*maximum value of float*/
+#endif
+#ifndef MINFLOAT
+#define MINFLOAT ((float)1.175494351e-38) /*minimum value of float*/
+#endif
+
+/* This define is in newlib's math.h (but nowhere else) */
+#ifndef M_SQRT3
+#define M_SQRT3 1.732051            /* sqrt(3) */
 #endif
 
 /*ADDED MATH CONSTANTS*/
 #define M_TC 0.63212055882855767840 /* 1 - 1/e */
 #define M_PI2 6.283185              /* pi*2 */
 #define M_GOLDEN 1.618034           /* golden ratio */
-#define M_SQRT3 1.732051            /* sqrt(3) */
 
 /*ADDED RECIPROCAL CONSTANTS (AVOID DIVISION AT ALL COST)*/
 /*IDEALLY THIS WOULD BE IN THE COMPILER? A BETTER WAY?*/
