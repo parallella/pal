@@ -1,0 +1,19 @@
+# TODO: Move to configure.ac. Use expansion in here instead.
+BUILD_CC=gcc
+
+EXTRA_DIST = runtest.noimpl.c runtest.simple.c
+
+if HOST_IS_EPIPHANY
+    RUNTEST_SRC = runtest.noimpl.c # TODO: implement
+else
+    RUNTEST_SRC = runtest.simple.c
+endif
+
+all-local: runtest
+
+runtest: $(RUNTEST_SRC)
+	$(BUILD_CC) $(BUILD_CFLAGS) $< -o $@ $(BUILD_LDFLAGS)
+
+
+clean-local:
+	-rm -f runtest
