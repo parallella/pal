@@ -82,6 +82,7 @@ AC_CONFIG_FILES([Makefile
                  examples/Makefile
                  examples/base/Makefile
                  tests/Makefile
+                 tests/dsp/Makefile
                  tests/math/Makefile
                  doc/Makefile])
 
