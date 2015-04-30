@@ -23,6 +23,7 @@ void p_conv_f32(float *x, float *h, float *r, int nr, int nh,
 		int p, p_team_t team);
 
 /*cross correlation: r[j] = sum ( x[j+k] * y[k]), k=0..(nx+ny-1) */
+/* NOTE: current implementation requires nx >= ny */
 void p_xcorr_f32(float *x, float *y, float *r, int nx, int ny,
 		 int p, p_team_t team);
 
