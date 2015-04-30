@@ -5,20 +5,12 @@ Currently, the test is only using Arm
 
 */
 
-
 #include <stdio.h>
 #include <string.h>
 #include <stdlib.h>
 #include <unistd.h>
-#include <fcntl.h>
-#include <sys/ioctl.h>
-#include <linux/fb.h>
-#include <sys/mman.h>
-#include <stdint.h>
-#include <time.h>
-#include <math.h>
-#include "pal_base.h"
-#include "pal_dsp.h"
+#include <pal.h>
+
 #include "xcorr_test_data_1.h"
 #include "xcorr_test_data_2.h"
 #include "xcorr_test_data_3.h"
