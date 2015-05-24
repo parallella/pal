@@ -8,7 +8,7 @@
  *
  * @param m     Pointer to an 8x8 pixel array within the image.
  *
- * @param r     Result scalar
+ * @param r     Result vector
  *
  * @param rows  Number of rows in input image
  *
