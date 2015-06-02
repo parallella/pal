@@ -25,12 +25,12 @@ void p_invsqrt_f32(float *a, float *c, int n, int p, p_team_t team)
 
     int i;
     for (i = 0; i < n; i++) {
-        x2 = *(a + i) * 0.5F;
-        y  = *(a + i);
-        i  = *(long *) &y;
-        i  = 0x5f3759df - (i >> 1);
-        y  = *(float *) &i;
-        y  = y * (1.5F - half * y * y); // Repeat this line for more accuracy
+        half = 0.5F * *(a + i);
+        y = *(a + i);
+        i = *(long *) &y;
+        i = 0x5f3759df - (i >> 1);
+        y = *(float *) &i;
+        y = y * (1.5F - half * y * y); // Repeat this line for more accuracy
         *(c + i) = y;
     }
 }
