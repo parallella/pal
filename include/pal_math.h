@@ -234,7 +234,7 @@ void p_min_f32(float *a, float *c, int *index, int n, int p, p_team_t team);
 
 /*sort an array*/
 void p_sort_f32(float *a, float *c, int n, int p, p_team_t team);
-void p_sort_u32(int *a, int *c, int n, int p, p_team_t team);
+void p_sort_u32(uint32_t *a, uint32_t *c, int n, int p, p_team_t team);
 
 /* seed pseudo-random number generator */
 void p_srand(unsigned int seed);
