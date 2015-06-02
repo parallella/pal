@@ -25,6 +25,11 @@
 void p_conv_f32(float *x, float *h, float *r, int nr, int nh,
 		int p, p_team_t team)
 {
-
-    /*PLACE CODE HERE*/
+	for (int i = nr; i >= nh; i--)
+  	{
+    		for (int j = nh; j >= 0; j--)
+    		{
+      			*r(i+j-nh) = *r(i+j-nh) + *x(i) * *h(j);
+    		}
+  	}
 }
