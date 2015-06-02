@@ -29,7 +29,7 @@ void p_conv_f32(float *x, float *h, float *r, int nr, int nh,
   	{
     		for (int j = nh; j >= 0; j--)
     		{
-      			*r(i+j-nh) = *r(i+j-nh) + *x(i) * *h(j);
+      			*(r + i + j - nh) = *(r + i + j - nh) + *(x + i) * *(h + j);
     		}
   	}
 }
