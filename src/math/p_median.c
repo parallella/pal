@@ -18,7 +18,14 @@
  *
  */
 
-void p_median_f32(float *a, float *c, int n, int p, p_team_t team) {
+void p_median_f32(float *a, float *c, int n, int p, p_team_t team)
+{
+    float sort[n];
 
+    p_sort_f32(a, sort, n, p, team);
 
+    if(n%2)
+        *c=a[n/2];
+    else
+        *c=(a[n/2] + a[(n-1)/2])/2.;
 }
