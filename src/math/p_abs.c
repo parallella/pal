@@ -20,10 +20,12 @@
 #include <math.h>
 void p_abs_f32(float *a, float *c, int n, int p, p_team_t team)
 {
-
+    uint32_t tmp;
     int i;
+
     for (i = 0; i < n; i++) {
-        float v = *(a + i);
-        *(c + i) = (1 - ((v < 0) << 1)) * v;
+        tmp = *(uint32_t*)(a + i);
+        tmp &= 0x7FFFFFFF;
+        *(c + i) = *(float*)&tmp;
     }
 }
