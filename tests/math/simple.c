@@ -31,7 +31,7 @@ float *ai, *bi, *res;
 #define EPSILON_MAX 0.001f
 #define EPSILON_RELMAX 0.00001f
 /* For detecting erroneous overwrites */
-#define SCALAR_OUTPUT_END_MARKER 60189537703610376.0f
+#define OUTPUT_END_MARKER 60189537703610376.0f
 __attribute__((weak))
 bool compare(float x, float y)
 {
@@ -78,11 +78,12 @@ START_TEST(CONCAT2(test_, TEST_FUNCTION))
         ck_assert_msg(compare(res[i], gold[i].gold), "%s(%f): %f != %f",
                       XSTRING(TEST_FUNCTION), ai[i], res[i], gold[i].gold);
 #ifdef SCALAR_OUTPUT /* Scalar output so only first address is valid */
-        ck_assert_msg(res[1] == SCALAR_OUTPUT_END_MARKER,
-                      "Scalar output end marker was overwritten");
+        i++;
         break;
 #endif
     }
+    ck_assert_msg(res[i] == OUTPUT_END_MARKER,
+                  "Output end marker was overwritten");
 #endif
 }
 END_TEST
@@ -101,11 +102,12 @@ START_TEST(CONCAT2(test_, TEST_FUNCTION))
                       XSTRING(TEST_FUNCTION), ai[i], bi[i], res[i],
                       gold[i].gold);
 #ifdef SCALAR_OUTPUT /* Scalar output so only first address is valid */
-        ck_assert_msg(res[1] == SCALAR_OUTPUT_END_MARKER,
-                      "Scalar output end marker was overwritten");
+        i++;
         break;
 #endif
     }
+    ck_assert_msg(res[i] == OUTPUT_END_MARKER,
+                  "Output end marker was overwritten");
 #endif
 }
 END_TEST
@@ -125,12 +127,15 @@ int main(void)
 
     ai = calloc(ARRAY_SIZE(gold), sizeof(float));
     bi = calloc(ARRAY_SIZE(gold), sizeof(float));
+
+    /* Allocate one extra element for res and add end marker so overwrites can
+     * be detected */
 #ifdef SCALAR_OUTPUT
     res = calloc(2, sizeof(float));
-    /* So erroneous overwrites can be detected */
-    res[1] = SCALAR_OUTPUT_END_MARKER;
+    res[1] = OUTPUT_END_MARKER;
 #else
-    res = calloc(ARRAY_SIZE(gold), sizeof(float));
+    res = calloc(ARRAY_SIZE(gold) + 1, sizeof(float));
+    res[ARRAY_SIZE(gold)] = OUTPUT_END_MARKER;
 #endif
     for (i = 0; i < ARRAY_SIZE(gold); i++) {
         ai[i] = gold[i].ai;
