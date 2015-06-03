@@ -24,9 +24,13 @@
  */
 void p_conv_f32(float *x, float *h, float *r, int nx, int nh, int p, p_team_t team)
 {
+    float *xc = x;
+    float *rx = r;
   	for ( int i = 0; i < nx; i++) {
+        float xv = *xc++;
+        rx++;
   		for (int j = 0; j < nh; j++) {
-  			*(r + i + j) += *(x + i) * *(h + j);		
-  		}	
+  			rx[j] += xv * h[j];		
+  		}
   	}
 }
