@@ -25,9 +25,6 @@ void p_absdiff_f32(float *a, float *b, float *c, int n, int p, p_team_t team)
 
     int i;
     for (i = 0; i < n; i++) {
-        *(c + i) = *(a + i) - *(b + i);
-        if (*(c + i) < 0) {
-            *(c + i) = -*(c + i);
-        }
+        *(c + i) = (-2 * (*(a + i) < *(b + i)) + 1) * (*(a + i) - *(b + i));
     }
 }
