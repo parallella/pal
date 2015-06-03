@@ -23,10 +23,6 @@ void p_abs_f32(float *a, float *c, int n, int p, p_team_t team)
 
     int i;
     for (i = 0; i < n; i++) {
-        if (*(a + i) < 0) {
-            *(c + i) = -*(a + i);
-        } else {
-            *(c + i) = *(a + i);
-        }
+        *(c + i) = (-2 * (*(a + i) < 0) + 1) * *(a + i);
     }
 }
