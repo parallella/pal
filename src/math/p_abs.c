@@ -24,6 +24,6 @@ void p_abs_f32(float *a, float *c, int n, int p, p_team_t team)
     int i;
     for (i = 0; i < n; i++) {
         float v = *(a + i);
-        *(c + i) = (-(*((int *) &v) & (1 << 31)) << 1 + 1) * v;
+        *(c + i) = (-(*((int *) &v) >> 31) << 1 + 1) * v;
     }
 }
