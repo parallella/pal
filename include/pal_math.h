@@ -41,6 +41,7 @@
 #define M_TC 0.63212055882855767840 /* 1 - 1/e */
 #define M_PI2 6.283185              /* pi*2 */
 #define M_GOLDEN 1.618034           /* golden ratio */
+#define M_1_PI2 0.15915494309189534561    /* 1/(pi*2) */
 
 /*ADDED RECIPROCAL CONSTANTS (AVOID DIVISION AT ALL COST)*/
 /*IDEALLY THIS WOULD BE IN THE COMPILER? A BETTER WAY?*/
@@ -83,7 +84,8 @@
 #define M_FLOOR(x) ((int)((int)x - ((int)x > x)))
 
 /* Normalize theta between -pi and pi */
-#define M_NORMALIZE_RADIANS(theta) (theta - (M_PI*2) * M_FLOOR((theta + M_PI) / (M_PI*2)))
+//#define M_NORMALIZE_RADIANS(theta) (theta - (M_PI*2) * M_FLOOR((theta + M_PI) / (M_PI*2)))
+#define M_NORMALIZE_RADIANS(theta) (theta - (M_PI2) * M_FLOOR((theta + M_PI) * M_1_PI2))
 
 /*
  ****************************************************************

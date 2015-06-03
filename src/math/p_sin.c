@@ -34,8 +34,15 @@ void p_sin_f32(float *a, float *c, int n, int p, p_team_t team)
       int k;
       float theta = M_NORMALIZE_RADIANS(*pa);
 
-      for(k=SIN_ITERATIONS; k>=0; --k)
-        val = 1 - theta * theta / (2*k+2)/(2*k+3)*val;
+      //for(k=SIN_ITERATIONS; k>=0; --k)
+        //val = 1 - theta * ((theta / (2*k+2))/(2*k+3))*val;
+
+      val = 1 - theta * theta * 0.083333333 * 0.076923077*val;
+      val = 1 - theta * theta * 0.1 * 0.090909091*val;
+      val = 1 - theta * theta * 0.125 * 0.111111111*val;
+      val = 1 - theta * theta * 0.166666667 * 0.142857143*val;
+      val = 1 - theta * theta * 0.25 * 0.2*val;
+      val = 1 - theta * theta * 0.5 * 0.333333333*val;
 
       *pc = theta * val;
     }

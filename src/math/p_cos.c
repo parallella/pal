@@ -35,8 +35,14 @@ void p_cos_f32(float *a, float *c, int n, int p, p_team_t team)
         int k;
         float theta = M_NORMALIZE_RADIANS(*pa);
 
-        for(k=COS_ITERATIONS-1; k>=0; --k)
-          val = 1 - theta*theta/(2*k+2)/(2*k+1)*val;
+        //for(k=COS_ITERATIONS-1; k>=0; --k)
+          //val = 1 - theta*theta/(2*k+2)/(2*k+1)*val;
+
+        val = 1 - theta*theta*0.10000000*0.11111111*val;
+        val = 1 - theta*theta*0.12500000*0.14285714*val;
+        val = 1 - theta*theta*0.16666667*0.20000000*val;
+        val = 1 - theta*theta*0.25000000*0.33333333*val;
+        val = 1 - theta*theta*0.50000000*1.00000000*val;
 
         *pc = val;
 
