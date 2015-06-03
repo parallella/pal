@@ -4,6 +4,7 @@ EXTRA_DIST = \
 
 noinst_LTLIBRARIES = libpal-math.la
 libpal_math_la_SOURCES = \
+    p_a_inv.c \
     p_abs.c \
     p_absdiff.c \
     p_acos.c \
