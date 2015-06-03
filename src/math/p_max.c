@@ -29,10 +29,9 @@ void p_max_f32(float *a, float *c, int *index, int n, int p, p_team_t team)
     pos = 0;
 
     for (i = 1; i < n; i++) {
-        if (*(a + i) > max) {
-            pos = i;
-            max = *(a + i);
-        }
+        int greater = (*(a + i) > max);
+        pos = greater * i + (1 - greater) * pos;
+        max = greater * *(a + i) + (1 - greater) * max;
     }
     *c = max;
     *index = pos;
