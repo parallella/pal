@@ -158,6 +158,7 @@ check_p_tan_f32_SOURCES         = $(SIMPLE)
 check_p_tanh_f32_SOURCES        = $(SIMPLE)
 
 # In alphabetic order
+# TODO: Mark all scalar output functions with -DSCALAR_OUTPUT
 check_p_absdiff_f32_CFLAGS      = -DTEST_FUNCTION=p_absdiff_f32 -DIS_BINARY
 check_p_abs_f32_CFLAGS          = -DTEST_FUNCTION=p_abs_f32     -DIS_UNARY
 check_p_acos_f32_CFLAGS         = -DTEST_FUNCTION=p_acos_f32    -DIS_UNARY
@@ -184,7 +185,7 @@ check_p_log10_f32_CFLAGS        = -DTEST_FUNCTION=p_log10_f32   -DIS_UNARY
 check_p_mac_f32_CFLAGS          = -DTEST_FUNCTION=p_mac_f32     -DIS_BINARY
 check_p_max_f32_CFLAGS          = -DTEST_FUNCTION=p_max_f32
 check_p_mean_f32_CFLAGS         = -DTEST_FUNCTION=p_mean_f32    -DIS_UNARY
-check_p_median_f32_CFLAGS       = -DTEST_FUNCTION=p_median_f32  -DIS_UNARY
+check_p_median_f32_CFLAGS       = -DTEST_FUNCTION=p_median_f32  -DIS_UNARY -DSCALAR_OUTPUT
 check_p_min_f32_CFLAGS          = -DTEST_FUNCTION=p_min_f32
 check_p_mode_f32_CFLAGS         = -DTEST_FUNCTION=p_mode_f32
 check_p_mul_f32_CFLAGS          = -DTEST_FUNCTION=p_mul_f32     -DIS_BINARY
@@ -207,5 +208,3 @@ TESTS = $(check_PROGRAMS)
 # Ubuntu 14.04 has automake-1.11. Need automake-1.12 for nicer test features.
 # This will have to do for now.
 TESTS_ENVIRONMENT = ../runtest
-
-
