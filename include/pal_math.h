@@ -79,6 +79,12 @@
  *
  */
 
+/* Get the floor of x */
+#define M_FLOOR(x) ((int)((int)x - ((int)x > x)))
+
+/* Normalize theta between -pi and pi */
+#define M_NORMALIZE_RADIANS(theta) (theta - (M_PI*2) * M_FLOOR((theta + M_PI) / (M_PI*2)))
+
 /*
  ****************************************************************
  * Basic Element Wise Vector Math Functions
