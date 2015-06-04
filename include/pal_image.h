@@ -56,3 +56,7 @@ void p_sad16x16_f32(float *x, float *m, float *r, int cols,
 /*2d sobel filter (3x3) */
 void p_sobel3x3_f32(float *x, float *r, int rows, int cols, 
 		    int p, p_team_t team);
+
+/*2d harris filter (3x3) */
+void p_harris3x3_f32(float *x, float *r, float *t, int rows, int cols, 
+		    int p, p_team_t team);
