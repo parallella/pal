@@ -21,6 +21,6 @@
 void p_ftoi(float *a, int *c, int n, int p, p_team_t team) 
 {
   for(int i = 0; i<n; i++) {
-    *(c+i) = (*(a+i)>=0) ? (int) (*(a+i)+0.5) : (int) (*(a+i)-0.5)
+    *(c+i) = (*(a+i)>=0) ? (int) (*(a+i)+0.5) : (int) (*(a+i)-0.5);
   }
 }
