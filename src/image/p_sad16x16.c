@@ -6,11 +6,9 @@
  *
  * @param x     Pointer to input image, a 2D array of size 'rows' x 'cols'
  *
- * @param m     Pointer to an 16x16 pixel array within the image.
+ * @param m     Pointer to a 16x16 sub image 
  *
- * @param r     Result vector
- *
- * @param rows  Number of rows in input image
+ * @param r     Result scalar
  *
  * @param cols  Number of columns in input image
  *
@@ -21,9 +19,16 @@
  * @return      None
  *
  */
-void p_sad16x16_f32(float *x, float *m, float *r, int rows, int cols, 
+void p_sad16x16_f32(float *x, float *m, float *r, int cols, 
                   int p, p_team_t team)
 {
 
-    /*PLACE CODE HERE*/
+     /*pseudo code
+       for (i = 0; i < 16; i++)
+         for (j = 0; j < 16; j++)
+          sad += abs(m[j+i*16] - x[j+i*cols]);
+       return sad;
+
+     */
+
 }

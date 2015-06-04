@@ -2,15 +2,13 @@
 
 /*
  * This function returns a scalar sum of the absolute differences between the
- * source block 'x' and an 8×8 region pointed to in the reference image 'm'.
+ * source block 'x' and an 8×8 sub image 'm'.
  *
  * @param x     Pointer to input image, a 2D array of size 'rows' x 'cols'
  *
- * @param m     Pointer to an 8x8 pixel array within the image.
+ * @param m     Pointer to an 8x8 sub image
  *
- * @param r     Result vector
- *
- * @param rows  Number of rows in input image
+ * @param r     Result scalar
  *
  * @param cols  Number of columns in input image
  *
@@ -21,8 +19,15 @@
  * @return      None
  */
 
-void p_sad8x8_f32(float *x, float *m, float *r, int rows, int cols, 
+void p_sad8x8_f32(float *x, float *m, float *r, int cols, 
 		  int p, p_team_t team)
 {
-    /*PLACE CODE HERE*/
+      /*pseudo code
+       for (i = 0; i < 8; i++)
+         for (j = 0; j < 8; j++)
+          sad += abs(m[j+i*8] - x[j+i*cols]);
+       return sad;
+
+     */
+
 }
