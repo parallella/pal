@@ -2,9 +2,9 @@
 
 /**
  *
- * Converts a floating point values in 'a' to signed integer values.
+ * Converts the floating point values in 'a' to signed integer values.
  *
- * @param a     Pointer to input vector
+ * @param a     Pointer to input vector, assume that no element is too close to LONG_MIN or LONG_MAX
  *
  * @param c     Pointer to output vector
  *
@@ -17,6 +17,10 @@
  * @return      None
  *
  */
+
 void p_ftoi(float *a, int *c, int n, int p, p_team_t team) 
 {
+  for(int i = 0; i<n; i++) {
+    *(c+i) = (*(a+i)>=0) ? (int) (*(a+i)+0.5) : (int) (*(a+i)-0.5);
+  }
 }
