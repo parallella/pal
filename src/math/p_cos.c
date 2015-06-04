@@ -5,9 +5,6 @@
  * Compute the cosine of the vector 'a'. Angles are specified in radians.
  * The radian number must be in the range 0 to 2pi,
  *
- * Author: Matt Thompson <mthompson@hexwave.com>
- * Date: Jun 2, 2015
- *
  * @param a     Pointer to input vector
  *
  * @param c     Pointer to output vector

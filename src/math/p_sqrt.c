@@ -4,9 +4,6 @@
  *
  * Calculates the square root of the input vector 'a'.
  *
- * Author: Matt Thompson <mthompson@hexwave.com>
- * Date: June 2, 2015
- *
  * This uses a method to approximate sqrt which only applies to IEEE 754 floating point numbers,
  * described in [1]. The optimized magic constant is from Chris Lomont[2]
  *
