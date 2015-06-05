@@ -25,7 +25,7 @@ void p_median_f32(float *a, float *c, int n, int p, p_team_t team)
     p_sort_f32(a, sort, n, p, team);
 
     if(n%2)
-        *c=a[n>>1];
+        *c=sort[n>>1];
     else
-        *c=(a[n>>1] + a[(n-1)>>1])*.5;
+        *c=(sort[n>>1] + sort[(n>>1) - 1])*.5;
 }
