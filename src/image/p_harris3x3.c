@@ -124,7 +124,11 @@ void p_harris3x3_f32(float *x, float *r, float *t, int rows, int cols,
         	pt -= cj;
         	
         	// harris response
-            *pr = ((dx2 * dy2 - dxy * dxy) / (dx2 + dy2 + 1e-8f)) * 0.015625f; // * 1/64
+			#ifdef PAL_HARRIS_HIQ
+            *pr = ((dx2 * dy2 - dxy * dxy) / (dx2 + dy2 + 1e-8f)) * 0.015625f;
+			#else
+			*pr = ((dx2 * dy2 - dxy * dxy) - 0.13f * (dx2 + dy2) * (dx2 + dy2)) * 0.015625f;
+			#endif
             pr++;
         }
         
