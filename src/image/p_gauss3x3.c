@@ -27,27 +27,31 @@ void p_gauss3x3_f32(float *x, float *r, int rows, int cols,
 		    int p, p_team_t team)
 {
     int i, j;
+	int rm2 = rows - 2;
+    int cm2 = cols - 2;
+	int cj = 1 + 2 * cols;
+	float P;
     float *px, *pr;
-    float P;
 
     px = x;
     pr = r;
 
-    for (i = 1; i < (cols - 1); i++) {
-        for (j = 1; j < (rows - 1); j++) {
-            P = 0;
-            P += (*px++);
+    for (i = 0; i < rm2; i++) {
+        for (j = 0; j < cm2; j++) {
+		
+            P = (*px++);
             P += (*px++) * 2;
-            P += (*px++);
-            px += cols - 3;
+            P += (*px);
+            px += cm2;
             P += (*px++) * 2;
             P += (*px++) * 4;
-            P += (*px++) * 2;
-            px += cols - 3;
+            P += (*px) * 2;
+            px += cm2;
             P += (*px++);
             P += (*px++) * 2;
-            P += (*px++);
-            px -= 2 + 2 * cols;
+            P += (*px);
+            px -= cj;
+			
             *pr = P * M_DIV16;
             pr++;
         }
