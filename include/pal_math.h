@@ -222,7 +222,7 @@ void p_sumsq_f32(float *a, float *c, int n, int p, p_team_t team);
 void p_mean_f32(float *a, float *c, int n, int p, p_team_t team);
 
 /*middle value: c = median ( a[n-1:0] ) */
-void p_median_f32(float *a, float *c, int n, int p, p_team_t team);
+void p_median_f32(float *a, float *c, size_t n, int p, p_team_t team)
 
 /*most common number: c = mode ( a[n-1:0] ) */
 void p_mode_f32(float *a, float *c, int n, int p, p_team_t team);
