@@ -24,16 +24,16 @@
  *
  */
 
-void p_xcorr_f32(float *x, float *y, float *r, int nx, int ny,
-		 int p, p_team_t team)
+void p_xcorr_f32(const float *x, const float *y, float *r, int nx, int ny,
+                 int p, p_team_t team)
 {
-  float* data1_p;
-  float* data2_p;
-  float* start_data1_p;
-  float* start_data2_p;
+  const float* data1_p;
+  const float* data2_p;
+  const float* start_data1_p;
+  const float* start_data2_p;
   int i1, i2, n1, n2, i;
-  float* vec1_save_p;
-  float* vec2_save_p;
+  const float* vec1_save_p;
+  const float* vec2_save_p;
   float tmp;
   // Default assumption ny <= nx
   n1 = nx;

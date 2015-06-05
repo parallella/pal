@@ -19,7 +19,7 @@
  * @return          Returns a reference. Negative value indicates error.
  *
  */
-p_prog_t p_load(p_dev_t dev, char *file, char *function, int flags)
+p_prog_t p_load(p_dev_t dev, const char *file, const char *function, int flags)
 {
     size_t len;
     struct prog *prog;

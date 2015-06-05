@@ -101,11 +101,11 @@ p_team_t p_remove(p_team_t team, int start, int count);
 int p_close(p_team_t team);
 
 /* Loads a program from the file system into memory */
-p_prog_t p_load(p_dev_t dev, char *file, char *function, int flags);
+p_prog_t p_load(p_dev_t dev, const char *file, const char *function, int flags);
 
 /* Run a program on N processors */
 int p_run(p_prog_t prog, p_team_t team, int start, int count, int nargs,
-              char *args[], int flags);
+              const char *args[], int flags);
 
 /*Execution barrier*/
 int p_barrier(p_team_t team);
@@ -157,7 +157,7 @@ ssize_t p_gather(p_mem_t *mlist[], int mcount, void *dbuf, size_t dcount,
                  int disp[], int flags);
 
 /*Specialized low level shared memory memcpy interface (non-blocking)*/
-ssize_t p_memcpy(void *dst, void *src, size_t nb, int flags);
+ssize_t p_memcpy(void *dst, const void *src, size_t nb, int flags);
 
 /*
  ***********************************************************************
@@ -199,7 +199,7 @@ int p_atomic_or_u32(p_atom_t atom, uint32_t n);
 int p_atomic_nand_u32(p_atom_t atom, uint32_t n);
 
 /*atomic swap*/
-int p_atomic_swap_u32(p_atom_t atom, uint32_t *input);
+int p_atomic_swap_u32(p_atom_t atom, const uint32_t *input);
 
 /*atomic compare and swap*/
 int p_atomic_compswap_u32(p_atom_t atom, uint32_t *input, uint32_t expected);

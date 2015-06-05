@@ -17,11 +17,12 @@
  * @return      None
  *
  */
-void p_popcount_u32(uint32_t *a, uint32_t *c, int n, int p, p_team_t team)
+void p_popcount_u32(const uint32_t *a, uint32_t *c, int n, int p, p_team_t team)
 {
     static const uint32_t A[] = {0x55555555, 0x33333333,
                                  0x0f0f0f0f, 0x01010101};
-    uint32_t *pa, *pc;
+    const uint32_t *pa;
+    uint32_t *pc;
     uint32_t tmp;
     int i;
 
@@ -37,11 +38,12 @@ void p_popcount_u32(uint32_t *a, uint32_t *c, int n, int p, p_team_t team)
     }
 }
 
-void p_popcount_u64(uint64_t *a, uint64_t *c, int n, int p, p_team_t team)
+void p_popcount_u64(const uint64_t *a, uint64_t *c, int n, int p, p_team_t team)
 {
     static const uint64_t A[] = {0x5555555555555555, 0x3333333333333333,
                                  0x0f0f0f0f0f0f0f0f, 0x0101010101010101};
-    uint64_t *pa, *pc;
+    const uint64_t *pa;
+    uint64_t *pc;
     uint64_t tmp;
     int i;
 

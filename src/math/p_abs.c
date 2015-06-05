@@ -18,7 +18,7 @@
  *
  */
 #include <math.h>
-void p_abs_f32(float *a, float *c, int n, int p, p_team_t team)
+void p_abs_f32(const float *a, float *c, int n, int p, p_team_t team)
 {
     uint32_t tmp;
     int i;

@@ -18,7 +18,7 @@
  *
  */
 #include <math.h>
-void p_invcbrt_f32(float *a, float *c, int n, int p, p_team_t team)
+void p_invcbrt_f32(const float *a, float *c, int n, int p, p_team_t team)
 {
     int i;
     for (i = 0; i < n; i++) {

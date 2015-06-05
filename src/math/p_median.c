@@ -18,7 +18,7 @@
  *
  */
 
-void p_median_f32(float *a, float *c, int n, int p, p_team_t team)
+void p_median_f32(const float *a, float *c, int n, int p, p_team_t team)
 {
     float sort[n];
 

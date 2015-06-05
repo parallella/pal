@@ -25,8 +25,8 @@
  * @return      None
  *
  */
-void p_firdec_f32(float *x, float *h, float *r, int nx, int nh, int df,
-		  int p, p_team_t team)
+void p_firdec_f32(const float *x, const float *h, float *r,
+                  int nx, int nh, int df, int p, p_team_t team)
 {
 
     /*PLACE CODE HERE*/

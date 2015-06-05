@@ -18,4 +18,4 @@
  *
  */
 #include <math.h>
-void p_itof(int *a, float *c, int n, int p, p_team_t team) {}
+void p_itof(const int *a, float *c, int n, int p, p_team_t team) {}

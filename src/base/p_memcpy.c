@@ -25,7 +25,7 @@
 #include "pal_base.h"
 #include "pal_base_private.h"
 
-ssize_t p_memcpy(void *dst, void *src, size_t nb, int flags)
+ssize_t p_memcpy(void *dst, const void *src, size_t nb, int flags)
 {
     /*PLACE CODE HERE*/
     return (0);

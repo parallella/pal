@@ -19,11 +19,12 @@
  *
  */
 
-void p_median3x3_f32(float *x, float *r, int rows, int cols, 
-		     int p, p_team_t team)
+void p_median3x3_f32(const float *x, float *r, int rows, int cols,
+                     int p, p_team_t team)
 {
     float buffer[9];
-    float *px, *pr;
+    const float *px;
+    float *pr;
     int i, j, buffer_col;
 
     px = x;

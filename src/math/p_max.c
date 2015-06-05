@@ -20,7 +20,8 @@
  *
  */
 
-void p_max_f32(float *a, float *c, int *index, int n, int p, p_team_t team)
+void p_max_f32(const float *a, float *c, int *index,
+               int n, int p, p_team_t team)
 {
     if (n==0) return; // only do work if there are elements
     int pos = 0;

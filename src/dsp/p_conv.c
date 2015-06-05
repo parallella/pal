@@ -22,9 +22,10 @@
  * @return        None
  *
  */
-void p_conv_f32(float *x, float *h, float *r, int nx, int nh, int p, p_team_t team)
+void p_conv_f32(const float *x, const float *h, float *r,
+                int nx, int nh, int p, p_team_t team)
 {
-    float *xc = x;
+    const float *xc = x;
     float *rx = r;
   	for ( int i = 0; i < nx; i++) {
         float xv = *xc++;

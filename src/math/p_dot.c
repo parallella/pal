@@ -20,7 +20,8 @@
  * @return      None
  *
  */
-void p_dot_f32(float *a, float *b, float *c, int n, int p, p_team_t team )
+void p_dot_f32(const float *a, const float *b, float *c,
+               int n, int p, p_team_t team )
 {
     float tmp = 0.0f;
     int i;

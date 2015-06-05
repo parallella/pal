@@ -27,8 +27,8 @@
  *
  */
 
-void p_firint_f32(float *x, float *h, float *r, int nx, int nh, int ifactor,
-		  int p, p_team_t team)
+void p_firint_f32(const float *x, const float *h, float *r, int nx, int nh,
+                  int ifactor, int p, p_team_t team)
 {
 
     /*PLACE CODE HERE*/

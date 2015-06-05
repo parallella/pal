@@ -23,11 +23,12 @@
  *
  */
 
-void p_gauss3x3_f32(float *x, float *r, int rows, int cols, 
-		    int p, p_team_t team)
+void p_gauss3x3_f32(const float *x, float *r, int rows, int cols,
+                    int p, p_team_t team)
 {
     int i, j;
-    float *px, *pr;
+    const float *px;
+    float *pr;
     float P;
 
     px = x;
