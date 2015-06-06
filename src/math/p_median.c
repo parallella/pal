@@ -20,12 +20,18 @@
 
 void p_median_f32(const float *a, float *c, int n, int p, p_team_t team)
 {
-    float sort[n];
+    float copy[n];
+    int i;
+    for (i = 0; i < n; ++i)
+        copy[i] = a[i];
 
-    p_sort_f32(a, sort, n, p, team);
-
-    if(n%2)
-        *c=a[n>>1];
-    else
-        *c=(a[n>>1] + a[(n-1)>>1])*.5;
+    if (n & 1) {
+        p_find_kth_f32(copy, c, n, n/2, p, team);
+    } else {
+        float m1, m2;
+        p_find_kth_f32(copy, &m1, n, n/2, p, team);
+        p_find_kth_f32(copy, &m2, n, n/2+1, p, team);
+        *c = (m1 + m2) * .5;
+    }
 }
+
