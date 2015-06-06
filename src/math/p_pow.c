@@ -20,7 +20,8 @@
  *
  */
 #include <math.h>
-void p_pow_f32(float *a, float *b, float *c, int n, int p, p_team_t team)
+void p_pow_f32(const float *a, const float *b, float *c,
+               int n, int p, p_team_t team)
 {
 
     int i;

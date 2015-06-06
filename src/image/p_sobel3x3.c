@@ -27,12 +27,12 @@ static __inline __attribute((__always_inline__)) float my_hypot( float a, float 
  *
  * @param p     Number of processor to use (task parallelism)
  *
- * @param team  Team to work with 
+ * @param team  Team to work with
  *
  */
 
-void p_sobel3x3_f32(float *x, float *r, int rows, int cols, 
-		    int p, p_team_t team)
+void p_sobel3x3_f32(const float *x, float *r, int rows, int cols,
+                    int p, p_team_t team)
 {
 	int i, j;
 	float Gx, Gy;
@@ -41,7 +41,7 @@ void p_sobel3x3_f32(float *x, float *r, int rows, int cols,
 	float a10, a11, a12, a13, a14;
 	float a20, a21, a22, a23, a24;
 
-	float* px = x;
+	const float* px = x;
 	float* pr = r+cols+1;
 
 	for (j = 0; j < (rows - 2); j++) {

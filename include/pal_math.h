@@ -101,103 +101,113 @@
  */
 
 /*integer to float conversion*/
-void p_itof(int *a, float *c, int n, int p, p_team_t team);
+void p_itof(const int *a, float *c, int n, int p, p_team_t team);
 
 /*float to integer conversion*/
-void p_ftoi(float *a, int *c, int n, int p, p_team_t team);
+void p_ftoi(const float *a, int *c, int n, int p, p_team_t team);
 
 /*absolute value c = abs ( a ) */
-void p_abs_f32(float *a, float *c, int n, int p, p_team_t team);
+void p_abs_f32(const float *a, float *c, int n, int p, p_team_t team);
 
 /*arc cosine: c = acos ( a ) */
-void p_acos_f32(float *a, float *c, int n, int p, p_team_t team);
+void p_acos_f32(const float *a, float *c, int n, int p, p_team_t team);
 
 /*arc hyperbolic cosine, c = acosh ( a ) */
-void p_acosh_f32(float *a, float *c, int n, int p, p_team_t team);
+void p_acosh_f32(const float *a, float *c, int n, int p, p_team_t team);
 
 /*arc sine: c = asin ( a ) */
-void p_asin_f32(float *a, float *c, int n, int p, p_team_t team);
+void p_asin_f32(const float *a, float *c, int n, int p, p_team_t team);
 
 /*arc hyperbolic sine: c = asinh ( a ) */
-void p_asinh_f32(float *a, float *c, int n, int p, p_team_t team);
+void p_asinh_f32(const float *a, float *c, int n, int p, p_team_t team);
 
 /*arc tanget: c = atan ( a ) */
-void p_atan_f32(float *a, float *c, int n, int p, p_team_t team);
+void p_atan_f32(const float *a, float *c, int n, int p, p_team_t team);
 
 /*arc tangent of b/a: c = atan2 ( a , b) */
-void p_atan2_f32(float *a, float *b, float *c, int n, int p, p_team_t team);
+void p_atan2_f32(const float *a, const float *b, float *c,
+                 int n, int p, p_team_t team);
 
 /*arc hyperbolic tanget: c = atanh ( a ) */
-void p_atanh_f32(float *a, float *c, int n, int p, p_team_t team);
+void p_atanh_f32(const float *a, float *c, int n, int p, p_team_t team);
 
 /*cubic root of a:  c = cbrt ( a) */
-void p_cbrt_f32(float *a, float *c, int n, int p, p_team_t team);
+void p_cbrt_f32(const float *a, float *c, int n, int p, p_team_t team);
 
 /*cosine: c = cos ( a ) */
-void p_cos_f32(float *a, float *c, int n, int p, p_team_t team);
+void p_cos_f32(const float *a, float *c, int n, int p, p_team_t team);
 
 /*hyperpolic cosine:  c = cosh ( a ) */
-void p_cosh_f32(float *a, float *c, int n, int p, p_team_t team);
+void p_cosh_f32(const float *a, float *c, int n, int p, p_team_t team);
 
 /*division: c =  a ./ b */
-void p_div_f32(float *a, float *b, float *c, int n, int p, p_team_t team);
+void p_div_f32(const float *a, const float *b, float *c,
+               int n, int p, p_team_t team);
 
 /*exponential: c = exp ( a ) */
-void p_exp_f32(float *a, float *c, int n, int p, p_team_t team);
+void p_exp_f32(const float *a, float *c, int n, int p, p_team_t team);
 
 /*inverse: c = 1 / ( a ) */
-void p_inv_f32(float *a, float *c, int n, int p, p_team_t team);
+void p_inv_f32(const float *a, float *c, int n, int p, p_team_t team);
 
 /*inverse cube root: c = 1 / cbrt ( a ) */
-void p_invcbrt_f32(float *a, float *c, int n, int p, p_team_t team);
+void p_invcbrt_f32(const float *a, float *c, int n, int p, p_team_t team);
 
 /*inverse square root c = 1 / sqrt ( a ) */
-void p_invsqrt_f32(float *a, float *c, int n, int p, p_team_t team);
+void p_invsqrt_f32(const float *a, float *c, int n, int p, p_team_t team);
 
 /*natural logarithm: c = ln ( a ) */
-void p_ln_f32(float *a, float *c, int n, int p, p_team_t team);
+void p_ln_f32(const float *a, float *c, int n, int p, p_team_t team);
 
 /*denary logarithm: c = log10 ( a ) */
-void p_log10_f32(float *a, float *c, int n, int p, p_team_t team);
+void p_log10_f32(const float *a, float *c, int n, int p, p_team_t team);
 
 /*element raised to a power: c = pow ( a , b ) */
-void p_pow_f32(float *a, float *b, float *c, int n, int p, p_team_t team);
+void p_pow_f32(const float *a, const float *b, float *c,
+               int n, int p, p_team_t team);
 
 /*sine: c = sin ( a ) */
-void p_sin_f32(float *a, float *c, int n, int p, p_team_t team);
+void p_sin_f32(const float *a, float *c, int n, int p, p_team_t team);
 
 /*computes sin and cos of a: c = sin ( a ),  z = cos ( a ) */
-void p_sincos_f32(float *a, float *c, float *z, int n, int p, p_team_t team);
+void p_sincos_f32(const float *a, float *c, float *z,
+                  int n, int p, p_team_t team);
 
 /*hyperbolic Sine: c = sinh ( a ) */
-void p_sinh_f32(float *a, float *c, int n, int p, p_team_t team);
+void p_sinh_f32(const float *a, float *c, int n, int p, p_team_t team);
 
 /*square root c = sqrt ( a ) */
-void p_sqrt_f32(float *a, float *c, int n, int p, p_team_t team);
+void p_sqrt_f32(const float *a, float *c, int n, int p, p_team_t team);
 
 /*tangent: c = tan ( a ) */
-void p_tan_f32(float *a, float *c, int n, int p, p_team_t team);
+void p_tan_f32(const float *a, float *c, int n, int p, p_team_t team);
 
 /*hyperbolic tangent, c = tanh ( a ) */
-void p_tanh_f32(float *a, float *c, int n, int p, p_team_t team);
+void p_tanh_f32(const float *a, float *c, int n, int p, p_team_t team);
 
 /*dot product: c =  sum ( a[n-1:0] * b[n-1:0] ) */
-void p_dot_f32(float *a, float *b, float *c, int n, int p, p_team_t team);
+void p_dot_f32(const float *a, const float *b, float *c,
+               int n, int p, p_team_t team);
 
 /*absolute difference: c = | a[n-1:0] - b[n-1:0] | */
-void p_absdiff_f32(float *a, float *b, float *c, int n, int p, p_team_t team);
+void p_absdiff_f32(const float *a, const float *b, float *c,
+                   int n, int p, p_team_t team);
 
 /*add vectors: c =  a[n-1:0] + b[n-1:0]  */
-void p_add_f32(float *a, float *b, float *c, int n, int p, p_team_t team);
+void p_add_f32(const float *a, const float *b, float *c,
+               int n, int p, p_team_t team);
 
 /*subtract vectors: c =  a[n-1:0] - b[n-1:0]  */
-void p_sub_f32(float *a, float *b, float *c, int n, int p, p_team_t team);
+void p_sub_f32(const float *a, const float *b, float *c,
+               int n, int p, p_team_t team);
 
 /*multiply vectors: c =  a[n-1:0] - b[n-1:0]  */
-void p_mul_f32(float *a, float *b, float *c, int n, int p, p_team_t team);
+void p_mul_f32(const float *a, const float *b, float *c,
+               int n, int p, p_team_t team);
 
 /* Element wise multiply accumulate: c += a * b' */
-void p_mac_f32(float *a, float *b, float *c, int n, int p, p_team_t team);
+void p_mac_f32(const float *a, const float *b, float *c,
+               int n, int p, p_team_t team);
 
 /*
  ****************************************************************
@@ -213,25 +223,27 @@ void p_mac_f32(float *a, float *b, float *c, int n, int p, p_team_t team);
  */
 
 /*sum: c = sum ( a[n-1:0] ) */
-void p_sum_f32(float *a, float *c, int n, int p, p_team_t team);
+void p_sum_f32(const float *a, float *c, int n, int p, p_team_t team);
 
 /*sum of squares: c =  sum( a[n-1:0]^2 ) */
-void p_sumsq_f32(float *a, float *c, int n, int p, p_team_t team);
+void p_sumsq_f32(const float *a, float *c, int n, int p, p_team_t team);
 
 /*mean: c = sum ( a[n-1:0] ) / n  */
-void p_mean_f32(float *a, float *c, int n, int p, p_team_t team);
+void p_mean_f32(const float *a, float *c, int n, int p, p_team_t team);
 
 /*middle value: c = median ( a[n-1:0] ) */
-void p_median_f32(float *a, float *c, int n, int p, p_team_t team);
+void p_median_f32(const float *a, float *c, int n, int p, p_team_t team);
 
 /*most common number: c = mode ( a[n-1:0] ) */
-void p_mode_f32(float *a, float *c, int n, int p, p_team_t team);
+void p_mode_f32(const float *a, float *c, int n, int p, p_team_t team);
 
 /*find max value and its index from input vector */
-void p_max_f32(float *a, float *c, int *index, int n, int p, p_team_t team);
+void p_max_f32(const float *a, float *c, int *index,
+               int n, int p, p_team_t team);
 
 /*find min value and its index from input vector */
-void p_min_f32(float *a, float *c, int *index, int n, int p, p_team_t team);
+void p_min_f32(const float *a, float *c, int *index,
+               int n, int p, p_team_t team);
 
 /*
  ****************************************************************
@@ -241,8 +253,8 @@ void p_min_f32(float *a, float *c, int *index, int n, int p, p_team_t team);
  */
 
 /*sort an array*/
-void p_sort_f32(float *a, float *c, int n, int p, p_team_t team);
-void p_sort_u32(uint32_t *a, uint32_t *c, int n, int p, p_team_t team);
+void p_sort_f32(const float *a, float *c, int n, int p, p_team_t team);
+void p_sort_u32(const uint32_t *a, uint32_t *c, int n, int p, p_team_t team);
 
 /* seed pseudo-random number generator */
 void p_srand(unsigned int seed);
@@ -251,5 +263,7 @@ void p_srand(unsigned int seed);
 int p_rand(void);
 
 /*population count*/
-void p_popcount_u32(uint32_t *a, uint32_t *c, int n, int p, p_team_t team);
-void p_popcount_u64(uint64_t *a, uint64_t *c, int n, int p, p_team_t team);
+void p_popcount_u32(const uint32_t *a, uint32_t *c,
+                    int n, int p, p_team_t team);
+void p_popcount_u64(const uint64_t *a, uint64_t *c,
+                    int n, int p, p_team_t team);

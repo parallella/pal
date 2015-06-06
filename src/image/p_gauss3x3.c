@@ -17,28 +17,29 @@
  *
  * @param p    Number of processor to use (task parallelism)
  *
- * @param team Team to work with 
+ * @param team Team to work with
  *
  * @return     None
  *
  */
 
-void p_gauss3x3_f32(float *x, float *r, int rows, int cols, 
-		    int p, p_team_t team)
+void p_gauss3x3_f32(const float *x, float *r, int rows, int cols,
+                    int p, p_team_t team)
 {
     int i, j;
 	int rm2 = rows - 2;
     int cm2 = cols - 2;
 	int cj = 1 + 2 * cols;
 	float P;
-    float *px, *pr;
+    const float *px;
+    float *pr;
 
     px = x;
     pr = r;
 
     for (i = 0; i < rm2; i++) {
         for (j = 0; j < cm2; j++) {
-		
+
             P = (*px++);
             P += (*px++) * 2;
             P += (*px);
@@ -51,7 +52,7 @@ void p_gauss3x3_f32(float *x, float *r, int rows, int cols,
             P += (*px++) * 2;
             P += (*px);
             px -= cj;
-			
+
             *pr = P * M_DIV16;
             pr++;
         }

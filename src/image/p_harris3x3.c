@@ -1,7 +1,7 @@
 #include <pal.h>
 
 /* smooth structure tensor */
-static void _sst3x3(float *x, float *r, int rows, int cols, 
+static void _sst3x3(const float *x, float *r, int rows, int cols, 
 		    int p, p_team_t team)
 {
     int i, j;
@@ -10,7 +10,8 @@ static void _sst3x3(float *x, float *r, int rows, int cols,
     int rm2 = rows - 2;
     int cm2 = cols - 2;
     float Dx, Dy;
-    float *px, *pr;
+    const float *px;
+    float *pr;
 
     px = x;
     pr = r;
@@ -68,7 +69,7 @@ static void _sst3x3(float *x, float *r, int rows, int cols,
  * @param team  Team to work with 
  *
  */
-void p_harris3x3_f32(float *x, float *r, float *t, int rows, int cols, 
+void p_harris3x3_f32(const float *x, float *r, float *t, int rows, int cols, 
 		    int p, p_team_t team)
 {
 	int i, j;

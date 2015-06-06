@@ -5,10 +5,10 @@ int main(int argc, char *argv[])
 {
 
     // Stack variables
-    char *file = "./hello_task.elf";
-    char *func = "main";
+    const char *file = "./hello_task.elf";
+    const char *func = "main";
     int status, i, all, nargs = 1;
-    char *args[nargs];
+    const char *args[nargs];
     char argbuf[20];
 
     // References as opaque structures

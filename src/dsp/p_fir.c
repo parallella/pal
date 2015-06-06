@@ -24,8 +24,9 @@
  *
  */
 
-void p_fir_f32(float *x, float *h, float *r, int nx, int nh,
-	       int p, p_team_t team){
+void p_fir_f32(const float *x, const float *h, float *r, int nx, int nh,
+               int p, p_team_t team)
+{
 
     int wrp; // delay line's current position.
     int rdp; // I/O data's current position

@@ -32,8 +32,8 @@ float coeffs[_Nstage][2][_Ntaps+1]  =
 	{{/*IIR-0*/ {1, 0.5, 0, 0}, /*FIR-0*/ {0.5, 0.5, 0, 0}},
 	 {/*IIR-1*/ {1, 0,   0, 0}, /*FIR-1*/ {0,   0,   0, 0}}};
 
-void p_iir_f32(float *x, float *h, float *r, int nb, int nr,
-	       int p, p_team_t team)
+void p_iir_f32(const float *x, const float *h, float *r, int nb, int nr,
+               int p, p_team_t team)
 {
 	int register rdp; // pointer to the I/O data's current position.
 	int register cp;  // pointer to the coefficients array.

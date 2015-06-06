@@ -21,12 +21,12 @@
 
 #define COS_ITERATIONS 5
 
-void p_cos_f32(float *a, float *c, int n, int p, p_team_t team)
+void p_cos_f32(const float *a, float *c, int n, int p, p_team_t team)
 {
 
     int i;
     for (i = 0; i < n; i++) {
-        float *pa = (a+i);
+        const float *pa = (a+i);
         float *pc = (c+i);
         float val = 1;
         int k;

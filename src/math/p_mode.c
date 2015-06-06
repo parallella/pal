@@ -18,7 +18,7 @@
  *
  */
 
-void p_mode_f32(float *a, float *c, int n, int p, p_team_t team)
+void p_mode_f32(const float *a, float *c, int n, int p, p_team_t team)
 {
     unsigned int occurrence_count = 0;
     unsigned int max_occurrence_count = 0;

@@ -20,17 +20,21 @@
  *
  */
 #include <math.h>
-void p_a_inv_f32(float *a, float *c, int n, int p, int iterations, p_team_t team)
+void p_a_inv_f32(const float *a, float *c, int n, int p,
+                 int iterations, p_team_t team)
 {
     int i, j;
     float max = iterations * iterations * iterations;
     float inv_max = 1.0/max; // only computed once, hence speedups
     for (i = 0; i < n; i++) {
-        int negate = *(a + i) < 0;
-        if (negate) *(a + i) *= -1;
-        *(c + i) = *(a + i) > 1 ? inv_max : max;
+        float ai = a[i];
+        int negate = ai < 0;
+
+        if (negate) ai *= -1;
+        c[i] = ai > 1 ? inv_max : max;
         for (j = 0; j < iterations; j++)
-            *(c + i) *= (2 - *(a+i) * *(c+i));
-        if (negate) { *(a + i) *= -1; *(c + i) *= -1; }
+            c[i] *= (2 - ai * c[i]);
+        if (negate)
+            c[i] *= -1;
     }
 }

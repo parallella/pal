@@ -20,7 +20,8 @@
  * @return            None
  *
  */
-void p_min_f32(float *a, float *c, int *index, int n, int p, p_team_t team)
+void p_min_f32(const float *a, float *c, int *index,
+               int n, int p, p_team_t team)
 {
     float min;
     int i, pos;

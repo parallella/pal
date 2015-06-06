@@ -22,13 +22,14 @@
  *
  */
 
-void p_conv2d_f32(float *x, float *m, float *r, int rows, int cols, int msize,
-		  int p, p_team_t team)
+void p_conv2d_f32(const float *x, float *m, float *r, int rows, int cols,
+                  int msize, int p, p_team_t team)
 
 {
     int i, j, k;
     float P, part;
-    float *px, *pm, *pr;
+    const float *px, *pm;
+    float *pr;
 
     px = x;
     pm = m;

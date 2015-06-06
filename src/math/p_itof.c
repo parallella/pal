@@ -12,13 +12,14 @@
  *
  * @param p     Number of processor to use (task parallelism)
  *
- * @param team  Team to work with 
+ * @param team  Team to work with
  *
  * @return      None
  *
  */
 #include <math.h>
-void p_itof(int *a, float *c, int n, int p, p_team_t team) {
+void p_itof(const int *a, float *c, int n, int p, p_team_t team)
+{
 	int i;
 	for(i = 0; i < n; i++) {
 		*(c + i) = (float)(*(a + i));

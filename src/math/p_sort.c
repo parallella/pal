@@ -76,7 +76,7 @@ SORT_FUNC(_heapsort_u32, uint32_t, _sift_down_u32);
  * @return      None
  *
  */
-void p_sort_f32(float *a, float *c, int n, int p, p_team_t team)
+void p_sort_f32(const float *a, float *c, int n, int p, p_team_t team)
 {
 	_heapsort_f32(a, c, n);
 }
@@ -94,7 +94,7 @@ void p_sort_f32(float *a, float *c, int n, int p, p_team_t team)
  * @return      None
  *
  */
-void p_sort_u32(uint32_t *a, uint32_t *c, int n, int p, p_team_t team)
+void p_sort_u32(const uint32_t *a, uint32_t *c, int n, int p, p_team_t team)
 {
 	_heapsort_u32(a, c, n);
 }

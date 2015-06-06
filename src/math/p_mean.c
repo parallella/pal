@@ -17,7 +17,7 @@
  * @return      None
  *
  */
-void p_mean_f32(float *a, float *c, int n, int p, p_team_t team)
+void p_mean_f32(const float *a, float *c, int n, int p, p_team_t team)
 {
     float tmp = 0.0f;
     int i;

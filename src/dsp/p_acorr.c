@@ -21,14 +21,14 @@
  *
  */
 
-void p_acorr_f32(float *x, float *r, int nx, int nr,
-		 int p, p_team_t team)
+void p_acorr_f32(const float *x, float *r, int nx, int nr,
+                 int p, p_team_t team)
 {
   int c_offset;
   int index;
-  float* x_off;
-  float* x_p;
-  float* x_po;
+  const float* x_off;
+  const float* x_p;
+  const float* x_po;
 
   x_off = x;
   for ( c_offset = 0; c_offset < nr; c_offset++ ) {

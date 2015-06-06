@@ -32,7 +32,7 @@
 #include "pal_base_private.h"
 
 int p_run(p_prog_t prog, p_team_t team, int start, int size, int nargs,
-        char *args[], int flags)
+        const char *args[], int flags)
 {
     int err;
     struct team *pteam = (struct team *) team;
