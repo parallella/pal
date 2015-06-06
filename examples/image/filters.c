@@ -77,6 +77,7 @@ int main(int argc, char *argv[])
     {
         float *tmp = malloc(size * 3 * sizeof(float));
         p_harris3x3_f32(data, dest, tmp, h, w, 1, team);
+	free(tmp);
         float_to_ubyte(data_ub, dest, size);
         stbi_write_tga("../dataset/lena_harris.tga", w-4, h-4, 1, data_ub);
     }
@@ -85,7 +86,7 @@ int main(int argc, char *argv[])
     {
         p_sobel3x3_f32(data, dest, h, w, 1, team);   
         float_to_ubyte(data_ub, dest, size);
-        stbi_write_tga("../dataset/lena_sobel.tga", w-2, h-2, 1, data_ub);
+        stbi_write_tga("../dataset/lena_sobel.tga", w, h, 1, data_ub);
     }
     
     /* box */
