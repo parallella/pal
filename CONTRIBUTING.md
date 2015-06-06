@@ -32,7 +32,10 @@ comment.
 logical units of work using `git rebase -i` and `git push -f`. After every
 commit the test suite should be passing. Include documentation changes in the
 same commit so that a revert would remove all traces of the feature or fix.
-
+* Before you submit, please ensure that your change did not break anything:
+```
+make check
+```
 
 ### How to submit a pull request?
 
