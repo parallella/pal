@@ -50,8 +50,8 @@ void p_median3x3_f32(const float *x, float *r, int rows, int cols,
             buffer[buffer_pointer+1] = *(px + j + cols );
             buffer[buffer_pointer+2] = *(px + j + cols + cols );
             buffer_pointer+= 3 ;
-            p_median_f32(buffer, pr, 9, 0, 0);
-            //*pr = opt_med9(buffer);
+            //p_median_f32(buffer, pr, 9, 0, 0);
+            *pr = opt_med9(buffer);
             pr++;
         }
         px += cols ;
