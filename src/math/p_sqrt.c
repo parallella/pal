@@ -44,6 +44,7 @@ void p_sqrt_f32(const float *a, float *c, int n, int p, p_team_t team)
         // Newton steps, repeating this increases accuracy
         x = x*(1.5f - xhalf*x*x);
         x = x*(1.5f - xhalf*x*x);
+        x = x*(1.5f - xhalf*x*x);
 
         // x contains the inverse sqrt
 
