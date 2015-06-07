@@ -20,7 +20,15 @@
 
 void p_ftoi(const float *a, int *c, int n, int p, p_team_t team)
 {
-  for(int i = 0; i<n; i++) {
-    *(c+i) = (*(a+i)>=0) ? (int) (*(a+i)+0.5) : (int) (*(a+i)-0.5);
+  const float *pa;
+  int *pc;
+  
+  pa = a;
+  pc = c;
+  
+  for (int i = 0; i<n; i++) {
+    *pc = (*pa>=0) ? (int) (*pa+0.5) : (int) (*pa-0.5);
+    pa++;
+    pc++;
   }
 }
