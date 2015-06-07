@@ -34,19 +34,6 @@ bool compare(float x, float y)
     return err <= EPSILON_RELMAX;
 }
 
-#ifdef GENERATE_GOLD
-void print_gold()
-{
-    size_t i;
-    FILE *ofp;
-
-    ofp = fopen(XSTRING(FUNCTION.res), "w");
-    for (i = 0; i < ARRAY_SIZE(gold); i++)
-        fprintf(ofp, "%f,%f,%f,%f\n", ai[i], bi[i], 0.0f, res[i]);
-    fclose(ofp);
-}
-#endif
-
 void setup()
 {
     size_t i;
@@ -67,19 +54,9 @@ void setup()
         ai[i] = gold[i].ai;
         bi[i] = gold[i].bi;
     }
-}
 
-void teardown()
-{
-    free(ai);
-    free(bi);
-    free(res);
-}
-
-START_TEST(GOLD_TEST)
-{
-    size_t i;
-
+    /* Run FUNCTION against gold input here so results are available
+     * for all test cases. */
     /* HACK: Pass in an invalid team. API was changed in:
      * a380f6b70b8461dbb8c0def388d00270f8b27c28
      * but implementation did have not catched up yet.
@@ -89,10 +66,33 @@ START_TEST(GOLD_TEST)
 #else /* Binary */
     FUNCTION(ai, bi, res, ARRAY_SIZE(gold), 0, p_ref_err(EINVAL));
 #endif
+}
 
-#ifdef GENERATE_GOLD
-    print_gold();
-#else
+void teardown()
+{
+    free(ai);
+    free(bi);
+    free(res);
+}
+
+START_TEST(print_gold)
+{
+    size_t i;
+    FILE *ofp;
+
+    ofp = fopen(XSTRING(FUNCTION.res), "w");
+    for (i = 0; i < ARRAY_SIZE(gold); i++)
+        fprintf(ofp, "%f,%f,%f,%f\n", ai[i], bi[i], 0.0f, res[i]);
+    fclose(ofp);
+
+    fprintf(stdout, "Gold data written to: %s\n", XSTRING(FUNCTION.res));
+}
+END_TEST
+
+START_TEST(GOLD_TEST)
+{
+    size_t i;
+
     for (i = 0; i < ARRAY_SIZE(gold); i++) {
 #if IS_UNARY
         ck_assert_msg(compare(res[i], gold[i].gold), "%s(%f): %f != %f",
@@ -108,11 +108,8 @@ START_TEST(GOLD_TEST)
     }
     ck_assert_msg(res[i] == OUTPUT_END_MARKER,
                   "Output end marker was overwritten");
-#endif
 }
 END_TEST
-
-__attribute__((weak))
 
 /* Allow individual tests to add more test cases, e.g. against a reference
  * function */
@@ -130,8 +127,13 @@ int main(void)
     SRunner *sr = srunner_create(suite);
 
     tcase_add_unchecked_fixture(tcase, setup, teardown);
+
+#ifdef GENERATE_GOLD
+    tcase_add_test(tcase, print_gold);
+#else
     tcase_add_test(tcase, GOLD_TEST);
     add_more_tests(tcase);
+#endif
 
     suite_add_tcase(suite, tcase);
 
