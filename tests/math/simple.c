@@ -1,5 +1,8 @@
 #include "simple.h"
 
+#define GOLD_PATH XSTRING(gold/FUNCTION.gold.h)
+#include GOLD_PATH
+
 #ifndef FUNCTION
 #error FUNCTION must be defined
 #endif
@@ -8,10 +11,7 @@
 #error IS_UNARY or IS_BINARY must be defined
 #endif
 
-float *ai, *bi, *res;
-
-#define GOLD_PATH XSTRING(gold/FUNCTION.gold.h)
-#include GOLD_PATH
+float *ai, *bi, *res, *ref;
 
 #define GOLD_TEST XCONCAT2(test_gold_, FUNCTION)
 
@@ -40,6 +40,7 @@ void setup()
 
     ai = calloc(ARRAY_SIZE(gold), sizeof(float));
     bi = calloc(ARRAY_SIZE(gold), sizeof(float));
+    ref = calloc(ARRAY_SIZE(gold), sizeof(float));
 
     /* Allocate one extra element for res and add end marker so overwrites can
      * be detected */
@@ -73,6 +74,7 @@ void teardown()
     free(ai);
     free(bi);
     free(res);
+    free(ref);
 }
 
 START_TEST(print_gold)
@@ -111,6 +113,30 @@ START_TEST(GOLD_TEST)
 }
 END_TEST
 
+#ifdef REF_FUNCTION
+START_TEST(against_ref_function)
+{
+    size_t i;
+
+    generate_ref(ref, ARRAY_SIZE(gold));
+
+    for (i = 0; i < ARRAY_SIZE(gold); i++) {
+#if IS_UNARY
+        ck_assert_msg(compare(res[i], ref[i]), "%s(%f): %f != %f",
+                      XSTRING(FUNCTION), ai[i], res[i], ref[i]);
+#else
+        ck_assert_msg(compare(res[i], ref[i]), "%s(%f, %f): %f != %f",
+                      XSTRING(FUNCTION), ai[i], bi[i], res[i], ref[i]);
+#endif
+#ifdef SCALAR_OUTPUT /* Scalar output so only first address is valid */
+        i++;
+        break;
+#endif
+    }
+}
+END_TEST
+#endif
+
 /* Allow individual tests to add more test cases, e.g. against a reference
  * function */
 __attribute__((weak))
@@ -132,6 +158,9 @@ int main(void)
     tcase_add_test(tcase, print_gold);
 #else
     tcase_add_test(tcase, GOLD_TEST);
+#ifdef REF_FUNCTION
+    tcase_add_test(tcase, against_ref_function);
+#endif
     add_more_tests(tcase);
 #endif
 

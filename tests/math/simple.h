@@ -21,7 +21,7 @@ struct gold {
     float gold;
 };
 
-extern float *ai, *bi, *res;
+extern float *ai, *bi, *res, *ref;
 
 
 /* Functions that can be overridden by individual tests */
@@ -32,3 +32,6 @@ bool compare(float x, float y);
 /* Allow individual tests to add more test cases, e.g. against a reference
  * function */
 void add_more_tests(TCase *tcase);
+
+/* Needs to be implemented by tests that define REF_FUNCTION */
+void generate_ref();
