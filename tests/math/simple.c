@@ -61,7 +61,6 @@ void print_gold()
 }
 #endif
 
-#if IS_UNARY
 START_TEST(CONCAT2(test_, FUNCTION))
 {
     size_t i;
@@ -70,7 +69,12 @@ START_TEST(CONCAT2(test_, FUNCTION))
      * a380f6b70b8461dbb8c0def388d00270f8b27c28
      * but implementation did have not catched up yet.
      * When it does, the tests will break... */
+#if IS_UNARY
     FUNCTION(ai, res, ARRAY_SIZE(gold), 0, p_ref_err(EINVAL));
+#else /* Binary */
+    FUNCTION(ai, bi, res, ARRAY_SIZE(gold), 0, p_ref_err(EINVAL));
+#endif
+
 #ifdef GENERATE_GOLD
     print_gold();
 #else
@@ -87,31 +91,6 @@ START_TEST(CONCAT2(test_, FUNCTION))
 #endif
 }
 END_TEST
-#else
-START_TEST(CONCAT2(test_, FUNCTION))
-{
-    size_t i;
-
-    /* HACK: see above comment */
-    FUNCTION(ai, bi, res, ARRAY_SIZE(gold), 0, p_ref_err(EINVAL));
-#ifdef GENERATE_GOLD
-    print_gold();
-#else
-    for (i = 0; i < ARRAY_SIZE(gold); i++) {
-        ck_assert_msg(compare(res[i], gold[i].gold), "%s(%f, %f): %f != %f",
-                      XSTRING(FUNCTION), ai[i], bi[i], res[i],
-                      gold[i].gold);
-#ifdef SCALAR_OUTPUT /* Scalar output so only first address is valid */
-        i++;
-        break;
-#endif
-    }
-    ck_assert_msg(res[i] == OUTPUT_END_MARKER,
-                  "Output end marker was overwritten");
-#endif
-}
-END_TEST
-#endif /* IS_UNARY */
 
 __attribute__((weak))
 int main(void)
