@@ -6,7 +6,8 @@
 
 /* Standard math constants. Seems to be in every math.h */
 #if !(defined __USE_BSD || defined __USE_XOPEN || defined __USE_GNU || \
-      defined _NEWLIB_VERSION || defined __USE_MISC)
+      defined _NEWLIB_VERSION || defined __USE_MISC || \
+      (defined __DARWIN_C_LEVEL && __DARWIN_C_LEVEL > 199506L))
 #define M_E 2.71828182845904523540        /* e */
 #define M_LOG2E 1.44269504088896340740    /* log 2e */
 #define M_LOG10E 0.43429448190325182765   /* log 10e */
