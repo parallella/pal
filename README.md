@@ -218,7 +218,7 @@ FUNCTION     | NOTES
 [p_max()](src/math/p_max.c)           | finds max val  
 [p_min()](src/math/p_min.c)           | finds min val  
 [p_mean()](src/math/p_mean.c)         | mean operation  
-[p_median()](src/math/p_mean.c)       | finds middle value  
+[p_median()](src/math/p_median.c)       | finds middle value  
 [p_mode()](src/math/p_mode.c)         | finds most common value  
 [p_mul()](src/math/p_mul.c)           | multiplication  
 [p_popcount()](src/math/p_popcount.c) | count the number of bits set  
