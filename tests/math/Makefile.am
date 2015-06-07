@@ -7,7 +7,7 @@ if HOST_IS_EPIPHANY
 else
     AM_CPPFLAGS += @CHECK_CFLAGS@
     LIBS += @CHECK_LIBS@
-    SIMPLE = simple.c
+    SIMPLE = simple.c simple.h
 endif
 
 LDADD = $(top_builddir)/src/libpal.la
