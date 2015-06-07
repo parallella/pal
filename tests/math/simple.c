@@ -113,7 +113,16 @@ START_TEST(GOLD_TEST)
 }
 END_TEST
 
-#ifdef REF_FUNCTION
+/* Default to using gold data as reference function output */
+__attribute__((weak))
+void generate_ref(float *out, size_t n)
+{
+    size_t i;
+
+    for (i = 0; i < n; i++)
+        out[i] = gold[i].gold;
+}
+
 START_TEST(against_ref_function)
 {
     size_t i;
@@ -135,7 +144,6 @@ START_TEST(against_ref_function)
     }
 }
 END_TEST
-#endif
 
 /* Allow individual tests to add more test cases, e.g. against a reference
  * function */
@@ -158,9 +166,7 @@ int main(void)
     tcase_add_test(tcase, print_gold);
 #else
     tcase_add_test(tcase, GOLD_TEST);
-#ifdef REF_FUNCTION
     tcase_add_test(tcase, against_ref_function);
-#endif
     add_more_tests(tcase);
 #endif
 

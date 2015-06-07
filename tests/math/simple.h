@@ -34,4 +34,4 @@ bool compare(float x, float y);
 void add_more_tests(TCase *tcase);
 
 /* Needs to be implemented by tests that define REF_FUNCTION */
-void generate_ref();
+void generate_ref(float *out, size_t n);

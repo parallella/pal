@@ -181,7 +181,7 @@ check_p_inv_f32_CFLAGS          = -DFUNCTION=p_inv_f32     -DIS_UNARY
 check_p_invsqrt_f32_CFLAGS      = -DFUNCTION=p_invsqrt_f32 -DIS_UNARY
 check_p_itof_CFLAGS             = -DFUNCTION=p_itof
 check_p_ln_f32_CFLAGS           = -DFUNCTION=p_ln_f32      -DIS_UNARY
-check_p_log10_f32_CFLAGS        = -DFUNCTION=p_log10_f32   -DIS_UNARY  -DREF_FUNCTION=y
+check_p_log10_f32_CFLAGS        = -DFUNCTION=p_log10_f32   -DIS_UNARY
 check_p_mac_f32_CFLAGS          = -DFUNCTION=p_mac_f32     -DIS_BINARY
 check_p_max_f32_CFLAGS          = -DFUNCTION=p_max_f32                 -DSCALAR_OUTPUT
 check_p_mean_f32_CFLAGS         = -DFUNCTION=p_mean_f32    -DIS_UNARY  -DSCALAR_OUTPUT
