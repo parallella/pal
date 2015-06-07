@@ -47,6 +47,35 @@ void print_gold()
 }
 #endif
 
+void setup()
+{
+    size_t i;
+
+    ai = calloc(ARRAY_SIZE(gold), sizeof(float));
+    bi = calloc(ARRAY_SIZE(gold), sizeof(float));
+
+    /* Allocate one extra element for res and add end marker so overwrites can
+     * be detected */
+#ifdef SCALAR_OUTPUT
+    res = calloc(2, sizeof(float));
+    res[1] = OUTPUT_END_MARKER;
+#else
+    res = calloc(ARRAY_SIZE(gold) + 1, sizeof(float));
+    res[ARRAY_SIZE(gold)] = OUTPUT_END_MARKER;
+#endif
+    for (i = 0; i < ARRAY_SIZE(gold); i++) {
+        ai[i] = gold[i].ai;
+        bi[i] = gold[i].bi;
+    }
+}
+
+void teardown()
+{
+    free(ai);
+    free(bi);
+    free(res);
+}
+
 START_TEST(GOLD_TEST)
 {
     size_t i;
@@ -100,33 +129,14 @@ int main(void)
     TCase *tcase = tcase_create(XSTRING(FUNCTION) "_tcase");
     SRunner *sr = srunner_create(suite);
 
-    suite_add_tcase(suite, tcase);
+    tcase_add_unchecked_fixture(tcase, setup, teardown);
     tcase_add_test(tcase, GOLD_TEST);
     add_more_tests(tcase);
 
-    ai = calloc(ARRAY_SIZE(gold), sizeof(float));
-    bi = calloc(ARRAY_SIZE(gold), sizeof(float));
-
-    /* Allocate one extra element for res and add end marker so overwrites can
-     * be detected */
-#ifdef SCALAR_OUTPUT
-    res = calloc(2, sizeof(float));
-    res[1] = OUTPUT_END_MARKER;
-#else
-    res = calloc(ARRAY_SIZE(gold) + 1, sizeof(float));
-    res[ARRAY_SIZE(gold)] = OUTPUT_END_MARKER;
-#endif
-    for (i = 0; i < ARRAY_SIZE(gold); i++) {
-        ai[i] = gold[i].ai;
-        bi[i] = gold[i].bi;
-    }
+    suite_add_tcase(suite, tcase);
 
     srunner_run_all(sr, CK_ENV);
     num_failures = srunner_ntests_failed(sr);
-
-    free(ai);
-    free(bi);
-    free(res);
 
     srunner_free(sr);
 
