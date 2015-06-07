@@ -159,49 +159,49 @@ check_p_tanh_f32_SOURCES        = $(SIMPLE)
 
 # In alphabetic order
 # TODO: Mark all scalar output functions with -DSCALAR_OUTPUT
-check_p_absdiff_f32_CFLAGS      = -DTEST_FUNCTION=p_absdiff_f32 -DIS_BINARY
-check_p_abs_f32_CFLAGS          = -DTEST_FUNCTION=p_abs_f32     -DIS_UNARY
-check_p_acos_f32_CFLAGS         = -DTEST_FUNCTION=p_acos_f32    -DIS_UNARY
-check_p_acosh_f32_CFLAGS        = -DTEST_FUNCTION=p_acosh_f32   -DIS_UNARY
-check_p_add_f32_CFLAGS          = -DTEST_FUNCTION=p_add_f32     -DIS_BINARY
-check_p_asin_f32_CFLAGS         = -DTEST_FUNCTION=p_asin_f32    -DIS_UNARY
-check_p_asinh_f32_CFLAGS        = -DTEST_FUNCTION=p_asinh_f32   -DIS_UNARY
-check_p_atan2_f32_CFLAGS        = -DTEST_FUNCTION=p_atan2_f32   -DIS_BINARY
-check_p_atan_f32_CFLAGS         = -DTEST_FUNCTION=p_atan_f32    -DIS_UNARY
-check_p_atanh_f32_CFLAGS        = -DTEST_FUNCTION=p_atanh_f32   -DIS_UNARY
-check_p_cbrt_f32_CFLAGS         = -DTEST_FUNCTION=p_cbrt_f32    -DIS_UNARY
-check_p_cos_f32_CFLAGS          = -DTEST_FUNCTION=p_cos_f32     -DIS_UNARY
-check_p_cosh_f32_CFLAGS         = -DTEST_FUNCTION=p_cosh_f32    -DIS_UNARY
-check_p_div_f32_CFLAGS          = -DTEST_FUNCTION=p_div_f32     -DIS_BINARY
-check_p_dot_f32_CFLAGS          = -DTEST_FUNCTION=p_dot_f32     -DIS_BINARY -DSCALAR_OUTPUT
-check_p_exp_f32_CFLAGS          = -DTEST_FUNCTION=p_exp_f32     -DIS_UNARY
-check_p_ftoi_CFLAGS             = -DTEST_FUNCTION=p_ftoi
-check_p_invcbrt_f32_CFLAGS      = -DTEST_FUNCTION=p_invcbrt_f32 -DIS_UNARY
-check_p_inv_f32_CFLAGS          = -DTEST_FUNCTION=p_inv_f32     -DIS_UNARY
-check_p_invsqrt_f32_CFLAGS      = -DTEST_FUNCTION=p_invsqrt_f32 -DIS_UNARY
-check_p_itof_CFLAGS             = -DTEST_FUNCTION=p_itof
-check_p_ln_f32_CFLAGS           = -DTEST_FUNCTION=p_ln_f32      -DIS_UNARY
-check_p_log10_f32_CFLAGS        = -DTEST_FUNCTION=p_log10_f32   -DIS_UNARY
-check_p_mac_f32_CFLAGS          = -DTEST_FUNCTION=p_mac_f32     -DIS_BINARY
-check_p_max_f32_CFLAGS          = -DTEST_FUNCTION=p_max_f32                 -DSCALAR_OUTPUT
-check_p_mean_f32_CFLAGS         = -DTEST_FUNCTION=p_mean_f32    -DIS_UNARY  -DSCALAR_OUTPUT
-check_p_median_f32_CFLAGS       = -DTEST_FUNCTION=p_median_f32  -DIS_UNARY  -DSCALAR_OUTPUT
-check_p_min_f32_CFLAGS          = -DTEST_FUNCTION=p_min_f32                 -DSCALAR_OUTPUT
-check_p_mode_f32_CFLAGS         = -DTEST_FUNCTION=p_mode_f32                -DSCALAR_OUTPUT
-check_p_mul_f32_CFLAGS          = -DTEST_FUNCTION=p_mul_f32     -DIS_BINARY
-check_p_popcount_CFLAGS         = -DTEST_FUNCTION=p_popcount
-check_p_pow_f32_CFLAGS          = -DTEST_FUNCTION=p_pow_f32     -DIS_BINARY
-check_p_rand_CFLAGS             = -DTEST_FUNCTION=p_rand                    -DSCALAR_OUTPUT
-check_p_sin_f32_CFLAGS          = -DTEST_FUNCTION=p_sin_f32     -DIS_UNARY
-check_p_sincos_f32_CFLAGS       = -DTEST_FUNCTION=p_sin_cos_f32
-check_p_sinh_f32_CFLAGS         = -DTEST_FUNCTION=p_sinh_f32    -DIS_UNARY
-check_p_sort_f32_CFLAGS         = -DTEST_FUNCTION=p_sort_f32
-check_p_sqrt_f32_CFLAGS         = -DTEST_FUNCTION=p_sqrt_f32    -DIS_UNARY
-check_p_sub_f32_CFLAGS          = -DTEST_FUNCTION=p_sub_f32     -DIS_BINARY
-check_p_sum_f32_CFLAGS          = -DTEST_FUNCTION=p_sum_f32     -DIS_UNARY  -DSCALAR_OUTPUT
-check_p_sumsq_f32_CFLAGS        = -DTEST_FUNCTION=p_sumsq_f32   -DIS_UNARY  -DSCALAR_OUTPUT
-check_p_tan_f32_CFLAGS          = -DTEST_FUNCTION=p_tan_f32     -DIS_UNARY
-check_p_tanh_f32_CFLAGS         = -DTEST_FUNCTION=p_tanh_f32    -DIS_UNARY
+check_p_absdiff_f32_CFLAGS      = -DFUNCTION=p_absdiff_f32 -DIS_BINARY
+check_p_abs_f32_CFLAGS          = -DFUNCTION=p_abs_f32     -DIS_UNARY
+check_p_acos_f32_CFLAGS         = -DFUNCTION=p_acos_f32    -DIS_UNARY
+check_p_acosh_f32_CFLAGS        = -DFUNCTION=p_acosh_f32   -DIS_UNARY
+check_p_add_f32_CFLAGS          = -DFUNCTION=p_add_f32     -DIS_BINARY
+check_p_asin_f32_CFLAGS         = -DFUNCTION=p_asin_f32    -DIS_UNARY
+check_p_asinh_f32_CFLAGS        = -DFUNCTION=p_asinh_f32   -DIS_UNARY
+check_p_atan2_f32_CFLAGS        = -DFUNCTION=p_atan2_f32   -DIS_BINARY
+check_p_atan_f32_CFLAGS         = -DFUNCTION=p_atan_f32    -DIS_UNARY
+check_p_atanh_f32_CFLAGS        = -DFUNCTION=p_atanh_f32   -DIS_UNARY
+check_p_cbrt_f32_CFLAGS         = -DFUNCTION=p_cbrt_f32    -DIS_UNARY
+check_p_cos_f32_CFLAGS          = -DFUNCTION=p_cos_f32     -DIS_UNARY
+check_p_cosh_f32_CFLAGS         = -DFUNCTION=p_cosh_f32    -DIS_UNARY
+check_p_div_f32_CFLAGS          = -DFUNCTION=p_div_f32     -DIS_BINARY
+check_p_dot_f32_CFLAGS          = -DFUNCTION=p_dot_f32     -DIS_BINARY -DSCALAR_OUTPUT
+check_p_exp_f32_CFLAGS          = -DFUNCTION=p_exp_f32     -DIS_UNARY
+check_p_ftoi_CFLAGS             = -DFUNCTION=p_ftoi
+check_p_invcbrt_f32_CFLAGS      = -DFUNCTION=p_invcbrt_f32 -DIS_UNARY
+check_p_inv_f32_CFLAGS          = -DFUNCTION=p_inv_f32     -DIS_UNARY
+check_p_invsqrt_f32_CFLAGS      = -DFUNCTION=p_invsqrt_f32 -DIS_UNARY
+check_p_itof_CFLAGS             = -DFUNCTION=p_itof
+check_p_ln_f32_CFLAGS           = -DFUNCTION=p_ln_f32      -DIS_UNARY
+check_p_log10_f32_CFLAGS        = -DFUNCTION=p_log10_f32   -DIS_UNARY
+check_p_mac_f32_CFLAGS          = -DFUNCTION=p_mac_f32     -DIS_BINARY
+check_p_max_f32_CFLAGS          = -DFUNCTION=p_max_f32                 -DSCALAR_OUTPUT
+check_p_mean_f32_CFLAGS         = -DFUNCTION=p_mean_f32    -DIS_UNARY  -DSCALAR_OUTPUT
+check_p_median_f32_CFLAGS       = -DFUNCTION=p_median_f32  -DIS_UNARY  -DSCALAR_OUTPUT
+check_p_min_f32_CFLAGS          = -DFUNCTION=p_min_f32                 -DSCALAR_OUTPUT
+check_p_mode_f32_CFLAGS         = -DFUNCTION=p_mode_f32                -DSCALAR_OUTPUT
+check_p_mul_f32_CFLAGS          = -DFUNCTION=p_mul_f32     -DIS_BINARY
+check_p_popcount_CFLAGS         = -DFUNCTION=p_popcount
+check_p_pow_f32_CFLAGS          = -DFUNCTION=p_pow_f32     -DIS_BINARY
+check_p_rand_CFLAGS             = -DFUNCTION=p_rand                    -DSCALAR_OUTPUT
+check_p_sin_f32_CFLAGS          = -DFUNCTION=p_sin_f32     -DIS_UNARY
+check_p_sincos_f32_CFLAGS       = -DFUNCTION=p_sin_cos_f32
+check_p_sinh_f32_CFLAGS         = -DFUNCTION=p_sinh_f32    -DIS_UNARY
+check_p_sort_f32_CFLAGS         = -DFUNCTION=p_sort_f32
+check_p_sqrt_f32_CFLAGS         = -DFUNCTION=p_sqrt_f32    -DIS_UNARY
+check_p_sub_f32_CFLAGS          = -DFUNCTION=p_sub_f32     -DIS_BINARY
+check_p_sum_f32_CFLAGS          = -DFUNCTION=p_sum_f32     -DIS_UNARY  -DSCALAR_OUTPUT
+check_p_sumsq_f32_CFLAGS        = -DFUNCTION=p_sumsq_f32   -DIS_UNARY  -DSCALAR_OUTPUT
+check_p_tan_f32_CFLAGS          = -DFUNCTION=p_tan_f32     -DIS_UNARY
+check_p_tanh_f32_CFLAGS         = -DFUNCTION=p_tanh_f32    -DIS_UNARY
 
 TESTS = $(check_PROGRAMS)
 

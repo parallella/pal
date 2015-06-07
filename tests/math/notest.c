@@ -1,5 +1,5 @@
-#ifndef TEST_FUNCTION
-#error TEST_FUNCTION must be defined
+#ifndef FUNCTION
+#error FUNCTION must be defined
 #endif
 
 #include <common.h>
@@ -9,7 +9,7 @@ int main()
 {
 #ifndef __epiphany
     fprintf(stderr, "WARNING: %s: Test not implemented yet\n",
-            XSTRING(TEST_FUNCTION));
+            XSTRING(FUNCTION));
 #endif
 
     /* Skipped test. see:

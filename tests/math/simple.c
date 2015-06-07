@@ -1,5 +1,5 @@
-#ifndef TEST_FUNCTION
-#error TEST_FUNCTION must be defined
+#ifndef FUNCTION
+#error FUNCTION must be defined
 #endif
 
 #if !(defined(IS_UNARY) || defined(IS_BINARY))
@@ -23,7 +23,7 @@ struct gold {
     float gold;
 };
 
-#define GOLD_PATH XSTRING(gold/TEST_FUNCTION.gold.h)
+#define GOLD_PATH XSTRING(gold/FUNCTION.gold.h)
 #include GOLD_PATH
 
 float *ai, *bi, *res;
@@ -54,7 +54,7 @@ void print_gold()
     size_t i;
     FILE *ofp;
 
-    ofp = fopen(XSTRING(TEST_FUNCTION.res), "w");
+    ofp = fopen(XSTRING(FUNCTION.res), "w");
     for (i = 0; i < ARRAY_SIZE(gold); i++)
         fprintf(ofp, "%f,%f,%f,%f\n", ai[i], bi[i], 0.0f, res[i]);
     fclose(ofp);
@@ -62,7 +62,7 @@ void print_gold()
 #endif
 
 #if IS_UNARY
-START_TEST(CONCAT2(test_, TEST_FUNCTION))
+START_TEST(CONCAT2(test_, FUNCTION))
 {
     size_t i;
 
@@ -70,13 +70,13 @@ START_TEST(CONCAT2(test_, TEST_FUNCTION))
      * a380f6b70b8461dbb8c0def388d00270f8b27c28
      * but implementation did have not catched up yet.
      * When it does, the tests will break... */
-    TEST_FUNCTION(ai, res, ARRAY_SIZE(gold), 0, p_ref_err(EINVAL));
+    FUNCTION(ai, res, ARRAY_SIZE(gold), 0, p_ref_err(EINVAL));
 #ifdef GENERATE_GOLD
     print_gold();
 #else
     for (i = 0; i < ARRAY_SIZE(gold); i++) {
         ck_assert_msg(compare(res[i], gold[i].gold), "%s(%f): %f != %f",
-                      XSTRING(TEST_FUNCTION), ai[i], res[i], gold[i].gold);
+                      XSTRING(FUNCTION), ai[i], res[i], gold[i].gold);
 #ifdef SCALAR_OUTPUT /* Scalar output so only first address is valid */
         i++;
         break;
@@ -88,18 +88,18 @@ START_TEST(CONCAT2(test_, TEST_FUNCTION))
 }
 END_TEST
 #else
-START_TEST(CONCAT2(test_, TEST_FUNCTION))
+START_TEST(CONCAT2(test_, FUNCTION))
 {
     size_t i;
 
     /* HACK: see above comment */
-    TEST_FUNCTION(ai, bi, res, ARRAY_SIZE(gold), 0, p_ref_err(EINVAL));
+    FUNCTION(ai, bi, res, ARRAY_SIZE(gold), 0, p_ref_err(EINVAL));
 #ifdef GENERATE_GOLD
     print_gold();
 #else
     for (i = 0; i < ARRAY_SIZE(gold); i++) {
         ck_assert_msg(compare(res[i], gold[i].gold), "%s(%f, %f): %f != %f",
-                      XSTRING(TEST_FUNCTION), ai[i], bi[i], res[i],
+                      XSTRING(FUNCTION), ai[i], bi[i], res[i],
                       gold[i].gold);
 #ifdef SCALAR_OUTPUT /* Scalar output so only first address is valid */
         i++;
@@ -118,12 +118,12 @@ int main(void)
 {
     int num_failures;
     size_t i;
-    Suite *suite = suite_create(XSTRING(TEST_FUNCTION) "_suite");
-    TCase *tcase = tcase_create(XSTRING(TEST_FUNCTION) "_tcase");
+    Suite *suite = suite_create(XSTRING(FUNCTION) "_suite");
+    TCase *tcase = tcase_create(XSTRING(FUNCTION) "_tcase");
     SRunner *sr = srunner_create(suite);
 
     suite_add_tcase(suite, tcase);
-    tcase_add_test(tcase, CONCAT2(test_, TEST_FUNCTION));
+    tcase_add_test(tcase, CONCAT2(test_, FUNCTION));
 
     ai = calloc(ARRAY_SIZE(gold), sizeof(float));
     bi = calloc(ARRAY_SIZE(gold), sizeof(float));
