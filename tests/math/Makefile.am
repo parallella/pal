@@ -113,28 +113,28 @@ check_PROGRAMS = \
 	check_p_tanh_f32
 
 # In alphabetic order
-check_p_abs_f32_SOURCES         = $(SIMPLE)
+check_p_abs_f32_SOURCES         = $(SIMPLE) p_abs.c
 check_p_absdiff_f32_SOURCES     = $(SIMPLE)
-check_p_acos_f32_SOURCES        = $(SIMPLE)
-check_p_acosh_f32_SOURCES       = $(SIMPLE)
+check_p_acos_f32_SOURCES        = $(SIMPLE) p_acos.c
+check_p_acosh_f32_SOURCES       = $(SIMPLE) p_acosh.c
 check_p_add_f32_SOURCES         = $(SIMPLE)
-check_p_asin_f32_SOURCES        = $(SIMPLE)
-check_p_asinh_f32_SOURCES       = $(SIMPLE)
-check_p_atan2_f32_SOURCES       = $(SIMPLE)
-check_p_atan_f32_SOURCES        = $(SIMPLE)
-check_p_atanh_f32_SOURCES       = $(SIMPLE)
-check_p_cbrt_f32_SOURCES        = $(SIMPLE)
-check_p_cos_f32_SOURCES         = $(SIMPLE)
-check_p_cosh_f32_SOURCES        = $(SIMPLE)
+check_p_asin_f32_SOURCES        = $(SIMPLE) p_asin.c
+check_p_asinh_f32_SOURCES       = $(SIMPLE) p_asinh.c
+check_p_atan2_f32_SOURCES       = $(SIMPLE) p_atan2.c
+check_p_atan_f32_SOURCES        = $(SIMPLE) p_atan.c
+check_p_atanh_f32_SOURCES       = $(SIMPLE) p_atanh.c
+check_p_cbrt_f32_SOURCES        = $(SIMPLE) p_cbrt.c
+check_p_cos_f32_SOURCES         = $(SIMPLE) p_cos.c
+check_p_cosh_f32_SOURCES        = $(SIMPLE) p_cosh.c
 check_p_div_f32_SOURCES         = $(SIMPLE)
 check_p_dot_f32_SOURCES         = $(SIMPLE)
-check_p_exp_f32_SOURCES         = $(SIMPLE)
+check_p_exp_f32_SOURCES         = $(SIMPLE) p_exp.c
 check_p_ftoi_SOURCES            = notest.c
 check_p_inv_f32_SOURCES         = $(SIMPLE)
 check_p_invcbrt_f32_SOURCES     = $(SIMPLE)
 check_p_invsqrt_f32_SOURCES     = $(SIMPLE)
 check_p_itof_SOURCES            = notest.c
-check_p_ln_f32_SOURCES          = $(SIMPLE)
+check_p_ln_f32_SOURCES          = $(SIMPLE) p_ln.c
 check_p_log10_f32_SOURCES       = $(SIMPLE) p_log10.c
 check_p_mac_f32_SOURCES         = $(SIMPLE)
 check_p_max_f32_SOURCES         = notest.c
@@ -144,18 +144,18 @@ check_p_min_f32_SOURCES         = notest.c
 check_p_mode_f32_SOURCES        = notest.c
 check_p_mul_f32_SOURCES         = $(SIMPLE)
 check_p_popcount_SOURCES        = notest.c
-check_p_pow_f32_SOURCES         = $(SIMPLE)
+check_p_pow_f32_SOURCES         = $(SIMPLE) p_pow.c
 check_p_rand_SOURCES            = notest.c
-check_p_sin_f32_SOURCES         = $(SIMPLE)
+check_p_sin_f32_SOURCES         = $(SIMPLE) p_sin.c
 check_p_sincos_f32_SOURCES      = notest.c
-check_p_sinh_f32_SOURCES        = $(SIMPLE)
+check_p_sinh_f32_SOURCES        = $(SIMPLE) p_sinh.c
 check_p_sort_f32_SOURCES        = notest.c
-check_p_sqrt_f32_SOURCES        = $(SIMPLE)
+check_p_sqrt_f32_SOURCES        = $(SIMPLE) p_sqrt.c
 check_p_sub_f32_SOURCES         = $(SIMPLE)
 check_p_sum_f32_SOURCES         = $(SIMPLE)
 check_p_sumsq_f32_SOURCES       = $(SIMPLE)
-check_p_tan_f32_SOURCES         = $(SIMPLE)
-check_p_tanh_f32_SOURCES        = $(SIMPLE)
+check_p_tan_f32_SOURCES         = $(SIMPLE) p_tan.c
+check_p_tanh_f32_SOURCES        = $(SIMPLE) p_tanh.c
 
 # In alphabetic order
 # TODO: Mark all scalar output functions with -DSCALAR_OUTPUT
