@@ -1,3 +1,5 @@
+#include "simple.h"
+
 #ifndef FUNCTION
 #error FUNCTION must be defined
 #endif
@@ -6,32 +8,16 @@
 #error IS_UNARY or IS_BINARY must be defined
 #endif
 
-#include <stdlib.h>
-#include <stdio.h>
-#include <math.h>
-#include <stdbool.h>
-
-#include <check.h>
-#include <pal.h>
-#include "../../src/base/pal_base_private.h"
-#include <common.h>
-
-struct gold {
-    float ai;
-    float bi;
-    float res;
-    float gold;
-};
+float *ai, *bi, *res;
 
 #define GOLD_PATH XSTRING(gold/FUNCTION.gold.h)
 #include GOLD_PATH
 
-float *ai, *bi, *res;
+#define GOLD_TEST XCONCAT2(test_gold_, FUNCTION)
 
-#define EPSILON_MAX 0.001f
-#define EPSILON_RELMAX 0.00001f
 /* For detecting erroneous overwrites */
 #define OUTPUT_END_MARKER 60189537703610376.0f
+
 __attribute__((weak))
 bool compare(float x, float y)
 {
@@ -61,7 +47,7 @@ void print_gold()
 }
 #endif
 
-START_TEST(CONCAT2(test_, FUNCTION))
+START_TEST(GOLD_TEST)
 {
     size_t i;
 
@@ -79,8 +65,13 @@ START_TEST(CONCAT2(test_, FUNCTION))
     print_gold();
 #else
     for (i = 0; i < ARRAY_SIZE(gold); i++) {
+#if IS_UNARY
         ck_assert_msg(compare(res[i], gold[i].gold), "%s(%f): %f != %f",
                       XSTRING(FUNCTION), ai[i], res[i], gold[i].gold);
+#else
+        ck_assert_msg(compare(res[i], gold[i].gold), "%s(%f, %f): %f != %f",
+                      XSTRING(FUNCTION), ai[i], bi[i], res[i], gold[i].gold);
+#endif
 #ifdef SCALAR_OUTPUT /* Scalar output so only first address is valid */
         i++;
         break;
@@ -93,6 +84,14 @@ START_TEST(CONCAT2(test_, FUNCTION))
 END_TEST
 
 __attribute__((weak))
+
+/* Allow individual tests to add more test cases, e.g. against a reference
+ * function */
+__attribute__((weak))
+void add_more_tests(TCase *tcase)
+{
+}
+
 int main(void)
 {
     int num_failures;
@@ -102,7 +101,8 @@ int main(void)
     SRunner *sr = srunner_create(suite);
 
     suite_add_tcase(suite, tcase);
-    tcase_add_test(tcase, CONCAT2(test_, FUNCTION));
+    tcase_add_test(tcase, GOLD_TEST);
+    add_more_tests(tcase);
 
     ai = calloc(ARRAY_SIZE(gold), sizeof(float));
     bi = calloc(ARRAY_SIZE(gold), sizeof(float));
