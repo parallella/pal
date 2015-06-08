@@ -30,8 +30,9 @@ void p_inv_f32(const float *a, float *c, int n, int p, p_team_t team)
             uint32_t x;
         } u = {cur};
         /* First approximation */
-        u.x = 0x7EF312AC - u.x;
+        u.x = 0x7EEEEBB3 - u.x;
         /* Refine */
+        u.f = u.f * (2 - u.f * cur);
         u.f = u.f * (2 - u.f * cur);
         u.f = u.f * (2 - u.f * cur);
         *(c + i) = u.f;
