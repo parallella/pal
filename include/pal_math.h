@@ -148,6 +148,9 @@ void p_div_f32(const float *a, const float *b, float *c,
 /*exponential: c = exp ( a ) */
 void p_exp_f32(const float *a, float *c, int n, int p, p_team_t team);
 
+/*find kth: c = sort(a)[k] */
+void p_find_kth_f32(float *a, float *c, int k, int n, int p, p_team_t team);
+
 /*inverse: c = 1 / ( a ) */
 void p_inv_f32(const float *a, float *c, int n, int p, p_team_t team);
 

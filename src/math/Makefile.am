@@ -21,6 +21,7 @@ libpal_math_la_SOURCES = \
     p_div.c \
     p_dot.c \
     p_exp.c \
+    p_find_kth_f32.c \
     p_ftoi.c \
     p_inv.c \
     p_invcbrt.c \
