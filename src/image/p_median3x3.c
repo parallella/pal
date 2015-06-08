@@ -59,7 +59,7 @@ pixelvalue opt_med9(pixelvalue * pointer)
  *
  */
 
-void p_median3x3_f32(float *x, float *r, int rows, int cols, 
+void p_median3x3_f32(const float *x, float *r, int rows, int cols, 
 		     int p, p_team_t team)
 {
     float buffer[9];
