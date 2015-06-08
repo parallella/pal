@@ -23,10 +23,11 @@
 void p_absdiff_f32(const float *a, const float *b, float *c,
                    int n, int p, p_team_t team)
 {
-
     int i;
     for (i = 0; i < n; i++) {
-        float v = *(a + i) - *(b + i);
-        *(c + i) = (1 - ((v < 0) << 1)) * v;
+        float diff = a[i] - b[i];
+        uint32_t udiff = *(uint32_t*) &diff;
+        udiff &= 0x7FFFFFFF;
+        c[i] = *(float*) &udiff;
     }
 }
