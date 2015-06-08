@@ -26,11 +26,11 @@ void p_median_f32(const float *a, float *c, int n, int p, p_team_t team)
         copy[i] = a[i];
 
     if (n & 1) {
-        p_find_kth_f32(copy, c, n, n/2, p, team);
+        p_find_kth_f32(copy, c, n, n >> 1, p, team);
     } else {
         float m1, m2;
-        p_find_kth_f32(copy, &m1, n, n/2, p, team);
-        p_find_kth_f32(copy, &m2, n, n/2+1, p, team);
+        p_find_kth_f32(copy, &m1, n, n >> 1, p, team);
+        p_find_kth_f32(copy, &m2, n, (n>>1)+1, p, team);
         *c = (m1 + m2) * .5;
     }
 }
