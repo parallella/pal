@@ -10,6 +10,7 @@ libpal_math_la_SOURCES = \
     p_acos.c \
     p_acosh.c \
     p_add.c \
+    p_and.c \
     p_asin.c \
     p_asinh.c \
     p_atan2.c \
@@ -35,6 +36,8 @@ libpal_math_la_SOURCES = \
     p_min.c \
     p_mode.c \
     p_mul.c \
+    p_not.c \
+    p_or.c \
     p_popcount.c \
     p_pow.c \
     p_rand.c \
@@ -48,6 +51,7 @@ libpal_math_la_SOURCES = \
     p_sumsq.c \
     p_tan.c \
     p_tanh.c \
+    p_xor.c \
     tinymt/tinymt32.c \
     tinymt/tinymt32.h
 

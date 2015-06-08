@@ -2,11 +2,11 @@
 
 /**
  *
- * Element wise division c = a / b.
+ * Element wise vector 'bitwise or' between input vectors 'a' and 'b'
  *
- * @param a     Pointer to input vector
+ * @param a     Pointer to first input vector
  *
- * @param b     Pointer to input vector
+ * @param b     Pointer to second input vector
  *
  * @param c     Pointer to output vector
  *
@@ -20,19 +20,19 @@
  *
  */
 
-void p_div_f32(const float *a, const float *b, float *c,
+void p_xor_f32(const float *a, const float *b, float *c,
                int n, int p, p_team_t team)
 {
 
     int i;
     for (i = 0; i < n; i++) {
-        *(c + i) = *(a + i) / *(b + i);
+        *(c + i) = *(a + i) ^ *(b + i);
     }
 }
 
 /**
  *
- * Element wise vector division between input vector 'a' and scalar 'b'
+ * Element wise vector 'bitwise or' between input vector 'a' and scalar 'b'
  *
  * @param a     Pointer to input vector
  *
@@ -50,12 +50,12 @@ void p_div_f32(const float *a, const float *b, float *c,
  *
  */
 
-void p_div_s(const float *a, const float *b, float *c,
+void p_xor_s(const float *a, const float *b, float *c,
                int n, int p, p_team_t team)
 {
 
     int i;
     for (i = 0; i < n; i++) {
-        *(c + i) = *(a + i) / *(b);
+        *(c + i) = *(a + i) ^ *(b);
     }
 }
