@@ -29,8 +29,8 @@ void p_box3x3_f32(float *x, float *r, int rows, int cols,
     px = x;
     pr = r;
 
-    for (ia = (rows - 2); ia != 0; ia--) {
-        for (ja = (cols - 2); ja != 0; ja--) {
+    for (ia = (rows - 2); ia; ia--) {
+        for (ja = (cols - 2); ja; ja--) {
             E = 0;
             E += (*px++);
             E += (*px++);
