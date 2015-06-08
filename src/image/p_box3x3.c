@@ -42,13 +42,13 @@ void p_box3x3_f32(float *x, float *r, int rows, int cols,
             px += cols - 3;
             E += (*px++);
             E += (*px++);
-            E += (*px++);
-            px += cols - 3;
+            E += (*px);
+            px += - 1 - 2 * cols; // reposition pointer from bottom right to middle top cell
+            
             *pr = E * M_DIV9;
-            px += 1 - 3 * cols; // advance mask matrix in one column.
             pr++;
         }
-        px = px + 2; // advance pointer to the beginning of next row.
+        px = px + 2; // advance pointer to the beginning of the next row.
     }
 
     return;
