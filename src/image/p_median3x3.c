@@ -1,5 +1,44 @@
 #include <pal.h>
 
+/*
+ * The following routines have been built from knowledge gathered
+ * around the Web. I am not aware of any copyright problem with
+ * them, so use it as you want.
+ * N. Devillard - 1998
+ */
+
+typedef float pixelvalue ;
+
+#define PIX_SORT(a,b) { if ((a)>(b)) PIX_SWAP((a),(b)); }
+#define PIX_SWAP(a,b) { pixelvalue temp=(a);(a)=(b);(b)=temp; }
+
+/*----------------------------------------------------------------------------
+   Function :   opt_med9()
+   In       :   pointer to an array of 9 pixelvalues
+   Out      :   a pixelvalue
+   Job      :   optimized search of the median of 9 pixelvalues
+   Notice   :   in theory, cannot go faster without assumptions on the
+                signal.
+                Formula from:
+                XILINX XCELL magazine, vol. 23 by John L. Smith
+  
+                The input array is *NOT* modified in the process
+                The result array is guaranteed to contain the median
+                value
+ ---------------------------------------------------------------------------*/
+
+pixelvalue opt_med9(pixelvalue * pointer)
+{
+    pixelvalue p[9];
+    memcpy(p, pointer, 9*sizeof(pixelvalue) );
+    PIX_SORT(p[1], p[2]) ; PIX_SORT(p[4], p[5]) ; PIX_SORT(p[7], p[8]) ;
+    PIX_SORT(p[0], p[1]) ; PIX_SORT(p[3], p[4]) ; PIX_SORT(p[6], p[7]) ;
+    PIX_SORT(p[1], p[2]) ; PIX_SORT(p[4], p[5]) ; PIX_SORT(p[7], p[8]) ;
+    PIX_SORT(p[0], p[3]) ; PIX_SORT(p[5], p[8]) ; PIX_SORT(p[4], p[7]) ;
+    PIX_SORT(p[3], p[6]) ; PIX_SORT(p[1], p[4]) ; PIX_SORT(p[2], p[5]) ;
+    PIX_SORT(p[4], p[7]) ; PIX_SORT(p[4], p[2]) ; PIX_SORT(p[6], p[4]) ;
+    PIX_SORT(p[4], p[2]) ; return(p[4]) ;
+}
 
 /*
  * A median 3x3 filter.
@@ -20,7 +59,7 @@
  *
  */
 
-void p_median3x3_f32(const float *x, float *r, int rows, int cols, 
+void p_median3x3_f32(float *x, float *r, int rows, int cols, 
 		     int p, p_team_t team)
 {
     float buffer[9];
