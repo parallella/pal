@@ -238,7 +238,7 @@ void p_median_f32(const float *a, float *c, int n, int p, p_team_t team);
 void p_mode_f32(const float *a, float *c, int n, int p, p_team_t team);
 
 /*standard deviation: c = sqrt ( mean ( ( a[n-1:0] - mean ( a[n-1:0] ) ) ^ 2 ) ) */
-void p_mode_f32(const float *a, float *c, int n, int p, p_team_t team);
+void p_stddev_f32(const float *a, float *c, int n, int p, p_team_t team);
 
 /*find max value and its index from input vector */
 void p_max_f32(const float *a, float *c, int *index,
