@@ -27,7 +27,7 @@ void p_box3x3_f32(float *x, float *r, int rows, int cols,
     float *px, *pr;
 
     px = x;
-    pr = r;
+    pr = r + 1 + cols; // center of filter box
 
     for (ia = (rows - 2); ia; ia--) {
         for (ja = (cols - 2); ja; ja--) {
@@ -43,12 +43,13 @@ void p_box3x3_f32(float *x, float *r, int rows, int cols,
             E += (*px++);
             E += (*px++);
             E += (*px);
-            px += - 1 - 2 * cols; // reposition pointer from bottom right to middle top cell
+            px += 1 - 2 * cols; // reposition pointer from bottom right to middle top cell
             
             *pr = E * M_DIV9;
             pr++;
         }
         px = px + 2; // advance pointer to the beginning of the next row.
+        pr = pr + 3; // advance pointer to the second pixel of the next row.
     }
 
     return;
