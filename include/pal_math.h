@@ -210,6 +210,48 @@ void p_mul_f32(const float *a, const float *b, float *c,
 void p_mac_f32(const float *a, const float *b, float *c,
                int n, int p, p_team_t team);
 
+/*logic and the two vectors: c =  a[n-1:0] & b[n-1:0]  */
+void p_and_f32(const float *a, const float *b, float *c,
+               int n, int p, p_team_t team);
+
+/*logic or the two vectors: c =  a[n-1:0] | b[n-1:0]  */
+void p_or_f32(const float *a, const float *b, float *c,
+               int n, int p, p_team_t team);
+
+/*logic xor the two vectors: c =  a[n-1:0] ^ b[n-1:0]  */
+void p_xor_f32(const float *a, const float *b, float *c,
+               int n, int p, p_team_t team);
+
+/*
+ ****************************************************************
+ * Basic Scalar-Vector Math Functions
+ *
+ * a    : input vector pointer
+ * b    : input scalar pointer
+ * c    : result vector pointer
+ * n    : length of input/output vector
+ * p    : number of processors in team (task parallelism)
+ * team : team to work with
+ *
+ ****************************************************************
+ */
+
+ /*add scalar to each element : c =  a[n-1:0] + b  */
+void p_add_s(const float *a, const float *b, float *c,
+               int n, int p, p_team_t team);
+
+/*subtract scalar to each element : c =  a[n-1:0] - b  */
+void p_sub_s(const float *a, const float *b, float *c,
+               int n, int p, p_team_t team);
+
+/*multiply scalar with each element : c =  a[n-1:0] * b  */
+void p_mul_s(const float *a, const float *b, float *c,
+               int n, int p, p_team_t team);
+
+/* Element wise multiply accumulate: c += a * b' */
+void p_mac_s(const float *a, const float *b, float *c,
+               int n, int p, p_team_t team);
+
 /*
  ****************************************************************
  * Vector Reduction Operations
@@ -244,6 +286,10 @@ void p_max_f32(const float *a, float *c, int *index,
 
 /*find min value and its index from input vector */
 void p_min_f32(const float *a, float *c, int *index,
+               int n, int p, p_team_t team);
+
+/*negates each element of the vector: c =  !a[n-1:0] */
+void p_not_f32(const float *a, const float *b, float *c,
                int n, int p, p_team_t team);
 
 /*
