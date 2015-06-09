@@ -17,8 +17,6 @@
  * @return      None
  *
  */
-#include <math.h>
-
 void p_inv_f32(const float *a, float *c, int n, int p, p_team_t team)
 {
     int i;
