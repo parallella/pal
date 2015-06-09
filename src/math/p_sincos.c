@@ -46,8 +46,8 @@ void cordic(int theta, int *s, int *c, int n) {
 float normalizeRadiansToPlusMinusM_PI(float radians) {
 	int sign = ((radians > 0) << 1) - 1;
 	radians = sign * radians;
-	int excessHalfRevolutions = ((int) (radians * M_1_PI) + 1) & ~1;
-	radians = radians - excessHalfRevolutions * M_PI;
+	int excessRevolutions = ((int) (radians * M_1_PI) + 1) >> 1;
+	radians = radians - excessRevolutions * (M_PI * 2);
 	return sign * radians;
 }
 
@@ -100,7 +100,8 @@ void cordicF(float theta, float *s, float *c, int n) {
  * @return      None
  *
  */
-void p_sincos_f32(const float *a, float *c, float *z, int n, int p, p_team_t team) {
+void p_sincos_f32(const float *a, float *c, float *z, int n, int p,
+		p_team_t team) {
 	int i;
 	for (i = 0; i < n; i++) {
 		const float angle = a[i];
