@@ -20,7 +20,7 @@
  *
  */
 
-void p_and_f32(const float *a, const float *b, float *c,
+void p_and(const uint32_t *a, const uint32_t *b, uint32_t *c,
                int n, int p, p_team_t team)
 {
 
@@ -50,7 +50,7 @@ void p_and_f32(const float *a, const float *b, float *c,
  *
  */
 
-void p_and_s(const float *a, const float *b, float *c,
+void p_and_s(const uint32_t *a, const uint32_t *b, uint32_t *c,
                int n, int p, p_team_t team)
 {
 

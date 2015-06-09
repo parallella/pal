@@ -18,7 +18,7 @@
  *
  */
 
-void p_not(const float *a, float *c,
+void p_not(const uint32_t *a, uint32_t *c,
                int n, int p, p_team_t team)
 {
 

@@ -211,15 +211,15 @@ void p_mac_f32(const float *a, const float *b, float *c,
                int n, int p, p_team_t team);
 
 /*logic and the two vectors: c =  a[n-1:0] & b[n-1:0]  */
-void p_and_f32(const float *a, const float *b, float *c,
+void p_and(const uint32_t *a, const uint32_t *b, uint32_t *c,
                int n, int p, p_team_t team);
 
 /*logic or the two vectors: c =  a[n-1:0] | b[n-1:0]  */
-void p_or_f32(const float *a, const float *b, float *c,
+void p_or(const uint32_t *a, const uint32_t *b, uint32_t *c,
                int n, int p, p_team_t team);
 
 /*logic xor the two vectors: c =  a[n-1:0] ^ b[n-1:0]  */
-void p_xor_f32(const float *a, const float *b, float *c,
+void p_xor(const uint32_t *a, const uint32_t *b, uint32_t *c,
                int n, int p, p_team_t team);
 
 /*
@@ -248,10 +248,21 @@ void p_sub_s(const float *a, const float *b, float *c,
 void p_mul_s(const float *a, const float *b, float *c,
                int n, int p, p_team_t team);
 
-/* Element wise multiply accumulate: c += a * b' */
-void p_mac_s(const float *a, const float *b, float *c,
+/*division of each element with scalar : c =  a[n-1:0] ./ b */
+void p_div_s(const float *a, const float *b, float *c,
                int n, int p, p_team_t team);
 
+/*logic and of each element with scalar =  a[n-1:0] & b  */
+void p_and_s(const uint32_t *a, const uint32_t *b, uint32_t *c,
+               int n, int p, p_team_t team);
+
+/*logic or of each element with scalar =  a[n-1:0] | b*/
+void p_or_s(const uint32_t *a, const uint32_t *b, uint32_t *c,
+               int n, int p, p_team_t team);
+
+/*logic xor  of each element with scalar =  a[n-1:0] ^ b*/
+void p_xor_s(const uint32_t *a, const uint32_t *b, uint32_t *c,
+               int n, int p, p_team_t team);
 /*
  ****************************************************************
  * Vector Reduction Operations
