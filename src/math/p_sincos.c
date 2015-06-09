@@ -43,12 +43,19 @@ void cordic(int theta, int *s, int *c, int n) {
 	*s = y;
 }
 
+float normalizeRadiansToPlusMinusM_PI(float radians) {
+	int sign = radians < 0 ? -1 : 1;
+	radians = sign * radians;
+	int revolutions = (int) (radians * M_1_PI) + 1;
+	revolutions = (revolutions >> 1) << 1;
+
+	radians = radians - revolutions * M_PI;
+	return sign * radians;
+}
+
 int radiansToPlusMinusM_PI_2(float *radians) {
 	int flip = 0;
-	while (*radians > M_PI)
-		*radians -= 2 * M_PI;
-	while (*radians < -M_PI)
-		*radians += 2 * M_PI;
+	*radians = normalizeRadiansToPlusMinusM_PI(*radians);
 
 	if (*radians < -M_PI_2 || *radians > M_PI_2) {
 		if (*radians < 0) {
