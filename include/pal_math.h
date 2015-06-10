@@ -254,3 +254,20 @@ int p_rand(void);
 /*population count*/
 void p_popcount_u32(const uint32_t *a, uint32_t *c, int n);
 void p_popcount_u64(const uint64_t *a, uint64_t *c, int n);
+
+/*
+ ****************************************************************
+ * Matrix and scalar multiplication
+ *
+ * a, b   : input matrix pointer(or scalar)
+ * c      : matrix(or scalar) result pointer
+ * n1,2,3 : dimensions of input matrixes
+ *
+ ****************************************************************
+ */
+
+/* scalar multiplication */
+void p_smul_f32(const float *a, float b, float *c, int n1, int n2);
+
+/* multiplies two matrixes */
+void p_matrix_mul_f32(const float *a, const float *b, float *c, int n1, int n2, int n3);
