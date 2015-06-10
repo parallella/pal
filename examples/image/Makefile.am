@@ -1,6 +1,6 @@
 AUTOMAKE_OPTIONS = foreign
 
-LDADD = $(top_builddir)/src/libpal.la
+LDADD = -lm $(top_builddir)/src/libpal.la
 
 noinst_PROGRAMS = filters harris
 
