@@ -21,7 +21,7 @@ for f in $files; do
             file=$1;
             next;
         }
-        if ($4 == "FUNC" || $4 == "OBJECT") {
+        if (($4 == "FUNC" || $4 == "OBJECT" || $4 == "NOTYPE") && $3 > 0) {
             sum += $3;
             if (txt == "")
                 txt=sprintf("%d,%s,%s",$3,$8,$4);
