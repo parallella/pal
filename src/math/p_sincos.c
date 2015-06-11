@@ -44,11 +44,17 @@ void cordic(int theta, int *s, int *c, int n) {
 }
 
 float normalizeRadiansToPlusMinusM_PI(float radians) {
-	int sign = ((radians > 0) << 1) - 1;
-	radians = sign * radians;
-	int excessRevolutions = ((int) (radians * M_1_PI) + 1) >> 1;
-	radians = radians - excessRevolutions * (M_PI * 2);
-	return sign * radians;
+	unsigned int *radiansBits = (unsigned int *)&radians;
+	unsigned int signBit = *radiansBits & 0x80000000u;
+	*radiansBits = *radiansBits ^ signBit; //remove any negative bit
+
+	int revolutions = (int) (radians * M_1_PI) + 1;
+	revolutions = revolutions >> 1; // div 2
+
+	radians = radians - revolutions * (2 * M_PI); //subtract whole revolutions, now in range [-pi..pi]
+
+	*radiansBits = *radiansBits ^ signBit; //if was negative, flip negative bit
+	return radians;
 }
 
 int radiansToPlusMinusM_PI_2(float *radians) {
