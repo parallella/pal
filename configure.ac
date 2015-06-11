@@ -40,6 +40,11 @@ AC_PROG_LN_S
 AC_PROG_MAKE_SET
 AM_PROG_AR
 
+AX_CHECK_COMPILE_FLAG([-fstack-usage],
+                      [AX_APPEND_FLAG([-fstack-usage])],
+                      [AC_MSG_WARN([-fstack-usage not supported, Some reports will be incomplete.])
+                      ])
+
 LT_INIT
 
 # Checks for libraries.
