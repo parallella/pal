@@ -1,8 +1,7 @@
 #include <pal.h>
 
 /* smooth structure tensor */
-static void _sst3x3(const float *x, float *r, int rows, int cols, 
-		    int p, p_team_t team)
+static void _sst3x3(const float *x, float *r, int rows, int cols)
 {
     int i, j;
     int ic3 = 1 - 3 * cols;
@@ -64,13 +63,8 @@ static void _sst3x3(const float *x, float *r, int rows, int cols,
  *
  * @param cols  Number of columns in input image
  *
- * @param p     Number of processor to use (task parallelism)
- *
- * @param team  Team to work with 
- *
  */
-void p_harris3x3_f32(const float *x, float *r, float *t, int rows, int cols, 
-		    int p, p_team_t team)
+void p_harris3x3_f32(const float *x, float *r, float *t, int rows, int cols)
 {
 	int i, j;
 	int rm4 = rows - 4;
@@ -83,7 +77,7 @@ void p_harris3x3_f32(const float *x, float *r, float *t, int rows, int cols,
     pr = r;
     pt = t;
     
-    _sst3x3(x, t, rows, cols, p, team);
+    _sst3x3(x, t, rows, cols);
 	
     for (i = 0; i < rm4; i++) {
         for (j = 0; j < cm4; j++) {

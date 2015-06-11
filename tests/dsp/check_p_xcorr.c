@@ -49,14 +49,11 @@ int main(int argc, char *argv[])
     int testOK = 1;
     int i;
 
-    // References as opaque structures
-    p_team_t team0;
-
   printf("Running test program p_xcorr_test...\n");
     // Execution setup
 
     // Run test 1 on Arm
-    p_xcorr_f32(in11, in12, test_out, in11_size, in12_size, 1, team0);
+    p_xcorr_f32(in11, in12, test_out, in11_size, in12_size);
 
     // Check data
     for ( i = 0; i < out_size1; i++ ) {
@@ -67,7 +64,7 @@ int main(int argc, char *argv[])
     }
 
     // Run test 2 on Arm
-    p_xcorr_f32(in21, in22, test_out, in21_size, in22_size, 1, team0);
+    p_xcorr_f32(in21, in22, test_out, in21_size, in22_size);
 
     // Check data
     for ( i = 0; i < out_size2; i++ ) {

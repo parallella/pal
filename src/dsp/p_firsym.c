@@ -18,16 +18,11 @@
  *
  * @param nh    The number of coefficients of the filter.
  *
- * @param p     Number of processor to use (task parallelism)
- *
- * @param team  Team to work with 
- *
  * @return      None
  *
  */
 
-void p_firsym_f32(const float *x, const float *h, float *r, int nx, int nh,
-                  int p, p_team_t team)
+void p_firsym_f32(const float *x, const float *h, float *r, int nx, int nh)
 {
 
     /*PLACE CODE HERE*/

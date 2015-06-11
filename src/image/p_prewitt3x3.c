@@ -23,15 +23,10 @@
  *
  * @param cols  Number of columns in input image
  *
- * @param p     Number of processor to use (task parallelism)
- *
- * @param team  Team to work with 
- *
  * @return      None
  *
  */
-void p_prewitt3x3_f32(const float *x,  float *r, int rows, int cols,
-                      int p, p_team_t team)
+void p_prewitt3x3_f32(const float *x,  float *r, int rows, int cols)
 {
 
     int ia, ja;
