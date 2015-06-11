@@ -18,7 +18,7 @@
  * @return      None
  *
  */
-static const int precision = 0.1e-6;
+static const float precision = 0.1e-6;
 
 float inverse(float a) //function to calucalte inverse without division operator using Newton Raphson method
 {
