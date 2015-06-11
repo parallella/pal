@@ -22,7 +22,7 @@ void p_invcbrt_f32(const float *a, float *c, int n, int p, p_team_t team)
 {
     int i;
     union {
-        int32_t i;
+        int32_t x;
         float f;
     } u;
     for (i = 0; i < n; i++) {
