@@ -32,6 +32,6 @@ void p_min_f32(const float *a, float *c, int *index,
         }
     }
     
-    *c = *(a + pos)
+    *c = *(a + pos);
     *index = pos;
 }
