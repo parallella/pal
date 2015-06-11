@@ -14,15 +14,36 @@ started. Thank you!
 * Include examples/test code for pull request
 
 ### Contribution Conventions
+#### Commit messages
+* Tag the commit message with `sublib: function: `. The exact format might not always apply so use common sense.
+* Commit messages must start with (after the tag) a capitalized and short summary (max. 50
+chars) written in the imperative, followed by an optional, more detailed
+explanatory text which is *separated* from the summary by an *empty line*.
+* Example of good commit summary:
+```
+math: p_sqrt: Implement sqrt function
+```
+* Example of bad commit summary:
+```
+Improve performance
+```
+
+The general guideline is that someone reading only the first line of the commit message should get a good sense of what the patch is doing.
+
+#### Testing
+
+* Before you submit, please ensure that your change did not break anything:
+```
+make check
+```
+
+#### How to submit a pull request?
 * If it's a bug fix branch, name it XXXX-something where XXXX is the number of
 the issue.
 * If it's a feature branch, create an enhancement issue to announce your
   intentions, and name it XXXX-something where XXXX is the number of the issue.
 * Pull requests descriptions should be as clear as possible and include a
 reference to all the issues that they address. 
-* Commit messages must start with a capitalized and short summary (max. 50
-chars) written in the imperative, followed by an optional, more detailed
-explanatory text which is separated from the summary by an empty line.
 * Code review comments may be added to your pull request. Discuss, then make 
 the suggested modifications and push additional commits to your feature branch. Be sure to post a comment after pushing. The new commits will show up in the 
 pull request automatically, but the reviewers will not be notified unless you
@@ -32,17 +53,7 @@ comment.
 logical units of work using `git rebase -i` and `git push -f`. After every
 commit the test suite should be passing. Include documentation changes in the
 same commit so that a revert would remove all traces of the feature or fix.
-* Before you submit, please ensure that your change did not break anything:
-```
-make check
-```
 
-### How to submit a pull request?
-
-1. Modify the code
-2. Run and pass the regression suite
-3. Submit a pull request:
- 
 
 ### How to file a bug report?
 For standard issues like bugs and documentation errors please fill out an [issue ticket](https://github.com/parallella/pal/issues)
