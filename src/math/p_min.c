@@ -23,18 +23,15 @@
 void p_min_f32(const float *a, float *c, int *index,
                int n, int p, p_team_t team)
 {
-    float min;
-    int i, pos;
-
-    min = *a;
-    pos = 0;
+    if (n==0) return; // only do work if there are elements
+    int i, pos = 0;
 
     for (i = 1; i < n; i++) {
-        if (*(a + i) < min) {
+        if (*(a + i) < *(a + pos)) {
             pos = i;
-            min = *(a + i);
         }
     }
-    *c = min;
+    
+    *c = *(a + pos)
     *index = pos;
 }
