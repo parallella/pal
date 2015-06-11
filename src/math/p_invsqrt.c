@@ -42,6 +42,7 @@ void p_invsqrt_f32(const float *a, float *c, int n)
         // Perform a couple steps of Newton's method to refine our guess
         x = x * (1.5f - (x2 * x * x));
         x = x * (1.5f - (x2 * x * x));
+        x = x * (1.5f - (x2 * x * x));
 
         c[i] = x;
     }
