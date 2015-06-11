@@ -35,3 +35,4 @@ all-local: reports
 
 clean-local:
 	-rm -rf reports
+	-find . -type f -name "*.su" -delete
