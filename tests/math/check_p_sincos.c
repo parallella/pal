@@ -49,11 +49,7 @@ void setup()
 
     /* Run FUNCTION against gold input here so results are available
      * for all test cases. */
-    /* HACK: Pass in an invalid team. API was changed in:
-     * a380f6b70b8461dbb8c0def388d00270f8b27c28
-     * but implementation did have not catched up yet.
-     * When it does, the tests will break... */
-    p_sincos_f32(ai, resSin, resCos, ARRAY_SIZE(gold), 0, p_ref_err(EINVAL));
+    p_sincos_f32(ai, resSin, resCos, ARRAY_SIZE(gold));
 }
 
 void teardown()
