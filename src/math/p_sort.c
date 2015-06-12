@@ -1,5 +1,4 @@
 #include <pal.h>
-#include <stdlib.h>
 
 #define SIFTDOWN_FUNC(name, type) \
 	static void name (type *a, const uint32_t start, const uint32_t end) \

@@ -18,7 +18,6 @@
  * @return      None
  *
  */
-#include <math.h>
 void p_invsqrt_f32(const float *a, float *c, int n)
 {
     // This union allows us to type-pun between integers and floats

@@ -1,5 +1,5 @@
 #include <pal.h>
-#include <stdint.h>
+
 /**
  *
  * Counts the number of bits set in 'a'.

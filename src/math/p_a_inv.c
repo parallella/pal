@@ -15,7 +15,6 @@
  * @return      None
  *
  */
-#include <math.h>
 void p_a_inv_f32(const float *a, float *c, int n, int iterations)
 {
     int i, j;

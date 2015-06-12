@@ -20,8 +20,6 @@
  * @return      None
  *
  */
-#include <math.h>
-
 void p_sqrt_f32(const float *a, float *c, int n)
 {
     

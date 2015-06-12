@@ -13,8 +13,6 @@
  * @return      None
  *
  */
-#include <math.h>
-
 void p_inv_f32(const float *a, float *c, int n)
 {
     int i;
