@@ -12,16 +12,10 @@
  *
  * @param it    The number of iterations to run; also, a function of the maximum magnitude that can be run.
  *
- * @param p     Number of processor to use (task parallelism)
- *
- * @param team  Team to work with 
- *
  * @return      None
  *
  */
-#include <math.h>
-void p_a_inv_f32(const float *a, float *c, int n, int p,
-                 int iterations, p_team_t team)
+void p_a_inv_f32(const float *a, float *c, int n, int iterations)
 {
     int i, j;
     float max = iterations * iterations * iterations;

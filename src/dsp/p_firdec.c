@@ -18,15 +18,11 @@
  *
  * @param df    Decimation factor. (1 output sample per 'd' input samples)
  *
- * @param p     Number of processor to use (task parallelism)
- *
- * @param team  Team to work with 
- *
  * @return      None
  *
  */
 void p_firdec_f32(const float *x, const float *h, float *r,
-                  int nx, int nh, int df, int p, p_team_t team)
+                  int nx, int nh, int df)
 {
 
     /*PLACE CODE HERE*/

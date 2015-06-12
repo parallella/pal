@@ -1,37 +1,23 @@
-#ifndef TEST_FUNCTION
-#error TEST_FUNCTION must be defined
+#include "simple.h"
+
+#define GOLD_PATH XSTRING(gold/FUNCTION.gold.h)
+#include GOLD_PATH
+
+#ifndef FUNCTION
+#error FUNCTION must be defined
 #endif
 
 #if !(defined(IS_UNARY) || defined(IS_BINARY))
 #error IS_UNARY or IS_BINARY must be defined
 #endif
 
-#include <stdlib.h>
-#include <stdio.h>
-#include <math.h>
-#include <stdbool.h>
+float *ai, *bi, *res, *ref;
 
-#include <check.h>
-#include <pal.h>
-#include "../../src/base/pal_base_private.h"
-#include <common.h>
+#define GOLD_TEST XCONCAT2(test_gold_, FUNCTION)
 
-struct gold {
-    float ai;
-    float bi;
-    float res;
-    float gold;
-};
-
-#define GOLD_PATH XSTRING(gold/TEST_FUNCTION.gold.h)
-#include GOLD_PATH
-
-float *ai, *bi, *res;
-
-#define EPSILON_MAX 0.001f
-#define EPSILON_RELMAX 0.00001f
 /* For detecting erroneous overwrites */
 #define OUTPUT_END_MARKER 60189537703610376.0f
+
 __attribute__((weak))
 bool compare(float x, float y)
 {
@@ -48,85 +34,13 @@ bool compare(float x, float y)
     return err <= EPSILON_RELMAX;
 }
 
-#ifdef GENERATE_GOLD
-void print_gold()
+void setup()
 {
     size_t i;
-    FILE *ofp;
-
-    ofp = fopen(XSTRING(TEST_FUNCTION.res), "w");
-    for (i = 0; i < ARRAY_SIZE(gold); i++)
-        fprintf(ofp, "%f,%f,%f,%f\n", ai[i], bi[i], 0.0f, res[i]);
-    fclose(ofp);
-}
-#endif
-
-#if IS_UNARY
-START_TEST(CONCAT2(test_, TEST_FUNCTION))
-{
-    size_t i;
-
-    /* HACK: Pass in an invalid team. API was changed in:
-     * a380f6b70b8461dbb8c0def388d00270f8b27c28
-     * but implementation did have not catched up yet.
-     * When it does, the tests will break... */
-    TEST_FUNCTION(ai, res, ARRAY_SIZE(gold), 0, p_ref_err(EINVAL));
-#ifdef GENERATE_GOLD
-    print_gold();
-#else
-    for (i = 0; i < ARRAY_SIZE(gold); i++) {
-        ck_assert_msg(compare(res[i], gold[i].gold), "%s(%f): %f != %f",
-                      XSTRING(TEST_FUNCTION), ai[i], res[i], gold[i].gold);
-#ifdef SCALAR_OUTPUT /* Scalar output so only first address is valid */
-        i++;
-        break;
-#endif
-    }
-    ck_assert_msg(res[i] == OUTPUT_END_MARKER,
-                  "Output end marker was overwritten");
-#endif
-}
-END_TEST
-#else
-START_TEST(CONCAT2(test_, TEST_FUNCTION))
-{
-    size_t i;
-
-    /* HACK: see above comment */
-    TEST_FUNCTION(ai, bi, res, ARRAY_SIZE(gold), 0, p_ref_err(EINVAL));
-#ifdef GENERATE_GOLD
-    print_gold();
-#else
-    for (i = 0; i < ARRAY_SIZE(gold); i++) {
-        ck_assert_msg(compare(res[i], gold[i].gold), "%s(%f, %f): %f != %f",
-                      XSTRING(TEST_FUNCTION), ai[i], bi[i], res[i],
-                      gold[i].gold);
-#ifdef SCALAR_OUTPUT /* Scalar output so only first address is valid */
-        i++;
-        break;
-#endif
-    }
-    ck_assert_msg(res[i] == OUTPUT_END_MARKER,
-                  "Output end marker was overwritten");
-#endif
-}
-END_TEST
-#endif /* IS_UNARY */
-
-__attribute__((weak))
-int main(void)
-{
-    int num_failures;
-    size_t i;
-    Suite *suite = suite_create(XSTRING(TEST_FUNCTION) "_suite");
-    TCase *tcase = tcase_create(XSTRING(TEST_FUNCTION) "_tcase");
-    SRunner *sr = srunner_create(suite);
-
-    suite_add_tcase(suite, tcase);
-    tcase_add_test(tcase, CONCAT2(test_, TEST_FUNCTION));
 
     ai = calloc(ARRAY_SIZE(gold), sizeof(float));
     bi = calloc(ARRAY_SIZE(gold), sizeof(float));
+    ref = calloc(ARRAY_SIZE(gold), sizeof(float));
 
     /* Allocate one extra element for res and add end marker so overwrites can
      * be detected */
@@ -142,12 +56,120 @@ int main(void)
         bi[i] = gold[i].bi;
     }
 
-    srunner_run_all(sr, CK_ENV);
-    num_failures = srunner_ntests_failed(sr);
+    /* Run FUNCTION against gold input here so results are available
+     * for all test cases. */
+#if IS_UNARY
+    FUNCTION(ai, res, ARRAY_SIZE(gold));
+#else /* Binary */
+    FUNCTION(ai, bi, res, ARRAY_SIZE(gold));
+#endif
+}
 
+void teardown()
+{
     free(ai);
     free(bi);
     free(res);
+    free(ref);
+}
+
+START_TEST(print_gold)
+{
+    size_t i;
+    FILE *ofp;
+
+    ofp = fopen(XSTRING(FUNCTION.res), "w");
+    for (i = 0; i < ARRAY_SIZE(gold); i++)
+        fprintf(ofp, "%f,%f,%f,%f\n", ai[i], bi[i], 0.0f, res[i]);
+    fclose(ofp);
+
+    fprintf(stdout, "Gold data written to: %s\n", XSTRING(FUNCTION.res));
+}
+END_TEST
+
+START_TEST(GOLD_TEST)
+{
+    size_t i;
+
+    for (i = 0; i < ARRAY_SIZE(gold); i++) {
+#if IS_UNARY
+        ck_assert_msg(compare(res[i], gold[i].gold), "%s(%f): %f != %f",
+                      XSTRING(FUNCTION), ai[i], res[i], gold[i].gold);
+#else
+        ck_assert_msg(compare(res[i], gold[i].gold), "%s(%f, %f): %f != %f",
+                      XSTRING(FUNCTION), ai[i], bi[i], res[i], gold[i].gold);
+#endif
+#ifdef SCALAR_OUTPUT /* Scalar output so only first address is valid */
+        i++;
+        break;
+#endif
+    }
+    ck_assert_msg(res[i] == OUTPUT_END_MARKER,
+                  "Output end marker was overwritten");
+}
+END_TEST
+
+/* Default to using gold data as reference function output */
+__attribute__((weak))
+void generate_ref(float *out, size_t n)
+{
+    size_t i;
+
+    for (i = 0; i < n; i++)
+        out[i] = gold[i].gold;
+}
+
+START_TEST(against_ref_function)
+{
+    size_t i;
+
+    generate_ref(ref, ARRAY_SIZE(gold));
+
+    for (i = 0; i < ARRAY_SIZE(gold); i++) {
+#if IS_UNARY
+        ck_assert_msg(compare(res[i], ref[i]), "%s(%f): %f != %f",
+                      XSTRING(FUNCTION), ai[i], res[i], ref[i]);
+#else
+        ck_assert_msg(compare(res[i], ref[i]), "%s(%f, %f): %f != %f",
+                      XSTRING(FUNCTION), ai[i], bi[i], res[i], ref[i]);
+#endif
+#ifdef SCALAR_OUTPUT /* Scalar output so only first address is valid */
+        i++;
+        break;
+#endif
+    }
+}
+END_TEST
+
+/* Allow individual tests to add more test cases, e.g. against a reference
+ * function */
+__attribute__((weak))
+void add_more_tests(TCase *tcase)
+{
+}
+
+int main(void)
+{
+    int num_failures;
+    size_t i;
+    Suite *suite = suite_create(XSTRING(FUNCTION) "_suite");
+    TCase *tcase = tcase_create(XSTRING(FUNCTION) "_tcase");
+    SRunner *sr = srunner_create(suite);
+
+    tcase_add_unchecked_fixture(tcase, setup, teardown);
+
+#ifdef GENERATE_GOLD
+    tcase_add_test(tcase, print_gold);
+#else
+    tcase_add_test(tcase, GOLD_TEST);
+    tcase_add_test(tcase, against_ref_function);
+    add_more_tests(tcase);
+#endif
+
+    suite_add_tcase(suite, tcase);
+
+    srunner_run_all(sr, CK_ENV);
+    num_failures = srunner_ntests_failed(sr);
 
     srunner_free(sr);
 

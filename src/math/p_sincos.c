@@ -99,15 +99,12 @@ void cordicF(float theta, float *s, float *c, int n) {
  *
  * @param n     Size of 'a' and 'c' vector.
  * 
- * @param p     Number of processor to use (task parallelism)
- *
- * @param team  Team to work with 
- *
  * @return      None
  *
  */
-void p_sincos_f32(const float *a, float *c, float *z, int n, int p,
-		p_team_t team) {
+void p_sincos_f32(const float *a, float *c, float *z,
+                  int n)
+{
 	int i;
 	for (i = 0; i < n; i++) {
 		const float angle = a[i];
@@ -116,4 +113,3 @@ void p_sincos_f32(const float *a, float *c, float *z, int n, int p,
 		cordicF(angle, psin, pcos, SIN_COS_ITERATIONS);
 	}
 }
-
