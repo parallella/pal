@@ -15,7 +15,6 @@ int main(int argc, char **argv)
 
     float testval;
     int n;   
-    p_team_t team;
     int i;
 
     while ( (opt = getopt(argc, argv, "f:n:")) != -1) {
@@ -43,7 +42,7 @@ int main(int argc, char **argv)
       }
 
     //Execute
-    p_sin_f32(a, c, n, 0, team);    
+    p_sin_f32(a, c, n);    
     
     //Print result
     for (i=0;i<n;i++){

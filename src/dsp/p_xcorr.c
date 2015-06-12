@@ -16,16 +16,11 @@
  *
  * @param ny    Number of elements in vector 'y'
  *
- * @param p     Number of processor to use (task parallelism)
- *
- * @param team  Team to work with 
- *
  * @return      None
  *
  */
 
-void p_xcorr_f32(const float *x, const float *y, float *r, int nx, int ny,
-                 int p, p_team_t team)
+void p_xcorr_f32(const float *x, const float *y, float *r, int nx, int ny)
 {
   const float* data1_p;
   const float* data2_p;

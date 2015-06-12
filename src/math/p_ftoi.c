@@ -12,15 +12,11 @@
  *
  * @param n     Size of 'a' and 'c' vector.
  *
- * @param p     Number of processor to use (task parallelism)
- *
- * @param team  Team to work with 
- *
  * @return      None
  *
  */
 
-void p_ftoi(const float *a, int *c, int n, int p, p_team_t team)
+void p_ftoi(const float *a, int *c, int n)
 {
     uint32_t tmp;
     float rounding_value;

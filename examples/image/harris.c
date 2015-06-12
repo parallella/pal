@@ -11,7 +11,6 @@
 
 int main(int argc, char *argv[])
 {
-    p_team_t team;
     int i, j;
     
     float src[W*W] = {
@@ -32,7 +31,7 @@ int main(int argc, char *argv[])
     float dest[W4*W4];
     float tmp[W2*W2*3];
  
-    p_harris3x3_f32(src, dest, tmp, W, W, 1, team);
+    p_harris3x3_f32(src, dest, tmp, W, W);
     
     /* src */
     for (i = 0; i < W; i++) {

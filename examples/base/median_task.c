@@ -13,11 +13,10 @@ int main()
 
     int match;
     float median;
-	p_team_t team;
 
 	puts("Running first test");
 
-    p_median_f32(a, &median, a_n, 1, team);
+    p_median_f32(a, &median, a_n);
 
     if(median==a_expected_median)
         match=1;
@@ -29,7 +28,7 @@ int main()
 
 	puts("\nRunning second test");
 
-    p_median_f32(b, &median, b_n, 1, team);
+    p_median_f32(b, &median, b_n);
 
     if(median==b_expected_median)
         match=1;

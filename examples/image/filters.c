@@ -31,8 +31,6 @@ void float_to_ubyte(unsigned char *dest, float *src, int size)
 
 int main(int argc, char *argv[])
 {
-    p_team_t team;
-  
     float *data;
     float *dest;
     unsigned char *data_ub; /* ubyte data */
@@ -68,7 +66,7 @@ int main(int argc, char *argv[])
     
     /* gaussian */
     {
-        p_gauss3x3_f32(data, dest, h, w, 1, team);   
+        p_gauss3x3_f32(data, dest, h, w);
         float_to_ubyte(data_ub, dest, size);
         stbi_write_tga("../dataset/lena_gaussian.tga", w-2, h-2, 1, data_ub);
     }
@@ -76,7 +74,7 @@ int main(int argc, char *argv[])
     /* harris */
     {
         float *tmp = malloc(size * 3 * sizeof(float));
-        p_harris3x3_f32(data, dest, tmp, h, w, 1, team);
+        p_harris3x3_f32(data, dest, tmp, h, w);
 	free(tmp);
         float_to_ubyte(data_ub, dest, size);
         stbi_write_tga("../dataset/lena_harris.tga", w-4, h-4, 1, data_ub);
@@ -84,21 +82,21 @@ int main(int argc, char *argv[])
     
     /* sobel */
     {
-        p_sobel3x3_f32(data, dest, h, w, 1, team);   
+        p_sobel3x3_f32(data, dest, h, w);   
         float_to_ubyte(data_ub, dest, size);
         stbi_write_tga("../dataset/lena_sobel.tga", w, h, 1, data_ub);
     }
     
     /* box */
     {
-        p_box3x3_f32(data, dest, h, w, 1, team);   
+        p_box3x3_f32(data, dest, h, w);   
         float_to_ubyte(data_ub, dest, size);
         stbi_write_tga("../dataset/lena_box.tga", w-2, h-2, 1, data_ub);
     }
     
     /* median */
     {
-        p_median3x3_f32(data, dest, h, w, 1, team);   
+        p_median3x3_f32(data, dest, h, w);   
         float_to_ubyte(data_ub, dest, size);
         stbi_write_tga("../dataset/lena_median.tga", w-2, h-2, 1, data_ub);
     }

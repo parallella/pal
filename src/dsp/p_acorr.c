@@ -13,16 +13,11 @@
  *
  * @param nr    Size of output vector
  * 
- * @param p     Number of processor to use (task parallelism)
- *
- * @param team  Team to work with 
- *
  * @return      None
  *
  */
 
-void p_acorr_f32(const float *x, float *r, int nx, int nr,
-                 int p, p_team_t team)
+void p_acorr_f32(const float *x, float *r, int nx, int nr)
 {
   int c_offset;
   int index;
