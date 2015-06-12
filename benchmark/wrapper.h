@@ -70,8 +70,6 @@ struct p_benchmark_specification
 {
 	struct p_benchmark_raw_memory mem;
 	size_t current_size;
-	int p;
-	p_team_t team;
 };
 
 struct p_benchmark_item
