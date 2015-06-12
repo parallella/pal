@@ -70,6 +70,17 @@ $ ./configure
 $ make
 ```
 
+Testing:
+To run the automated unit tests you need to run
+``` bash
+$ make check
+```
+For this to succeed you need to have the check unit test library (see http://check.sourceforge.net ) installed e.g.
+``` bash
+$ sudo apt-get install check
+```
+
+
 ##A Simple Example
 The following sample shows how to use PAL launch a simple task on a remote processor within the system. The program flow should be familiar to anyone who has used accelerator programming frameworks. 
 
