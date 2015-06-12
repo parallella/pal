@@ -58,7 +58,7 @@ float single_exp(float b)
 		return inverse(result);
 	return result;
 }
-void p_exp_f32(const float *a, float *c, int n, int p, p_team_t team)
+void p_exp_f32(const float *a, float *c, int n)
 {
 
     int i;
