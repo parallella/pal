@@ -9,7 +9,8 @@
  * r         : output matrix pointer
  * rows      : rows in input image
  * columns   : columns in input image (multiple of 4)
- * msize     : mask size (square)
+ * mrows     : mask rows
+ * mcols     : mask cols
  * opt       : options
  * p         : number of processors "parallelism"
  * team      : team to work with
@@ -18,8 +19,8 @@
  */
 
 /*2d convolution */
-void p_conv2d_f32(const float *x, float *m, float *r, int rows, int cols,
-                  int msize, int p, p_team_t team);
+void p_conv2d_f32(const float *x, const float *m, float *r, int rows, int cols,
+                  int mrows, int mcols,  int p, p_team_t team);
 
 /*2d box (i.e mean) filter(3x3) */
 void p_box3x3_f32(const float *x, float *r, int rows, int cols,
