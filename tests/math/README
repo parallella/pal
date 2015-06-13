@@ -1,6 +1,8 @@
 To add a new function to test suite
-1.) Add line to run.sh with correct arguments
-2.) Make sure entry is in test_main
+1.) Update Makefile.am. You should need to add two lines, just follow the
+    examples of the existing tests.
+2.) Create a reference implementation of the function. This will be in a file
+    like p_sin.c in this directory. 
 3.) Add a .dat file with comma separate columns. The last column contains
     the expected results
 
@@ -8,6 +10,5 @@ STILL TODO:
 sort
 max
 min
-sincos
 mode
 
