@@ -10,6 +10,7 @@
 
 # Libraries
 *.lib
+.libs/
 *.a
 *.la
 *.lo
@@ -65,4 +66,4 @@ tests/*.log
 tests/*.sum
 tests/*/check_p_*
 tests/*/*.log
-tests/*/.libs/
+
