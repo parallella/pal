@@ -57,12 +57,12 @@ Instructions for contributing can be found [HERE](CONTRIBUTING.md).
 
 ##Build Instructions
 
-Install Pre-requisites:
+###Install Prerequisites
 ``` bash
 $ sudo apt-get install libtool build-essential pkg-config autoconf doxygen check
 ```
 
-Build Sequence:
+###Build Sequence
 
 ``` bash
 $ ./bootstrap
@@ -70,15 +70,15 @@ $ ./configure
 $ make
 ```
 
-Testing:
+###Testing
+
 To run the automated unit tests you need to run
 ``` bash
 $ make check
 ```
-For this to succeed you need to have the check unit test library (see http://check.sourceforge.net ) installed e.g.
-``` bash
-$ sudo apt-get install check
-```
+
+For this to succeed you need to have the check unit test library (http://check.sourceforge.net).
+See [prerequisites](#install-prerequisites).
 
 
 ##A Simple Example
@@ -218,7 +218,7 @@ FUNCTION     | NOTES
 [p_cosh()](src/math/p_cosh.c)         | hyperbolic cosine  
 [p_div()](src/math/p_div.c)           | division  
 [p_dot()](src/math/p_dot.c)           | dot product  
-[p_exp()](src/math/p_div.c)           | exponential  
+[p_exp()](src/math/p_exp.c)           | exponential
 [p_ftoi()](src/math/p_ftoi.c)         | float to  
 [p_itof()](src/math/p_itof.c)         | integer to float conversion  
 [p_inv()](src/math/p_inv.c)           | inverse  
