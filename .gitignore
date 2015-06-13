@@ -54,3 +54,6 @@ Makefile.in
 
 # Erlang
 *.beam
+
+# Gold test headers (generated from .dat files)
+*.gold.h
