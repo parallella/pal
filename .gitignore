@@ -10,9 +10,13 @@
 
 # Libraries
 *.lib
+.libs/
 *.a
 *.la
 *.lo
+
+# Static Usage
+*.su
 
 # Shared objects (inc. Windows DLLs)
 *.dll
@@ -54,3 +58,15 @@ Makefile.in
 
 # Erlang
 *.beam
+
+# Gold test headers (generated from .dat files)
+*.gold.h
+
+# Test outputs
+tests/math/rangen
+tests/runtest
+tests/*.log
+tests/*.sum
+tests/*/check_p_*
+tests/*/*.log
+
