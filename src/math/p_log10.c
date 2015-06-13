@@ -10,15 +10,11 @@
  *
  * @param n     Size of 'a' and 'c' vector.
  *
- * @param p     Number of processor to use (task parallelism)
- *
- * @param team  Team to work with 
- *
  * @return      None
  *
  */
 #include <math.h>
-void p_log10_f32(const float *a, float *c, int n, int p, p_team_t team)
+void p_log10_f32(const float *a, float *c, int n)
 {
     p_ln_f32(a, c, n, p, team);
     int i;

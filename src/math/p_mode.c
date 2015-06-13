@@ -10,22 +10,18 @@
  *
  * @param n     Size of 'a' vector.
  *
- * @param p     Number of processor to use (task parallelism)
- *
- * @param team  Team to work with 
- *
  * @return      None
  *
  */
 
-void p_mode_f32(const float *a, float *c, int n, int p, p_team_t team)
+void p_mode_f32(const float *a, float *c, int n)
 {
     unsigned int occurrence_count = 0;
     unsigned int max_occurrence_count = 0;
     unsigned int i = 1;
     float mode_value = 0.0f;
-    float *sorted_a = (float*) p_malloc(team, sizeof(float) * n);
-    p_sort_f32(a, sorted_a, n, p, team);
+    float *sorted_a = (float*) malloc(sizeof(float) * n);
+    p_sort_f32(a, sorted_a, n);
 
     for (; i < n; ++i) {
         ++occurrence_count;

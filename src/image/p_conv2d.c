@@ -14,16 +14,12 @@
  *
  * @param msize Size of convolution kernel
  *
- * @param p     Number of processor to use (task parallelism)
- *
- * @param team  Team to work with 
- *
  * @return      None
  *
  */
 
 void p_conv2d_f32(const float *x, float *m, float *r, int rows, int cols,
-                  int msize, int p, p_team_t team)
+                  int msize)
 
 {
     int i, j, k;
@@ -40,7 +36,7 @@ void p_conv2d_f32(const float *x, float *m, float *r, int rows, int cols,
             P = 0.0f;
             pm = m;
             for (k = 0; k < msize; k++) {
-                p_dot_f32(px, pm, &part, msize, 0, team);
+                p_dot_f32(px, pm, &part, msize);
                 P += part;
                 px += cols;
                 pm += msize;

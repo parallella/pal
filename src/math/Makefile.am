@@ -43,6 +43,7 @@ libpal_math_la_SOURCES = \
     p_sinh.c \
     p_sort.c \
     p_sqrt.c \
+    p_stddev.c \
     p_sub.c \
     p_sum.c \
     p_sumsq.c \

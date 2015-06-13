@@ -51,7 +51,7 @@ The PAL source code is licensed under the Apache License, Version 2.0.
 See LICENSE for full license text unless otherwise specified.
 
 ##Contribution
-Our goal is to make PAL a broad community project from day one. If just 100 people contribute one function each, we'll be done in a couple of days! If you know C, your are ready to contribute!!
+Our goal is to make PAL a broad community project from day one. If just 100 people contribute one function each, we'll be done in a couple of days! If you know C, you are ready to contribute!!
 
 Instructions for contributing can be found [HERE](CONTRIBUTING.md). 
 

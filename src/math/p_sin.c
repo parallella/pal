@@ -1,5 +1,5 @@
-#include <pal_math.h>
-#include <pal_base.h>
+#include <pal.h>
+
 /**
  *
  * Compute the sine of the vector 'a'. Angles are specified in radians.
@@ -11,17 +11,13 @@
  *
  * @param n     Size of 'a' and 'c' vector.
  *
- * @param p     Number of processor to use (task parallelism)
- *
- * @param team  Team to work with 
- *
  * @return      None
  *
  */
 
 #define SIN_ITERATIONS 5
 
-void p_sin_f32(const float *a, float *c, int n, int p, p_team_t team)
+void p_sin_f32(const float *a, float *c, int n)
 {
     int i;    
     for (i = 0; i < n; i++) {

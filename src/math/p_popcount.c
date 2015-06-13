@@ -1,5 +1,5 @@
 #include <pal.h>
-#include <stdint.h>
+
 /**
  *
  * Counts the number of bits set in 'a'.
@@ -10,14 +10,10 @@
  *
  * @param n     Size of 'a' and 'c' vector.
  *
- * @param p     Number of processor to use (task parallelism)
- *
- * @param team  Team to work with 
- *
  * @return      None
  *
  */
-void p_popcount_u32(const uint32_t *a, uint32_t *c, int n, int p, p_team_t team)
+void p_popcount_u32(const uint32_t *a, uint32_t *c, int n)
 {
     static const uint32_t A[] = {0x55555555, 0x33333333,
                                  0x0f0f0f0f, 0x01010101};
@@ -38,7 +34,7 @@ void p_popcount_u32(const uint32_t *a, uint32_t *c, int n, int p, p_team_t team)
     }
 }
 
-void p_popcount_u64(const uint64_t *a, uint64_t *c, int n, int p, p_team_t team)
+void p_popcount_u64(const uint64_t *a, uint64_t *c, int n)
 {
     static const uint64_t A[] = {0x5555555555555555, 0x3333333333333333,
                                  0x0f0f0f0f0f0f0f0f, 0x0101010101010101};

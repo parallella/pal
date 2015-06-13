@@ -11,16 +11,11 @@
  *
  * @param cols  Number of columns in input image
  *
- * @param p     Number of processor to use (task parallelism)
- *
- * @param team  Team to work with 
- *
  * @return      None
  *
  */
 
-void p_median3x3_f32(const float *x, float *r, int rows, int cols,
-                     int p, p_team_t team)
+void p_median3x3_f32(const float *x, float *r, int rows, int cols)
 {
     float buffer[9];
     const float *px;
@@ -44,7 +39,7 @@ void p_median3x3_f32(const float *x, float *r, int rows, int cols,
         buffer[7] = *(px + cols + cols + 1);
         buffer[8] = *(px + cols + cols + 2);
 
-        p_median_f32(buffer, pr, 9, 0, 0);
+        p_median_f32(buffer, pr, 9);
         pr++;
         px += 3;
         // other windows differ only by one column
@@ -55,7 +50,7 @@ void p_median3x3_f32(const float *x, float *r, int rows, int cols,
             buffer[buffer_col + 3] = *(px + cols);
             buffer[buffer_col + 6] = *(px + cols + cols);
 
-            p_median_f32(buffer, pr, 9, 0, 0);
+            p_median_f32(buffer, pr, 9);
             pr++;
             px++;
         }
