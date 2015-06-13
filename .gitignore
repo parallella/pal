@@ -63,10 +63,25 @@ Makefile.in
 *.gold.h
 
 # Test outputs
-tests/math/rangen
-tests/runtest
-tests/*.log
-tests/*.sum
-tests/*/check_p_*
-tests/*/*.log
+/tests/math/rangen
+/tests/runtest
+/tests/*.log
+/tests/*.sum
+/tests/*/check_p_*
+/tests/*/*.log
 
+# Reports
+/reports/
+
+# Doc
+/doc/Doxyfile
+
+# Example binaries
+/examples/base/hello_task
+/examples/base/median_task
+/examples/base/mode_task
+/examples/base/simple_example
+/examples/base/sine_task
+/examples/base/sort_task
+/examples/image/filters
+/examples/image/harris
