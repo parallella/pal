@@ -15,6 +15,9 @@
 *.la
 *.lo
 
+# Static Usage
+*.su
+
 # Shared objects (inc. Windows DLLs)
 *.dll
 *.so
