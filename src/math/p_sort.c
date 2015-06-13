@@ -1,5 +1,4 @@
 #include <pal.h>
-#include <stdlib.h>
 
 #define SIFTDOWN_FUNC(name, type) \
 	static void name (type *a, const uint32_t start, const uint32_t end) \
@@ -70,13 +69,11 @@ SORT_FUNC(_heapsort_u32, uint32_t, _sift_down_u32);
  * @param a     Pointer to input vector
  * @param c     Pointer to result vector
  * @param n     Size of 'a' and 'c' vector.
- * @param p     Number of processor to use (task parallelism)
- * @param team  Team to work with 
  *
  * @return      None
  *
  */
-void p_sort_f32(const float *a, float *c, int n, int p, p_team_t team)
+void p_sort_f32(const float *a, float *c, int n)
 {
 	_heapsort_f32(a, c, n);
 }
@@ -88,13 +85,11 @@ void p_sort_f32(const float *a, float *c, int n, int p, p_team_t team)
  * @param a     Pointer to input vector
  * @param c     Pointer to result vector
  * @param n     Size of 'a' and 'c' vector.
- * @param p     Number of processor to use (task parallelism)
- * @param team  Team to work with 
  *
  * @return      None
  *
  */
-void p_sort_u32(const uint32_t *a, uint32_t *c, int n, int p, p_team_t team)
+void p_sort_u32(const uint32_t *a, uint32_t *c, int n)
 {
 	_heapsort_u32(a, c, n);
 }

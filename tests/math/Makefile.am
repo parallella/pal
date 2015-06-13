@@ -44,6 +44,7 @@ BUILT_SOURCES = \
     gold/p_mul_f32.gold.h \
     gold/p_pow_f32.gold.h \
     gold/p_sin_f32.gold.h \
+    gold/p_sincos_f32.gold.h \
     gold/p_sinh_f32.gold.h \
     gold/p_sqrt_f32.gold.h \
     gold/p_sub_f32.gold.h \
@@ -147,7 +148,7 @@ check_p_popcount_SOURCES        = notest.c
 check_p_pow_f32_SOURCES         = $(SIMPLE) p_pow.c
 check_p_rand_SOURCES            = notest.c
 check_p_sin_f32_SOURCES         = $(SIMPLE) p_sin.c
-check_p_sincos_f32_SOURCES      = notest.c
+check_p_sincos_f32_SOURCES      = check_p_sincos.c
 check_p_sinh_f32_SOURCES        = $(SIMPLE) p_sinh.c
 check_p_sort_f32_SOURCES        = notest.c
 check_p_sqrt_f32_SOURCES        = $(SIMPLE) p_sqrt.c

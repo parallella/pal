@@ -51,7 +51,7 @@ The PAL source code is licensed under the Apache License, Version 2.0.
 See LICENSE for full license text unless otherwise specified.
 
 ##Contribution
-Our goal is to make PAL a broad community project from day one. If just 100 people contribute one function each, we'll be done in a couple of days! If you know C, your are ready to contribute!!
+Our goal is to make PAL a broad community project from day one. If just 100 people contribute one function each, we'll be done in a couple of days! If you know C, you are ready to contribute!!
 
 Instructions for contributing can be found [HERE](CONTRIBUTING.md). 
 
@@ -229,6 +229,7 @@ FUNCTION     | NOTES
 [p_sin()](src/math/p_sin.c)           | sine  
 [p_sinh()](src/math/p_sinh.c)         | hyperbolic sine  
 [p_sqrt()](src/math/p_sqrt.c)         | square root  
+[p_stddev()](src/math/p_stddev.c)     | calculates standard deviation  
 [p_sub()](src/math/p_sub.c)           | subtract  
 [p_sum()](src/math/p_sum.c)           | sum of all vector elements  
 [p_sumsq()](src/math/p_sumsq.c)       | sum of all squared elements  

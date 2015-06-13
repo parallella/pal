@@ -3,7 +3,6 @@
 
 int main()
 {
-	p_team_t team;
 #define FSIZE 30
 	int fsize = FSIZE;
 	float fin[FSIZE] = {
@@ -39,7 +38,7 @@ int main()
 	int i;
 
 	printf("Running p_sort_f32()\n");
-	p_sort_f32(fin, fout, fsize, 1, team);
+	p_sort_f32(fin, fout, fsize);
 	printf("Results:\n");
 	sorted = 1;
 	ulast = fout[0];
@@ -54,7 +53,7 @@ int main()
 	printf("\n");
 
 	printf("Running p_sort_u32()\n");
-	p_sort_u32(uin, uout, usize, 1, team);
+	p_sort_u32(uin, uout, usize);
 	printf("Results:\n");
 	sorted = 1;
 	ulast = uout[0];
