@@ -11,6 +11,9 @@
 #error IS_UNARY or IS_BINARY must be defined
 #endif
 
+struct gold *gold = builtin_gold;
+size_t gold_size = ARRAY_SIZE(builtin_gold);
+
 float *ai, *bi, *res, *ref;
 
 bool generate_gold_flag = false;
@@ -40,9 +43,9 @@ void setup()
 {
     size_t i;
 
-    ai = calloc(ARRAY_SIZE(gold), sizeof(float));
-    bi = calloc(ARRAY_SIZE(gold), sizeof(float));
-    ref = calloc(ARRAY_SIZE(gold), sizeof(float));
+    ai = calloc(gold_size, sizeof(float));
+    bi = calloc(gold_size, sizeof(float));
+    ref = calloc(gold_size, sizeof(float));
 
     /* Allocate one extra element for res and add end marker so overwrites can
      * be detected */
@@ -50,10 +53,10 @@ void setup()
     res = calloc(2, sizeof(float));
     res[1] = OUTPUT_END_MARKER;
 #else
-    res = calloc(ARRAY_SIZE(gold) + 1, sizeof(float));
-    res[ARRAY_SIZE(gold)] = OUTPUT_END_MARKER;
+    res = calloc(gold_size + 1, sizeof(float));
+    res[gold_size] = OUTPUT_END_MARKER;
 #endif
-    for (i = 0; i < ARRAY_SIZE(gold); i++) {
+    for (i = 0; i < gold_size; i++) {
         ai[i] = gold[i].ai;
         bi[i] = gold[i].bi;
     }
@@ -61,9 +64,9 @@ void setup()
     /* Run FUNCTION against gold input here so results are available
      * for all test cases. */
 #if IS_UNARY
-    FUNCTION(ai, res, ARRAY_SIZE(gold));
+    FUNCTION(ai, res, gold_size);
 #else /* Binary */
-    FUNCTION(ai, bi, res, ARRAY_SIZE(gold));
+    FUNCTION(ai, bi, res, gold_size);
 #endif
 }
 
@@ -81,7 +84,7 @@ START_TEST(print_gold)
     FILE *ofp;
 
     ofp = fopen(XSTRING(FUNCTION.res), "w");
-    for (i = 0; i < ARRAY_SIZE(gold); i++)
+    for (i = 0; i < gold_size; i++)
         fprintf(ofp, "%f,%f,%f,%f\n", ai[i], bi[i], 0.0f, res[i]);
     fclose(ofp);
 
@@ -95,7 +98,7 @@ START_TEST(GOLD_TEST)
 {
     size_t i;
 
-    for (i = 0; i < ARRAY_SIZE(gold); i++) {
+    for (i = 0; i < gold_size; i++) {
 #if IS_UNARY
         ck_assert_msg(compare(res[i], gold[i].gold), "%s(%f): %f != %f",
                       XSTRING(FUNCTION), ai[i], res[i], gold[i].gold);
@@ -127,9 +130,9 @@ START_TEST(against_ref_function)
 {
     size_t i;
 
-    generate_ref(ref, ARRAY_SIZE(gold));
+    generate_ref(ref, gold_size);
 
-    for (i = 0; i < ARRAY_SIZE(gold); i++) {
+    for (i = 0; i < gold_size; i++) {
 #if IS_UNARY
         ck_assert_msg(compare(res[i], ref[i]), "%s(%f): %f != %f",
                       XSTRING(FUNCTION), ai[i], res[i], ref[i]);

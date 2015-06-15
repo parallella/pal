@@ -8,6 +8,9 @@
 
 float *ai, *resCos, *resSin, *refCos, *refSin;
 
+struct gold *gold = builtin_gold;
+size_t gold_size = ARRAY_SIZE(builtin_gold);
+
 /* For detecting erroneous overwrites */
 #define OUTPUT_END_MARKER 60189537703610376.0f
 
@@ -32,24 +35,24 @@ void setup()
 {
     size_t i;
 
-    ai = calloc(ARRAY_SIZE(gold), sizeof(float));
-    refCos = calloc(ARRAY_SIZE(gold), sizeof(float));
-    refSin = calloc(ARRAY_SIZE(gold), sizeof(float));
+    ai = calloc(gold_size, sizeof(float));
+    refCos = calloc(gold_size, sizeof(float));
+    refSin = calloc(gold_size, sizeof(float));
 
     /* Allocate one extra element for res and add end marker so overwrites can
      * be detected */
-    resCos = calloc(ARRAY_SIZE(gold) + 1, sizeof(float));
-    resCos[ARRAY_SIZE(gold)] = OUTPUT_END_MARKER;
-    resSin = calloc(ARRAY_SIZE(gold) + 1, sizeof(float));
-    resSin[ARRAY_SIZE(gold)] = OUTPUT_END_MARKER;
+    resCos = calloc(gold_size + 1, sizeof(float));
+    resCos[gold_size] = OUTPUT_END_MARKER;
+    resSin = calloc(gold_size + 1, sizeof(float));
+    resSin[gold_size] = OUTPUT_END_MARKER;
 
-    for (i = 0; i < ARRAY_SIZE(gold); i++) {
+    for (i = 0; i < gold_size; i++) {
         ai[i] = gold[i].ai;
     }
 
     /* Run FUNCTION against gold input here so results are available
      * for all test cases. */
-    p_sincos_f32(ai, resSin, resCos, ARRAY_SIZE(gold));
+    p_sincos_f32(ai, resSin, resCos, gold_size);
 }
 
 void teardown()
@@ -65,7 +68,7 @@ START_TEST(GOLD_TEST)
 {
     size_t i;
 
-    for (i = 0; i < ARRAY_SIZE(gold); i++) {
+    for (i = 0; i < gold_size; i++) {
         ck_assert_msg(compare(resSin[i], gold[i].bi),
                       "p_sincos(%f): sin: %f != %f",
                       ai[i], resSin[i], gold[i].bi);
@@ -84,7 +87,7 @@ START_TEST(against_ref_function)
 {
     size_t i;
 
-    for (i = 0; i < ARRAY_SIZE(gold); i++) {
+    for (i = 0; i < gold_size; i++) {
         ck_assert_msg(compare(resSin[i], sinf(gold[i].ai)),
                       "p_sincos_f32(%f): sin: %f != %f",
                       ai[i], resSin[i], sinf(gold[i].ai));

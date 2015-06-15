@@ -59,7 +59,7 @@ SUFFIXES = .dat .gold.h
 .dat.gold.h:
 	@$(MKDIR_P) gold
 	@echo "$< --> $@"
-	@echo "struct gold gold[] = {" >> $@
+	@echo "struct gold builtin_gold[] = {" >> $@
 	@sed -e 's/,/f, /g;s/^/    { /g;s/$$/f },/g;s/0\.00*f/0.0f/g;$$s/,$$//g' $< >> $@
 	@echo "};" >> $@
 
