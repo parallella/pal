@@ -95,8 +95,6 @@
  * a,b : input vector pointer
  * c   : result vector pointer
  * n   : length of input/output vector
- * p    : number of processors in team (task parallelism)
- * team : team to work with
  *
  ****************************************************************
  */
@@ -207,8 +205,6 @@ void p_mac_f32(const float *a, const float *b, float *c, int n);
  * a, b : input vector pointer
  * c    : scalar result pointer
  * n    : length of input vector (data parallelism)
- * p    : number of processors in team (task parallelism)
- * team : team to work with
  *
  ****************************************************************
  */

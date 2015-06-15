@@ -11,8 +11,6 @@
  * columns   : columns in input image (multiple of 4)
  * msize     : mask size (square)
  * opt       : options
- * p         : number of processors "parallelism"
- * team      : team to work with
  *
  ****************************************************************
  */

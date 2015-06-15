@@ -8,8 +8,6 @@
  * h            : input coefficient vector pointer
  * r            : output result vector pointer
  * nx,ny,nr,nh  : size of respective vectors
- * p            : number of processor to use (task parallelism)
- * team         : team to work with
  *
  ****************************************************************
  */
