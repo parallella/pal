@@ -16,9 +16,10 @@
 #include <math.h>
 void p_log10_f32(const float *a, float *c, int n)
 {
-
+    p_ln_f32(a, c, n);
     int i;
     for (i = 0; i < n; i++) {
-        *(c + i) = log10f(*(a + i));
+        // log10(x) = ln(x) / ln(10)
+        c[i] /= M_LN10;
     }
 }
