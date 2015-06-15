@@ -194,7 +194,7 @@ check_p_popcount_CFLAGS         = -DFUNCTION=p_popcount
 check_p_pow_f32_CFLAGS          = -DFUNCTION=p_pow_f32     -DIS_BINARY
 check_p_rand_CFLAGS             = -DFUNCTION=p_rand                    -DSCALAR_OUTPUT
 check_p_sin_f32_CFLAGS          = -DFUNCTION=p_sin_f32     -DIS_UNARY
-check_p_sincos_f32_CFLAGS       = -DFUNCTION=p_sin_cos_f32
+check_p_sincos_f32_CFLAGS       = -DFUNCTION=p_sincos_f32
 check_p_sinh_f32_CFLAGS         = -DFUNCTION=p_sinh_f32    -DIS_UNARY
 check_p_sort_f32_CFLAGS         = -DFUNCTION=p_sort_f32
 check_p_sqrt_f32_CFLAGS         = -DFUNCTION=p_sqrt_f32    -DIS_UNARY
