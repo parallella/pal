@@ -13,6 +13,7 @@
 
 struct gold *gold = builtin_gold;
 size_t gold_size = ARRAY_SIZE(builtin_gold);
+char *gold_file = NULL;
 
 float *ai, *bi, *res, *ref;
 
@@ -76,6 +77,10 @@ void teardown()
     free(bi);
     free(res);
     free(ref);
+
+    /* Need to free if we're not using built-in gold data */
+    if (gold_file)
+        free(gold);
 }
 
 START_TEST(print_gold)
@@ -157,22 +162,88 @@ void add_more_tests(TCase *tcase)
 
 void parse_options_or_die(int argc, char *argv[])
 {
+    /* At some point we might to want to use getopt if this gets to messy. */
     for (int i = 1; i < argc; i++) {
-        if (!strncmp(argv[i], "--gold", ARRAY_SIZE("--gold")) ||
-            !strncmp(argv[i], "-g", ARRAY_SIZE("-g")))
+        if (argv[i][0] != '-') {
+            if (gold_file)
+                goto usage;
+
+            gold_file = argv[i];
+        } else if (!strncmp(argv[i], "--gold", ARRAY_SIZE("--gold")) ||
+            !strncmp(argv[i], "-g", ARRAY_SIZE("-g"))) {
             generate_gold_flag = true;
-        else
+        } else {
             goto usage;
+        }
     }
     return;
 
 usage:
     fprintf(stderr,
-"Usage: %s [OPTIONS]\n"
+"Usage: %s [OPTIONS] [GOLD FILE]\n"
 "\n"
 "OPTIONS\n"
 "\n"
 "\t-g, --gold\tInstead of running test, generate gold data\n", argv[0]);
+    exit(EXIT_FAILURE);
+}
+
+void read_gold_file_or_die(char *progname)
+{
+    float ai, bi, res, expect;
+    FILE *fp;
+    int ret;
+
+    gold = NULL;
+    gold_size = 0;
+
+    if (!(fp = fopen(gold_file, "r"))) {
+        fprintf(stderr, "%s: Cannot open %s. %s\n",
+                progname, gold_file, strerror(errno));
+        goto fail;
+    }
+
+    while (true) {
+retry:
+        errno = 0;
+        ret = fscanf(fp, "%f,%f,%f,%f\n", &ai, &bi, &res, &expect);
+        if (ret == EOF) {
+            if (errno == EINTR)
+                goto retry;
+
+            if (errno) {
+                perror("ERROR");
+                goto fail;
+            }
+
+            if (!gold_size)
+                fprintf(stderr, "WARNING: No gold data\n");
+
+            return;
+        }
+        if (ret != 4) {
+                fprintf(stderr, "ERROR: Failed parsing %s at line %zu\n",
+                        gold_file, gold_size);
+                goto fail;
+        }
+
+        gold = realloc(gold, sizeof(*gold) * (gold_size + 1));
+        if (!gold) {
+                fprintf(stderr, "ERROR: Out of memory\n");
+                goto fail;
+        }
+
+        gold[gold_size].ai = ai;
+        gold[gold_size].bi = bi;
+        gold[gold_size].res = res;
+        gold[gold_size].gold = expect;
+
+        gold_size++;
+    }
+
+fail:
+    if (gold)
+        free(gold);
     exit(EXIT_FAILURE);
 }
 
@@ -185,6 +256,9 @@ int main(int argc, char *argv[])
     SRunner *sr = srunner_create(suite);
 
     parse_options_or_die(argc, argv);
+
+    if (gold_file)
+        read_gold_file_or_die(argv[0]);
 
     tcase_add_unchecked_fixture(tcase, setup, teardown);
 
