@@ -154,10 +154,9 @@ void add_more_tests(TCase *tcase)
 
 void parse_options_or_die(int argc, char *argv[])
 {
-
-    while (--argc) {
-        if (!strncmp(argv[argc], "--gold", ARRAY_SIZE("--gold")) ||
-            !strncmp(argv[argc], "-g", ARRAY_SIZE("-g")))
+    for (int i = 1; i < argc; i++) {
+        if (!strncmp(argv[i], "--gold", ARRAY_SIZE("--gold")) ||
+            !strncmp(argv[i], "-g", ARRAY_SIZE("-g")))
             generate_gold_flag = true;
         else
             goto usage;
