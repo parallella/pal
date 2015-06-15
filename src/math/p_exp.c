@@ -1,5 +1,4 @@
 #include <pal.h>
-#include <stdio.h>
 /**
  *
  * Calculate exponent (e^a), where e is the base of the natural logarithm
@@ -17,7 +16,7 @@
  * @return      None
  *
  */
-#include <math.h>
+
 void p_exp_f32(const float *a, float *c, int n)
 {
     int i;
