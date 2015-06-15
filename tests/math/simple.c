@@ -13,6 +13,8 @@
 
 float *ai, *bi, *res, *ref;
 
+bool generate_gold_flag = false;
+
 #define GOLD_TEST XCONCAT2(test_gold_, FUNCTION)
 
 /* For detecting erroneous overwrites */
@@ -84,6 +86,8 @@ START_TEST(print_gold)
     fclose(ofp);
 
     fprintf(stdout, "Gold data written to: %s\n", XSTRING(FUNCTION.res));
+    fprintf(stdout, "You need to manually copy it to gold/%s\n",
+            XSTRING(FUNCTION.dat));
 }
 END_TEST
 
@@ -148,7 +152,29 @@ void add_more_tests(TCase *tcase)
 {
 }
 
-int main(void)
+void parse_options_or_die(int argc, char *argv[])
+{
+
+    while (--argc) {
+        if (!strncmp(argv[argc], "--gold", ARRAY_SIZE("--gold")) ||
+            !strncmp(argv[argc], "-g", ARRAY_SIZE("-g")))
+            generate_gold_flag = true;
+        else
+            goto usage;
+    }
+    return;
+
+usage:
+    fprintf(stderr,
+"Usage: %s [OPTIONS]\n"
+"\n"
+"OPTIONS\n"
+"\n"
+"\t-g, --gold\tInstead of running test, generate gold data\n", argv[0]);
+    exit(EXIT_FAILURE);
+}
+
+int main(int argc, char *argv[])
 {
     int num_failures;
     size_t i;
@@ -156,15 +182,17 @@ int main(void)
     TCase *tcase = tcase_create(XSTRING(FUNCTION) "_tcase");
     SRunner *sr = srunner_create(suite);
 
+    parse_options_or_die(argc, argv);
+
     tcase_add_unchecked_fixture(tcase, setup, teardown);
 
-#ifdef GENERATE_GOLD
-    tcase_add_test(tcase, print_gold);
-#else
-    tcase_add_test(tcase, GOLD_TEST);
-    tcase_add_test(tcase, against_ref_function);
-    add_more_tests(tcase);
-#endif
+    if (generate_gold_flag) {
+        tcase_add_test(tcase, print_gold);
+    } else {
+        tcase_add_test(tcase, GOLD_TEST);
+        tcase_add_test(tcase, against_ref_function);
+        add_more_tests(tcase);
+    }
 
     suite_add_tcase(suite, tcase);
 

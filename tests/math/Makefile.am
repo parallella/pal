@@ -64,7 +64,7 @@ SUFFIXES = .dat .gold.h
 	@echo "};" >> $@
 
 clean-local:
-	-rm -f gold/*.gold.h
+	-rm -f gold/*.gold.h *.res
 
 
 # In alphabetic order
