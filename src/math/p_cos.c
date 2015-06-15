@@ -31,11 +31,12 @@ void p_cos_f32(const float *a, float *c, int n)
         //for(k=COS_ITERATIONS-1; k>=0; --k)
           //val = 1 - theta*theta/(2*k+2)/(2*k+1)*val;
 
-        val = 1 - theta*theta*0.10000000*0.11111111*val;
-        val = 1 - theta*theta*0.12500000*0.14285714*val;
-        val = 1 - theta*theta*0.16666667*0.20000000*val;
-        val = 1 - theta*theta*0.25000000*0.33333333*val;
-        val = 1 - theta*theta*0.50000000*1.00000000*val;
+        val = 1.0f - theta*theta*0.083333333f*0.090909090f*val;
+        val = 1.0f - theta*theta*0.10000000f*0.11111111f*val;
+        val = 1.0f - theta*theta*0.12500000f*0.14285714f*val;
+        val = 1.0f - theta*theta*0.16666667f*0.20000000f*val;
+        val = 1.0f - theta*theta*0.25000000f*0.33333333f*val;
+        val = 1.0f - theta*theta*0.50000000f*1.00000000f*val;
 
         *pc = val;
 
