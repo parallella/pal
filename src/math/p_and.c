@@ -2,7 +2,7 @@
 
 /**
  *
- * Element wise vector multiplication between input vectors 'a' and 'b'
+ * Element wise vector 'bitwise and' between input vectors 'a' and 'b'
  *
  * @param a     Pointer to first input vector
  *
@@ -12,23 +12,27 @@
  *
  * @param n     Size of 'a' and 'c' vector.
  *
+ * @param p     Number of processor to use (task parallelism)
+ *
+ * @param team  Team to work with 
+ *
  * @return      None
  *
  */
 
-void p_mul_f32(const float *a, const float *b, float *c,
-               int n)
+void p_and(const uint32_t *a, const uint32_t *b, uint32_t *c,
+               int n, int p, p_team_t team)
 {
 
     int i;
     for (i = 0; i < n; i++) {
-        *(c + i) = *(a + i) * *(b + i);
+        *(c + i) = *(a + i) & *(b + i);
     }
 }
 
 /**
  *
- * Element wise vector multiplication between input vector 'a' and scalar 'b'
+ * Element wise vector 'bitwise and' between input vector 'a' and scalar 'b'
  *
  * @param a     Pointer to input vector
  *
@@ -46,12 +50,12 @@ void p_mul_f32(const float *a, const float *b, float *c,
  *
  */
 
-void p_mul_s(const float *a, const float *b, float *c,
+void p_and_s(const uint32_t *a, const uint32_t *b, uint32_t *c,
                int n, int p, p_team_t team)
 {
 
     int i;
     for (i = 0; i < n; i++) {
-        *(c + i) = *(a + i) * *(b);
+        *(c + i) = *(a + i) & *(b);
     }
 }
