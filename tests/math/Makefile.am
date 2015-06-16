@@ -44,6 +44,7 @@ BUILT_SOURCES = \
     gold/p_mul_f32.gold.h \
     gold/p_pow_f32.gold.h \
     gold/p_sin_f32.gold.h \
+    gold/p_sincos_f32.gold.h \
     gold/p_sinh_f32.gold.h \
     gold/p_sqrt_f32.gold.h \
     gold/p_sub_f32.gold.h \
@@ -58,12 +59,12 @@ SUFFIXES = .dat .gold.h
 .dat.gold.h:
 	@$(MKDIR_P) gold
 	@echo "$< --> $@"
-	@echo "struct gold gold[] = {" >> $@
+	@echo "struct gold builtin_gold[] = {" >> $@
 	@sed -e 's/,/f, /g;s/^/    { /g;s/$$/f },/g;s/0\.00*f/0.0f/g;$$s/,$$//g' $< >> $@
 	@echo "};" >> $@
 
 clean-local:
-	-rm -f gold/*.gold.h
+	-rm -f gold/*.gold.h *.res
 
 
 # In alphabetic order
@@ -147,7 +148,7 @@ check_p_popcount_SOURCES        = notest.c
 check_p_pow_f32_SOURCES         = $(SIMPLE) p_pow.c
 check_p_rand_SOURCES            = notest.c
 check_p_sin_f32_SOURCES         = $(SIMPLE) p_sin.c
-check_p_sincos_f32_SOURCES      = notest.c
+check_p_sincos_f32_SOURCES      = check_p_sincos.c
 check_p_sinh_f32_SOURCES        = $(SIMPLE) p_sinh.c
 check_p_sort_f32_SOURCES        = notest.c
 check_p_sqrt_f32_SOURCES        = $(SIMPLE) p_sqrt.c
@@ -193,7 +194,7 @@ check_p_popcount_CFLAGS         = -DFUNCTION=p_popcount
 check_p_pow_f32_CFLAGS          = -DFUNCTION=p_pow_f32     -DIS_BINARY
 check_p_rand_CFLAGS             = -DFUNCTION=p_rand                    -DSCALAR_OUTPUT
 check_p_sin_f32_CFLAGS          = -DFUNCTION=p_sin_f32     -DIS_UNARY
-check_p_sincos_f32_CFLAGS       = -DFUNCTION=p_sin_cos_f32
+check_p_sincos_f32_CFLAGS       = -DFUNCTION=p_sincos_f32
 check_p_sinh_f32_CFLAGS         = -DFUNCTION=p_sinh_f32    -DIS_UNARY
 check_p_sort_f32_CFLAGS         = -DFUNCTION=p_sort_f32
 check_p_sqrt_f32_CFLAGS         = -DFUNCTION=p_sqrt_f32    -DIS_UNARY

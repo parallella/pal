@@ -10,9 +10,13 @@
 
 # Libraries
 *.lib
+.libs/
 *.a
 *.la
 *.lo
+
+# Static Usage
+*.su
 
 # Shared objects (inc. Windows DLLs)
 *.dll
@@ -31,6 +35,9 @@
 # Emacs
 *~
 
+# Vim
+*.swp
+
 # Autotools
 /autom4te.cache
 Makefile.in
@@ -39,6 +46,42 @@ Makefile.in
 /config
 /aclocal.m4
 /config.h
+/stamp-h1
+/missing
+/depcomp
+/config.log
+/config.status
+**/.deps/
+**/Makefile
+/libtool
+**/.dirstamp
 
 # Erlang
 *.beam
+
+# Gold test headers (generated from .dat files)
+*.gold.h
+
+# Test outputs
+/tests/math/rangen
+/tests/runtest
+/tests/*.log
+/tests/*.sum
+/tests/*/check_p_*
+/tests/*/*.log
+
+# Reports
+/reports/
+
+# Doc
+/doc/Doxyfile
+
+# Example binaries
+/examples/base/hello_task
+/examples/base/median_task
+/examples/base/mode_task
+/examples/base/simple_example
+/examples/base/sine_task
+/examples/base/sort_task
+/examples/image/filters
+/examples/image/harris

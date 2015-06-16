@@ -19,16 +19,12 @@
  * @param ifactor Interpolation factor. 'ifactor' output samples produced
  *                for every 1 input sample
  *
- * @param p       Number of processor to use (task parallelism)
- *
- * @param team    Team to work with 
- *
  * @return        None
  *
  */
 
 void p_firint_f32(const float *x, const float *h, float *r, int nx, int nh,
-                  int ifactor, int p, p_team_t team)
+                  int ifactor)
 {
 
     /*PLACE CODE HERE*/

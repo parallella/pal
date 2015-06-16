@@ -4,8 +4,6 @@
 
 int main(int argc, char *argv[])
 {
-    p_team_t team0;
-
     unsigned int size_a = 10;
     unsigned int size_b = 15;
     unsigned int size_c = 7;
@@ -20,9 +18,9 @@ int main(int argc, char *argv[])
 
     unsigned int i = 0;
 
-    p_mode_f32(a, &m_a, size_a, 0, team0);
-    p_mode_f32(b, &m_b, size_b, 0, team0);
-    p_mode_f32(c, &m_c, size_c, 0, team0);
+    p_mode_f32(a, &m_a, size_a);
+    p_mode_f32(b, &m_b, size_b);
+    p_mode_f32(c, &m_c, size_c);
 
     printf("[");
     for (i = 0; i < size_a; ++i) {

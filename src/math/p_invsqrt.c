@@ -15,15 +15,10 @@
  *
  * @param n     Size of 'a' and 'c' vector.
  *
- * @param p     Number of processor to use (task parallelism)
- *
- * @param team  Team to work with 
- **
  * @return      None
  *
  */
-#include <math.h>
-void p_invsqrt_f32(const float *a, float *c, int n, int p, p_team_t team)
+void p_invsqrt_f32(const float *a, float *c, int n)
 {
     // This union allows us to type-pun between integers and floats
     // with fewer strict aliasing concerns than the pointer casts
@@ -36,7 +31,7 @@ void p_invsqrt_f32(const float *a, float *c, int n, int p, p_team_t team)
 
     int i;
     for (i = 0; i < n; i++) {
-        float x = *(a + i);
+        float x = a[i];
         float x2 = x * 0.5f;
 
         // Use some bit hacks to get a decent first approximation
@@ -47,7 +42,8 @@ void p_invsqrt_f32(const float *a, float *c, int n, int p, p_team_t team)
         // Perform a couple steps of Newton's method to refine our guess
         x = x * (1.5f - (x2 * x * x));
         x = x * (1.5f - (x2 * x * x));
+        x = x * (1.5f - (x2 * x * x));
 
-        *(c + i) = x;
+        c[i] = x;
     }
 }

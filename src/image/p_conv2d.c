@@ -12,47 +12,39 @@
  *
  * @param cols  Number of columns in input image
  *
- * @param msize Size of convolution kernel
+ * @param mrows number of rows in convolution kernel
  *
- * @param p     Number of processor to use (task parallelism)
- *
- * @param team  Team to work with 
+ * @param mcols number of cols in convolution kernel
  *
  * @return      None
  *
  */
 
 void p_conv2d_f32(const float *x, float *m, float *r, int rows, int cols,
-                  int msize, int p, p_team_t team)
+                  int mrows, int mcols)
 
 {
-    int i, j, k;
-    float P, part;
+    int i, j, ki, kj;
+    float P;
     const float *px, *pm;
     float *pr;
 
     px = x;
-    pm = m;
     pr = r;
 
-    for (i = msize * 0.5; i < (rows - msize * 0.5); i++) {
-        for (j = msize * 0.5; j < (cols - msize * 0.5); j++) {
+    for (i = 0; i < rows - mrows+1  ; i++) {
+        for (j = 0; j < cols - mcols+1 ; j++) {
             P = 0.0f;
-            pm = m;
-            for (k = 0; k < msize; k++) {
-                p_dot_f32(px, pm, &part, msize, 0, team);
-                P += part;
-                px += cols;
-                pm += msize;
+            pm = m+(mcols * mrows)-1;
+            for (ki=0 ; ki< mrows ; ki++){
+                for (kj=0 ; kj< mcols ; kj++){
+                    P+= (*px++)* (*pm--) ;
+		}
+            px += cols - mcols;
             }
-            *pr = P;
-            pr++;
-            // move image pointer one index forward compared to
-            // the position from before `for` loop
-            px += 1 - msize * cols;
+            px -= (mrows * cols) -1 ;
+            *(pr++) = P;
         }
-        // move image pointer to the beginning of line
-        // beneath the current line
-        px += (int)(msize * 0.5) * 2;
+    px+=mcols-1 ;
     }
 }

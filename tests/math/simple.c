@@ -11,7 +11,13 @@
 #error IS_UNARY or IS_BINARY must be defined
 #endif
 
+struct gold *gold = builtin_gold;
+size_t gold_size = ARRAY_SIZE(builtin_gold);
+char *gold_file = NULL;
+
 float *ai, *bi, *res, *ref;
+
+bool generate_gold_flag = false;
 
 #define GOLD_TEST XCONCAT2(test_gold_, FUNCTION)
 
@@ -38,9 +44,9 @@ void setup()
 {
     size_t i;
 
-    ai = calloc(ARRAY_SIZE(gold), sizeof(float));
-    bi = calloc(ARRAY_SIZE(gold), sizeof(float));
-    ref = calloc(ARRAY_SIZE(gold), sizeof(float));
+    ai = calloc(gold_size, sizeof(float));
+    bi = calloc(gold_size, sizeof(float));
+    ref = calloc(gold_size, sizeof(float));
 
     /* Allocate one extra element for res and add end marker so overwrites can
      * be detected */
@@ -48,24 +54,20 @@ void setup()
     res = calloc(2, sizeof(float));
     res[1] = OUTPUT_END_MARKER;
 #else
-    res = calloc(ARRAY_SIZE(gold) + 1, sizeof(float));
-    res[ARRAY_SIZE(gold)] = OUTPUT_END_MARKER;
+    res = calloc(gold_size + 1, sizeof(float));
+    res[gold_size] = OUTPUT_END_MARKER;
 #endif
-    for (i = 0; i < ARRAY_SIZE(gold); i++) {
+    for (i = 0; i < gold_size; i++) {
         ai[i] = gold[i].ai;
         bi[i] = gold[i].bi;
     }
 
     /* Run FUNCTION against gold input here so results are available
      * for all test cases. */
-    /* HACK: Pass in an invalid team. API was changed in:
-     * a380f6b70b8461dbb8c0def388d00270f8b27c28
-     * but implementation did have not catched up yet.
-     * When it does, the tests will break... */
 #if IS_UNARY
-    FUNCTION(ai, res, ARRAY_SIZE(gold), 0, p_ref_err(EINVAL));
+    FUNCTION(ai, res, gold_size);
 #else /* Binary */
-    FUNCTION(ai, bi, res, ARRAY_SIZE(gold), 0, p_ref_err(EINVAL));
+    FUNCTION(ai, bi, res, gold_size);
 #endif
 }
 
@@ -75,6 +77,10 @@ void teardown()
     free(bi);
     free(res);
     free(ref);
+
+    /* Need to free if we're not using built-in gold data */
+    if (gold_file)
+        free(gold);
 }
 
 START_TEST(print_gold)
@@ -83,11 +89,13 @@ START_TEST(print_gold)
     FILE *ofp;
 
     ofp = fopen(XSTRING(FUNCTION.res), "w");
-    for (i = 0; i < ARRAY_SIZE(gold); i++)
+    for (i = 0; i < gold_size; i++)
         fprintf(ofp, "%f,%f,%f,%f\n", ai[i], bi[i], 0.0f, res[i]);
     fclose(ofp);
 
     fprintf(stdout, "Gold data written to: %s\n", XSTRING(FUNCTION.res));
+    fprintf(stdout, "You need to manually copy it to gold/%s\n",
+            XSTRING(FUNCTION.dat));
 }
 END_TEST
 
@@ -95,7 +103,7 @@ START_TEST(GOLD_TEST)
 {
     size_t i;
 
-    for (i = 0; i < ARRAY_SIZE(gold); i++) {
+    for (i = 0; i < gold_size; i++) {
 #if IS_UNARY
         ck_assert_msg(compare(res[i], gold[i].gold), "%s(%f): %f != %f",
                       XSTRING(FUNCTION), ai[i], res[i], gold[i].gold);
@@ -127,9 +135,9 @@ START_TEST(against_ref_function)
 {
     size_t i;
 
-    generate_ref(ref, ARRAY_SIZE(gold));
+    generate_ref(ref, gold_size);
 
-    for (i = 0; i < ARRAY_SIZE(gold); i++) {
+    for (i = 0; i < gold_size; i++) {
 #if IS_UNARY
         ck_assert_msg(compare(res[i], ref[i]), "%s(%f): %f != %f",
                       XSTRING(FUNCTION), ai[i], res[i], ref[i]);
@@ -152,7 +160,94 @@ void add_more_tests(TCase *tcase)
 {
 }
 
-int main(void)
+void parse_options_or_die(int argc, char *argv[])
+{
+    /* At some point we might to want to use getopt if this gets to messy. */
+    for (int i = 1; i < argc; i++) {
+        if (argv[i][0] != '-') {
+            if (gold_file)
+                goto usage;
+
+            gold_file = argv[i];
+        } else if (!strncmp(argv[i], "--gold", ARRAY_SIZE("--gold")) ||
+            !strncmp(argv[i], "-g", ARRAY_SIZE("-g"))) {
+            generate_gold_flag = true;
+        } else {
+            goto usage;
+        }
+    }
+    return;
+
+usage:
+    fprintf(stderr,
+"Usage: %s [OPTIONS] [GOLD FILE]\n"
+"\n"
+"OPTIONS\n"
+"\n"
+"\t-g, --gold\tInstead of running test, generate gold data\n", argv[0]);
+    exit(EXIT_FAILURE);
+}
+
+void read_gold_file_or_die(char *progname)
+{
+    float ai, bi, res, expect;
+    FILE *fp;
+    int ret;
+
+    gold = NULL;
+    gold_size = 0;
+
+    if (!(fp = fopen(gold_file, "r"))) {
+        fprintf(stderr, "%s: Cannot open %s. %s\n",
+                progname, gold_file, strerror(errno));
+        goto fail;
+    }
+
+    while (true) {
+retry:
+        errno = 0;
+        ret = fscanf(fp, "%f,%f,%f,%f\n", &ai, &bi, &res, &expect);
+        if (ret == EOF) {
+            if (errno == EINTR)
+                goto retry;
+
+            if (errno) {
+                perror("ERROR");
+                goto fail;
+            }
+
+            if (!gold_size)
+                fprintf(stderr, "WARNING: No gold data\n");
+
+            return;
+        }
+        if (ret != 4) {
+                fprintf(stderr, "ERROR: Failed parsing %s at line %zu\n",
+                        gold_file, gold_size);
+                goto fail;
+        }
+
+        gold = realloc(gold, sizeof(*gold) * (gold_size + 1));
+        if (!gold) {
+                fprintf(stderr, "ERROR: Out of memory\n");
+                goto fail;
+        }
+
+        gold[gold_size].ai = ai;
+        gold[gold_size].bi = bi;
+        gold[gold_size].res = res;
+        gold[gold_size].gold = expect;
+
+        gold_size++;
+    }
+
+fail:
+    if (gold)
+        free(gold);
+    exit(EXIT_FAILURE);
+}
+
+int main(int argc, char *argv[])
 {
     int num_failures;
     size_t i;
@@ -160,15 +255,20 @@ int main(void)
     TCase *tcase = tcase_create(XSTRING(FUNCTION) "_tcase");
     SRunner *sr = srunner_create(suite);
 
+    parse_options_or_die(argc, argv);
+
+    if (gold_file)
+        read_gold_file_or_die(argv[0]);
+
     tcase_add_unchecked_fixture(tcase, setup, teardown);
 
-#ifdef GENERATE_GOLD
-    tcase_add_test(tcase, print_gold);
-#else
-    tcase_add_test(tcase, GOLD_TEST);
-    tcase_add_test(tcase, against_ref_function);
-    add_more_tests(tcase);
-#endif
+    if (generate_gold_flag) {
+        tcase_add_test(tcase, print_gold);
+    } else {
+        tcase_add_test(tcase, GOLD_TEST);
+        tcase_add_test(tcase, against_ref_function);
+        add_more_tests(tcase);
+    }
 
     suite_add_tcase(suite, tcase);
 

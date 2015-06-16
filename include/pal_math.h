@@ -8,19 +8,19 @@
 #if !(defined __USE_BSD || defined __USE_XOPEN || defined __USE_GNU || \
       defined _NEWLIB_VERSION || defined __USE_MISC || \
       (defined __DARWIN_C_LEVEL && __DARWIN_C_LEVEL > 199506L))
-#define M_E 2.71828182845904523540        /* e */
-#define M_LOG2E 1.44269504088896340740    /* log 2e */
-#define M_LOG10E 0.43429448190325182765   /* log 10e */
-#define M_LN2 0.69314718055994530942      /* log e2 */
-#define M_LN10 2.30258509299404568402     /* log e10 */
-#define M_PI 3.14159265358979323846       /* pi */
-#define M_PI_2 1.57079632679489661923     /* pi/2 */
-#define M_PI_4 0.78539816339744830962     /* pi/4 */
-#define M_1_PI 0.31830988618379067154     /* 1/pi */
-#define M_2_PI 0.63661977236758134308     /* 2/pi */
-#define M_2_SQRTPI 1.12837916709551257390 /* 2/sqrt(pi) */
-#define M_SQRT2 1.41421356237309504880    /* sqrt(2) */
-#define M_SQRT1_2 0.70710678118654752440  /* 1/sqrt(2) */
+#define M_E        2.71828182845904523540f    /* e */
+#define M_LOG2E    1.44269504088896340740f    /* log 2e */
+#define M_LOG10E   0.43429448190325182765f    /* log 10e */
+#define M_LN2      0.69314718055994530942f    /* log e2 */
+#define M_LN10     2.30258509299404568402f    /* log e10 */
+#define M_PI       3.14159265358979323846f    /* pi */
+#define M_PI_2     1.57079632679489661923f    /* pi/2 */
+#define M_PI_4     0.78539816339744830962f    /* pi/4 */
+#define M_1_PI     0.31830988618379067154f    /* 1/pi */
+#define M_2_PI     0.63661977236758134308f    /* 2/pi */
+#define M_2_SQRTPI 1.12837916709551257390f    /* 2/sqrt(pi) */
+#define M_SQRT2    1.41421356237309504880f    /* sqrt(2) */
+#define M_SQRT1_2  0.70710678118654752440f    /* 1/sqrt(2) */
 #endif
 
 #ifndef HUGE
@@ -30,50 +30,51 @@
 #define MAXFLOAT ((float)3.40282347e+38)  /*maximum value of float*/
 #endif
 #ifndef MINFLOAT
-#define MINFLOAT ((float)1.175494351e-38) /*minimum value of float*/
+#define MINFLOAT ((float)1.175494351e-38)  /*minimum value of float*/
 #endif
 
 /* This define is in newlib's math.h (but nowhere else) */
 #ifndef M_SQRT3
-#define M_SQRT3 1.732051            /* sqrt(3) */
+#define M_SQRT3 1.732051f                  /* sqrt(3) */
 #endif
 
 /*ADDED MATH CONSTANTS*/
-#define M_TC 0.63212055882855767840 /* 1 - 1/e */
-#define M_PI2 6.283185              /* pi*2 */
-#define M_GOLDEN 1.618034           /* golden ratio */
-#define M_1_PI2 0.15915494309189534561    /* 1/(pi*2) */
+#define M_TC     0.63212055882855767840f    /* 1 - 1/e */
+#define M_PI2    6.283185f                  /* pi*2 */
+#define M_GOLDEN 1.618034f                  /* golden ratio */
+#define M_1_PI2  0.15915494309189534561f    /* 1/(pi*2) */
 
 /*ADDED RECIPROCAL CONSTANTS (AVOID DIVISION AT ALL COST)*/
 /*IDEALLY THIS WOULD BE IN THE COMPILER? A BETTER WAY?*/
-#define M_DIV3 0.3333333333333333333  /* 1/3 */
-#define M_DIV4 0.25                   /* 1/4 */
-#define M_DIV5 0.2                    /* 1/5 */
-#define M_DIV6 0.1666666666666666666  /* 1/6 */
-#define M_DIV7 0.142857143            /* 1/7 */
-#define M_DIV8 0.125                  /* 1/8 */
-#define M_DIV9 0.1111111111111111111  /* 1/9 */
-#define M_DIV10 0.1                   /* 1/10 */
-#define M_DIV11 0.090909091           /* 1/11 */
-#define M_DIV12 0.0833333333333333333 /* 1/12 */
-#define M_DIV13 0.076923077           /* 1/13 */
-#define M_DIV14 0.071428571           /* 1/14 */
-#define M_DIV15 0.0666666666666666666 /* 1/15 */
-#define M_DIV16 0.0625                /* 1/16 */
+#define M_DIV3  0.3333333333333333333f  /* 1/3 */
+#define M_DIV4  0.25f                   /* 1/4 */
+#define M_DIV5  0.2f                    /* 1/5 */
+#define M_DIV6  0.1666666666666666666f  /* 1/6 */
+#define M_DIV7  0.142857143f            /* 1/7 */
+#define M_DIV8  0.125f                  /* 1/8 */
+#define M_DIV9  0.1111111111111111111f  /* 1/9 */
+#define M_DIV10 0.1f                    /* 1/10 */
+#define M_DIV11 0.090909091f            /* 1/11 */
+#define M_DIV12 0.0833333333333333333f  /* 1/12 */
+#define M_DIV13 0.076923077f            /* 1/13 */
+#define M_DIV14 0.071428571f            /* 1/14 */
+#define M_DIV15 0.0666666666666666666f  /* 1/15 */
+#define M_DIV16 0.0625f                 /* 1/16 */
+#define M_DIV_LN10 0.43429448190325182765f /* 1 / ln(10) */
 
 /*ADDED PHYSICAL CONSTANTS (ADD YOUR FAVORITES:-)*/
-#define PH_C 299792458                  /*speed of light (m/s)*/
-#define PH_M0 1.2566370614359172950     /*mag permeability (mH/m)*/
-#define PH_H ((float)6.62606957e-34)    /*planck constant (J/Hz)*/
-#define PH_HBAR ((float)1.05457172e-34) /*diract constant* (J.s/rad)*/
-#define PH_K ((float)1.3806488e-23)     /*boltzmann constant (J/K)*/
-#define PH_ME ((float)9.10938291e-31)   /*mass of electron (kg)*/
-#define PH_MP ((float)1.672614e-27)     /*mass of proton (kg)*/
-#define PH_MN ((float)1.674920e-27)     /*mass of neutron (kg)*/
-#define PH_EC ((float)1.6021917e-19)    /*charge of electron (C)*/
-#define PH_F ((float)9.648670e4)        /*faraday constant (C/mol)*/
-#define PH_G ((float)6.6732e-11)        /*gravitational constant (N*m^2/kg^2)*/
-#define PH_AVO ((float)6.022169e23)     /*avogadro constant*/
+#define PH_C    ((float)299792458)             /*speed of light (m/s)*/
+#define PH_M0   ((float)1.2566370614359172950) /*mag permeability (mH/m)*/
+#define PH_H    ((float)6.62606957e-34)        /*planck constant (J/Hz)*/
+#define PH_HBAR ((float)1.05457172e-34)        /*diract constant* (J.s/rad)*/
+#define PH_K    ((float)1.3806488e-23)         /*boltzmann constant (J/K)*/
+#define PH_ME   ((float)9.10938291e-31)        /*mass of electron (kg)*/
+#define PH_MP   ((float)1.672614e-27)          /*mass of proton (kg)*/
+#define PH_MN   ((float)1.674920e-27)          /*mass of neutron (kg)*/
+#define PH_EC   ((float)1.6021917e-19)         /*charge of electron (C)*/
+#define PH_F    ((float)9.648670e4)            /*faraday constant (C/mol)*/
+#define PH_G    ((float)6.6732e-11)            /*gravitational constant (N*m^2/kg^2)*/
+#define PH_AVO  ((float)6.022169e23)           /*avogadro constant*/
 
 /*computing macros?
  *
@@ -86,7 +87,7 @@
 
 /* Normalize theta between -pi and pi */
 //#define M_NORMALIZE_RADIANS(theta) (theta - (M_PI*2) * M_FLOOR((theta + M_PI) / (M_PI*2)))
-#define M_NORMALIZE_RADIANS(theta) (theta - (M_PI2) * M_FLOOR((theta + M_PI) * M_1_PI2))
+#define M_NORMALIZE_RADIANS(theta) ((float)(theta - (M_PI2) * M_FLOOR((theta + M_PI) * M_1_PI2)))
 
 /*
  ****************************************************************
@@ -95,120 +96,108 @@
  * a,b : input vector pointer
  * c   : result vector pointer
  * n   : length of input/output vector
- * p    : number of processors in team (task parallelism)
- * team : team to work with
  *
  ****************************************************************
  */
 
 /*integer to float conversion*/
-void p_itof(const int *a, float *c, int n, int p, p_team_t team);
+void p_itof(const int *a, float *c, int n);
 
 /*float to integer conversion*/
-void p_ftoi(const float *a, int *c, int n, int p, p_team_t team);
+void p_ftoi(const float *a, int *c, int n);
 
 /*absolute value c = abs ( a ) */
-void p_abs_f32(const float *a, float *c, int n, int p, p_team_t team);
+void p_abs_f32(const float *a, float *c, int n);
 
 /*arc cosine: c = acos ( a ) */
-void p_acos_f32(const float *a, float *c, int n, int p, p_team_t team);
+void p_acos_f32(const float *a, float *c, int n);
 
 /*arc hyperbolic cosine, c = acosh ( a ) */
-void p_acosh_f32(const float *a, float *c, int n, int p, p_team_t team);
+void p_acosh_f32(const float *a, float *c, int n);
 
 /*arc sine: c = asin ( a ) */
-void p_asin_f32(const float *a, float *c, int n, int p, p_team_t team);
+void p_asin_f32(const float *a, float *c, int n);
 
 /*arc hyperbolic sine: c = asinh ( a ) */
-void p_asinh_f32(const float *a, float *c, int n, int p, p_team_t team);
+void p_asinh_f32(const float *a, float *c, int n);
 
 /*arc tanget: c = atan ( a ) */
-void p_atan_f32(const float *a, float *c, int n, int p, p_team_t team);
+void p_atan_f32(const float *a, float *c, int n);
 
 /*arc tangent of b/a: c = atan2 ( a , b) */
-void p_atan2_f32(const float *a, const float *b, float *c,
-                 int n, int p, p_team_t team);
+void p_atan2_f32(const float *a, const float *b, float *c, int n);
 
 /*arc hyperbolic tanget: c = atanh ( a ) */
-void p_atanh_f32(const float *a, float *c, int n, int p, p_team_t team);
+void p_atanh_f32(const float *a, float *c, int n);
 
 /*cubic root of a:  c = cbrt ( a) */
-void p_cbrt_f32(const float *a, float *c, int n, int p, p_team_t team);
+void p_cbrt_f32(const float *a, float *c, int n);
 
 /*cosine: c = cos ( a ) */
-void p_cos_f32(const float *a, float *c, int n, int p, p_team_t team);
+void p_cos_f32(const float *a, float *c, int n);
 
 /*hyperpolic cosine:  c = cosh ( a ) */
-void p_cosh_f32(const float *a, float *c, int n, int p, p_team_t team);
+void p_cosh_f32(const float *a, float *c, int n);
 
 /*division: c =  a ./ b */
-void p_div_f32(const float *a, const float *b, float *c,
-               int n, int p, p_team_t team);
+void p_div_f32(const float *a, const float *b, float *c, int n);
 
 /*exponential: c = exp ( a ) */
-void p_exp_f32(const float *a, float *c, int n, int p, p_team_t team);
+void p_exp_f32(const float *a, float *c, int n);
 
 /*inverse: c = 1 / ( a ) */
-void p_inv_f32(const float *a, float *c, int n, int p, p_team_t team);
+void p_inv_f32(const float *a, float *c, int n);
 
 /*inverse cube root: c = 1 / cbrt ( a ) */
-void p_invcbrt_f32(const float *a, float *c, int n, int p, p_team_t team);
+void p_invcbrt_f32(const float *a, float *c, int n);
 
 /*inverse square root c = 1 / sqrt ( a ) */
-void p_invsqrt_f32(const float *a, float *c, int n, int p, p_team_t team);
+void p_invsqrt_f32(const float *a, float *c, int n);
 
 /*natural logarithm: c = ln ( a ) */
-void p_ln_f32(const float *a, float *c, int n, int p, p_team_t team);
+void p_ln_f32(const float *a, float *c, int n);
 
 /*denary logarithm: c = log10 ( a ) */
-void p_log10_f32(const float *a, float *c, int n, int p, p_team_t team);
+void p_log10_f32(const float *a, float *c, int n);
 
 /*element raised to a power: c = pow ( a , b ) */
-void p_pow_f32(const float *a, const float *b, float *c,
-               int n, int p, p_team_t team);
+void p_pow_f32(const float *a, const float *b, float *c, int n);
 
 /*sine: c = sin ( a ) */
-void p_sin_f32(const float *a, float *c, int n, int p, p_team_t team);
+void p_sin_f32(const float *a, float *c, int n);
 
 /*computes sin and cos of a: c = sin ( a ),  z = cos ( a ) */
-void p_sincos_f32(const float *a, float *c, float *z,
-                  int n, int p, p_team_t team);
+void p_sincos_f32(const float *a, float *c, float *z, int n);
 
 /*hyperbolic Sine: c = sinh ( a ) */
-void p_sinh_f32(const float *a, float *c, int n, int p, p_team_t team);
+void p_sinh_f32(const float *a, float *c, int n);
 
 /*square root c = sqrt ( a ) */
-void p_sqrt_f32(const float *a, float *c, int n, int p, p_team_t team);
+void p_sqrt_f32(const float *a, float *c, int n);
 
 /*tangent: c = tan ( a ) */
-void p_tan_f32(const float *a, float *c, int n, int p, p_team_t team);
+void p_tan_f32(const float *a, float *c, int n);
 
 /*hyperbolic tangent, c = tanh ( a ) */
-void p_tanh_f32(const float *a, float *c, int n, int p, p_team_t team);
+void p_tanh_f32(const float *a, float *c, int n);
 
 /*dot product: c =  sum ( a[n-1:0] * b[n-1:0] ) */
-void p_dot_f32(const float *a, const float *b, float *c,
-               int n, int p, p_team_t team);
+void p_dot_f32(const float *a, const float *b, float *c, int n);
 
 /*absolute difference: c = | a[n-1:0] - b[n-1:0] | */
-void p_absdiff_f32(const float *a, const float *b, float *c,
-                   int n, int p, p_team_t team);
+void p_absdiff_f32(const float *a, const float *b, float *c, int n);
 
 /*add vectors: c =  a[n-1:0] + b[n-1:0]  */
-void p_add_f32(const float *a, const float *b, float *c,
-               int n, int p, p_team_t team);
+void p_add_f32(const float *a, const float *b, float *c, int n);
 
 /*subtract vectors: c =  a[n-1:0] - b[n-1:0]  */
-void p_sub_f32(const float *a, const float *b, float *c,
-               int n, int p, p_team_t team);
+void p_sub_f32(const float *a, const float *b, float *c, int n);
 
 /*multiply vectors: c =  a[n-1:0] - b[n-1:0]  */
-void p_mul_f32(const float *a, const float *b, float *c,
-               int n, int p, p_team_t team);
+void p_mul_f32(const float *a, const float *b, float *c, int n);
 
 /* Element wise multiply accumulate: c += a * b' */
-void p_mac_f32(const float *a, const float *b, float *c,
-               int n, int p, p_team_t team);
+void p_mac_f32(const float *a, const float *b, float *c, int n);
 
 /*logic and the two vectors: c =  a[n-1:0] & b[n-1:0]  */
 void p_and(const uint32_t *a, const uint32_t *b, uint32_t *c,
@@ -270,34 +259,33 @@ void p_xor_s(const uint32_t *a, const uint32_t *b, uint32_t *c,
  * a, b : input vector pointer
  * c    : scalar result pointer
  * n    : length of input vector (data parallelism)
- * p    : number of processors in team (task parallelism)
- * team : team to work with
  *
  ****************************************************************
  */
 
 /*sum: c = sum ( a[n-1:0] ) */
-void p_sum_f32(const float *a, float *c, int n, int p, p_team_t team);
+void p_sum_f32(const float *a, float *c, int n);
 
 /*sum of squares: c =  sum( a[n-1:0]^2 ) */
-void p_sumsq_f32(const float *a, float *c, int n, int p, p_team_t team);
+void p_sumsq_f32(const float *a, float *c, int n);
 
 /*mean: c = sum ( a[n-1:0] ) / n  */
-void p_mean_f32(const float *a, float *c, int n, int p, p_team_t team);
+void p_mean_f32(const float *a, float *c, int n);
 
 /*middle value: c = median ( a[n-1:0] ) */
-void p_median_f32(const float *a, float *c, int n, int p, p_team_t team);
+void p_median_f32(const float *a, float *c, int n);
 
 /*most common number: c = mode ( a[n-1:0] ) */
-void p_mode_f32(const float *a, float *c, int n, int p, p_team_t team);
+void p_mode_f32(const float *a, float *c, int n);
+
+/*standard deviation: c = sqrt ( mean ( ( a[n-1:0] - mean ( a[n-1:0] ) ) ^ 2 ) ) */
+void p_stddev_f32(const float *a, float *c, int n);
 
 /*find max value and its index from input vector */
-void p_max_f32(const float *a, float *c, int *index,
-               int n, int p, p_team_t team);
+void p_max_f32(const float *a, float *c, int *index, int n);
 
 /*find min value and its index from input vector */
-void p_min_f32(const float *a, float *c, int *index,
-               int n, int p, p_team_t team);
+void p_min_f32(const float *a, float *c, int *index, int n);
 
 /*negates each element of the vector: c =  !a[n-1:0] */
 void p_not_f32(const float *a, const float *b, float *c,
@@ -311,8 +299,8 @@ void p_not_f32(const float *a, const float *b, float *c,
  */
 
 /*sort an array*/
-void p_sort_f32(const float *a, float *c, int n, int p, p_team_t team);
-void p_sort_u32(const uint32_t *a, uint32_t *c, int n, int p, p_team_t team);
+void p_sort_f32(const float *a, float *c, int n);
+void p_sort_u32(const uint32_t *a, uint32_t *c, int n);
 
 /* seed pseudo-random number generator */
 void p_srand(unsigned int seed);
@@ -321,7 +309,5 @@ void p_srand(unsigned int seed);
 int p_rand(void);
 
 /*population count*/
-void p_popcount_u32(const uint32_t *a, uint32_t *c,
-                    int n, int p, p_team_t team);
-void p_popcount_u64(const uint64_t *a, uint64_t *c,
-                    int n, int p, p_team_t team);
+void p_popcount_u32(const uint32_t *a, uint32_t *c, int n);
+void p_popcount_u64(const uint64_t *a, uint64_t *c, int n);

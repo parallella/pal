@@ -12,21 +12,17 @@
  *
  * @param n     Size of 'a' and 'c' vector.
  *
- * @param p     Number of processor to use (task parallelism)
- *
- * @param team  Team to work with 
- *
  * @return      None
  *
  */
 
-void p_absdiff_f32(const float *a, const float *b, float *c,
-                   int n, int p, p_team_t team)
+void p_absdiff_f32(const float *a, const float *b, float *c, int n)
 {
-
     int i;
     for (i = 0; i < n; i++) {
-        float v = *(a + i) - *(b + i);
-        *(c + i) = (1 - ((v < 0) << 1)) * v;
+        float diff = a[i] - b[i];
+        uint32_t udiff = *(uint32_t*) &diff;
+        udiff &= 0x7FFFFFFF;
+        c[i] = *(float*) &udiff;
     }
 }

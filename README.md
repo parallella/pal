@@ -51,24 +51,35 @@ The PAL source code is licensed under the Apache License, Version 2.0.
 See LICENSE for full license text unless otherwise specified.
 
 ##Contribution
-Our goal is to make PAL a broad community project from day one. If just 100 people contribute one function each, we'll be done in a couple of days! If you know C, your are ready to contribute!!
+Our goal is to make PAL a broad community project from day one. If just 100 people contribute one function each, we'll be done in a couple of days! If you know C, you are ready to contribute!!
 
 Instructions for contributing can be found [HERE](CONTRIBUTING.md). 
 
 ##Build Instructions
 
-Install Pre-requisites:
+###Install Prerequisites
 ``` bash
 $ sudo apt-get install libtool build-essential pkg-config autoconf doxygen check
 ```
 
-Build Sequence:
+###Build Sequence
 
 ``` bash
 $ ./bootstrap
 $ ./configure
 $ make
 ```
+
+###Testing
+
+To run the automated unit tests you need to run
+``` bash
+$ make check
+```
+
+For this to succeed you need to have the check unit test library (http://check.sourceforge.net).
+See [prerequisites](#install-prerequisites).
+
 
 ##A Simple Example
 The following sample shows how to use PAL launch a simple task on a remote processor within the system. The program flow should be familiar to anyone who has used accelerator programming frameworks. 
@@ -207,7 +218,7 @@ FUNCTION     | NOTES
 [p_cosh()](src/math/p_cosh.c)         | hyperbolic cosine  
 [p_div()](src/math/p_div.c)           | division  
 [p_dot()](src/math/p_dot.c)           | dot product  
-[p_exp()](src/math/p_div.c)           | exponential  
+[p_exp()](src/math/p_exp.c)           | exponential
 [p_ftoi()](src/math/p_ftoi.c)         | float to  
 [p_itof()](src/math/p_itof.c)         | integer to float conversion  
 [p_inv()](src/math/p_inv.c)           | inverse  
@@ -218,7 +229,7 @@ FUNCTION     | NOTES
 [p_max()](src/math/p_max.c)           | finds max val  
 [p_min()](src/math/p_min.c)           | finds min val  
 [p_mean()](src/math/p_mean.c)         | mean operation  
-[p_median()](src/math/p_mean.c)       | finds middle value  
+[p_median()](src/math/p_median.c)     | finds middle value  
 [p_mode()](src/math/p_mode.c)         | finds most common value  
 [p_mul()](src/math/p_mul.c)           | multiplication  
 [p_popcount()](src/math/p_popcount.c) | count the number of bits set  
@@ -229,6 +240,7 @@ FUNCTION     | NOTES
 [p_sin()](src/math/p_sin.c)           | sine  
 [p_sinh()](src/math/p_sinh.c)         | hyperbolic sine  
 [p_sqrt()](src/math/p_sqrt.c)         | square root  
+[p_stddev()](src/math/p_stddev.c)     | calculates standard deviation  
 [p_sub()](src/math/p_sub.c)           | subtract  
 [p_sum()](src/math/p_sum.c)           | sum of all vector elements  
 [p_sumsq()](src/math/p_sumsq.c)       | sum of all squared elements  
