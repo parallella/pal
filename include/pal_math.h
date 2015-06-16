@@ -60,6 +60,7 @@
 #define M_DIV14 0.071428571f            /* 1/14 */
 #define M_DIV15 0.0666666666666666666f  /* 1/15 */
 #define M_DIV16 0.0625f                 /* 1/16 */
+#define M_DIV_LN10 0.43429448190325182765f /* 1 / ln(10) */
 
 /*ADDED PHYSICAL CONSTANTS (ADD YOUR FAVORITES:-)*/
 #define PH_C    ((float)299792458)             /*speed of light (m/s)*/
