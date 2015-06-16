@@ -12,7 +12,9 @@
  *
  * @param cols  Number of columns in input image
  *
- * @param msize Size of convolution kernel
+ * @param mrows number of rows in convolution kernel
+ *
+ * @param mcols number of cols in convolution kernel
  *
  * @return      None
  *
