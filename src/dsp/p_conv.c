@@ -22,11 +22,15 @@ void p_conv_f32(const float *x, const float *h, float *r, int nx, int nh)
 {
     const float *xc = x;
     float *rx = r;
-  	for ( int i = 0; i < nx; i++) {
+    int i,j ;
+        for ( i = 0; i < nx+nh-1; i++) { *(rx++) = 0; } 
+        rx = r ;
+  	for ( i = 0; i < nx; i++) {
         float xv = *xc++;
-        rx++;
-  		for (int j = 0; j < nh; j++) {
-  			*(rx + j) += xv * *(h + j);		
+
+  		for (j = 0; j < nh; j++) {
+  			*(rx + j) += xv * *(h + j);	
   		}
+        rx++;
   	}
 }

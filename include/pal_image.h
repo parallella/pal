@@ -17,7 +17,7 @@
 
 /*2d convolution */
 void p_conv2d_f32(const float *x, float *m, float *r, int rows, int cols,
-                  int msize);
+                  int mrows, int mcols);
 
 /*2d box (i.e mean) filter(3x3) */
 void p_box3x3_f32(const float *x, float *r, int rows, int cols);
