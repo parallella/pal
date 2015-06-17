@@ -81,5 +81,5 @@ done
 git checkout $orig_branch
 git branch -d $tmp_branch
 rm -rf $toolsdir
-rm -rf $one
+rm -rf $logfile
 
