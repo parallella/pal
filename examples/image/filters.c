@@ -1,6 +1,7 @@
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
+#include <unistd.h>
 #include <pal_image.h>
 
 /* stb image */
@@ -17,7 +18,10 @@ void set_working_dir(char *argv[])
     char *wdir = strdup(argv[0]);
     char *s = strrchr(wdir,'/');
     *s = '\0';
-    chdir(wdir);
+    if (chdir(wdir)) {
+        perror(argv[0]);
+        exit(EXIT_FAILURE);
+    }
     free(wdir);
 }
 

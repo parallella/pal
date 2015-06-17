@@ -18,7 +18,7 @@ int main()
 		0.7797161703591056, 0.7584878213763965, 0.26744055775017217
 	};
 	float fout[FSIZE];
-	float flast;
+	float flast = 0.0f;
 
 #define USIZE 31
 	int usize = USIZE;
