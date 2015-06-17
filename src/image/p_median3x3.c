@@ -1,4 +1,7 @@
 #include <pal.h>
+
+void *memcpy(void *dest, const void *src, size_t n);
+
 /*
  * The following routines have been built from knowledge gathered
  * around the Web. I am not aware of any copyright problem with

@@ -30,8 +30,8 @@ float coeffs[_Nstage][2][_Ntaps+1]  =
 
 void p_iir_f32(const float *x, const float *h, float *r, int nb, int nr)
 {
-	int register rdp; // pointer to the I/O data's current position.
-	int register cp;  // pointer to the coefficients array.
+	register int rdp; // pointer to the I/O data's current position.
+	register int cp;  // pointer to the coefficients array.
 
 	//TODO: Need to make this dynamic
 
