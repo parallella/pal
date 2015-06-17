@@ -16,7 +16,7 @@
 
 #define GEN_FUNC(NAME,TYPE) \
 	/** NAME TYPE */ \
-	void NAME(const TYPE *a, TYPE * restrict c, int n) \
+	void NAME(const TYPE * restrict a, TYPE * restrict c, int n) \
 	{ \
     	*c = *(a) * *(a);  \
         for (;--n;) \
