@@ -22,7 +22,7 @@
 	{ \
 		*(c) = *(a) + *(b);  \
 		for (;--n;) \
-			*(c + n) += *(a + n) + *(b + n); \
+			*(c + n) = *(a + n) + *(b + n); \
 	}
 
 GEN_FUNC_ADD(p_add_f32,float);
@@ -61,7 +61,7 @@ GEN_FUNC_ADD(p_add_uint64,uint64_t);
 	{ \
 		*(c) = *(a) + *(b);  \
 		for (;--n;) \
-			*(c + n) += *(a + n) + *(b); \
+			*(c + n) = *(a + n) + *(b); \
 	}
 
 GEN_FUNC_ADDS(p_adds_f32,float);
