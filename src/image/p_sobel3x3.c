@@ -116,14 +116,18 @@ void p_sobel3x3_f32(const float *x, float *r, int rows, int cols)
  * @return   The length of the hypotenuse
  */
 
-static __inline __attribute((__always_inline__)) float my_hypot( float a, float b )
+static __inline __attribute((__always_inline__)) float my_hypot(float a, float b)
 {
-	float s2 = __builtin_fmaf(a,a,b * b);
-	float x = s2 * -0.5f;
-	long i  = * ( long * ) &s2;
-	i  = 0x5f375a86 - ( i >> 1 );
-	float y  = * ( float * ) &i;
-	y = y * __builtin_fmaf(x, y*y, 1.5f); // 1st Newton iteration
-	y = y * __builtin_fmaf(x, y*y, 1.5f); // 2nd iteration, this can be removed
-	return s2 * y;
+    union fl {
+        float f;
+        long l;
+    };
+    union fl s2 = { .l = 0 };
+    s2.f = __builtin_fmaf(a,a,b * b);
+    float x = s2.f * -0.5f;
+    union fl i = { .l = 0x5f375a86 - ( s2.l >> 1 ) } ;
+    float y  = i.f;
+    y = y * __builtin_fmaf(x, y*y, 1.5f); // 1st Newton iteration
+    y = y * __builtin_fmaf(x, y*y, 1.5f); // 2nd iteration, this can be removed
+    return s2.f * y;
 }
