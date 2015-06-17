@@ -18,12 +18,14 @@
 
 void p_ftoi(const float *a, int *c, int n)
 {
-    uint32_t tmp;
-    float rounding_value;
+    union {
+        float f;
+        uint32_t u;
+    } rounding;
 
-    for(int i = 0; i < n; i++) {
-        tmp = ((*(uint32_t*)(a + i)) & 0x80000000) | ZERO_POINT_FIVE;
-        rounding_value = *((float*)&tmp);
-        *(c+i) = (int) (*(a+i) + rounding_value);
+    for (int i = 0; i < n; i++) {
+        rounding.f = *(a + i);
+        rounding.u = (rounding.u & 0x80000000) | ZERO_POINT_FIVE;
+        *(c+i) = (int) (*(a+i) + rounding.f);
     }
 }

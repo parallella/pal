@@ -18,11 +18,13 @@
 
 void p_absdiff_f32(const float *a, const float *b, float *c, int n)
 {
-    int i;
-    for (i = 0; i < n; i++) {
-        float diff = a[i] - b[i];
-        uint32_t udiff = *(uint32_t*) &diff;
-        udiff &= 0x7FFFFFFF;
-        c[i] = *(float*) &udiff;
+    union {
+        float f;
+        uint32_t u;
+    } diff;
+    for (int i = 0; i < n; i++) {
+        diff.f = a[i] - b[i];
+        diff.u &= 0x7FFFFFFF;
+        c[i] = diff.f;
     }
 }
