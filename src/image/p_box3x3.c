@@ -27,91 +27,45 @@ void p_box3x3_f32(const float *x, float *r, int rows, int cols)
     float *pr;
 
     px = x;
-    pr = r;
+    // Initialize the output pointer to the (-1, 0) coordinate
+    pr = r - cols + 2;
 
-    // Process first row
-
-    // Calculate the first sum
-    sum = (*px) + (*(px+1)) + (*(px+2));
-    // The sums from the first row are only used for a single row of the output.
-    *pr = sum;
-    pr++;
-    for (j = 3; j < cols; j++) {
-        // All subsequent sums are calculated by removing the leftmost
-        // value, and adding the next.
-        sum += (*(px+3)) - (*px);
-        *pr = sum;
-        px++;
-        pr++;
-    }
-    px += 3; // Advance input pointer to beginning of next row.
-    pr = r;
-
-    // Process second row
-
-    sum = (*px) + (*(px+1)) + (*(px+2));
-    // The second row's sums are added to the first row's, and used to
-    // initialize a new output row.
-    *pr += sum;
-    *(pr+cols-2) = sum;
-    pr++;
-    for (j = 3; j < cols; j++) {
-        sum += (*(px+3)) - (*px);
-        *pr += sum;
-        *(pr+cols-2) = sum;
-        px++;
-        pr++;
-    }
-    px += 3; // Advance input pointer to beginning of next row.
-
-    // Process (rows - 4) middle rows
-
-    for (i = 4; i < rows; i++) {
-        // These rows are the final inclusion to the output row from two
-        // iterations ago (so the final division is applied). They are also
-        // added to the previous row's output and used to initialize the
-        // next row.
+    for (i = 0; i < rows; i++) {
+        // The first sum is calculated directly.
         sum = (*px) + (*(px+1)) + (*(px+2));
-        *(pr-cols+2) = (*(pr-cols+2) + sum) * M_DIV9;
-        *pr += sum;
-        *(pr+cols-2) = sum;
+        if (i >= 2) {
+            // The first two input rows do not correspond to the bottom of any
+            // pixel filter, so skip this logic for those rows.
+            *(pr-cols+2) = (*(pr-cols+2) + sum) * M_DIV9;
+        }
+        if (i != 0 && i != rows-1) {
+            // The first and last input rows do not correspond to the middle
+            // of any pixel filter, so skip this logic for those rows.
+            *pr += sum;
+        }
+        if (i < rows - 2) {
+            // The last two input rows do not correspond to the top of any
+            // pixel filter, so skip this logic for those rows.
+            *(pr+cols-2) = sum;
+        }
         pr++;
         for (j = 3; j < cols; j++) {
+            // All subsequent sums (in the same row) are calculated by
+            // removing the leftmost value, and adding the value to the
+            // immediate right of the currently included values.
             sum += (*(px+3)) - (*px);
-            *(pr-cols+2) = (*(pr-cols+2) + sum) * M_DIV9;
-            *pr += sum;
-            *(pr+cols-2) = sum;
+            if (i >= 2) {
+                *(pr-cols+2) = (*(pr-cols+2) + sum) * M_DIV9;
+            }
+            if (i != 0 && i != rows-1) {
+                *pr += sum;
+            }
+            if (i < rows - 2) {
+                *(pr+cols-2) = sum;
+            }
             px++;
             pr++;
         }
         px += 3; // Advance input pointer to beginning of next row.
-    }
-
-    // Process second-to-last row
-
-    sum = (*px) + (*(px+1)) + (*(px+2));
-    *(pr-cols+2) = (*(pr-cols+2) + sum) * M_DIV9;
-    *pr += sum;
-    pr++;
-    for (j = 3; j < cols; j++) {
-        sum += (*(px+3)) - (*px);
-        *(pr-cols+2) = (*(pr-cols+2) + sum) * M_DIV9;
-        *pr += sum;
-        px++;
-        pr++;
-    }
-    px += 3; // Advance input pointer to beginning of next row.
-    pr -= cols-2; // Reset output pointer to the previous row.
-
-    // Process last row
-
-    sum = (*px) + (*(px+1)) + (*(px+2));
-    *pr = (*(pr) + sum) * M_DIV9;
-    pr++;
-    for (j = 3; j < cols; j++) {
-        sum += (*(px+3)) - (*px);
-        *pr = (*(pr) + sum) * M_DIV9;
-        px++;
-        pr++;
     }
 }
