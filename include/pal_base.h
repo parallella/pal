@@ -73,8 +73,9 @@ typedef p_ref_t p_event_t;
 typedef p_ref_t p_mem_t;
 typedef p_ref_t p_memptr_t;
 typedef p_ref_t p_atom_t;
-typedef p_ref_t p_mutex_t;
-typedef p_ref_t p_mutex_attr_t;
+
+typedef uint32_t * p_mutex_t;
+typedef p_ref_t  p_mutex_attr_t;
 
 /*
  ***********************************************************************
@@ -172,7 +173,7 @@ int p_mutex_init(p_mutex_t *mp);
 int p_mutex_lock(p_mutex_t *mp);
 
 /*Try locking a mutex once*/
-int p_mutex_trylock(p_mutex_t *mp);
+int p_mutex_trylock(p_mutex_t *p);
 
 /*Unlock a mutex*/
 int p_mutex_unlock(p_mutex_t *mp);
