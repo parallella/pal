@@ -81,6 +81,8 @@ check_PROGRAMS = \
 	check_p_atan_f32 \
 	check_p_atanh_f32 \
 	check_p_cbrt_f32 \
+	check_p_colmeans_f32 \
+	check_p_colsums_f32 \
 	check_p_cos_f32 \
 	check_p_cosh_f32 \
 	check_p_div_f32 \
@@ -126,6 +128,8 @@ check_p_atan2_f32_SOURCES       = $(SIMPLE) p_atan2.c
 check_p_atan_f32_SOURCES        = $(SIMPLE) p_atan.c
 check_p_atanh_f32_SOURCES       = $(SIMPLE) p_atanh.c
 check_p_cbrt_f32_SOURCES        = $(SIMPLE) p_cbrt.c
+check_p_colmeans_f32_SOURCES    = notest.c
+check_p_colsums_f32_SOURCES     = notest.c
 check_p_cos_f32_SOURCES         = $(SIMPLE) p_cos.c
 check_p_cosh_f32_SOURCES        = $(SIMPLE) p_cosh.c
 check_p_div_f32_SOURCES         = $(SIMPLE)
@@ -172,6 +176,8 @@ check_p_atan2_f32_CFLAGS        = -DFUNCTION=p_atan2_f32   -DIS_BINARY
 check_p_atan_f32_CFLAGS         = -DFUNCTION=p_atan_f32    -DIS_UNARY
 check_p_atanh_f32_CFLAGS        = -DFUNCTION=p_atanh_f32   -DIS_UNARY
 check_p_cbrt_f32_CFLAGS         = -DFUNCTION=p_cbrt_f32    -DIS_UNARY
+check_p_colmeans_f32_CFLAGS     = -DFUNCTION=p_colmeans_f32 -DIS_UNARY
+check_p_colsums_f32_CFLAGS      = -DFUNCTION=p_colsums_f32 -DIS_UNARY
 check_p_cos_f32_CFLAGS          = -DFUNCTION=p_cos_f32     -DIS_UNARY
 check_p_cosh_f32_CFLAGS         = -DFUNCTION=p_cosh_f32    -DIS_UNARY
 check_p_div_f32_CFLAGS          = -DFUNCTION=p_div_f32     -DIS_BINARY

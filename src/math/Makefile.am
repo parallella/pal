@@ -16,6 +16,8 @@ libpal_math_la_SOURCES = \
     p_atan.c \
     p_atanh.c \
     p_cbrt.c \
+    p_colmeans.c \
+    p_colsums.c \
     p_cos.c \
     p_cosh.c \
     p_div.c \
