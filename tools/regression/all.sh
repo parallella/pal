@@ -1,7 +1,10 @@
 #!/bin/bash
 set -e
-
 PAL_DB=${PAL_DB:-pal.db}
+
+# First commit that produce any stats
+# This is so we don't have to rebuild the first commits every time.
+FIRST_COMMIT=521aa636a374c1d8e83df927d50d9a542537362b
 
 usage() {
     echo Usage: $0 PLATFORM >/dev/stderr
@@ -53,7 +56,7 @@ cp -rf tools/* $toolsdir/
 $toolsdir/regression/create-db.sh
 
 # All commits on current branch (only follow first parent)
-all=$(git log --oneline HEAD --first-parent --format="%H" --reverse)
+all=$(git log --oneline ${FIRST_COMMIT}^..HEAD --first-parent --format="%H" --reverse)
 logfile=$(mktemp)
 
 # Keep track of original branch
