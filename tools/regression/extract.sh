@@ -1,7 +1,7 @@
 #!/bin/bash
 set -e
 
-DB="pal.db"
+PAL_DB=${PAL_DB:-pal.db}
 
 usage() {
     echo Usage: $0 PLATFORM >&2
@@ -24,14 +24,14 @@ if ! which gawk >/dev/null; then
     exit 1
 fi
 
-if ! [ -e ${DB} ]; then
-    echo Database \'${DB}\' not found >&2
+if ! [ -e ${PAL_DB} ]; then
+    echo Database \'${PAL_DB}\' not found >&2
     exit 1
 fi
 
 head=$(git rev-parse HEAD)
 files_qry="SELECT DISTINCT file FROM report WHERE commit_sha=\"${head}\" ORDER BY file ASC;"
-files=$(echo "$files_qry" | sqlite3 ${DB});
+files=$(echo "$files_qry" | sqlite3 ${PAL_DB});
 
 cat << EOF
 <html>
@@ -87,7 +87,7 @@ for f in $files; do
     echo "<table>"
     echo "<tr><th>Symbol</th><th>Date (GMT+0)</th><th>Commit</th><th>Size</th></tr>"
     qry="SELECT datetime(commit_date, 'unixepoch'), commit_sha, symbol, size FROM report WHERE file='${f}' AND platform='${platform}' GROUP BY symbol, commit_date;"
-    (echo .mode csv && echo $qry) | sqlite3 ${DB} | gawk -F"," '
+    (echo .mode csv && echo $qry) | sqlite3 ${PAL_DB} | gawk -F"," '
     BEGIN {
         prev_size=(-1);
         prev_symbol="";

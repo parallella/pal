@@ -1,7 +1,7 @@
 #!/bin/bash
 set -e
 
-DB=pal.db
+PAL_DB=${PAL_DB:-pal.db}
 
 usage() {
     echo Usage: $0 PLATFORM >/dev/stderr
@@ -22,7 +22,7 @@ already_built() {
     platform=$1
     sha=$2
 
-    in_db=$(echo "select \"yes\" from report where platform=\"${platform}\" and commit_sha=\"${sha}\" LIMIT 1;" | sqlite3 ${DB})
+    in_db=$(echo "select \"yes\" from report where platform=\"${platform}\" and commit_sha=\"${sha}\" LIMIT 1;" | sqlite3 ${PAL_DB})
 
     [ "x${in_db}" = "xyes" ]
 }
@@ -72,7 +72,7 @@ for c in $all; do
     echo "Building $c" >/dev/stderr
     if $toolsdir/regression/log-code-size.sh $platform > $logfile; then
         # TODO: Perform insert as transaction
-        (echo ".mode csv" && echo ".import $logfile report") | sqlite3 ${DB}
+        (echo ".mode csv" && echo ".import $logfile report") | sqlite3 ${PAL_DB}
     else
         echo Building $c failed
     fi
