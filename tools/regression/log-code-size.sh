@@ -6,9 +6,9 @@
 set -e
 
 usage() {
-    echo Usage: $0 [PLATFORM] >/dev/stderr
-    echo >/dev/stderr
-    echo Reports symbol size for all compilation units in a directory. >/dev/stderr
+    echo Usage: $0 [PLATFORM] >&2
+    echo >&2
+    echo Reports symbol size for all compilation units in a directory. >&2
     exit 1
 }
 
