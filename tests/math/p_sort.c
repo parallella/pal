@@ -1,6 +1,13 @@
 #include <stdlib.h>
 #include "simple.h"
 
+/* Override simple.c's compare function. Here we want exact matches */
+bool compare(float x, float y)
+{
+    return x == y;
+}
+
+/* qsort compare function */
 static int comp(const void * a, const void * b)
 {
     if (*(float*)a > *(float*)b) {
