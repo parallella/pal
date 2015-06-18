@@ -55,11 +55,15 @@ top_srcdir=$(git rev-parse --show-toplevel)
 cd $top_srcdir
 
 # Copy tools outside of
-toolsdir=$(mktemp -d)
-cp -rf tools/* $toolsdir/
+if [ "x${PAL_TOOLS}" = "x" ]; then
+    PAL_TOOLS=$(mktemp -d)
+    export PAL_TOOLS
+    cp -rf $top_srcdir/tools/* ${PAL_TOOLS}/
+    created_pal_tools="yes"
+fi
 
 # Create Database if necessary
-$toolsdir/regression/create-db.sh
+$PAL_TOOLS/regression/create-db.sh
 
 # All commits on current branch (only follow first parent)
 all=$(git log --oneline $range --first-parent --format="%H" --reverse)
@@ -77,7 +81,7 @@ for c in $all; do
     git reset --hard $c
     [ -e src -a -e configure.ac ] || continue
     echo "Building $c" >&2
-    if $toolsdir/regression/log-code-size.sh $platform > $logfile; then
+    if $PAL_TOOLS/regression/log-code-size.sh $platform > $logfile; then
         # TODO: Perform insert as transaction
         (echo ".mode csv" && echo ".import $logfile report") | sqlite3 ${PAL_DB}
     else
@@ -87,6 +91,8 @@ done
 
 git checkout $orig_branch
 git branch -d $tmp_branch
-rm -rf $toolsdir
 rm -rf $logfile
 
+if [ "x${created_pal_tools}" = "xyes" ]; then
+    rm -rf ${PAL_TOOLS}
+fi
