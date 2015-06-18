@@ -69,9 +69,9 @@ git checkout -b $tmp_branch >/dev/stderr
 echo logfile=${logfile}
 echo toolsdir=${toolsdir}
 for c in $all; do
+    already_built $platform $c && continue
     git reset --hard $c
     [ -e src -a -e configure.ac ] || continue
-    already_built $platform $c && continue
     echo "Building $c" >/dev/stderr
     if $toolsdir/regression/log-code-size.sh $platform > $logfile; then
         # TODO: Perform insert as transaction
