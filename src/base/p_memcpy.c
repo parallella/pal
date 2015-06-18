@@ -35,19 +35,37 @@ static p_mutex_t __global_memset_mutex = 0;
 ssize_t p_memcpy(void *dst, const void *src, size_t nb, int flags)
 {
 #ifdef FAIL_FAST
-    if(src+nb >= dst) {
+    // Fail if
+    // src == dst
+    // src < dst and src + nb >= dst
+    // src > dst and dst + nb >= src
+    if( src == dst ||
+            (src > dst && src + nb >= dst) ||
+            (src < dst && dst + nb >= src) ) {
+
         printf("Bad p_memcpy in %s (dst=0x%8x src=0x%8x, nb=%d)",
             __FILE__,
             dst,
             src,
             nb);
             
-        abort(); }
+        abort();
+    }
 #else
-    assert(src+nb < dst);
+    // assert that
+    // src != dst
+    // when src < dst, src+nb < dst
+    // when src > dst, dst+nb < src
+    assert( src != dst );
+    if( src < dst ) {
+        assert( src+nb < dst );
+    }
+    if( src > dst ) {
+        assert( dst + nb < src );
+    }
 #endif
     int idx;
-		// Take the mutex if we've not been asked to ignore it.
+    // Take the mutex if we've not been asked to ignore it.
     if(!(flags && P_FLAG_ASYNC)) {
         p_mutex_lock(&__global_memset_mutex);
     }
