@@ -66,8 +66,6 @@ orig_branch=$(git symbolic-ref --short HEAD 2>/dev/null)
 tmp_branch=regression-test-$(mktemp -u XXXX)
 git checkout -b $tmp_branch >/dev/stderr
 
-echo logfile=${logfile}
-echo toolsdir=${toolsdir}
 for c in $all; do
     already_built $platform $c && continue
     git reset --hard $c
