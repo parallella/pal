@@ -7,14 +7,20 @@ PAL_DB=${PAL_DB:-pal.db}
 FIRST_COMMIT=521aa636a374c1d8e83df927d50d9a542537362b
 
 usage() {
-    echo Usage: $0 PLATFORM >&2
+    echo "Usage: $0 PLATFORM [RANGE]" >&2
     echo >&2
     echo Reports symbol size for all compilation units in a directory. >&2
     exit 1
 }
 
-[ $# == 1 ] || usage
+[ $# == 1 -o $# == 2 ] || usage
 platform=$1
+
+if [ "x$2" = "x" ]; then
+    range="${FIRST_COMMIT}^..HEAD"
+else
+    range=$2
+fi
 
 git_dirty() {
     # ??? TODO: Won't work if something was added to index ?
@@ -56,7 +62,7 @@ cp -rf tools/* $toolsdir/
 $toolsdir/regression/create-db.sh
 
 # All commits on current branch (only follow first parent)
-all=$(git log --oneline ${FIRST_COMMIT}^..HEAD --first-parent --format="%H" --reverse)
+all=$(git log --oneline $range --first-parent --format="%H" --reverse)
 logfile=$(mktemp)
 
 # Keep track of original branch
