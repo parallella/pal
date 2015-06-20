@@ -48,7 +48,7 @@ void p_median_f32(const float *a, float *c, int n)
     unsigned int left = 0;
     unsigned int median_index = (n - 1) >> 1;
     float median_value = 0.0f;
-    float search_a[n];
+    float *search_a = malloc(n * sizeof(float));
 
     memcpy(search_a, a, sizeof(float) * n);
 
@@ -71,4 +71,5 @@ void p_median_f32(const float *a, float *c, int n)
     }
 
     *c = (n % 2 ? median_value : median_value * 0.5);
+    free(search_a);
 }
