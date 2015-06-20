@@ -20,6 +20,10 @@
 
 void p_sad16x16_f32(const float *x, const float *img, float *r, int rows, int cols)
 {
+    union {
+        float f;
+        uint32_t u;
+    } tmp;
     int i,j ;
     int k,l ;
     const float *px, *pk ;
@@ -32,7 +36,9 @@ void p_sad16x16_f32(const float *x, const float *img, float *r, int rows, int co
             pk = img ;
             for(k=0; k<16 ; k++){
                 for(l=0; l<16 ; l++){
-                    sum += fabs(*(pk++) - *(px++));
+                    tmp.f = *(pk++) - *(px++);
+                    tmp.u &= 0x7FFFFFFF ;
+                    sum += tmp.f ;
                 }
             px +=  cols - 16 ; 
             }
