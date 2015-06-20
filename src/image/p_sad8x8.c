@@ -17,7 +17,7 @@
  * @return      None
  */
 
-void p_sad8x8_f32(const float *x, float *img, float *r, int rows, int cols)
+void p_sad8x8_f32(const float *x, const float *img, float *r, int rows, int cols)
 {
     union {
         float f;
