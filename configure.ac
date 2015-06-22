@@ -90,6 +90,7 @@ AC_CONFIG_FILES([Makefile
                  tests/Makefile
                  tests/dsp/Makefile
                  tests/math/Makefile
+                 tests/image/Makefile
                  doc/Makefile])
 
 # Epiphany host support

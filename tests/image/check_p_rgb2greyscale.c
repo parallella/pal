@@ -49,7 +49,7 @@ int main(int argc, char *argv[])
     int testOK = 1;
 
     // Run the test on Arm
-    p_rgb2grayscale_f32(in, test_out, in_rows, in_cols,0);
+    p_rgb2grayscale_f32(in, test_out, in_rows, in_cols);
 
     // Check data
     for ( i = 0; i < out_size; i++ ) {
