@@ -7,6 +7,8 @@
  * LA3 =  | -1  4 -1 |
  *        |  0 -1  0 |
  *
+ * Notes: cols must be a multiple of 2
+ *
  * @param x     Pointer to input image, a 2D array of size 'rows' x 'cols'
  *
  * @param r     Pointer to output image

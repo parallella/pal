@@ -1,12 +1,14 @@
 #include <pal.h>
 
-/*
+/**
  * A 3x3 box filter (aka a moving average filter)
  * Basically a convolution with a 3x3 coefficient matrix all set to ones.
  *
  *    |1 1 1|
  * M =|1 1 1| * 1/9
  *    |1 1 1|
+ *
+ * Notes: cols must be a multiple of 2
  *
  * @param x    Pointer to input image, a 2D array of size 'rows' x 'cols'
  *

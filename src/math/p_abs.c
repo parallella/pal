@@ -15,12 +15,15 @@
  */
 void p_abs_f32(const float *a, float *c, int n)
 {
-    uint32_t tmp;
+    union {
+        float f;
+        uint32_t u;
+    } tmp;
     int i;
 
     for (i = 0; i < n; i++) {
-        tmp = *(uint32_t*)(a + i);
-        tmp &= 0x7FFFFFFF;
-        *(c + i) = *(float*)&tmp;
+        tmp.f = *(a + i);
+        tmp.u &= 0x7FFFFFFF;
+        *(c + i) = tmp.f;
     }
 }

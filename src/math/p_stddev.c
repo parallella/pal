@@ -31,12 +31,15 @@ void p_stddev_f32(const float *a, float *c, int n)
     meansq = tmp / (n - 1);
 
     float x;
-    int32_t j;
+    union {
+       float f;
+       int32_t i;
+    } j;
     float xhalf = 0.5f*meansq;
 
-    j = *(int32_t*)(&meansq);
-    j = 0x5f375a86 - (j>>1);
-    x = *(float*)&j;
+    j.f = meansq;
+    j.i = 0x5f375a86 - (j.i >> 1);
+    x = j.f;
 
     // Newton steps, repeating this increases accuracy
     x = x*(1.5f - xhalf*x*x);

@@ -7,8 +7,8 @@ To add a new function to test suite
     the expected results
 
 STILL TODO:
-sort
 max
 min
 mode
+popcount
 

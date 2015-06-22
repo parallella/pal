@@ -46,6 +46,7 @@ BUILT_SOURCES = \
     gold/p_sin_f32.gold.h \
     gold/p_sincos_f32.gold.h \
     gold/p_sinh_f32.gold.h \
+    gold/p_sort_f32.gold.h \
     gold/p_sqrt_f32.gold.h \
     gold/p_sub_f32.gold.h \
     gold/p_sum_f32.gold.h \
@@ -150,7 +151,7 @@ check_p_rand_SOURCES            = notest.c
 check_p_sin_f32_SOURCES         = $(SIMPLE) p_sin.c
 check_p_sincos_f32_SOURCES      = check_p_sincos.c
 check_p_sinh_f32_SOURCES        = $(SIMPLE) p_sinh.c
-check_p_sort_f32_SOURCES        = notest.c
+check_p_sort_f32_SOURCES        = $(SIMPLE) p_sort.c
 check_p_sqrt_f32_SOURCES        = $(SIMPLE) p_sqrt.c
 check_p_sub_f32_SOURCES         = $(SIMPLE)
 check_p_sum_f32_SOURCES         = $(SIMPLE)
@@ -196,7 +197,7 @@ check_p_rand_CFLAGS             = -DFUNCTION=p_rand                    -DSCALAR_
 check_p_sin_f32_CFLAGS          = -DFUNCTION=p_sin_f32     -DIS_UNARY
 check_p_sincos_f32_CFLAGS       = -DFUNCTION=p_sincos_f32
 check_p_sinh_f32_CFLAGS         = -DFUNCTION=p_sinh_f32    -DIS_UNARY
-check_p_sort_f32_CFLAGS         = -DFUNCTION=p_sort_f32
+check_p_sort_f32_CFLAGS         = -DFUNCTION=p_sort_f32    -DIS_UNARY
 check_p_sqrt_f32_CFLAGS         = -DFUNCTION=p_sqrt_f32    -DIS_UNARY
 check_p_sub_f32_CFLAGS          = -DFUNCTION=p_sub_f32     -DIS_BINARY
 check_p_sum_f32_CFLAGS          = -DFUNCTION=p_sum_f32     -DIS_UNARY  -DSCALAR_OUTPUT

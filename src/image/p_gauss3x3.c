@@ -1,11 +1,13 @@
 #include <pal.h>
 
-/*
+/**
  * A 3x3 gauss smoothing filter with the following convolution matrix
  *
  *    |1 2 1|
  * M =|2 4 2| * 1/16
  *    |1 2 1|
+ *
+ * Notes: cols must be a multiple of 2
  *
  * @param x    Pointer to input image, a 2D array of size 'rows' x 'cols'
  *

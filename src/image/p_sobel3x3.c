@@ -17,6 +17,8 @@ static __inline __attribute((__always_inline__)) float my_hypot( float a, float 
  *
  * Gradient Direction (theta) = atan2(Gy,Gx)
  *
+ * Notes: cols must be a multiple of 2
+ *
  * @param x     Pointer to input image, a 2D array of size 'rows' x 'cols'
  *
  * @param r     Pointer to output image

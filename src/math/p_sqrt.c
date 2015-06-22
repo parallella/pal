@@ -22,18 +22,21 @@
  */
 void p_sqrt_f32(const float *a, float *c, int n)
 {
-    
+
     int i;
     for (i = 0; i < n; i++) {
         const float *pa = (a+i);
         float *pc = (c+i);
         float x;
-        int32_t j;
+        union {
+            float f;
+            int32_t i;
+        } j;
         float xhalf = 0.5f*(*pa);
- 
-        j = *(int32_t*)(pa);
-        j = 0x5f375a86 - (j>>1);
-        x = *(float*)&j;
+
+        j.f = *pa;
+        j.i = 0x5f375a86 - (j.i >> 1);
+        x = j.f;
 
         // Newton steps, repeating this increases accuracy
         x = x*(1.5f - xhalf*x*x);
