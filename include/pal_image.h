@@ -38,10 +38,10 @@ void p_scharr3x3_f32(const float *x, float *r, int rows, int cols);
 void p_prewitt3x3_f32(const float *x, float *r, int rows, int cols);
 
 /*2d sum of absolute differences (8x8), returns scalar */
-void p_sad8x8_f32(const float *x, float *m, float *r, int cols);
+void p_sad8x8_f32(const float *x, const float *img, float *r, int rows, int cols);
 
 /*2d sum of absolute differences (16x16), returns scalar */
-void p_sad16x16_f32(const float *x, float *m, float *r, int cols);
+void p_sad16x16_f32(const float *x, const float *img, float *r, int rows, int cols);
 
 /*2d sobel filter (3x3) */
 void p_sobel3x3_f32(const float *x, float *r, int rows, int cols);
