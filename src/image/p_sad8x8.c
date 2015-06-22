@@ -1,8 +1,10 @@
 #include <pal.h>
 
-/*
+/**
  * This function returns a scalar sum of the absolute differences between the
  * source block 'x' and an 8×8 sub image 'm'.
+ *
+ * Notes: cols must be a multiple of 2
  *
  * @param x     Pointer to input image, a 2D array of size 'rows' x 'cols'
  *

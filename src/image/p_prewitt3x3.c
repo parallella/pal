@@ -1,6 +1,6 @@
 #include <pal.h>
 
-/*
+/**
  * A Prewitt 3x3 convolution filter (m) with the Prewitt operators defined as:
  *
  *       | -1  0  1 |
@@ -14,6 +14,8 @@
  * G = sqrt (Gx^2 + Gy^2)
  *
  * Gradient Direction (theta) = atan2(Gy,Gx)
+ *
+ * Notes: cols must be a multiple of 2
  *
  * @param x     Pointer to input image, a 2D array of size 'rows' x 'cols'
  *
