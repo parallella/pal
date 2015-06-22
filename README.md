@@ -66,7 +66,7 @@ $ sudo apt-get install libtool build-essential pkg-config autoconf doxygen check
 
 ``` bash
 $ ./bootstrap
-$ ./configure
+$ ./configure "CFLAGS=-Werror"
 $ make
 ```
 
