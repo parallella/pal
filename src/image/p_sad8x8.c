@@ -17,8 +17,12 @@
  * @return      None
  */
 
-void p_sad8x8_f32(const float *x, float *img, float *r, int rows, int cols)
+void p_sad8x8_f32(const float *x, const float *img, float *r, int rows, int cols)
 {
+    union {
+        float f;
+        uint32_t u;
+    } tmp;
     int i,j ;
     int k,l ;
     const float *px, *pk ;
@@ -31,7 +35,9 @@ void p_sad8x8_f32(const float *x, float *img, float *r, int rows, int cols)
             pk = img ;
             for(k=0; k<8 ; k++){
                 for(l=0; l<8 ; l++){
-                    sum += fabs(*(pk++) - *(px++));
+                    tmp.f = *(pk++) - *(px++);
+                    tmp.u &= 0x7FFFFFFF ;
+                    sum += tmp.f ;
                 }
             px +=  cols - 8 ; 
             }
