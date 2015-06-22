@@ -1,4 +1,4 @@
-SUBDIRS = dsp math
+SUBDIRS = dsp image math 
 
 # TODO: Move to configure.ac. Use expansion in here instead.
 BUILD_CC=gcc

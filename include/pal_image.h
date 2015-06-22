@@ -48,3 +48,6 @@ void p_sobel3x3_f32(const float *x, float *r, int rows, int cols);
 
 /*2d harris filter (3x3) */
 void p_harris3x3_f32(const float *x, float *r, float *t, int rows, int cols);
+
+/*RGB to Grayscale conversion */
+void p_rgb2grayscale_f32(const float *x, float *r, int rows, int cols);
