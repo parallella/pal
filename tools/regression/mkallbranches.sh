@@ -67,10 +67,23 @@ git pull
 # TODO: Git remote add ... && fetch instr
 git fetch
 
+
+create_summary()
+{
+    sha=$1
+    $PAL_TOOLS/regression/summary.sh > $PAL_REPORTS/summary.html
+    (
+        cd $PAL_REPORTS
+        git add summary.html
+        git commit -m"Summary report for $sha"
+    )
+}
+
 master_sha=$(git rev-parse master)
 echo Building for master branch:
 if need_build master $master_sha; then
     $PAL_TOOLS/regression/mkallreports.sh
+    create_summary $master_sha
 else
     echo No new commits for: $orig_branch
 fi
