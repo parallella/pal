@@ -79,10 +79,29 @@ create_summary()
     )
 }
 
+build_w_cflags() {
+    platform=$1
+    cflags=$2
+
+    echo Building: master $platform \"${cflags}\"
+
+    CFLAGS=${cflags} $PAL_TOOLS/regression/all.sh $platform "master^..master"
+}
+
 master_sha=$(git rev-parse master)
 echo Building for master branch:
 if need_build master $master_sha; then
+    # Create code size regression reports
     $PAL_TOOLS/regression/mkallreports.sh
+
+    # Build with more CFLAG configurations for summary report
+    build_w_cflags x86_64              "-Os -ffast-math"
+    build_w_cflags x86_64              "-O2 -ffast-math"
+    build_w_cflags arm-linux-gnueabihf "-Os -ffast-math"
+    build_w_cflags arm-linux-gnueabihf "-O2 -ffast-math"
+    build_w_cflags epiphany-elf        "-Os -ffast-math -mfp-mode=round-nearest -ffp-contract=fast"
+    build_w_cflags epiphany-elf        "-O2 -ffast-math -mfp-mode=round-nearest -ffp-contract=fast"
+
     create_summary $master_sha
 else
     echo No new commits for: $orig_branch
