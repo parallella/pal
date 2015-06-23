@@ -22,11 +22,27 @@
  */
 int p_mutex_lock(p_mutex_t *mp)
 {
-	if(mp == NULL || *mp == NULL) {
-		return EINVAL;
-	}
-    // Spin while we wait for the lock to become 0.
-    while(**mp != 0) { ;; }
-    **mp = 1;
+    if(mp == NULL || *mp == NULL) {
+        return EINVAL;
+    }
+    /* We've got to avoid race conditions. Our solution to this is to spin
+     * until we can increment the mutex and make it 1, not 2.
+     * This works because our definition of "locked" is non-zero
+     * and our unlock is set to 0.
+     * 
+     * When we lose the race, our mutex will be a value other than 1.
+     *
+     * When we enter the loop, we spin until **mp == 0
+     * When **mp == 0, we check if ++(**mp) == 1
+     * If that condition is true, we are safe: We won the race.
+     * If that condition is false, we lost the race: keep trying.
+     */
+    do {
+        /* Spin while the lock is taken. */
+        while(**mp != 0) { ;; }
+        /* attempt to take the lock. If we lost the race
+         * we'll keep trying.
+         */
+    } while( ++(**mp) != 1);
     return (0);
 }

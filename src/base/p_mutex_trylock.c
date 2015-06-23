@@ -17,11 +17,15 @@ int p_mutex_trylock(p_mutex_t *mp)
 	if( mp == NULL || *mp == NULL) {
 		return EINVAL;
 	}
-	else if(**mp == 0) {
-        **mp = 1;
-        return 0;
-	}
-    else {
-        return EBUSY;
-	}
+    if(**mp !=0 ) { return EBUSY; }
+    /* Try to take the mutex. If we won, **mp will be 1. If we lost,
+     * it'll be something different.
+     * 
+     * There's one small caveat to this: If, by some magical means, you have
+     * the ability to make UINT_MAX attempts *simultaneously*
+     * you run the slight risk of overflowing.
+     * 
+     * That's a lot of attempts, though.
+     */
+    return ( ++(**mp) == 1 ? 0 : EBUSY );    
 }
