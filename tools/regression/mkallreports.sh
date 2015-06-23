@@ -57,10 +57,13 @@ fi
 orig_branch=$(git symbolic-ref --short HEAD 2>/dev/null)
 sha=$(git rev-parse --verify HEAD)$(git_dirty_str)
 
-# TODO: Check if PAL_REPORTS is set, then we don't need to clone.
-reportsdir=$(mktemp -d)
-git clone git@github.com:/parallella/pal-stats.git $reportsdir
-export PAL_DB=$reportsdir/pal.db
+if [ "x${PAL_REPORTS}" = "x" ]; then
+    PAL_REPORTS=$(mktemp -d)
+    git clone git@github.com:/parallella/pal-stats.git $PAL_REPORTS
+    export PAL_REPORTS
+    export PAL_DB=$PAL_REPORTS/pal.db
+    created_pal_reports="yes"
+fi
 
 echo Building x86_64
 $PAL_TOOLS/regression/all.sh x86_64              $range && build_x86_64="ok"
@@ -70,24 +73,29 @@ echo Building epiphany
 $PAL_TOOLS/regression/all.sh epiphany-elf        $range && build_epiphany="ok"
 
 echo Generating reports
-mkdir -p $reportsdir/$orig_branch
-$PAL_TOOLS/regression/extract.sh x86_64              $range > $reportsdir/$orig_branch/codesize.x86_64.html
-$PAL_TOOLS/regression/extract.sh arm-linux-gnueabihf $range > $reportsdir/$orig_branch/codesize.arm.html
-$PAL_TOOLS/regression/extract.sh epiphany-elf        $range > $reportsdir/$orig_branch/codesize.epiphany.html
+mkdir -p $PAL_REPORTS/$orig_branch
+$PAL_TOOLS/regression/extract.sh x86_64              $range > $PAL_REPORTS/$orig_branch/codesize.x86_64.html
+$PAL_TOOLS/regression/extract.sh arm-linux-gnueabihf $range > $PAL_REPORTS/$orig_branch/codesize.arm.html
+$PAL_TOOLS/regression/extract.sh epiphany-elf        $range > $PAL_REPORTS/$orig_branch/codesize.epiphany.html
 
 # Optimize DB size
 echo "VACUUM;" | sqlite3 $PAL_DB
 
 # Push changes
-cd $reportsdir
+cd $PAL_REPORTS
 git add pal.db
 git add $orig_branch
 git commit -m"${orig_branch}:${sha}"
-git push
+if [ "x${created_pal_reports}" = "xyes" ]; then
+    git push
+fi
 
 cd $top_srcdir
-rm -rf $reportsdir
 
 if [ "x${created_pal_tools}" = "xyes" ]; then
     rm -rf ${PAL_TOOLS}
+fi
+
+if [ "x${created_pal_reports}" = "xyes" ]; then
+    rm -rf $PAL_REPORTS
 fi
