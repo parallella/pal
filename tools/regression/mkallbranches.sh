@@ -40,8 +40,6 @@ fi
 top_srcdir=$(git rev-parse --show-toplevel)
 cd $top_srcdir
 
-git fetch
-
 if [ "x${PAL_TOOLS}" = "x" ]; then
     PAL_TOOLS=$(mktemp -d)
     export PAL_TOOLS
@@ -61,15 +59,23 @@ fi
 # Keep track of original branch
 orig_branch=$(git symbolic-ref --short HEAD 2>/dev/null)
 
-echo Building for current branch: $orig_branch
-if need_build $orig_branch $(git rev-parse $orig_branch); then
+# Check out master and pull latest changes
+git checkout master
+git pull
+
+# Fetch pull requests
+# TODO: Git remote add ... && fetch instr
+git fetch
+
+master_sha=$(git rev-parse master)
+echo Building for master branch:
+if need_build master $master_sha; then
     $PAL_TOOLS/regression/mkallreports.sh
 else
     echo No new commits for: $orig_branch
 fi
 
 
-# TODO: Git remote add ... && fetch instr
 openprs=$(curl --silent https://api.github.com/repos/parallella/pal/pulls?state=open | grep '"number"' | cut -f2 -d":" | tr -d " ," | sort -g)
 #openprs=$(git branch -r --no-merged master | tr -d " " | grep "^origin/pr" | sort -g)
 
