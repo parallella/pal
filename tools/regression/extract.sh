@@ -4,16 +4,17 @@ set -e
 PAL_DB=${PAL_DB:-pal.db}
 
 usage() {
-    echo Usage: $0 PLATFORM [RANGE] >&2
+    echo Usage: $0 PLATFORM [RANGE] [CFLAGS] >&2
     echo >&2
     echo Create HTML report for PLATFORM >&2
     echo Example: $0 x86_64 >&2
     exit 1
 }
 
-[ $# = 1 -o $# = 2 ] || usage
+[ $# = 1 -o $# = 2 -o $# = 3 ] || usage
 platform=$1
 range=$2
+cflags=$3
 
 if ! which sqlite3 >/dev/null; then
     echo This tool needs sqlite3 >&2
@@ -97,7 +98,7 @@ for f in $files; do
         min_date=$(git show --format="%ct" $first_sha | head -n1)
         min_date_str="commit_date >= ${min_date} AND "
     fi
-    qry="SELECT datetime(commit_date, 'unixepoch'), commit_sha, symbol, size FROM report WHERE ${min_date_str} file='${f}' AND platform='${platform}' GROUP BY symbol, commit_date;"
+    qry="SELECT datetime(commit_date, 'unixepoch'), commit_sha, symbol, size FROM report WHERE ${min_date_str} file='${f}' AND platform='${platform}' AND cflags='${cflags}' GROUP BY symbol, commit_date;"
     (echo .mode csv && echo $qry) | sqlite3 ${PAL_DB} | gawk -F"," '
     BEGIN {
         prev_size=(-1);

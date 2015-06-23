@@ -31,7 +31,7 @@ already_built() {
     platform=$1
     sha=$2
 
-    in_db=$(echo "select \"yes\" from report where platform=\"${platform}\" and commit_sha=\"${sha}\" LIMIT 1;" | sqlite3 ${PAL_DB})
+    in_db=$(echo "select \"yes\" from report where platform=\"${platform}\" and commit_sha=\"${sha}\" and cflags=\"${CFLAGS}\" LIMIT 1;" | sqlite3 ${PAL_DB})
 
     [ "x${in_db}" = "xyes" ]
 }

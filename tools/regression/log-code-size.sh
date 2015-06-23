@@ -1,8 +1,6 @@
 #!/bin/bash
 # Must be called from inside git repository
 
-# TODO: command line cflags
-
 set -e
 
 usage() {
@@ -37,7 +35,7 @@ builddir=$(mktemp -d /tmp/palXXXXXXXX)
 
 # Build in builddir
 cd $builddir
-CFLAGS=${cflags} $top_srcdir/configure ${host_str} >> build.log 2>&1
+$top_srcdir/configure ${host_str} >> build.log 2>&1
 
 # Compile
 (cd src && make -j -k >> build.log 2>&1 || true)
@@ -45,7 +43,7 @@ CFLAGS=${cflags} $top_srcdir/configure ${host_str} >> build.log 2>&1
 # Output results in CSV format. Must match database scheme
 files=$(find src -name "*.o" | grep -v "\.libs" | sort)
 for f in $files; do
-    (echo $commit_date,$sha,$f,$platform,$cflags && readelf -s $f) | gawk '
+    (echo $commit_date,$sha,$f,$platform,$CFLAGS && readelf -s $f) | gawk '
     {
         if (NR==1) {
             oldfs=FS;

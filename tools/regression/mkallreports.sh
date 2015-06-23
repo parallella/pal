@@ -65,6 +65,12 @@ if [ "x${PAL_REPORTS}" = "x" ]; then
     created_pal_reports="yes"
 fi
 
+# Set CFLAGS to empty string if unset. Otherwise Autoconf will default to
+# "-g -O2"
+if [ "x${CFLAGS}" = "x" ]; then
+    export CFLAGS=""
+fi
+
 echo Building x86_64
 $PAL_TOOLS/regression/all.sh x86_64              $range && build_x86_64="ok"
 echo Building arm
