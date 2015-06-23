@@ -11,6 +11,6 @@ CREATE TABLE IF NOT EXISTS report (
     cflags TEXT,
     type TEXT,
     size INTEGER,
-    PRIMARY KEY (commit_date, commit_sha, platform, file, symbol)
+    PRIMARY KEY (commit_date, commit_sha, platform, file, symbol, cflags)
 );
 EOF
