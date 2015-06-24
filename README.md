@@ -291,7 +291,7 @@ FUNCTION     | NOTES
 
 STATUS REPORT
 ========================================
-LINK
+https://parallella.github.io/pal-stats/summary.html
 
 BENCHMARKING
 ========================================
