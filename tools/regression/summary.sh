@@ -36,6 +36,20 @@ fi
 files_qry="SELECT DISTINCT file FROM report WHERE commit_sha=\"${head}\" ORDER BY file ASC;"
 files=$(echo "$files_qry" | sqlite3 ${PAL_DB});
 
+# CFLAGS have to match perfectly with mkallbranches.sh
+# ??? TODO: Use separate file for CFLAGS
+x86_64_Os_flags='-Os -ffast-math'
+x86_64_O2_flags='-O2 -ffast-math'
+arm_Os_flags='-Os -ffast-math'
+arm_O2_flags='-O2 -ffast-math'
+epiphany_Os_flags='-Os -ffast-math -mfp-mode=round-nearest -ffp-contract=fast'
+epiphany_O2_flags='-O2 -ffast-math -mfp-mode=round-nearest -ffp-contract=fast'
+
+# Fix word wrapping
+fixwrap() {
+    echo $1 | sed -e 's,^,<nobr>,g;s, [ ]*\([^ ]\),</nobr> <nobr>\1,g;s,$,</nobr>,g'
+}
+
 cat << EOF
 <html>
 <head>
@@ -55,6 +69,7 @@ table {
 }
 th {
     border-bottom: 1px solid #222;
+    width: 5em; /* hack? but it works */
 }
 tr.newsymbol {
     border-top: 1px solid #222;
@@ -71,6 +86,11 @@ th.side {
     background-color: #222;
     color: #eee;
 }
+
+th.cflags {
+    font-size: x-small;
+}
+
 
 .bottom {
     border: 1px solid #222;
@@ -105,36 +125,45 @@ th.side {
 <p>Latest commit: ${head}</p>
 
 <table>
-<tr><th rowspan="2">&nbsp;</th><th>x86_64</th><th>ARM</th><th>Epiphany</th><th class="side"><div class="rotate">Platform</div></th></tr>
-<tr><th>(default)</th><th>(default)</th><th>(default)</th><th class="side"><div class="rotate">CFLAGS</div></th></tr>
-<tr><th>File</th><th colspan="3">Size</th><th class="side" rowspan="1000">&nbsp;</th></tr>
+<tr><th rowspan="2">&nbsp;</th><th colspan="3">x86_64</th><th colspan="3">ARM</th><th colspan="3">Epiphany</th><th class="side"><div class="rotate">Platform</div></th></tr>
+<tr>
+<th class="cflags">(default)</th><th class="cflags">$(fixwrap "${x86_64_Os_flags}")</th><th class="cflags">$(fixwrap "${x86_64_O2_flags}")</th>
+<th class="cflags">(default)</th><th class="cflags">$(fixwrap "${arm_Os_flags}")</th><th class="cflags">$(fixwrap "${arm_O2_flags}")</th>
+<th class="cflags">(default)</th><th class="cflags">$(fixwrap "${epiphany_Os_flags}")</th><th class="cflags">$(fixwrap "${epiphany_O2_flags}")</th>
+<th class="side"><div class="rotate">CFLAGS</div></th></tr>
+<tr><th>File</th><th colspan="9">Size</th><th class="side" rowspan="1000">&nbsp;</th></tr>
 
 EOF
 
 
 size_qry() {
-    c=$1
-    f=$2
-    p=$3
-    cflags=$4
-    echo "SELECT SUM(size) FROM report WHERE commit_sha='${c}' AND file='${f}' AND platform='${p}' AND cflags='${cflags}';"
+    f=$1
+    p=$2
+    cflags=$3
+    (
+        echo ".mode csv"
+        echo "SELECT SUM(size) FROM report WHERE commit_sha='${head}' AND file='${f}' AND platform='${p}' AND cflags='${cflags}';"
+    ) | sqlite3 ${PAL_DB}
 }
 
 for f in $files; do
     f_src=$(echo $f | sed 's/\.o$/\.c/g')
-    x86_64_size=$((echo .mode csv && size_qry $head $f x86_64 "") | sqlite3 ${PAL_DB})
-    arm_size=$((echo .mode csv && size_qry $head $f arm-linux-gnueabihf "") | sqlite3 ${PAL_DB})
-    epiphany_size=$((echo .mode csv && size_qry $head $f epiphany-elf "") | sqlite3 ${PAL_DB})
     echo "<tr>"
     echo "<td><a href=\"https://github.com/parallella/pal/tree/master/${f_src}\">${f_src}</a></td>"
-    echo "<td class=\"number\">${x86_64_size}</td>"
-    echo "<td class=\"number\">${arm_size}</td>"
-    echo "<td class=\"number\">${epiphany_size}</td>"
+    echo "<td class=\"number\">$(size_qry $f x86_64 '')</td>"
+    echo "<td class=\"number\">$(size_qry $f x86_64 "${x86_64_Os_flags}")</td>"
+    echo "<td class=\"number\">$(size_qry $f x86_64 "${x86_64_O2_flags}")</td>"
+    echo "<td class=\"number\">$(size_qry $f arm-linux-gnueabihf '')</td>"
+    echo "<td class=\"number\">$(size_qry $f arm-linux-gnueabihf "${arm_Os_flags}")</td>"
+    echo "<td class=\"number\">$(size_qry $f arm-linux-gnueabihf "${arm_O2_flags}")</td>"
+    echo "<td class=\"number\">$(size_qry $f epiphany-elf '')</td>"
+    echo "<td class=\"number\">$(size_qry $f epiphany-elf "${epiphany_Os_flags}")</td>"
+    echo "<td class=\"number\">$(size_qry $f epiphany-elf "${epiphany_O2_flags}")</td>"
     echo "</tr>"
 done
 
 cat << EOF
-<tr class="bottom"><td colspan="4">&nbsp;</td></tr>
+<tr class="bottom"><td colspan="10">&nbsp;</td></tr>
 </table>
 </body>
 </html>
