@@ -74,7 +74,7 @@ create_summary()
     $PAL_TOOLS/regression/summary.sh > $PAL_REPORTS/summary.html
     (
         cd $PAL_REPORTS
-        git add summary.html
+        git add pal.db summary.html
         git commit -m"Summary report for $sha"
     )
 }
