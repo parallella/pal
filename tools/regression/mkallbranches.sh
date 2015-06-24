@@ -125,6 +125,9 @@ for n in $openprs; do
     git branch -d pr-$n
 done
 
+# Create directory index
+$PAL_TOOLS/regression/create-directory-index.sh
+
 if [ "x${created_pal_tools}" = "xyes" ]; then
     rm -rf ${PAL_TOOLS}
 fi
