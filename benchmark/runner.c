@@ -59,8 +59,6 @@ int main(void)
 	char *raw_mem = NULL;
 	spec.current_size = default_initial_size;
 
-	spec.p = 1;
-	spec.team = NULL;
 	setup_memory(&spec.mem, &raw_mem, spec.current_size);
 	for (const struct p_benchmark_item* item = benchmark_items;
 		item->name != NULL;
