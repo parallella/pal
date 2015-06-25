@@ -23,7 +23,7 @@ void p_cosh_f32(const float *a, float *c, int n)
 		const float *pa = (a+i);
 		float *pc = (c+i);
 		float val = 0;
-		float theta = M_NORMALIZE_RADIANS(*pa);
+		float theta = *pa;
 		float theta_sq = theta*theta;
 
 		val = 1.0f + theta_sq*0.01111111f*val;
