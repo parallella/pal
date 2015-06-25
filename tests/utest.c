@@ -8,45 +8,99 @@
  */
 
 #include <stdlib.h>
-#include <stdarg.h>
 #include <stdio.h>
+#include <string.h>
 #include <errno.h>
 #include "utest.h"
 
 static struct ut_tcase *__ut_curr_tcase = NULL;
 
-void __ut_assert_msg(const char *file, const char *func, int line,
-                     const char *str, const char *format, ...)
+void __ut_assert_msg(const char *file, const char *func, const char *line,
+                     const char *str)
 {
-    int n;
-    va_list args;
+    char *p, *endp;
 
     if (!__ut_curr_tcase)
         exit(UT_HARD_ERROR);
 
-    n = snprintf(__ut_curr_tcase->msg, UT_TCASE_LOG_LEN, "%s:%s():%d: %s\n",
-                 file, func, line, str);
+    p = __ut_curr_tcase->msg;
+    endp = &__ut_curr_tcase->msg[UT_TCASE_LOG_LEN];
 
-    if (n > UT_TCASE_LOG_LEN)
-        exit(UT_HARD_ERROR);
+    p = strncpy(p, file, endp - p);
+    if (p >= endp)
+        goto oom;
 
-    va_start(args, format);
-    /* Don't care if string gets truncated */
-    vsnprintf(&__ut_curr_tcase->msg[n], UT_TCASE_LOG_LEN - n, format, args);
-    va_end(args);
+    p = strncpy(p, ":", endp - p);
+    if (p >= endp)
+        goto oom;
+
+    p = strncpy(p, func, endp - p);
+    if (p >= endp)
+        goto oom;
+
+    p = strncpy(p, "():", endp - p);
+    if (p >= endp)
+        goto oom;
+
+    p = strncpy(p, line, endp - p);
+    if (p >= endp)
+        goto oom;
+
+    p = strncpy(p, ": ", endp - p);
+    if (p >= endp)
+        goto oom;
+
+    p = strncpy(p, str, endp - p);
+    if (p >= endp)
+        goto oom;
+
+    return;
+
+oom:
+    __ut_curr_tcase->msg[0] = 'N';
+    __ut_curr_tcase->msg[1] = 'O';
+    __ut_curr_tcase->msg[2] = 'M';
+    __ut_curr_tcase->msg[3] = 'E';
+    __ut_curr_tcase->msg[4] = 'M';
+    __ut_curr_tcase->msg[5] = 'a';
+    __ut_curr_tcase->msg[6] = '\n';
+    __ut_curr_tcase->msg[7] = '\0';
 }
 
-void ut_log_msg(const char *format, ...)
+void ut_log_msg(const char *str)
 {
-    va_list args;
+    char *p, *endp;
 
     if (!__ut_curr_tcase)
         exit(UT_HARD_ERROR);
 
-    va_start(args, format);
-    /* Don't care if string gets truncated */
-    vsnprintf(__ut_curr_tcase->msg, UT_TCASE_LOG_LEN, format, args);
-    va_end(args);
+    p = __ut_curr_tcase->msg;
+    endp = &__ut_curr_tcase->msg[UT_TCASE_LOG_LEN];
+
+    strncpy(p, __ut_curr_tcase->name, endp - p);
+    if (p >= endp)
+        goto oom;
+
+    strncpy(p, ": ", endp - p);
+    if (p >= endp)
+        goto oom;
+
+
+    strncpy(p, str, endp - p);
+    if (p >= endp)
+        goto oom;
+
+    return;
+
+oom:
+    __ut_curr_tcase->msg[0] = 'N';
+    __ut_curr_tcase->msg[1] = 'O';
+    __ut_curr_tcase->msg[2] = 'M';
+    __ut_curr_tcase->msg[3] = 'E';
+    __ut_curr_tcase->msg[4] = 'M';
+    __ut_curr_tcase->msg[5] = 'l';
+    __ut_curr_tcase->msg[6] = '\n';
+    __ut_curr_tcase->msg[7] = '\0';
 }
 
 int ut_run(struct ut_suite *suite)
@@ -70,8 +124,7 @@ int ut_run(struct ut_suite *suite)
         if (!(__ut_curr_tcase->execute || __ut_curr_tcase->verify)) {
             suite->nharderror++;
             __ut_curr_tcase->status = UT_HARD_ERROR;
-            ut_log_msg("%s: Testcase lacks both execute() and verify()",
-                       __ut_curr_tcase->name);
+            ut_log_msg("Testcase lacks both execute() and verify()");
             continue;
         }
 
@@ -202,7 +255,8 @@ oom:
     buf[2] = 'M';
     buf[3] = 'E';
     buf[4] = 'M';
-    buf[5] = '\n';
-    buf[6] = '\0';
+    buf[5] = 'r';
+    buf[6] = '\n';
+    buf[7] = '\0';
     return ENOMEM;
 }
