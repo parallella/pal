@@ -11,8 +11,12 @@
 #include <common.h>
 
 /* Max allowed diff against expected value */
+#ifndef EPSILON_MAX
 #define EPSILON_MAX 0.001f
+#endif
+#ifndef EPSILON_RELMAX
 #define EPSILON_RELMAX 0.00001f
+#endif
 
 struct gold {
     float ai;
