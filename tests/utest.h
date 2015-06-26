@@ -76,18 +76,15 @@ struct ut_suite _Name = {\
 
 extern int ut_run(struct ut_suite *suite);
 extern int ut_report(char *buf, size_t n, struct ut_suite *suite, bool verbose);
-extern void __ut_assert_msg(const char *file, const char *func,
-                            const char *line, const char *str);
-
-#define __UT_STRING(x) #x
-#define __UT_XSTRING(x) __UT_STRING(x)
+extern void __ut_assert_msg(const char *file, const char *func, int line,
+                            const char *str, const char *format, ...);
 
 #define ut_assert(_Expr) ut_assert_msg((_Expr), NULL)
-#define ut_assert_msg(_Expr, _Msg)\
+#define ut_assert_msg(_Expr, ...)\
     do {\
         if (!(_Expr)) {\
-            __ut_assert_msg(__FILE__, __func__, __UT_XSTRING(__LINE__),\
-                            "Assertion: '" #_Expr "' failed. " #_Msg);\
+            __ut_assert_msg(__FILE__, __func__, __LINE__,\
+                            "Assertion: '" #_Expr "' failed.", __VA_ARGS__);\
             return UT_FAIL;\
         }\
     } while (0)
