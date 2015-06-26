@@ -20,6 +20,8 @@
 /* Max total assert msg length. */
 #define UT_TCASE_LOG_LEN 255
 
+#define __UT_STRING(_x) #_x
+
 struct ut_tcase;
 struct ut_suite;
 
@@ -35,7 +37,7 @@ struct ut_tcase {
 };
 #define DECLARE_UT_TCASE(_Name, _Execute, _Verify, _Data)\
 struct ut_tcase _Name = {\
-    .name    = #_Name,\
+    .name    = __UT_STRING(_Name),\
     .execute = _Execute,\
     .verify  = _Verify,\
     .data    = _Data\
@@ -63,10 +65,11 @@ struct ut_suite {
     int nrun;
     int nharderror;
 };
+
 #define DECLARE_UT_SUITE(_Name, _Setup, _Teardown, _Independent, \
                          _Tcases, _Data)\
 struct ut_suite _Name = {\
-    .name        = #_Name,\
+    .name        = __UT_STRING(_Name),\
     .setup       = _Setup,\
     .teardown    = _Teardown,\
     .independent = _Independent,\
