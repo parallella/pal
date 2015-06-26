@@ -11,6 +11,7 @@ else
 endif
 
 LDADD = $(top_builddir)/src/libpal.la
+LDADD += $(top_builddir)/tests/libutest.la
 
 # TODO: For cross compilation: Build for build arch, not host arch.
 noinst_PROGRAMS = rangen
@@ -149,7 +150,9 @@ check_p_popcount_SOURCES        = notest.c
 check_p_pow_f32_SOURCES         = $(SIMPLE) p_pow.c
 check_p_rand_SOURCES            = notest.c
 check_p_sin_f32_SOURCES         = $(SIMPLE) p_sin.c
-check_p_sincos_f32_SOURCES      = check_p_sincos.c
+# TODO: Port check_p_sincos to utest
+#check_p_sincos_f32_SOURCES      = check_p_sincos.c
+check_p_sincos_f32_SOURCES      = notest.c
 check_p_sinh_f32_SOURCES        = $(SIMPLE) p_sinh.c
 check_p_sort_f32_SOURCES        = $(SIMPLE) p_sort.c
 check_p_sqrt_f32_SOURCES        = $(SIMPLE) p_sqrt.c

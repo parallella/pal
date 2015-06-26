@@ -1,4 +1,5 @@
 #include <stdlib.h>
+#include <string.h>
 #include "simple.h"
 
 /* Override simple.c's compare function. Here we want exact matches */

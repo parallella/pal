@@ -1,14 +1,6 @@
 #pragma once
-
-#include <stdlib.h>
-#include <stdio.h>
-#include <math.h>
 #include <stdbool.h>
-
-#include <check.h>
-#include <pal.h>
-#include "../../src/base/pal_base_private.h"
-#include <common.h>
+#include <stdlib.h>
 
 /* Max allowed diff against expected value */
 #ifndef EPSILON_MAX
@@ -32,10 +24,6 @@ extern float *ai, *bi, *res, *ref;
 
 /* Compare two values */
 bool compare(float x, float y);
-
-/* Allow individual tests to add more test cases, e.g. against a reference
- * function */
-void add_more_tests(TCase *tcase);
 
 /* Needs to be implemented by tests that define REF_FUNCTION */
 void generate_ref(float *out, size_t n);
