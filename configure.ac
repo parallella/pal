@@ -163,29 +163,15 @@ AS_IF([test "x$enable_device_epiphany" = "xyes"],
        AC_DEFINE([ENABLE_DEV_EPIPHANY], [1], [Epiphany device support])
        ])
 
-# Unit testing
-PKG_CHECK_MODULES(CHECK, [check >= 0.9.4],
-                  [have_check="yes"],
-                  [have_check="no"])
-AM_CONDITIONAL(HAVE_CHECK, [test "x${have_check}" = "xyes"])
-AC_SUBST(CHECK_CFLAGS)
-AC_SUBST(CHECK_LIBS)
 AC_ARG_ENABLE([tests],
               AS_HELP_STRING([--disable-tests],
                              [Disable building unit tests]))
 
+# Unit testing
 AC_MSG_CHECKING([whether to build unit tests])
-AS_IF([test "x${enable_tests}" = "xyes"],
-      [AS_IF([test "x${have_check}" != "xyes"],
-             [AC_MSG_RESULT([error])
-             AC_MSG_ERROR([Cannot build unit tests, check not installed])])])
-AS_IF([test "x${enable_tests}" = "x"],
-      [AS_IF([test "x${have_check}" != "xyes"], [enable_tests="no"])])
-
 AS_IF([test "x${enable_tests}" = "xno"],
       [AC_MSG_RESULT([no])],
       [AC_MSG_RESULT([yes])])
-
 AM_CONDITIONAL(ENABLE_TESTS, [test "x${enable_tests}" != "xno"])
 
 # Documentation

@@ -3,8 +3,6 @@ LIBS = -lm
 if HOST_IS_EPIPHANY
     SIMPLE = notest.c
 else
-    AM_CPPFLAGS += @CHECK_CFLAGS@
-    LIBS += @CHECK_LIBS@
     SIMPLE = simple.c
 endif
 

@@ -5,8 +5,7 @@ LIBS = -lm
 if HOST_IS_EPIPHANY
     SIMPLE = notest.c
 else
-    AM_CPPFLAGS += @CHECK_CFLAGS@ -I$(top_srcdir)/tests
-    LIBS += @CHECK_LIBS@
+    AM_CPPFLAGS += -I$(top_srcdir)/tests
     SIMPLE = simple.c simple.h
 endif
 
