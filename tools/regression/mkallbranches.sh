@@ -125,6 +125,15 @@ for n in $openprs; do
     git branch -d pr-$n
 done
 
+# Remove closed pull requests
+cd $PAL_REPORTS
+closedprs=$(curl --silent https://api.github.com/repos/parallella/pal/pulls?state=closed | grep '"number"' | cut -f2 -d":" | tr -d " ," | sort -g)
+for n in $closedprs; do
+    [ -e "pr-${n}" ] && git rm -rf pr-$n
+done
+git commit -m"Removed closed pull requests" || echo No closed pull requests to remove
+cd $top_srcdir
+
 # Create directory index
 $PAL_TOOLS/regression/create-directory-index.sh
 
