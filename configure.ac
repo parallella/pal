@@ -85,6 +85,7 @@ AC_CONFIG_FILES([Makefile
                  src/fft/Makefile
                  src/image/Makefile
                  src/math/Makefile
+                 benchmark/Makefile
                  examples/Makefile
                  examples/base/Makefile
                  examples/image/Makefile

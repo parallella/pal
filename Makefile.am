@@ -9,7 +9,7 @@ if ENABLE_DOC
     MAYBE_DOC = doc
 endif
 
-SUBDIRS = src examples include $(MAYBE_TESTS) $(MAYBE_DOC)
+SUBDIRS = src examples include benchmark $(MAYBE_TESTS) $(MAYBE_DOC)
 
 EXTRA_DIST = config include bootstrap CHANGELOG.md CODING-STYLE.md \
              CONTRIBUTING.md LICENSE QUESTIONS.md README.md scripts
