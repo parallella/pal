@@ -74,16 +74,6 @@ int setup(struct ut_suite *suite)
         bi[i] = gold[i].bi;
     }
 
-
-    /* Run FUNCTION against gold input here so results are available
-     * for all test cases. */
-    /* TODO: Do this in tc_against_gold_e() */
-#if IS_UNARY
-    FUNCTION(ai, res, gold_size);
-#else /* Binary */
-    FUNCTION(ai, bi, res, gold_size);
-#endif
-
     return 0;
 }
 
@@ -125,7 +115,23 @@ int tc_print_gold_e(struct ut_suite *suite, struct ut_tcase *tcase)
 
 int tc_against_gold_e(struct ut_suite *suite, struct ut_tcase *tcase)
 {
+    /* Run FUNCTION against gold input */
+#if IS_UNARY
+    FUNCTION(ai, res, gold_size);
+#else /* Binary */
+    FUNCTION(ai, bi, res, gold_size);
+#endif
+
+    return 0;
+}
+
+int tc_against_gold_v(struct ut_suite *suite, struct ut_tcase *tcase)
+{
     size_t i;
+
+    /* Skip test if we're generation gold data */
+    if (generate_gold_flag)
+        return UT_SKIP;
 
     for (i = 0; i < gold_size; i++) {
 #if IS_UNARY
@@ -266,8 +272,7 @@ fail:
     exit(EXIT_FAILURE);
 }
 
-/* TODO: Split against_gold into execute() and verify() */
-DECLARE_UT_TCASE(tc_against_gold, tc_against_gold_e, NULL, NULL);
+DECLARE_UT_TCASE(tc_against_gold, tc_against_gold_e, tc_against_gold_v, NULL);
 DECLARE_UT_TCASE(tc_against_ref, NULL, tc_against_ref_v, NULL);
 
 DECLARE_UT_TCASE_LIST(tcases, &tc_against_gold, &tc_against_ref);
@@ -277,9 +282,8 @@ DECLARE_UT_SUITE(FUNCTION_SUITE, setup, teardown, false, tcases, NULL);
 
 #define PRINT_GOLD_SUITE XCONCAT2(FUNCTION,_print_gold_suite)
 DECLARE_UT_TCASE(tc_print_gold, tc_print_gold_e, NULL, NULL);
-DECLARE_UT_TCASE_LIST(print_gold, &tc_print_gold);
-DECLARE_UT_SUITE(PRINT_GOLD_SUITE, setup, teardown, false, print_gold,
-                 NULL);
+DECLARE_UT_TCASE_LIST(print_gold, &tc_against_gold, &tc_print_gold);
+DECLARE_UT_SUITE(PRINT_GOLD_SUITE, setup, teardown, false, print_gold, NULL);
 
 int main(int argc, char *argv[])
 {
