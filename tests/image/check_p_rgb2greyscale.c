@@ -65,5 +65,6 @@ int main(int argc, char *argv[])
       printf("RGB2Grayscale ARM test FAILED!!\n");
     }
 
+    return !testOK;
 }
 
