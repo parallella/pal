@@ -7,7 +7,7 @@
 /* For usage, see example benchmark
  */
 
-struct p_benchmark_raw_memory
+struct p_bench_raw_memory
 {
     /*  The pointers used as input/output
      *  while running each individual benchmark.
@@ -66,17 +66,17 @@ struct p_benchmark_raw_memory
     uintmax_t *output_uintmax_t;
 };
 
-struct p_benchmark_specification
+struct p_bench_specification
 {
-    struct p_benchmark_raw_memory mem;
+    struct p_bench_raw_memory mem;
     size_t current_size;
 };
 
-struct p_benchmark_item
+struct p_bench_item
 {
     const char *name;
-    void (*benchmark)(const struct p_benchmark_specification *);
+    void (*benchmark)(const struct p_bench_specification *);
 };
 
 /* The NULL terminated array of items to run */
-extern const struct p_benchmark_item benchmark_items[];
+extern const struct p_bench_item benchmark_items[];

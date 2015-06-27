@@ -43,25 +43,25 @@ struct item_data
     platform_clock_t start;
 };
 
-static void item_preface(struct item_data *, const struct p_benchmark_item *);
-static void item_done(struct item_data *,
-                      const struct p_benchmark_specification *, const char *);
-static void setup_memory(struct p_benchmark_raw_memory *, char **raw, size_t);
+static void item_preface(struct item_data *, const struct p_bench_item *);
+static void item_done(struct item_data *, const struct p_bench_specification *,
+                      const char *);
+static void setup_memory(struct p_bench_raw_memory *, char **raw, size_t);
 
 static char dummy_memarea[1024 * 1024 * 32];
-int p_benchmark_dummy_func(char *, size_t);
+int p_bench_dummy_func(char *, size_t);
 
 int main(void)
 {
     static const size_t default_initial_size = 655360;
 
-    struct p_benchmark_specification spec;
+    struct p_bench_specification spec;
     char *raw_mem = NULL;
     spec.current_size = default_initial_size;
 
     setup_memory(&spec.mem, &raw_mem, spec.current_size);
-    for (const struct p_benchmark_item *item = benchmark_items;
-         item->name != NULL; ++item) {
+    for (const struct p_bench_item *item = benchmark_items; item->name != NULL;
+         ++item) {
         struct item_data data;
 
         item_preface(&data, item);
@@ -71,7 +71,7 @@ int main(void)
     return EXIT_SUCCESS;
 }
 
-static void setup_output_pointers(struct p_benchmark_raw_memory *mem, void *p)
+static void setup_output_pointers(struct p_bench_raw_memory *mem, void *p)
 {
     mem->output_float = p;
     mem->output_double = p;
@@ -105,7 +105,7 @@ static void setup_prandom_chars(char *p, size_t size, unsigned r,
     }
 }
 
-static void copy_integral_input_pointers(struct p_benchmark_raw_memory *mem)
+static void copy_integral_input_pointers(struct p_bench_raw_memory *mem)
 {
     mem->input_char_first = (char *)mem->input_uintmax_t_first;
     mem->input_char_second = (char *)mem->input_uintmax_t_second;
@@ -123,7 +123,7 @@ static void copy_integral_input_pointers(struct p_benchmark_raw_memory *mem)
     mem->input_uint64_t_second = (uint64_t *)mem->input_uintmax_t_second;
 }
 
-static void setup_input_pointers(struct p_benchmark_raw_memory *mem, char *p,
+static void setup_input_pointers(struct p_bench_raw_memory *mem, char *p,
                                  size_t size)
 {
     unsigned seed = 0;
@@ -151,7 +151,7 @@ static void setup_input_pointers(struct p_benchmark_raw_memory *mem, char *p,
     copy_integral_input_pointers(mem);
 }
 
-static void setup_memory(struct p_benchmark_raw_memory *mem, char **raw,
+static void setup_memory(struct p_bench_raw_memory *mem, char **raw,
                          size_t size)
 {
     assert(mem != NULL);
@@ -181,11 +181,11 @@ static void setup_memory(struct p_benchmark_raw_memory *mem, char **raw,
 static void invalidate_data_cache(void)
 {
     setup_prandom_chars(dummy_memarea, sizeof(dummy_memarea), 1, false);
-    (void)p_benchmark_dummy_func(dummy_memarea, sizeof(dummy_memarea));
+    (void)p_bench_dummy_func(dummy_memarea, sizeof(dummy_memarea));
 }
 
 static void item_preface(struct item_data *data,
-                         const struct p_benchmark_item *item)
+                         const struct p_bench_item *item)
 {
     invalidate_data_cache();
 
@@ -193,7 +193,7 @@ static void item_preface(struct item_data *data,
 }
 
 static void item_done(struct item_data *data,
-                      const struct p_benchmark_specification *spec,
+                      const struct p_bench_specification *spec,
                       const char *name)
 {
     assert(name != NULL);
