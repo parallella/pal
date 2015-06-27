@@ -307,7 +307,7 @@ int main(int argc, char *argv[])
 
     ut_report(buf, ARRAY_SIZE(buf), suite, true);
 
-    puts(buf);
+    printf("%s", buf);
 
     return ret;
 }
