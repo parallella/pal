@@ -1,5 +1,4 @@
-
-#include "wrapper.h"
+#include "benchmark.h"
 #include <pal.h>
 
 void bench_p_add(const struct p_benchmark_specification *spec)

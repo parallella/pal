@@ -7,7 +7,7 @@
 #include <inttypes.h>
 #include <errno.h>
 
-#include "wrapper.h"
+#include "benchmark.h"
 
 /* The ratio of the largest known output to input
  * e.g.: p_conv_f32 -> nr+nh-1 -> ratio 2
