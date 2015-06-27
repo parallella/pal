@@ -46,10 +46,10 @@ int main(int argc, char *argv[])
 
     // Stack variables
     float test_out[500];
-    int testOK = 1;
+    int testFail = 0;
     int i;
 
-  printf("Running test program p_xcorr_test...\n");
+    printf("Running test program p_xcorr_test...\n");
     // Execution setup
 
     // Run test 1 on Arm
@@ -58,8 +58,8 @@ int main(int argc, char *argv[])
     // Check data
     for ( i = 0; i < out_size1; i++ ) {
       if (check_data(test_out[i],out1[i], MAX_REL_DIFF) == NOK ) {
-	testOK = 0;
-	printf("Test 1: Large diff for index %d, ref:%f   test: %f   rel:%f \n",i,out1[i],test_out[i], test_out[i]/out1[i]);
+        testFail = 1;
+        printf("Test 1: Large diff for index %d, ref:%f   test: %f   rel:%f \n",i,out1[i],test_out[i], test_out[i]/out1[i]);
       }
     }
 
@@ -69,8 +69,8 @@ int main(int argc, char *argv[])
     // Check data
     for ( i = 0; i < out_size2; i++ ) {
       if (check_data(test_out[i],out2[i], MAX_REL_DIFF) == NOK ) {
-	testOK = 0;
-	printf("Test 2: Large diff for index %d, ref:%f   test: %f   rel:%f \n",i,out2[i],test_out[i], test_out[i]/out2[i]);
+        testFail = 1;
+        printf("Test 2: Large diff for index %d, ref:%f   test: %f   rel:%f \n",i,out2[i],test_out[i], test_out[i]/out2[i]);
       }
     }
 
@@ -87,11 +87,12 @@ int main(int argc, char *argv[])
     }
     */
 
-    if ( testOK ){
-      printf("Xcorr ARM test OK\n");
-    } else {
+    if (testFail) {
       printf("Xcorr ARM test FAILED!!\n");
+    } else {
+      printf("Xcorr ARM test OK\n");
     }
 
+    return testFail;
 }
 

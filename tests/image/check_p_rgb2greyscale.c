@@ -46,7 +46,7 @@ int main(int argc, char *argv[])
     // Stack variables
     int i;
     float test_out[out_size];
-    int testOK = 1;
+    int testFail = 0;
 
     // Run the test on Arm
     p_rgb2grayscale_f32(in, test_out, in_rows, in_cols);
@@ -54,17 +54,17 @@ int main(int argc, char *argv[])
     // Check data
     for ( i = 0; i < out_size; i++ ) {
       if (check_data(test_out[i],out[i], MAX_REL_DIFF) == NOK ) {
-	testOK = 0;
-	printf("Large diff for index %d, ref:%f   test: %f   rel:%f \n",i,out[i],test_out[i], test_out[i]/out[i]);
+        testFail = 1;
+        printf("Large diff for index %d, ref:%f   test: %f   rel:%f \n",i,out[i],test_out[i], test_out[i]/out[i]);
       }
     }
 
-    if ( testOK ){
-      printf("RGB2Grayscale ARM test OK\n");
-    } else {
+    if (testFail){
       printf("RGB2Grayscale ARM test FAILED!!\n");
+    } else {
+      printf("RGB2Grayscale ARM test OK\n");
     }
 
-    return !testOK;
+    return testFail;
 }
 

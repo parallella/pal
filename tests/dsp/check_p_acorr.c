@@ -47,7 +47,7 @@ int main(int argc, char *argv[])
     // Stack variables
     int i;
     float test_out[out_size];
-    int testOK = 1;
+    int testFail = 0;
 
     // Run the test on Arm
     p_acorr_f32(in, test_out, in_size, out_size);
@@ -55,16 +55,17 @@ int main(int argc, char *argv[])
     // Check data
     for ( i = 0; i < out_size; i++ ) {
       if (check_data(test_out[i],out[i], MAX_REL_DIFF) == NOK ) {
-	testOK = 0;
-	printf("Large diff for index %d, ref:%f   test: %f   rel:%f \n",i,out[i],test_out[i], test_out[i]/out[i]);
+        testFail = 1;
+        printf("Large diff for index %d, ref:%f   test: %f   rel:%f \n",i,out[i],test_out[i], test_out[i]/out[i]);
       }
     }
 
-    if ( testOK ){
-      printf("Acorr ARM test OK\n");
-    } else {
+    if (testFail) {
       printf("Acorr ARM test FAILED!!\n");
+    } else {
+      printf("Acorr ARM test OK\n");
     }
 
+    return testFail;
 }
 
