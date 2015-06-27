@@ -26,7 +26,7 @@ report-stack-usage:
 	@mkdir -p reports
 	$(SHELL) $(top_srcdir)/scripts/report-stack-usage.sh src \
 	    > reports/stack-usage.txt
-	@echo Code size report saved to reports/stack-usage.txt
+	@echo Stack usage report saved to reports/stack-usage.txt
 
 
 reports: report-code-size report-stack-usage
