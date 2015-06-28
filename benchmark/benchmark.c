@@ -49,7 +49,7 @@ static void item_done(struct item_data *, const struct p_bench_specification *,
 static void setup_memory(struct p_bench_raw_memory *, char **raw, size_t);
 
 static char dummy_memarea[1024 * 1024 * 32];
-int p_bench_dummy_func(char *, size_t);
+// int p_bench_dummy_func(char *, size_t);
 
 int main(void)
 {
@@ -73,16 +73,13 @@ int main(void)
 
 static void setup_output_pointers(struct p_bench_raw_memory *mem, void *p)
 {
-    mem->output_float = p;
-    mem->output_double = p;
-    mem->output_uintmax_t = p;
-    mem->output_char = p;
-    mem->output_short = p;
-    mem->output_int = p;
-    mem->output_long = p;
-    mem->output_uint16_t = p;
-    mem->output_uint32_t = p;
-    mem->output_uint64_t = p;
+    /* Assume largest type is 64 bits */
+
+    /* TODO: All pointers point to same memory region so output will be bogus */
+    mem->o1.p_u64 = p;
+    mem->o2.p_u64 = p;
+    mem->o3.p_u64 = p;
+    mem->o4.p_u64 = p;
 }
 
 static void setup_prandom_chars(char *p, size_t size, unsigned r,
@@ -105,50 +102,28 @@ static void setup_prandom_chars(char *p, size_t size, unsigned r,
     }
 }
 
-static void copy_integral_input_pointers(struct p_bench_raw_memory *mem)
-{
-    mem->input_char_first = (char *)mem->input_uintmax_t_first;
-    mem->input_char_second = (char *)mem->input_uintmax_t_second;
-    mem->input_short_first = (short *)mem->input_uintmax_t_first;
-    mem->input_short_second = (short *)mem->input_uintmax_t_second;
-    mem->input_int_first = (int *)mem->input_uintmax_t_first;
-    mem->input_int_second = (int *)mem->input_uintmax_t_second;
-    mem->input_long_first = (long *)mem->input_uintmax_t_first;
-    mem->input_long_second = (long *)mem->input_uintmax_t_second;
-    mem->input_uint16_t_first = (uint16_t *)mem->input_uintmax_t_first;
-    mem->input_uint16_t_second = (uint16_t *)mem->input_uintmax_t_second;
-    mem->input_uint32_t_first = (uint32_t *)mem->input_uintmax_t_first;
-    mem->input_uint32_t_second = (uint32_t *)mem->input_uintmax_t_second;
-    mem->input_uint64_t_first = (uint64_t *)mem->input_uintmax_t_first;
-    mem->input_uint64_t_second = (uint64_t *)mem->input_uintmax_t_second;
-}
-
 static void setup_input_pointers(struct p_bench_raw_memory *mem, char *p,
                                  size_t size)
 {
     unsigned seed = 0;
 
-    setup_prandom_chars(p, size * sizeof(float), seed, false);
-    mem->input_float_first = (float *)p;
-    p += size * sizeof(float);
-    setup_prandom_chars(p, size * sizeof(float), seed, true);
-    mem->input_float_second = (float *)p;
-    p += size * sizeof(float);
+    /* Assume uint64_t is largest type */
 
-    setup_prandom_chars(p, size * sizeof(double), seed, false);
-    mem->input_double_first = (double *)p;
-    p += size * sizeof(double);
-    setup_prandom_chars(p, size * sizeof(double), seed, true);
-    mem->input_double_second = (double *)p;
-    p += size * sizeof(double);
+    setup_prandom_chars(p, size * sizeof(uint64_t), seed, false);
+    mem->i1_w.p_void = p;
+    p += size * sizeof(uint64_t);
 
-    setup_prandom_chars(p, size * sizeof(uintmax_t), seed, false);
-    mem->input_uintmax_t_first = (uintmax_t *)p;
-    p += size * sizeof(uintmax_t);
-    setup_prandom_chars(p, size * sizeof(uintmax_t), seed, true);
-    mem->input_uintmax_t_second = (uintmax_t *)p;
+    setup_prandom_chars(p, size * sizeof(uint64_t), seed, false);
+    mem->i2_w.p_void = p;
+    p += size * sizeof(uint64_t);
 
-    copy_integral_input_pointers(mem);
+    setup_prandom_chars(p, size * sizeof(uint64_t), seed, false);
+    mem->i3_w.p_void = p;
+    p += size * sizeof(uint64_t);
+
+    setup_prandom_chars(p, size * sizeof(uint64_t), seed, false);
+    mem->i4_w.p_void = p;
+    p += size * sizeof(uint64_t);
 }
 
 static void setup_memory(struct p_bench_raw_memory *mem, char **raw,
@@ -181,7 +156,7 @@ static void setup_memory(struct p_bench_raw_memory *mem, char **raw,
 static void invalidate_data_cache(void)
 {
     setup_prandom_chars(dummy_memarea, sizeof(dummy_memarea), 1, false);
-    (void)p_bench_dummy_func(dummy_memarea, sizeof(dummy_memarea));
+    // (void)p_bench_dummy_func(dummy_memarea, sizeof(dummy_memarea));
 }
 
 static void item_preface(struct item_data *data,
