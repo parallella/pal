@@ -75,6 +75,15 @@ AC_FUNC_FORK
 AC_FUNC_MMAP
 AC_CHECK_FUNCS([bzero fesetround floor gettimeofday memset modf munmap pow rint sqrt strdup strerror strtol])
 
+# Older versions of libc need -lrt for clock_gettime()
+AC_CHECK_FUNCS(clock_gettime, [], [
+  AC_CHECK_LIB(rt, clock_gettime, [
+    AC_DEFINE(HAVE_CLOCK_GETTIME, [1], [Have clock_gettime])
+    BENCHMARK_LIBS="$BENCHMARK_LIBS -lrt"
+  ])
+])
+AC_SUBST([BENCHMARK_LIBS])
+
 AC_CONFIG_FILES([Makefile
                  include/Makefile
                  src/Makefile

@@ -8,6 +8,7 @@ noinst_LTLIBRARIES = libbenchmark.la
 libbenchmark_la_SOURCES = \
     benchmark.c
 libbenchmark_la_CFLAGS = -DNDEBUG
+libbenchmark_la_LIBADD = $(BENCHMARK_LIBS)
 
 noinst_HEADERS = benchmark.h bench_tmpl.h
 noinst_PROGRAMS = example
