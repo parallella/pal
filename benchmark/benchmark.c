@@ -18,22 +18,27 @@ static const size_t max_output = 3;
  * this prototype is posix specific
  */
 
-#include <sys/times.h>
+#include <time.h>
 
-typedef clock_t platform_clock_t;
+typedef struct timespec platform_clock_t;
 
 static platform_clock_t platform_clock(void)
 {
-    struct tms tmsbuffer;
+    struct timespec ts;
 
-    (void)times(&tmsbuffer);
-    return tmsbuffer.tms_utime;
+    clock_gettime(CLOCK_THREAD_CPUTIME_ID, &ts);
+
+    return ts;
 }
 
 static void platform_print_duration(platform_clock_t start,
                                     platform_clock_t end)
 {
-    printf("%ju", (uintmax_t)(end - start));
+    uint64_t duration;
+    duration = ((uint64_t) (end.tv_sec - start.tv_sec) * 1000000000UL) +
+               end.tv_nsec - start.tv_nsec;
+
+    printf("%ju", duration);
 }
 
 /* end of platform specific section */
