@@ -1,5 +1,8 @@
 AUTOMAKE_OPTIONS = foreign
 
+SUBDIRS = math
+
+BUILT_SOURCES = libbenchmark.la
 
 noinst_LTLIBRARIES = libbenchmark.la
 libbenchmark_la_SOURCES = \
