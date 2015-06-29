@@ -65,6 +65,7 @@ int main(void)
     spec.current_size = default_initial_size;
 
     setup_memory(&spec.mem, &raw_mem, spec.current_size);
+    printf(";name, size, duration (ns)\n");
     for (const struct p_bench_item *item = benchmark_items; item->name != NULL;
          ++item) {
         struct item_data data;
@@ -143,7 +144,6 @@ static void setup_memory(struct p_bench_raw_memory *mem, char **raw,
         raw_output_size +
         (sizeof(float) + sizeof(double) + sizeof(uintmax_t)) * size * 2;
 
-    printf("raw_size: %zu\n", raw_size);
     if (*raw == NULL) {
         *raw = malloc(raw_size);
     } else {
@@ -180,7 +180,7 @@ static void item_done(struct item_data *data,
     assert(name[0] != 0);
 
     platform_clock_t now = platform_clock();
-    (void)printf("%s size: %zu duration: ", name, spec->current_size);
+    (void)printf("%s, %zu, ", name, spec->current_size);
     platform_print_duration(data->start, now);
     (void)printf("\n");
 }
