@@ -7,6 +7,7 @@
 #include <inttypes.h>
 #include <errno.h>
 
+#include "config.h"
 #include "benchmark.h"
 
 /* The ratio of the largest known output to input
@@ -18,7 +19,9 @@ static const size_t max_output = 3;
  * this prototype is posix specific
  */
 
+#if defined(HAVE_TIME_H)
 #include <time.h>
+#endif
 
 typedef struct timespec platform_clock_t;
 
