@@ -25,6 +25,7 @@ static const size_t max_output = 3;
 
 typedef struct timespec platform_clock_t;
 
+#if defined(HAVE_CLOCK_GETTIME)
 static platform_clock_t platform_clock(void)
 {
     struct timespec ts;
@@ -33,6 +34,7 @@ static platform_clock_t platform_clock(void)
 
     return ts;
 }
+#endif
 
 static void platform_print_duration(platform_clock_t start,
                                     platform_clock_t end)
