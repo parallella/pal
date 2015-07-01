@@ -23,27 +23,25 @@ static const size_t max_output = 3;
 #include <time.h>
 #endif
 
-typedef struct timespec platform_clock_t;
+typedef uint64_t platform_clock_t;
 
 #if defined(HAVE_CLOCK_GETTIME)
 static platform_clock_t platform_clock(void)
 {
     struct timespec ts;
+    uint64_t nanosec;
 
     clock_gettime(CLOCK_THREAD_CPUTIME_ID, &ts);
+    nanosec = (uint64_t) ts.tv_sec * 1000000000UL + (uint64_t) ts.tv_nsec;
 
-    return ts;
+    return nanosec;
 }
 #endif
 
 static void platform_print_duration(platform_clock_t start,
                                     platform_clock_t end)
 {
-    uint64_t duration;
-    duration = ((uint64_t) (end.tv_sec - start.tv_sec) * 1000000000UL) +
-               end.tv_nsec - start.tv_nsec;
-
-    printf("%ju", duration);
+    printf("%" PRIu64, end - start);
 }
 
 /* end of platform specific section */
