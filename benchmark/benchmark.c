@@ -38,6 +38,28 @@ static platform_clock_t platform_clock(void)
 }
 #endif
 
+#if defined(HAVE_MACH_TIME)
+#include <mach/mach_time.h>
+static platform_clock_t platform_clock(void)
+{
+    static mach_timebase_info_data_t tb_info = {
+        .numer = 0,
+        .denom = 0,
+    };
+    uint64_t abs_time, nanosec;
+
+    abs_time = mach_absolute_time();
+    if (tb_info.denom == 0) {
+        (void) mach_timebase_info(&tb_info);
+    }
+    nanosec = abs_time;
+    nanosec /= tb_info.denom;
+    nanosec *= tb_info.numer;
+
+    return nanosec;
+}
+#endif
+
 static void platform_print_duration(platform_clock_t start,
                                     platform_clock_t end)
 {

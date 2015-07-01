@@ -52,6 +52,9 @@ LT_INIT
 
 # Checks for header files.
 AC_CHECK_HEADERS([fcntl.h fenv.h float.h inttypes.h limits.h stddef.h stdint.h stdlib.h string.h strings.h sys/ioctl.h time.h unistd.h])
+AC_CHECK_HEADER([mach/mach_time.h],
+  [AC_DEFINE([HAVE_MACH_TIME], [1],
+    [Define to 1 if you have <mach/mach_time.h>])])
 
 # Checks for typedefs, structures, and compiler characteristics.
 AC_CHECK_HEADER_STDBOOL
