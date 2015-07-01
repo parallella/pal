@@ -210,8 +210,17 @@ AS_IF([test "x${enable_doc}" = "xno"],
 
 AM_CONDITIONAL(ENABLE_DOC, [test "x${enable_doc}" != "xno"])
 
+# Define the --enable-debug command-line option
+AC_ARG_ENABLE(debug,
+  [AS_HELP_STRING([--enable-debug], [Build with debugging enabled])],
+  [enable_debug=yes], [enable_debug=no])
+# Set any CPPFLAGS specific to debugging
+AS_IF([test "x$enable_debug" = "xyes"],
+  [AC_SUBST(debug_CPPFLAGS, [''])],
+  [AC_SUBST(debug_CPPFLAGS, ['-DNDEBUG'])])
 
 # Easiest way to include header files globally
 AC_SUBST([AM_CPPFLAGS], ['-I$(top_srcdir)/include -I$(top_builddir)'])
 
+AC_SUBST([AM_CPPFLAGS])
 AC_OUTPUT
