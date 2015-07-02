@@ -62,8 +62,7 @@ for f in $files; do
         symbol = $8;
         # NOTYPE is for Epiphany toolchain bug
         if ((type == "FUNC" || type == "OBJECT" || type == "NOTYPE") && size > 0) {
-            # Last two fields are for benchmarks
-            printf("%s,%s,%s,%s,%s,%s,%s,%d,NULL,NULL\n", ts, sha, platform, file, symbol, cflags, type, size);
+            printf("%s,%s,%s,%s,%s,%s,%s,%d\n", ts, sha, platform, file, symbol, cflags, type, size);
         }
     }; '
 done
