@@ -37,11 +37,16 @@ else
     platform=$build_arch
 fi
 
+platform_short=$(echo $platform | cut -f1 -d"-")
+if [ "x${platform_short}" != "x${build_arch}" ]; then
+    echo $0: Detected cross compilation. Skipping. >&2
+    exit 0
+fi
+
 sha=$(git rev-parse --verify HEAD)$(git_dirty_str)
 commit_date=$(git show -s --format="%ct" HEAD)
 
 top_srcdir=$(git rev-parse --show-toplevel)
-builddir=$(mktemp -d /tmp/palXXXXXXXX)
 
 if [ "x${PAL_TOOLS}" = "x" ]; then
     PAL_TOOLS=$(mktemp -d)
@@ -61,13 +66,22 @@ if [ "x${PAL_REPORTS}" = "x" ]; then
     created_pal_reports="yes"
 fi
 
-# Bootstrap
-(cd $top_srcdir && ./bootstrap >$builddir/boostrap.log 2>&1)
+# If PAL_BUILDDIR is set then bootstrap and configure must have been run.
+# However, no guarantee that 'make' was called.
+if [ "x${PAL_BUILDDIR}" = "x" ]; then
+    # Bootstrap
+    PAL_BUILDDIR=$(mktemp -d /tmp/palXXXXXXXX)
+    export PAL_BUILDDIR
+    # Bootstrap
+    (cd $top_srcdir && ./bootstrap >$PAL_BUILDDIR/boostrap.log 2>&1)
 
-# Build in builddir
-cd $builddir
-$top_srcdir/configure ${host_str} >> build.log 2>&1
+    # Configure
+    cd $PAL_BUILDDIR
+    $top_srcdir/configure ${host_str} >> build.log 2>&1
+    created_pal_builddir="yes"
+fi
 
+cd $PAL_BUILDDIR
 # Compile src and bench
 (cd src && make -j -k >> build.log 2>&1 || true)
 (cd benchmark && make -j -k >> build.log 2>&1 || true)
@@ -75,9 +89,9 @@ $top_srcdir/configure ${host_str} >> build.log 2>&1
 # Run benchmark when not cross compiling
 platform_short=$(echo $platform | cut -f1 -d"-")
 if [ "x${platform_short}" = "x${build_arch}" ]; then
-    if [ -e "${builddir}/benchmark/math/bench_all" ]; then
+    if [ -e "${PAL_BUILDDIR}/benchmark/math/bench_all" ]; then
         bench_res=$(mktemp)
-        ${builddir}/benchmark/math/bench_all | gawk -F"," '
+        ${PAL_BUILDDIR}/benchmark/math/bench_all | gawk -F"," '
         {
             if (substr($0, 0, 1) == ";") {
                 next;
@@ -103,7 +117,10 @@ git commit -m"Benchmarks for $platform $sha"
 
 
 cd $top_srcdir
-rm -rf $builddir
+
+if [ "x${created_pal_builddir}" = "xyes" ]; then
+    rm -rf ${PAL_BUILDDIR}
+fi
 
 if [ "x${created_pal_tools}" = "xyes" ]; then
     rm -rf ${PAL_TOOLS}
