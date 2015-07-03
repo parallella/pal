@@ -29,6 +29,10 @@ git_dirty_str() {
 }
 
 build_arch=$(uname -m)
+# Special case ARMv7l == ARM
+if [ "xarmv7l" = "x${build_arch}" ]; then
+    build_arch="arm"
+fi
 
 platform=$1
 if [ "x$platform" != "x" ]; then
@@ -38,6 +42,7 @@ else
 fi
 
 platform_short=$(echo $platform | cut -f1 -d"-")
+
 if [ "x${platform_short}" != "x${build_arch}" ]; then
     echo $0: Detected cross compilation. Skipping. >&2
     exit 0
