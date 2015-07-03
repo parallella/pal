@@ -102,7 +102,7 @@ if [ "x${platform_short}" = "x${build_arch}" ]; then
             unit="ns";
 
             printf("%s,%s,%s,%s,%s,%f,%s\n", ts, sha, platform, fn, cflags, result, unit);
-        }' ts=$commit_date sha=$sha cflags=$CFLAGS platform=$platform > $bench_res
+        }' ts=$commit_date sha=$sha cflags="${CFLAGS}" platform=$platform > $bench_res
         (
             echo ".mode csv"
             echo ".import $bench_res benchmarks"
