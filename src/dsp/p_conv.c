@@ -20,17 +20,14 @@
  */
 void p_conv_f32(const float *x, const float *h, float *r, int nx, int nh)
 {
-    const float *xc = x;
-    float *rx = r;
-    int i,j ;
-        for ( i = 0; i < nx+nh-1; i++) { *(rx++) = 0; } 
-        rx = r ;
-  	for ( i = 0; i < nx; i++) {
-        float xv = *xc++;
+  int i,n;
+  float xv = *x;
 
-  		for (j = 0; j < nh; j++) {
-  			*(rx + j) += xv * *(h + j);	
-  		}
-        rx++;
-  	}
+  for(i = 0; i < nh; i++) r[i] = xv * h[i];
+
+  for(n = 1; n < nx; n++){
+    xv = *(++x); r++;
+    for(i = 0; i < nh-1; i++) r[i] += xv * h[i];
+    r[i] = xv * h[i];
+  }
 }
