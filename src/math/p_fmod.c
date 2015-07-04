@@ -18,3 +18,13 @@ void p_fmod_f32(const float *a, float *c, int n, const float x)
 {
     _fmod(a, c, n, x);
 }
+
+/**
+ * Compute the floating-point remainder with divisor 2pi.
+ *
+ * See p_fmod_f32 for details.
+ */
+void p_fmod_2pi_f32(const float *a, float *c, int n)
+{
+    _fmod(a, c, n, 2.f * M_PI);
+}
