@@ -171,13 +171,23 @@ bench_qry() {
     # At least one case w/ 2 API functions in same file
     # p_popcount.
     fn=$(echo $file | gawk -F/ '{ print $NF }' | cut -f1 -d.)
-    # Wildcard match
-    fn="${fn}\_%"
     p=$2
     cflags=$3
+
+    # Exact match
+    res=$( (
+        echo ".mode csv"
+        echo "SELECT result,unit FROM benchmarks WHERE commit_sha='${head}' AND function='${fn}' AND platform='${p}' AND cflags='${cflags}';"
+    ) | sqlite3 ${PAL_DB} | gawk -F',' '{ printf("<nobr>%.2f %s</nobr>\n", $1, $2); }' )
+    if [ "x" != "x${res}" ]; then
+        echo $res
+        return 0
+    fi
+
+    # Fuzzy match
     (
         echo ".mode csv"
-        echo "SELECT result,unit FROM benchmarks WHERE commit_sha='${head}' AND function LIKE '${fn}' ESCAPE '\' AND platform='${p}' AND cflags='${cflags}';"
+        echo "SELECT result,unit FROM benchmarks WHERE commit_sha='${head}' AND function LIKE '${fn}\_%' ESCAPE '\' AND platform='${p}' AND cflags='${cflags}';"
     ) | sqlite3 ${PAL_DB} | gawk -F',' '{ printf("<nobr>%.2f %s</nobr>\n", $1, $2); }'
 }
 
