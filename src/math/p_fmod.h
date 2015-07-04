@@ -3,7 +3,7 @@
 /* Return the remainder of x / y. */
 static inline float __fmod(const float x, const float y)
 {
-    float i;
+    long int i;
     i = x / y;
     return x - i * y;
 }
