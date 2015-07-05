@@ -3,10 +3,11 @@
 #include "p_fmod.h"
 
 /**
- * Compute the floating-point remainder value of x / y.
+ * Compute the floating-point remainder value of a[i] / x.
  *
- * The floating-point remainder of x / y is r = x - i * y for some i,
- * such that 0 <= r <= y.
+ * The floating-point remainder of a[i] / x is r = a[i] - j * x
+ * for some integer j, for a[i] >= 0, and r = a[i] - j * x + x
+ * for a[i] < 0, such that 0 <= r <= x.
  *
  * @param a     Pointer to the input vector
  * @param c     Pointer to the output vector
