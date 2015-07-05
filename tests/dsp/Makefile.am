@@ -10,7 +10,8 @@ LDADD = $(top_builddir)/src/libpal.la
 
 check_PROGRAMS = check_p_acorr \
                  check_p_xcorr \
-                 check_p_fir
+                 check_p_fir \
+                 check_p_firsym
 
 check_p_acorr_SOURCES = check_p_acorr.c \
                         acorr_test_data.h
@@ -23,6 +24,8 @@ check_p_xcorr_SOURCES = check_p_xcorr.c \
 check_p_fir_SOURCES = check_p_fir.c \
                       fir_test_data.h
 
+check_p_firsym_SOURCES = check_p_firsym.c \
+                         firsym_test_data.h
 
 TESTS = $(check_PROGRAMS)
 
