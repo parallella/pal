@@ -13,6 +13,7 @@ int main()
 {
     float error1, error2;
     int i;
+    int testFail = 0;
 
 
     /*** TEST 1 ***/
@@ -23,6 +24,11 @@ int main()
     for (i = 0; i < 32; i++) {
         if (error1 < fabs(r1[i] - ref1[i]))
             error1 = fabs(r1[i] - ref1[i]);
+    }
+
+    if (error1 != 0) {
+        printf("p_fir: Test 1 - Maximum error = %f is not zero.\n\n", error1);
+        testFail = 1;
     }
 
 
@@ -36,16 +42,18 @@ int main()
             error2 = fabs(r2[i] - ref2[i]);
     }
 
+    if (error2 > EPS) {
+        printf("p_fir: Test 2 - Maximum error = %f < %.1e.\n\n", error2, EPS);
+        testFail = 1;
+    }
+
 
     /*** RESULTS ***/
-    printf("Test 1 - Error = %f.\n\n", error1);
-    printf("Test 2 - Error = %f < %.1e.\n\n", error2, EPS);
-
-    if ( (error1 == 0) & (error2 < EPS) ) {
+    if ( testFail == 0 ) {
         printf("p_fir is OK!\n");
-        return(0);
     } else {
         printf("p_fir test FAILED!\n");
-        return(1);
     }
+
+    return(testFail);
 }
