@@ -3,6 +3,9 @@
  * Generated using MATLAB filter([h fliplr(h(1:end-1))],1,x).
  */
 
+#define EPS  0.0001
+
+
 /* Integers: result should be exact. Two additional values are added to all
  * arrays to check for out-of-boundary array accesses. */
 float x1[32] = {1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16, 17, 18,
