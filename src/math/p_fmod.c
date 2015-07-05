@@ -17,7 +17,7 @@
  */
 void p_fmod_f32(const float *a, float *c, int n, const float x)
 {
-    _fmod(a, c, n, x);
+    _p_fmod(a, c, n, x);
 }
 
 /**
@@ -27,5 +27,5 @@ void p_fmod_f32(const float *a, float *c, int n, const float x)
  */
 void p_fmod_2pi_f32(const float *a, float *c, int n)
 {
-    _fmod(a, c, n, 2.f * M_PI);
+    _p_fmod(a, c, n, 2.f * M_PI);
 }
