@@ -5,7 +5,7 @@ static inline float __fmod(const float x, const float y)
 {
     long int i;
     i = x / y;
-    return x - i * y;
+    return x - i * y + (x < 0.f ? y : 0.f);
 }
 
 /* Map __fmod on a array. */
