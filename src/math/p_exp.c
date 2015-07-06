@@ -24,15 +24,17 @@ static inline float __p_exp_ln2(const float x)
 static const float ln2 = (float) M_LN2;
 
 /*
- * x > ln 2
- * exp x = exp(x' + ln 2) = (exp x') * 2
+ * x >= 0
+ * exp x = exp(x' + k ln 2) = (exp x') * 2^k
  */
 static inline float __p_exp_pos(const float x)
 {
-    if (x <= ln2)
-        return __p_exp_ln2(x);
-    else
-        return 2.f * __p_exp_pos(x - ln2);
+    long int i, fact;
+    float x_;
+    i = x / ln2;
+    fact = 1U << i;
+    x_ = x - (float) i * ln2;
+    return (float) fact * __p_exp_ln2(x_);
 }
 
 static inline float _p_exp(const float x)
