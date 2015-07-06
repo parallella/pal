@@ -15,6 +15,5 @@ libpal_dsp_la_SOURCES = \
 
 libpal_dsp_la_LIBADD = -lm
 libpal_dsp_la_CPPFLAGS = @AM_CPPFLAGS@ ${debug_CPPFLAGS}
-libpal_dsp_la_CFLAGS = @AM_CFLAGS@ ${debug_CFLAGS}
 
 

@@ -54,6 +54,5 @@ libpal_math_la_SOURCES = \
 
 libpal_math_la_LIBADD = -lm
 libpal_math_la_CPPFLAGS = @AM_CPPFLAGS@ ${debug_CPPFLAGS}
-libpal_math_la_CFLAGS = @AM_CFLAGS@ ${debug_CFLAGS}
 
 

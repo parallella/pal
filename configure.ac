@@ -218,14 +218,9 @@ AC_ARG_ENABLE(debug,
 AS_IF([test "x$enable_debug" = "xyes"],
   [AC_SUBST(debug_CPPFLAGS, [''])],
   [AC_SUBST(debug_CPPFLAGS, ['-DNDEBUG'])])
-# Set any CFLAGS specific to debugging
-AS_IF([test "x$enable_debug" = "xyes"],
-  [AC_SUBST(debug_CFLAGS, ['-g -O0'])],
-  [AC_SUBST(debug_CFLAGS, [''])])
 
 # Easiest way to include header files globally
 AC_SUBST([AM_CPPFLAGS], ['-I$(top_srcdir)/include -I$(top_builddir)'])
 
 AC_SUBST([AM_CPPFLAGS])
-AC_SUBST([AM_CFLAGS])
 AC_OUTPUT

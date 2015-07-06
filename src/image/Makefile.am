@@ -15,6 +15,5 @@ libpal_image_la_SOURCES = \
 
 libpal_image_la_LIBADD = -lm
 libpal_image_la_CPPFLAGS = @AM_CPPFLAGS@ ${debug_CPPFLAGS}
-libpal_image_la_CFLAGS = @AM_CFLAGS@ ${debug_CFLAGS}
 
 
