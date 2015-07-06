@@ -223,5 +223,4 @@ AS_IF([test "x$enable_assert" = "xyes"],
 AC_SUBST([AM_CPPFLAGS],
   ['-I$(top_srcdir)/include -I$(top_builddir) $(assert_CPPFLAGS)'])
 
-AC_SUBST([AM_CPPFLAGS])
 AC_OUTPUT
