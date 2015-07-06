@@ -1,6 +1,10 @@
 #include <math.h>
 #include <pal.h>
 
+static const float pi_4 = (float) M_PI / 4.f;
+static const float pi_2 = (float) M_PI / 2.f;
+static const float pi =   (float) M_PI;
+
 /*
  * 0 <= x <= pi/4
  * tan x / x = 1 + a2 * x^2 + a4 * x^4 + ... + a12 * x^12 + e(x)
@@ -34,7 +38,7 @@ static inline float __p_tan_pi_4(const float x)
 static inline float __p_tan_pi_2(const float x)
 {
     float x_, tanx_;
-    x_ = x - M_PI / 4.f;
+    x_ = x - pi_4;
     tanx_ = __p_tan_pi_4(x_);
     return (tanx_ + 1.f) / (1.f - tanx_);
 }
@@ -47,21 +51,21 @@ static inline float __p_tan_pi_2(const float x)
 static inline float __p_tan_pi(const float x)
 {
     float x_;
-    x_ = x - M_PI / 2.f;
-    return -1.f * __p_tan_pi_2(M_PI / 2.f - x_);
+    x_ = x - pi_2;
+    return -1.f * __p_tan_pi_2(pi_2 - x_);
 }
 
 /* 0 <= x <= 2pi */
 static inline float _p_tan(const float x)
 {
-    if (x <= M_PI / 4.f)
+    if (x <= pi_4)
         return __p_tan_pi_4(x);
-    else if (x <= M_PI / 2.f)
+    else if (x <= pi_2)
         return __p_tan_pi_2(x);
-    else if (x <= M_PI)
+    else if (x <= pi)
         return __p_tan_pi(x);
     else
-        return __p_tan_pi(x - M_PI);
+        return __p_tan_pi(x - pi);
 }
 
 /**
