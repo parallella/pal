@@ -49,8 +49,7 @@ static inline float _p_exp(const float x)
 
 /**
  *
- * Calculate exponent (e^a), where e is the base of the natural logarithm
- * (2.71828.)
+ * Calculate the exponent e^a where e is Euler's number (2.71...).
  *
  * @param a     Pointer to input vector
  *
