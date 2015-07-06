@@ -3,27 +3,21 @@
 
 /*
  * 0 <= x <= ln 2
- * e^-x = 1 + a1 * x + a2 * x^2 + ... + a7 * x^7 + e(x)
- * |e(x)| <= 2 * 10^-10
+ * e^-x = 1 + a1 * x + a2 * x^2 + ... + a4 * x^4 + e(x)
+ * |e(x)| <= 3 * 10^-5
  */
 static inline float __p_exp_ln2(const float x)
 {
-    const float a1 = -0.9999999995f;
-    const float a2 =  0.4999999206f;
-    const float a3 = -0.1666653019f;
-    const float a4 =  0.0416573475f;
-    const float a5 = -0.0083013598f;
-    const float a6 =  0.0013298820f;
-    const float a7 = -0.0001413161f;
+    const float a1 = -0.9998684f;
+    const float a2 =  0.4982926f;
+    const float a3 = -0.1595332f;
+    const float a4 =  0.0293641f;
     float exp_x;
     exp_x = 1.f +
         a1 * x +
         a2 * x * x +
         a3 * x * x * x +
-        a4 * x * x * x * x +
-        a5 * x * x * x * x * x +
-        a6 * x * x * x * x * x * x +
-        a7 * x * x * x * x * x * x * x;
+        a4 * x * x * x * x;
     return 1.f / exp_x;
 }
 
