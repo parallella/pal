@@ -21,16 +21,18 @@ static inline float __p_exp_ln2(const float x)
     return 1.f / exp_x;
 }
 
+static const float ln2 = (float) M_LN2;
+
 /*
  * x > ln 2
  * exp x = exp(x' + ln 2) = (exp x') * 2
  */
 static inline float __p_exp_pos(const float x)
 {
-    if (x <= M_LN2)
+    if (x <= ln2)
         return __p_exp_ln2(x);
     else
-        return 2.f * __p_exp_pos(x - M_LN2);
+        return 2.f * __p_exp_pos(x - ln2);
 }
 
 static inline float _p_exp(const float x)
