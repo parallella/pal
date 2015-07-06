@@ -53,6 +53,5 @@ libpal_math_la_SOURCES = \
     tinymt/tinymt32.h
 
 libpal_math_la_LIBADD = -lm
-libpal_math_la_CPPFLAGS = @AM_CPPFLAGS@
 
 
