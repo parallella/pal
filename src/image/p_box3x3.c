@@ -23,35 +23,51 @@
 void p_box3x3_f32(const float *x, float *r, int rows, int cols)
 {
 
-    int ia, ja;
-    float E;
+    int i, j;
+    float sum;
     const float *px;
     float *pr;
 
     px = x;
-    pr = r;
+    // Initialize the output pointer to the (-1, 0) coordinate
+    pr = r - cols + 2;
 
-    for (ia = 1; ia <= (rows - 2); ia++) {
-        for (ja = 1; ja <= (cols - 2); ja++) {
-            E = 0;
-            E += (*px++);
-            E += (*px++);
-            E += (*px++);
-            px += cols - 3;
-            E += (*px++);
-            E += (*px++);
-            E += (*px++);
-            px += cols - 3;
-            E += (*px++);
-            E += (*px++);
-            E += (*px++);
-            px += cols - 3;
-            *pr = E * M_DIV9;
-            px += 1 - 3 * cols; // advance mask matrix in one column.
+    for (i = 0; i < rows; i++) {
+        // The first sum is calculated directly.
+        sum = (*px) + (*(px+1)) + (*(px+2));
+        if (i >= 2) {
+            // The first two input rows do not correspond to the bottom of any
+            // pixel filter, so skip this logic for those rows.
+            *(pr-cols+2) = (*(pr-cols+2) + sum) * M_DIV9;
+        }
+        if (i != 0 && i != rows-1) {
+            // The first and last input rows do not correspond to the middle
+            // of any pixel filter, so skip this logic for those rows.
+            *pr += sum;
+        }
+        if (i < rows - 2) {
+            // The last two input rows do not correspond to the top of any
+            // pixel filter, so skip this logic for those rows.
+            *(pr+cols-2) = sum;
+        }
+        pr++;
+        for (j = 3; j < cols; j++) {
+            // All subsequent sums (in the same row) are calculated by
+            // removing the leftmost value, and adding the value to the
+            // immediate right of the currently included values.
+            sum += (*(px+3)) - (*px);
+            if (i >= 2) {
+                *(pr-cols+2) = (*(pr-cols+2) + sum) * M_DIV9;
+            }
+            if (i != 0 && i != rows-1) {
+                *pr += sum;
+            }
+            if (i < rows - 2) {
+                *(pr+cols-2) = sum;
+            }
+            px++;
             pr++;
         }
-        px = px + 2; // advance pointer to the beginning of next row.
+        px += 3; // Advance input pointer to beginning of next row.
     }
-
-    return;
 }
