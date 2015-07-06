@@ -1,6 +1,8 @@
 #include <math.h>
 #include <pal.h>
 
+static const float ln2 = (float) M_LN2;
+
 /*
  * 0 <= x <= ln 2
  * e^-x = 1 + a1 * x + a2 * x^2 + ... + a4 * x^4 + e(x)
@@ -20,8 +22,6 @@ static inline float __p_exp_ln2(const float x)
         a4 * x * x * x * x;
     return 1.f / exp_x;
 }
-
-static const float ln2 = (float) M_LN2;
 
 /*
  * x >= 0
