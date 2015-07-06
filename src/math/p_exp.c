@@ -29,12 +29,12 @@ static const float ln2 = (float) M_LN2;
  */
 static inline float __p_exp_pos(const float x)
 {
-    long int i, fact;
+    long int k, twok;
     float x_;
-    i = x / ln2;
-    fact = 1U << i;
-    x_ = x - (float) i * ln2;
-    return (float) fact * __p_exp_ln2(x_);
+    k = x / ln2;
+    twok = 1U << k;
+    x_ = x - (float) k * ln2;
+    return (float) twok * __p_exp_ln2(x_);
 }
 
 static inline float _p_exp(const float x)
