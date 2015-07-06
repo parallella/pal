@@ -14,6 +14,6 @@ libpal_dsp_la_SOURCES = \
     p_xcorr.c
 
 libpal_dsp_la_LIBADD = -lm
-libpal_dsp_la_CPPFLAGS = @AM_CPPFLAGS@ ${assert_CPPFLAGS}
+libpal_dsp_la_CPPFLAGS = @AM_CPPFLAGS@
 
 

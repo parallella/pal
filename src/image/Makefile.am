@@ -14,6 +14,6 @@ libpal_image_la_SOURCES = \
     p_grayscale.c
 
 libpal_image_la_LIBADD = -lm
-libpal_image_la_CPPFLAGS = @AM_CPPFLAGS@ ${assert_CPPFLAGS}
+libpal_image_la_CPPFLAGS = @AM_CPPFLAGS@
 
 
