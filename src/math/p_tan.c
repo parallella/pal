@@ -46,13 +46,13 @@ static inline float __p_tan_pi_2(const float x)
 /*
  * pi/2 <= x <= pi
  * x = x' + pi/2
- * tan x = tan (x' + pi/2) = - tan (pi/2 - x')
+ * tan x = tan (x' + pi/2) = -1 / tan x'
  */
 static inline float __p_tan_pi(const float x)
 {
     float x_;
     x_ = x - pi_2;
-    return -1.f * __p_tan_pi_2(pi_2 - x_);
+    return -1.f / __p_tan_pi_2(x_);
 }
 
 /* 0 <= x <= 2pi */
