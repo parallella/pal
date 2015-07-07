@@ -40,5 +40,5 @@ void p_mode_f32(const float *a, float *c, int n)
 
     *c = mode_value;
 
-    p_free(sorted_a);
+    free(sorted_a);
 }

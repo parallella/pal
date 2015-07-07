@@ -13,7 +13,7 @@ Currently, the test is only using Arm
 #include <stdlib.h>
 #include <unistd.h>
 #include <pal.h>
-#include "acorr_test_data.h"
+#include "rgb2greyscale_test_data.h"
 
 #define MAX_REL_DIFF  0.0001
 #define OK 1
@@ -43,14 +43,13 @@ int check_data(float tst, float ref, float max_diff)
 
 int main(int argc, char *argv[])
 {
-
     // Stack variables
     int i;
     float test_out[out_size];
     int testFail = 0;
 
     // Run the test on Arm
-    p_acorr_f32(in, test_out, in_size, out_size);
+    p_rgb2grayscale_f32(in, test_out, in_rows, in_cols);
 
     // Check data
     for ( i = 0; i < out_size; i++ ) {
@@ -60,10 +59,10 @@ int main(int argc, char *argv[])
       }
     }
 
-    if (testFail) {
-      printf("Acorr ARM test FAILED!!\n");
+    if (testFail){
+      printf("RGB2Grayscale ARM test FAILED!!\n");
     } else {
-      printf("Acorr ARM test OK\n");
+      printf("RGB2Grayscale ARM test OK\n");
     }
 
     return testFail;

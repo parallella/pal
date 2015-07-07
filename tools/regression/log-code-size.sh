@@ -1,8 +1,6 @@
 #!/bin/bash
 # Must be called from inside git repository
 
-# TODO: command line cflags
-
 set -e
 
 usage() {
@@ -30,22 +28,30 @@ sha=$(git rev-parse --verify HEAD)$(git_dirty_str)
 commit_date=$(git show -s --format="%ct" HEAD)
 
 top_srcdir=$(git rev-parse --show-toplevel)
-builddir=$(mktemp -d /tmp/palXXXXXXXX)
 
-# Bootstrap
-(cd $top_srcdir && ./bootstrap >$builddir/boostrap.log 2>&1)
+# If PAL_BUILDDIR is set then bootstrap and configure must have been run.
+# However, no guarantee that 'make' was called.
+if [ "x${PAL_BUILDDIR}" = "x" ]; then
+    # Bootstrap
+    PAL_BUILDDIR=$(mktemp -d /tmp/palXXXXXXXX)
+    export PAL_BUILDDIR
+    # Bootstrap
+    (cd $top_srcdir && ./bootstrap >$PAL_BUILDDIR/boostrap.log 2>&1)
 
-# Build in builddir
-cd $builddir
-CFLAGS=${cflags} $top_srcdir/configure ${host_str} >> build.log 2>&1
+    # Configure
+    cd $PAL_BUILDDIR
+    $top_srcdir/configure ${host_str} >> build.log 2>&1
+    created_pal_builddir="yes"
+fi
 
+cd $PAL_BUILDDIR
 # Compile
 (cd src && make -j -k >> build.log 2>&1 || true)
 
 # Output results in CSV format. Must match database scheme
 files=$(find src -name "*.o" | grep -v "\.libs" | sort)
 for f in $files; do
-    (echo $commit_date,$sha,$f,$platform,$cflags && readelf -s $f) | gawk '
+    (echo $commit_date,$sha,$f,$platform,$CFLAGS && readelf -s $f) | gawk '
     {
         if (NR==1) {
             oldfs=FS;
@@ -70,4 +76,12 @@ for f in $files; do
 done
 
 cd $top_srcdir
-rm -rf $builddir
+
+# Invoke benchmark.
+# HACK: Redirect stdout to stderr
+# TODO: Append to db in this script
+$PAL_TOOLS/regression/benchmark.sh $platform 1>&2
+
+if [ "x${created_pal_builddir}" = "xyes" ]; then
+    rm -rf ${PAL_BUILDDIR}
+fi

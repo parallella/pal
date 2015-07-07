@@ -5,12 +5,12 @@ LIBS = -lm
 if HOST_IS_EPIPHANY
     SIMPLE = notest.c
 else
-    AM_CPPFLAGS += @CHECK_CFLAGS@
-    LIBS += @CHECK_LIBS@
+    AM_CPPFLAGS += -I$(top_srcdir)/tests
     SIMPLE = simple.c simple.h
 endif
 
 LDADD = $(top_builddir)/src/libpal.la
+LDADD += $(top_builddir)/tests/libutest.la
 
 # TODO: For cross compilation: Build for build arch, not host arch.
 noinst_PROGRAMS = rangen
@@ -192,7 +192,8 @@ check_p_min_f32_CFLAGS          = -DFUNCTION=p_min_f32                 -DSCALAR_
 check_p_mode_f32_CFLAGS         = -DFUNCTION=p_mode_f32                -DSCALAR_OUTPUT
 check_p_mul_f32_CFLAGS          = -DFUNCTION=p_mul_f32     -DIS_BINARY
 check_p_popcount_CFLAGS         = -DFUNCTION=p_popcount
-check_p_pow_f32_CFLAGS          = -DFUNCTION=p_pow_f32     -DIS_BINARY
+# Override fault tolerance for p_pow_f32
+check_p_pow_f32_CFLAGS          = -DFUNCTION=p_pow_f32     -DIS_BINARY -DEPSILON_MAX=0.003f
 check_p_rand_CFLAGS             = -DFUNCTION=p_rand                    -DSCALAR_OUTPUT
 check_p_sin_f32_CFLAGS          = -DFUNCTION=p_sin_f32     -DIS_UNARY
 check_p_sincos_f32_CFLAGS       = -DFUNCTION=p_sincos_f32

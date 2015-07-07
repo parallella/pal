@@ -34,6 +34,7 @@ AM_SILENT_RULES([yes])
 AC_PROG_CXX
 AC_PROG_AWK
 AC_PROG_CC_C99
+AM_PROG_CC_C_O
 AC_PROG_CPP
 AC_PROG_INSTALL
 AC_PROG_LN_S
@@ -50,7 +51,10 @@ LT_INIT
 # Checks for libraries.
 
 # Checks for header files.
-AC_CHECK_HEADERS([fcntl.h fenv.h float.h inttypes.h limits.h stddef.h stdint.h stdlib.h string.h strings.h sys/ioctl.h sys/time.h unistd.h])
+AC_CHECK_HEADERS([fcntl.h fenv.h float.h inttypes.h limits.h stddef.h stdint.h stdlib.h string.h strings.h sys/ioctl.h time.h unistd.h])
+AC_CHECK_HEADER([mach/mach_time.h],
+  [AC_DEFINE([HAVE_MACH_TIME], [1],
+    [Define to 1 if you have <mach/mach_time.h>])])
 
 # Checks for typedefs, structures, and compiler characteristics.
 AC_CHECK_HEADER_STDBOOL
@@ -74,6 +78,15 @@ AC_FUNC_FORK
 AC_FUNC_MMAP
 AC_CHECK_FUNCS([bzero fesetround floor gettimeofday memset modf munmap pow rint sqrt strdup strerror strtol])
 
+# Older versions of libc need -lrt for clock_gettime()
+AC_CHECK_FUNCS(clock_gettime, [], [
+  AC_CHECK_LIB(rt, clock_gettime, [
+    AC_DEFINE(HAVE_CLOCK_GETTIME, [1], [Have clock_gettime])
+    BENCHMARK_LIBS="$BENCHMARK_LIBS -lrt"
+  ])
+])
+AC_SUBST([BENCHMARK_LIBS])
+
 AC_CONFIG_FILES([Makefile
                  include/Makefile
                  src/Makefile
@@ -84,12 +97,15 @@ AC_CONFIG_FILES([Makefile
                  src/fft/Makefile
                  src/image/Makefile
                  src/math/Makefile
+                 benchmark/Makefile
+                 benchmark/math/Makefile
                  examples/Makefile
                  examples/base/Makefile
                  examples/image/Makefile
                  tests/Makefile
                  tests/dsp/Makefile
                  tests/math/Makefile
+                 tests/image/Makefile
                  doc/Makefile])
 
 # Epiphany host support
@@ -161,29 +177,15 @@ AS_IF([test "x$enable_device_epiphany" = "xyes"],
        AC_DEFINE([ENABLE_DEV_EPIPHANY], [1], [Epiphany device support])
        ])
 
-# Unit testing
-PKG_CHECK_MODULES(CHECK, [check >= 0.9.4],
-                  [have_check="yes"],
-                  [have_check="no"])
-AM_CONDITIONAL(HAVE_CHECK, [test "x${have_check}" = "xyes"])
-AC_SUBST(CHECK_CFLAGS)
-AC_SUBST(CHECK_LIBS)
 AC_ARG_ENABLE([tests],
               AS_HELP_STRING([--disable-tests],
                              [Disable building unit tests]))
 
+# Unit testing
 AC_MSG_CHECKING([whether to build unit tests])
-AS_IF([test "x${enable_tests}" = "xyes"],
-      [AS_IF([test "x${have_check}" != "xyes"],
-             [AC_MSG_RESULT([error])
-             AC_MSG_ERROR([Cannot build unit tests, check not installed])])])
-AS_IF([test "x${enable_tests}" = "x"],
-      [AS_IF([test "x${have_check}" != "xyes"], [enable_tests="no"])])
-
 AS_IF([test "x${enable_tests}" = "xno"],
       [AC_MSG_RESULT([no])],
       [AC_MSG_RESULT([yes])])
-
 AM_CONDITIONAL(ENABLE_TESTS, [test "x${enable_tests}" != "xno"])
 
 # Documentation
@@ -211,8 +213,17 @@ AS_IF([test "x${enable_doc}" = "xno"],
 
 AM_CONDITIONAL(ENABLE_DOC, [test "x${enable_doc}" != "xno"])
 
+# Define the --enable-assert command-line option
+AC_ARG_ENABLE(assert,
+  [AS_HELP_STRING([--enable-assert], [Build with assertions enabled])],
+  [enable_assert=yes], [enable_assert=no])
+# Set any CPPFLAGS specific to debugging
+AS_IF([test "x$enable_assert" = "xyes"],
+  [AC_SUBST(assert_CPPFLAGS, [''])],
+  [AC_SUBST(assert_CPPFLAGS, ['-DNDEBUG'])])
 
 # Easiest way to include header files globally
-AC_SUBST([AM_CPPFLAGS], ['-I$(top_srcdir)/include -I$(top_builddir)'])
+AC_SUBST([AM_CPPFLAGS],
+  ['-I$(top_srcdir)/include -I$(top_builddir) $(assert_CPPFLAGS)'])
 
 AC_OUTPUT

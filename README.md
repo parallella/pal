@@ -59,7 +59,7 @@ Instructions for contributing can be found [HERE](CONTRIBUTING.md).
 
 ###Install Prerequisites
 ``` bash
-$ sudo apt-get install libtool build-essential pkg-config autoconf doxygen check
+$ sudo apt-get install libtool build-essential pkg-config autoconf doxygen
 ```
 
 ###Build Sequence
@@ -76,10 +76,6 @@ To run the automated unit tests you need to run
 ``` bash
 $ make check
 ```
-
-For this to succeed you need to have the check unit test library (http://check.sourceforge.net).
-See [prerequisites](#install-prerequisites).
-
 
 ##A Simple Example
 The following sample shows how to use PAL launch a simple task on a remote processor within the system. The program flow should be familiar to anyone who has used accelerator programming frameworks. 
@@ -291,7 +287,7 @@ FUNCTION     | NOTES
 
 STATUS REPORT
 ========================================
-LINK
+https://parallella.github.io/pal-stats/summary.html
 
 BENCHMARKING
 ========================================

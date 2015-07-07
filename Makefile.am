@@ -9,7 +9,7 @@ if ENABLE_DOC
     MAYBE_DOC = doc
 endif
 
-SUBDIRS = src examples include $(MAYBE_TESTS) $(MAYBE_DOC)
+SUBDIRS = src examples include benchmark $(MAYBE_TESTS) $(MAYBE_DOC)
 
 EXTRA_DIST = config include bootstrap CHANGELOG.md CODING-STYLE.md \
              CONTRIBUTING.md LICENSE QUESTIONS.md README.md scripts
@@ -26,7 +26,7 @@ report-stack-usage:
 	@mkdir -p reports
 	$(SHELL) $(top_srcdir)/scripts/report-stack-usage.sh src \
 	    > reports/stack-usage.txt
-	@echo Code size report saved to reports/stack-usage.txt
+	@echo Stack usage report saved to reports/stack-usage.txt
 
 
 reports: report-code-size report-stack-usage

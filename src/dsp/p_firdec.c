@@ -24,7 +24,19 @@
 void p_firdec_f32(const float *x, const float *h, float *r,
                   int nx, int nh, int df)
 {
+	int t;
+	int i;
+	for (t = 0; t < nh; ++t)
+	{
+	 	r[t] = 0;
+		for (i = 0; i <= t && t * df < nx; ++i) 
+			r[t] += h[i] * x[t * df - i];
+	}
 
-    /*PLACE CODE HERE*/
-
+	for (t = nh; t < nx; ++t)
+	{
+		r[t] = 0;
+		for (i = 0; i < nh && t * df < nx; ++i)
+			r[t] += h[i] * x[t * df - i];
+	}
 }
