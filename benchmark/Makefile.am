@@ -2,7 +2,11 @@ AUTOMAKE_OPTIONS = foreign
 
 SUBDIRS = math
 
-EXTRA_DIST = runbench.default.c runbench.noimpl.c runbench.epiphany.c
+EXTRA_DIST = \
+    runbench.default.c \
+    runbench.noimpl.c \
+    runbench.epiphany.c \
+    bench-all.sh.in
 
 CLEANFILES = runbench
 
@@ -42,3 +46,4 @@ runbench: $(RUNBENCH_SRC)
 	$(BUILDCC) $(BUILDCFLAGS) $< -o $@ $(BUILDLDFLAGS)
 
 all-local: runbench
+	chmod +x bench-all.sh
