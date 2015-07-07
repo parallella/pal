@@ -1,0 +1,11 @@
+#include <math.h>
+#include "simple.h"
+
+void generate_ref(float *out, size_t n)
+{
+    size_t i;
+    float twopi = 2.0 * M_PI;
+
+    for (i = 0; i < n; i++)
+        out[i] = fmodf(ai[i], twopi) + (ai[i] >= 0.f ? 0.f : twopi);
+}

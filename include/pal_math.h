@@ -145,6 +145,12 @@ void p_div_f32(const float *a, const float *b, float *c, int n);
 /*exponential: c = exp ( a ) */
 void p_exp_f32(const float *a, float *c, int n);
 
+/*floating-point remainder: c = a - i * x */
+void p_fmod_f32(const float *a, float *c, int n, const float x);
+
+/*floating-point remainder with divisor 2pi: c = a - i * 2pi */
+void p_fmod_2pi_f32(const float *a, float *c, int n);
+
 /*inverse: c = 1 / ( a ) */
 void p_inv_f32(const float *a, float *c, int n);
 
