@@ -58,6 +58,7 @@ void bench_p_rand(const struct p_bench_specification *spec) {
     for (size_t i = 0; i < spec->current_size; i++) {
         r = p_rand();
     }
+    (void) r;
 }
 declare_unary(p_sin_f32)
 void bench_p_sincos_f32(const struct p_bench_specification *spec)
