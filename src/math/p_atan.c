@@ -34,7 +34,6 @@ static inline float _p_atan(const float x)
  * @return      None
  *
  */
-#include <math.h>
 void p_atan_f32(const float *a, float *c, int n)
 {
 
