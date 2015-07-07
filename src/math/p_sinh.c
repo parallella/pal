@@ -1,12 +1,13 @@
 #include <pal.h>
 
+#include "p_exp.h"
+
 /*
  * sinh z = (exp z - exp(-z)) / 2
  */
 static inline float _p_sinh(const float z)
 {
-    float exp_z;
-    p_exp_f32(&z, &exp_z, 1);
+    float exp_z = _p_exp(z);
     return 0.5f * (exp_z - 1.f / exp_z);
 }
 
