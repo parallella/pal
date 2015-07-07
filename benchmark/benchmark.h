@@ -17,12 +17,14 @@ union p_bench_param {
     bool *p_bool;
 
     /* Unsigned types */
+    unsigned int *p_uint;
     uint8_t  *p_u8;
     uint16_t *p_u16;
     uint32_t *p_u32;
     uint64_t *p_u64;
 
     /* Signed types */
+    int     *p_int;
     int8_t  *p_i8;
     int16_t *p_i16;
     int32_t *p_i32;
