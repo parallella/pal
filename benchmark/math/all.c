@@ -18,28 +18,28 @@ declare_binary(p_dot_f32)
 declare_unary(p_exp_f32)
 void bench_p_ftoi(const struct p_bench_specification *spec)
 {
-    p_ftoi(spec->mem.i1.p_float, spec->mem.o1.p_i32, spec->current_size);
+    p_ftoi(spec->mem.i1.p_float, spec->mem.o1.p_int, spec->current_size);
 }
 declare_unary(p_invcbrt_f32)
 declare_unary(p_inv_f32)
 declare_unary(p_invsqrt_f32)
 void bench_p_itof(const struct p_bench_specification *spec)
 {
-    p_itof(spec->mem.i1.p_i32, spec->mem.o1.p_float, spec->current_size);
+    p_itof(spec->mem.i1.p_int, spec->mem.o1.p_float, spec->current_size);
 }
 declare_unary(p_ln_f32)
 declare_unary(p_log10_f32)
 declare_binary(p_mac_f32)
 void bench_p_max_f32(const struct p_bench_specification *spec)
 {
-    p_max_f32(spec->mem.i1.p_float, spec->mem.i2.p_float, spec->mem.o1.p_i32,
+    p_max_f32(spec->mem.i1.p_float, spec->mem.i2.p_float, spec->mem.o1.p_int,
               spec->current_size);
 }
 declare_unary(p_mean_f32)
 declare_unary(p_median_f32)
 void bench_p_min_f32(const struct p_bench_specification *spec)
 {
-    p_min_f32(spec->mem.i1.p_float, spec->mem.i2.p_float, spec->mem.o1.p_i32,
+    p_min_f32(spec->mem.i1.p_float, spec->mem.i2.p_float, spec->mem.o1.p_int,
               spec->current_size);
 }
 declare_unary(p_mode_f32)
