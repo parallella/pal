@@ -1,6 +1,8 @@
 #include <math.h>
 #include <pal.h>
 
+#include "p_sqrt.h"
+
 static const float pi_2 = (float) M_PI / 2.f;
 
 /*
@@ -14,9 +16,7 @@ static inline float __p_asin_pos(const float x)
     const float a1 = -0.2121144f;
     const float a2 =  0.0742610f;
     const float a3 = -0.0187293f;
-    float a_ = 1.f - x;
-    float a;
-    p_sqrt_f32(&a_, &a, 1);
+    float a = _p_sqrt(1.f - x);
     return pi_2 - a * (a0 + a1 * x + a2 * x * x + a3 * x * x * x);
 }
 
