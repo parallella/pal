@@ -25,6 +25,13 @@ static const size_t max_output = 3;
 
 typedef uint64_t platform_clock_t;
 
+/* Arrays */
+#define MAX_OUTPUTS 1 /* Points to same memory */
+#define MAX_INPUTS 3
+#define MAX_PARAMS (MAX_OUTPUTS + MAX_INPUTS)
+
+#define MAX_ELEMS 655360
+
 #if defined(HAVE_CLOCK_GETTIME)
 static platform_clock_t platform_clock(void)
 {
@@ -87,7 +94,7 @@ int main(void)
 
     struct p_bench_specification spec;
     char *raw_mem = NULL;
-    spec.current_size = default_initial_size;
+    spec.current_size = MAX_ELEMS;
 
     setup_memory(&spec.mem, &raw_mem, spec.current_size);
     printf(";name, size, duration (ns)\n");
@@ -152,9 +159,12 @@ static void setup_input_pointers(struct p_bench_raw_memory *mem, char *p,
     mem->i3_w.p_void = p;
     p += size * sizeof(uint64_t);
 
+#if 0
+    /* TODO: Do we really need 4 inputs? */
     setup_prandom_chars(p, size * sizeof(uint64_t), seed, false);
     mem->i4_w.p_void = p;
     p += size * sizeof(uint64_t);
+#endif
 }
 
 static void setup_memory(struct p_bench_raw_memory *mem, char **raw,
@@ -164,10 +174,9 @@ static void setup_memory(struct p_bench_raw_memory *mem, char **raw,
     assert(size > 0);
     assert(raw != NULL);
 
-    size_t raw_output_size = sizeof(uintmax_t) * size * max_output;
+    size_t raw_output_size = MAX_OUTPUTS * MAX_ELEMS * sizeof(uintmax_t);
     size_t raw_size =
-        raw_output_size +
-        (sizeof(float) + sizeof(double) + sizeof(uintmax_t)) * size * 2;
+        raw_output_size + MAX_INPUTS * MAX_ELEMS * (sizeof(uintmax_t));
 
     if (*raw == NULL) {
         *raw = malloc(raw_size);
