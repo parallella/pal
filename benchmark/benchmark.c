@@ -6,6 +6,7 @@
 #include <stdint.h>
 #include <inttypes.h>
 #include <errno.h>
+#include <unistd.h>
 
 #include "config.h"
 #include "benchmark.h"
@@ -23,6 +24,10 @@ static const size_t max_output = 3;
 #include <time.h>
 #endif
 
+#if defined(HAVE_E_LIB_H)
+#include <e-lib.h>
+#endif
+
 typedef uint64_t platform_clock_t;
 
 /* Arrays */
@@ -30,7 +35,25 @@ typedef uint64_t platform_clock_t;
 #define MAX_INPUTS 3
 #define MAX_PARAMS (MAX_OUTPUTS + MAX_INPUTS)
 
+/* Output args point to same mem, input args point to same mem */
+#ifdef __epiphany__
+volatile uint32_t *epiphany_done = (uint32_t *) 0x8f200000;
+char *epiphany_stdout = (char *) 0x8f300000;
+#define MAX_ELEMS 512
+uint8_t RAW_MEM[MAX_PARAMS * MAX_ELEMS * sizeof(uintmax_t)];
+#define bench_printf(...)\
+    do {\
+        int __tmp;\
+        __tmp = sprintf(epiphany_stdout, __VA_ARGS__);\
+        if (__tmp > 0) {\
+            epiphany_stdout = (char *) (((uintptr_t) epiphany_stdout) + \
+                ((uintptr_t) __tmp));\
+        }\
+    } while(0)
+#else
+#define bench_printf printf
 #define MAX_ELEMS 655360
+#endif
 
 #if defined(HAVE_CLOCK_GETTIME)
 static platform_clock_t platform_clock(void)
@@ -43,9 +66,7 @@ static platform_clock_t platform_clock(void)
 
     return nanosec;
 }
-#endif
-
-#if defined(HAVE_MACH_TIME)
+#elif defined(HAVE_MACH_TIME)
 #include <mach/mach_time.h>
 static platform_clock_t platform_clock(void)
 {
@@ -65,12 +86,48 @@ static platform_clock_t platform_clock(void)
 
     return nanosec;
 }
+#elif defined(HAVE_E_LIB_H)
+static platform_clock_t platform_clock(void)
+{
+    // Assuming 600MHz clock 10^9 / (600 * 10^6)
+    const float factor = 1.6666666666666666666f;
+
+    static platform_clock_t clock = 0;
+    platform_clock_t diff;
+
+    static bool initialized = false;
+    uint64_t now;
+
+    if (!initialized) {
+        e_ctimer_stop(E_CTIMER_0);
+        e_ctimer_set(E_CTIMER_0, E_CTIMER_MAX);
+        e_ctimer_start(E_CTIMER_0, E_CTIMER_CLK);
+        initialized = true;
+        return 0;
+    }
+
+    /* Clock will drift here */
+    diff = E_CTIMER_MAX - e_ctimer_get(E_CTIMER_0);
+
+    e_ctimer_stop(E_CTIMER_0);
+    e_ctimer_set(E_CTIMER_0, E_CTIMER_MAX);
+    e_ctimer_start(E_CTIMER_0, E_CTIMER_CLK);
+
+    clock += diff;
+
+    return (platform_clock_t) ((float) clock * factor);
+}
+#else
+#error "No timing function"
 #endif
 
 static void platform_print_duration(platform_clock_t start,
                                     platform_clock_t end)
 {
-    printf("%" PRIu64, end - start);
+    if (end < start)
+        bench_printf("%" PRIu64, 0xffffffffffffffffULL);
+    else
+        bench_printf("%" PRIu64, end - start);
 }
 
 /* end of platform specific section */
@@ -85,19 +142,19 @@ static void item_done(struct item_data *, const struct p_bench_specification *,
                       const char *);
 static void setup_memory(struct p_bench_raw_memory *, char **raw, size_t);
 
+#ifndef __epiphany__
 static char dummy_memarea[1024 * 1024 * 32];
 // int p_bench_dummy_func(char *, size_t);
+#endif
 
 int main(void)
 {
-    static const size_t default_initial_size = 655360;
-
     struct p_bench_specification spec;
     char *raw_mem = NULL;
     spec.current_size = MAX_ELEMS;
 
     setup_memory(&spec.mem, &raw_mem, spec.current_size);
-    printf(";name, size, duration (ns)\n");
+    bench_printf(";name, size, duration (ns)\n");
     for (const struct p_bench_item *item = benchmark_items; item->name != NULL;
          ++item) {
         struct item_data data;
@@ -106,6 +163,9 @@ int main(void)
         item->benchmark(&spec);
         item_done(&data, &spec, item->name);
     }
+#ifdef __epiphany__
+    *epiphany_done = 1;
+#endif
     return EXIT_SUCCESS;
 }
 
@@ -178,6 +238,9 @@ static void setup_memory(struct p_bench_raw_memory *mem, char **raw,
     size_t raw_size =
         raw_output_size + MAX_INPUTS * MAX_ELEMS * (sizeof(uintmax_t));
 
+#ifdef __epiphany__
+    *raw = RAW_MEM;
+#else
     if (*raw == NULL) {
         *raw = malloc(raw_size);
     } else {
@@ -187,6 +250,7 @@ static void setup_memory(struct p_bench_raw_memory *mem, char **raw,
         (void)fprintf(stderr, "Unable to allocate memory: %zu\n", size);
         exit(EXIT_FAILURE);
     }
+#endif
 
     setup_output_pointers(mem, *raw);
     setup_input_pointers(mem, *raw + raw_output_size, size);
@@ -194,8 +258,10 @@ static void setup_memory(struct p_bench_raw_memory *mem, char **raw,
 
 static void invalidate_data_cache(void)
 {
+#ifndef __epiphany__
     setup_prandom_chars(dummy_memarea, sizeof(dummy_memarea), 1, false);
     // (void)p_bench_dummy_func(dummy_memarea, sizeof(dummy_memarea));
+#endif
 }
 
 static void item_preface(struct item_data *data,
@@ -214,7 +280,7 @@ static void item_done(struct item_data *data,
     assert(name[0] != 0);
 
     platform_clock_t now = platform_clock();
-    (void)printf("%s, %zu, ", name, spec->current_size);
+    bench_printf("%s, %" PRIu64 ", ", name, spec->current_size);
     platform_print_duration(data->start, now);
-    (void)printf("\n");
+    bench_printf("\n");
 }
