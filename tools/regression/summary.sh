@@ -134,19 +134,13 @@ tr.row {
 <p>Latest commit: ${head}</p>
 
 <table>
-<tr><th rowspan="2">&nbsp;</th><th colspan="6">x86_64</th><th colspan="6">ARM</th><th colspan="6">Epiphany</th><th class="side"><div class="rotate">Platform</div></th></tr>
+<tr><th rowspan="2">&nbsp;</th><th colspan="2">x86_64</th><th colspan="2">ARM</th><th colspan="2">Epiphany</th><th class="side"><div class="rotate">Platform</div></th></tr>
 <tr>
-<th class="cflags" colspan="2">(default)</th><th class="cflags" colspan="2">$(fixwrap "${x86_64_Os_flags}")</th>  <th class="cflags" colspan="2">$(fixwrap "${x86_64_O2_flags}")</th>
-<th class="cflags" colspan="2">(default)</th><th class="cflags" colspan="2">$(fixwrap "${arm_Os_flags}")</th>     <th class="cflags" colspan="2">$(fixwrap "${arm_O2_flags}")</th>
-<th class="cflags" colspan="2">(default)</th><th class="cflags" colspan="2">$(fixwrap "${epiphany_Os_flags}")</th><th class="cflags" colspan="2">$(fixwrap "${epiphany_O2_flags}")</th>
+<th class="cflags" colspan="2">$(fixwrap "${x86_64_O2_flags}")</th>
+<th class="cflags" colspan="2">$(fixwrap "${arm_O2_flags}")</th>
+<th class="cflags" colspan="2">$(fixwrap "${epiphany_O2_flags}")</th>
 <th class="side"><div class="rotate">CFLAGS</div></th></tr>
 <tr><th>File</th>
-<th>Size</th><th>Bench</th>
-<th>Size</th><th>Bench</th>
-<th>Size</th><th>Bench</th>
-<th>Size</th><th>Bench</th>
-<th>Size</th><th>Bench</th>
-<th>Size</th><th>Bench</th>
 <th>Size</th><th>Bench</th>
 <th>Size</th><th>Bench</th>
 <th>Size</th><th>Bench</th>
@@ -196,29 +190,17 @@ for f in $files; do
     f_src_shrt=$(echo $f_src | sed 's,src/,,g')
     echo "<tr class=\"row\">"
     echo "<td><a href=\"https://github.com/parallella/pal/tree/master/${f_src}\">${f_src_shrt}</a></td>"
-    echo "<td class=\"size\"> $(size_qry  $f x86_64 '')</td>"
-    echo "<td class=\"bench\">$(bench_qry $f x86_64 '')</td>"
-    echo "<td class=\"size\"> $(size_qry  $f x86_64 "${x86_64_Os_flags}")</td>"
-    echo "<td class=\"bench\">$(bench_qry $f x86_64 "${x86_64_Os_flags}")</td>"
     echo "<td class=\"size\"> $(size_qry  $f x86_64 "${x86_64_O2_flags}")</td>"
     echo "<td class=\"bench\">$(bench_qry $f x86_64 "${x86_64_O2_flags}")</td>"
-    echo "<td class=\"size\"> $(size_qry  $f arm-linux-gnueabihf '')</td>"
-    echo "<td class=\"bench\">$(bench_qry $f arm-linux-gnueabihf '')</td>"
-    echo "<td class=\"size\"> $(size_qry  $f arm-linux-gnueabihf "${arm_Os_flags}")</td>"
-    echo "<td class=\"bench\">$(bench_qry $f arm-linux-gnueabihf "${arm_Os_flags}")</td>"
     echo "<td class=\"size\"> $(size_qry  $f arm-linux-gnueabihf "${arm_O2_flags}")</td>"
     echo "<td class=\"bench\">$(bench_qry $f arm-linux-gnueabihf "${arm_O2_flags}")</td>"
-    echo "<td class=\"size\"> $(size_qry  $f epiphany-elf '')</td>"
-    echo "<td class=\"bench\">$(bench_qry $f epiphany-elf '')</td>"
-    echo "<td class=\"size\"> $(size_qry  $f epiphany-elf "${epiphany_Os_flags}")</td>"
-    echo "<td class=\"bench\">$(bench_qry $f epiphany-elf "${epiphany_Os_flags}")</td>"
     echo "<td class=\"size\"> $(size_qry  $f epiphany-elf "${epiphany_O2_flags}")</td>"
     echo "<td class=\"bench\">$(bench_qry $f epiphany-elf "${epiphany_O2_flags}")</td>"
     echo "</tr>"
 done
 
 cat << EOF
-<tr class="bottom"><td colspan="19">&nbsp;</td></tr>
+<tr class="bottom"><td colspan="8">&nbsp;</td></tr>
 </table>
 </body>
 </html>
