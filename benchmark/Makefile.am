@@ -1,6 +1,6 @@
 AUTOMAKE_OPTIONS = foreign
 
-SUBDIRS = math
+SUBDIRS = image math
 
 EXTRA_DIST = \
     runbench.default.c \

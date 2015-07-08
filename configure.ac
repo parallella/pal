@@ -101,6 +101,7 @@ AC_CONFIG_FILES([Makefile
                  src/math/Makefile
                  benchmark/Makefile
                  benchmark/bench-all.sh
+                 benchmark/image/Makefile
                  benchmark/math/Makefile
                  examples/Makefile
                  examples/base/Makefile
