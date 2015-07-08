@@ -10,7 +10,7 @@ libpal_math_la_SOURCES = \
     p_acos.c \
     p_acosh.c \
     p_add.c \
-    p_asin.c \
+    p_asin.c p_asin.h \
     p_asinh.c \
     p_atan2.c \
     p_atan.c \
