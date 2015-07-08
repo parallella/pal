@@ -1,5 +1,7 @@
 #include <pal.h>
 
+#include "p_asin.h"
+
 /**
  *
  * Computes the inverse cosine (arc cosine) of the input vector 'a'. Input
@@ -15,12 +17,12 @@
  * @return      None
  *
  */
-#include <math.h>
 void p_acos_f32(const float *a, float *c, int n)
 {
 
     int i;
+    /* acos x = pi/2 - asin x */
     for (i = 0; i < n; i++) {
-        *(c + i) = acosf(*(a + i));
+        c[i] = pi_2 - _p_asin(a[i]);
     }
 }
