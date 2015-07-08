@@ -95,11 +95,11 @@ if need_build master $master_sha; then
     $PAL_TOOLS/regression/mkallreports.sh
 
     # Build with more CFLAG configurations for summary report
-    build_w_cflags x86_64              "-Os -ffast-math"
+    #build_w_cflags x86_64              "-Os -ffast-math"
     build_w_cflags x86_64              "-O2 -ffast-math"
-    build_w_cflags arm-linux-gnueabihf "-Os -ffast-math"
+    #build_w_cflags arm-linux-gnueabihf "-Os -ffast-math"
     build_w_cflags arm-linux-gnueabihf "-O2 -ffast-math"
-    build_w_cflags epiphany-elf        "-Os -ffast-math -mfp-mode=round-nearest -ffp-contract=fast"
+    #build_w_cflags epiphany-elf        "-Os -ffast-math -mfp-mode=round-nearest -ffp-contract=fast"
     build_w_cflags epiphany-elf        "-O2 -ffast-math -mfp-mode=round-nearest -ffp-contract=fast"
 
     create_summary $master_sha
