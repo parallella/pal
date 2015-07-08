@@ -1,5 +1,18 @@
 #include <pal.h>
 
+#include "p_exp.h"
+
+/*
+ * tanh z = sinh z / cosh z
+ *        = (exp z - exp -z) / (exp z + ezp -z)
+ *        = (exp 2z - 1) / (exp 2z + 1)
+ */
+static inline float _p_tanh(const float z)
+{
+    float exp_2z = _p_exp(2.f * z);
+    return (exp_2z - 1.f) / (exp_2z + 1.f);
+}
+
 /**
  *
  * Calculates the hyperbolic tangent of the input vector 'a'.
@@ -14,11 +27,10 @@
  * @return      None
  *
  */
-#include <math.h>
 void p_tanh_f32(const float *a, float *c, int n)
 {
     int i;
     for (i = 0; i < n; i++) {
-        *(c + i) = tanhf(*(a + i));
+        c[i] = _p_tanh(a[i]);
     }
 }
