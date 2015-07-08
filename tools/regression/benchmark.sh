@@ -43,7 +43,10 @@ fi
 
 platform_short=$(echo $platform | cut -f1 -d"-")
 
-if [ "x${platform_short}" != "x${build_arch}" ]; then
+if [ "x${platform_short}" = "xepiphany" -a "x${build_arch}" = "xarm" ]; then
+    echo $0: Detected Parallella board. >&2
+    true
+elif [ "x${platform_short}" != "x${build_arch}" ]; then
     echo $0: Detected cross compilation. Skipping. >&2
     exit 0
 fi
@@ -94,9 +97,9 @@ cd $PAL_BUILDDIR
 # Run benchmark when not cross compiling
 platform_short=$(echo $platform | cut -f1 -d"-")
 if [ "x${platform_short}" = "x${build_arch}" ]; then
-    if [ -e "${PAL_BUILDDIR}/benchmark/math/bench_all" ]; then
+    if [ -e "${PAL_BUILDDIR}/benchmark/bench-all.sh" ]; then
         bench_res=$(mktemp)
-        ${PAL_BUILDDIR}/benchmark/math/bench_all | gawk -F"," '
+        ${PAL_BUILDDIR}/benchmark/math/bench-all.sh | gawk -F"," '
         {
             if (substr($0, 0, 1) == ";") {
                 next;
