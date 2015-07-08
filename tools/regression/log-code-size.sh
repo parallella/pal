@@ -29,6 +29,11 @@ commit_date=$(git show -s --format="%ct" HEAD)
 
 top_srcdir=$(git rev-parse --show-toplevel)
 
+if [ "x${platform_short}" = "xepiphany" -a "x${build_arch}" = "xarm" ]; then
+    #Detected Parallella board.
+    ldflags_str='LDFLAGS=-Wl,-T/opt/adapteva/esdk/bsps/current/fast.ldf'
+fi
+
 # If PAL_BUILDDIR is set then bootstrap and configure must have been run.
 # However, no guarantee that 'make' was called.
 if [ "x${PAL_BUILDDIR}" = "x" ]; then
@@ -40,7 +45,7 @@ if [ "x${PAL_BUILDDIR}" = "x" ]; then
 
     # Configure
     cd $PAL_BUILDDIR
-    $top_srcdir/configure ${host_str} >> build.log 2>&1
+    $top_srcdir/configure ${ldflags_str} ${host_str} >> build.log 2>&1
     created_pal_builddir="yes"
 fi
 
