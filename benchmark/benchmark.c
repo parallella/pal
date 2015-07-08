@@ -7,6 +7,7 @@
 #include <inttypes.h>
 #include <errno.h>
 #include <unistd.h>
+#include <string.h>
 
 #include "config.h"
 #include "benchmark.h"
@@ -37,20 +38,27 @@ typedef uint64_t platform_clock_t;
 
 /* Output args point to same mem, input args point to same mem */
 #ifdef __epiphany__
-volatile uint32_t *epiphany_done = (uint32_t *) 0x8f200000;
-char *epiphany_stdout = (char *) 0x8f300000;
+struct status {
+    uint32_t done;
+    uint32_t _pad1;
+    uint32_t nbench;
+    uint32_t _pad2;
+};
+
+struct result {
+    char name[64];
+    uint64_t ns;
+    uint64_t size;
+};
+
+
+volatile struct status *epiphany_status = (struct status *) 0x8f200000;
+struct result *epiphany_results = (struct result *) 0x8f300000;
 #define MAX_ELEMS 512
 int8_t RAW_MEM[MAX_PARAMS * MAX_ELEMS * sizeof(uintmax_t)];
-#define bench_printf(...)\
-    do {\
-        int __tmp;\
-        __tmp = sprintf(epiphany_stdout, __VA_ARGS__);\
-        if (__tmp > 0) {\
-            epiphany_stdout = (char *) (((uintptr_t) epiphany_stdout) + \
-                ((uintptr_t) __tmp));\
-        }\
-    } while(0)
+#define bench_printf(...)
 #else
+
 #define bench_printf printf
 /* We don't want to be memory bound. So fit inside last-level cache (assume
  * 512kb). This might need tweaking, e.g., for x86_64 data will likely fit in
@@ -99,7 +107,6 @@ static platform_clock_t platform_clock(void)
     platform_clock_t diff;
 
     static bool initialized = false;
-    uint64_t now;
 
     if (!initialized) {
         e_ctimer_stop(E_CTIMER_0);
@@ -138,6 +145,7 @@ static void platform_print_duration(platform_clock_t start,
 struct item_data
 {
     platform_clock_t start;
+    platform_clock_t end;
 };
 
 static void item_preface(struct item_data *, const struct p_bench_item *);
@@ -150,6 +158,9 @@ int main(void)
     struct p_bench_specification spec;
     char *raw_mem = NULL;
     spec.current_size = MAX_ELEMS;
+#ifdef __epiphany__
+    uint32_t nbench = 0;
+#endif
 
     setup_memory(&spec.mem, &raw_mem, spec.current_size);
     bench_printf(";name, size, duration (ns)\n");
@@ -165,9 +176,16 @@ int main(void)
         item_preface(&data, item);
         item->benchmark(&spec);
         item_done(&data, &spec, item->name);
+#ifdef __epiphany__
+        strcpy(epiphany_results[nbench].name, item->name);
+        epiphany_results[nbench].ns = data.end - data.start;
+        epiphany_results[nbench].size = (uint64_t) spec.current_size;
+        nbench++;
+        epiphany_status->nbench = nbench;
+#endif
     }
 #ifdef __epiphany__
-    *epiphany_done = 1;
+    epiphany_status->done = 1;
 #endif
     return EXIT_SUCCESS;
 }
@@ -272,8 +290,8 @@ static void item_done(struct item_data *data,
     assert(name != NULL);
     assert(name[0] != 0);
 
-    platform_clock_t now = platform_clock();
+    data->end = platform_clock();
     bench_printf("%s, %" PRIu64 ", ", name, (uint64_t) spec->current_size);
-    platform_print_duration(data->start, now);
+    platform_print_duration(data->start, data->end);
     bench_printf("\n");
 }
