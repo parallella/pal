@@ -45,7 +45,7 @@ platform_short=$(echo $platform | cut -f1 -d"-")
 
 if [ "x${platform_short}" = "xepiphany" -a "x${build_arch}" = "xarm" ]; then
     echo $0: Detected Parallella board. >&2
-    true
+    ldflags_str='LDFLAGS=-Wl,-T/opt/adapteva/esdk/bsps/current/fast.ldf'
 elif [ "x${platform_short}" != "x${build_arch}" ]; then
     echo $0: Detected cross compilation. Skipping. >&2
     exit 0
@@ -85,7 +85,7 @@ if [ "x${PAL_BUILDDIR}" = "x" ]; then
 
     # Configure
     cd $PAL_BUILDDIR
-    $top_srcdir/configure ${host_str} >> build.log 2>&1
+    $top_srcdir/configure ${ldflags_str} ${host_str} >> build.log 2>&1
     created_pal_builddir="yes"
 fi
 
@@ -95,28 +95,25 @@ cd $PAL_BUILDDIR
 (cd benchmark && make -j -k >> build.log 2>&1 || true)
 
 # Run benchmark when not cross compiling
-platform_short=$(echo $platform | cut -f1 -d"-")
-if [ "x${platform_short}" = "x${build_arch}" ]; then
-    if [ -e "${PAL_BUILDDIR}/benchmark/bench-all.sh" ]; then
-        bench_res=$(mktemp)
-        ${PAL_BUILDDIR}/benchmark/math/bench-all.sh | gawk -F"," '
-        {
-            if (substr($0, 0, 1) == ";") {
-                next;
-            }
+if [ -e "${PAL_BUILDDIR}/benchmark/bench-all.sh" ]; then
+    bench_res=$(mktemp)
+    ${PAL_BUILDDIR}/benchmark/bench-all.sh | gawk -F"," '
+    {
+        if (substr($0, 0, 1) == ";") {
+            next;
+        }
 
-            fn=$1;
-            result=$3/$2;
-            unit="ns";
+        fn=$1;
+        result=$3/$2;
+        unit="ns";
 
-            printf("%s,%s,%s,%s,%s,%f,%s\n", ts, sha, platform, fn, cflags, result, unit);
-        }' ts=$commit_date sha=$sha cflags="${CFLAGS}" platform=$platform > $bench_res
-        (
-            echo ".mode csv"
-            echo ".import $bench_res benchmarks"
-        ) | sqlite3 ${PAL_DB}
-        rm $bench_res
-    fi
+        printf("%s,%s,%s,%s,%s,%f,%s\n", ts, sha, platform, fn, cflags, result, unit);
+    }' ts=$commit_date sha=$sha cflags="${CFLAGS}" platform=$platform > $bench_res
+    (
+        echo ".mode csv"
+        echo ".import $bench_res benchmarks"
+    ) | sqlite3 ${PAL_DB}
+    rm $bench_res
 fi
 
 cd $PAL_REPORTS
