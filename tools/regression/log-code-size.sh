@@ -85,7 +85,9 @@ cd $top_srcdir
 # Invoke benchmark.
 # HACK: Redirect stdout to stderr
 # TODO: Append to db in this script
-$PAL_TOOLS/regression/benchmark.sh $platform 1>&2
+if [ -e $PAL_TOOLS/regression/benchmark.sh ]; then
+    $PAL_TOOLS/regression/benchmark.sh $platform 1>&2 || true
+fi
 
 if [ "x${created_pal_builddir}" = "xyes" ]; then
     rm -rf ${PAL_BUILDDIR}
