@@ -273,7 +273,7 @@ static void item_done(struct item_data *data,
     assert(name[0] != 0);
 
     platform_clock_t now = platform_clock();
-    bench_printf("%s, %" PRIu64 ", ", name, spec->current_size);
+    bench_printf("%s, %" PRIu64 ", ", name, (uint64_t) spec->current_size);
     platform_print_duration(data->start, now);
     bench_printf("\n");
 }
