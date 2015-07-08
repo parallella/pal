@@ -31,38 +31,38 @@ static inline float __p_tan_pi_4(const float x)
 }
 
 /*
- * pi/4 <= x <= pi/2
+ * 0 <= x <= pi/2
  * x = x' + pi/4
  * tan x = tan(x' + pi/4) = (tan x' + 1) / (1 - tan x')
  */
 static inline float __p_tan_pi_2(const float x)
 {
     float x_, tanx_;
+    if (x <= pi_4)
+        return __p_tan_pi_4(x);
     x_ = x - pi_4;
     tanx_ = __p_tan_pi_4(x_);
     return (tanx_ + 1.f) / (1.f - tanx_);
 }
 
 /*
- * pi/2 <= x <= pi
+ * 0 <= x <= pi
  * x = x' + pi/2
- * tan x = tan (x' + pi/2) = - tan (pi/2 - x')
+ * tan x = tan (x' + pi/2) = -1 / tan x'
  */
 static inline float __p_tan_pi(const float x)
 {
     float x_;
+    if (x <= pi_2)
+        return __p_tan_pi_2(x);
     x_ = x - pi_2;
-    return -1.f * __p_tan_pi_2(pi_2 - x_);
+    return -1.f / __p_tan_pi_2(x_);
 }
 
 /* 0 <= x <= 2pi */
 static inline float _p_tan(const float x)
 {
-    if (x <= pi_4)
-        return __p_tan_pi_4(x);
-    else if (x <= pi_2)
-        return __p_tan_pi_2(x);
-    else if (x <= pi)
+    if (x <= pi)
         return __p_tan_pi(x);
     else
         return __p_tan_pi(x - pi);
