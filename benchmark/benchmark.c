@@ -52,7 +52,10 @@ int8_t RAW_MEM[MAX_PARAMS * MAX_ELEMS * sizeof(uintmax_t)];
     } while(0)
 #else
 #define bench_printf printf
-#define MAX_ELEMS 655360
+/* We don't want to be memory bound. So fit inside last-level cache (assume
+ * 512kb). This might need tweaking, e.g., for x86_64 data will likely fit in
+ * L1$ whereas on ARM (Cortex A9) probably not. */
+#define MAX_ELEMS 16384
 #endif
 
 #if defined(HAVE_CLOCK_GETTIME)
@@ -142,11 +145,6 @@ static void item_done(struct item_data *, const struct p_bench_specification *,
                       const char *);
 static void setup_memory(struct p_bench_raw_memory *, char **raw, size_t);
 
-#ifndef __epiphany__
-static char dummy_memarea[1024 * 1024 * 32];
-// int p_bench_dummy_func(char *, size_t);
-#endif
-
 int main(void)
 {
     struct p_bench_specification spec;
@@ -158,6 +156,11 @@ int main(void)
     for (const struct p_bench_item *item = benchmark_items; item->name != NULL;
          ++item) {
         struct item_data data;
+
+#ifndef __epiphany__
+        /* Warm up cache. We don't want to be memory-bound. */
+        item->benchmark(&spec);
+#endif
 
         item_preface(&data, item);
         item->benchmark(&spec);
@@ -256,19 +259,9 @@ static void setup_memory(struct p_bench_raw_memory *mem, char **raw,
     setup_input_pointers(mem, *raw + raw_output_size, size);
 }
 
-static void invalidate_data_cache(void)
-{
-#ifndef __epiphany__
-    setup_prandom_chars(dummy_memarea, sizeof(dummy_memarea), 1, false);
-    // (void)p_bench_dummy_func(dummy_memarea, sizeof(dummy_memarea));
-#endif
-}
-
 static void item_preface(struct item_data *data,
                          const struct p_bench_item *item)
 {
-    invalidate_data_cache();
-
     data->start = platform_clock();
 }
 
