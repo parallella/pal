@@ -40,7 +40,7 @@ typedef uint64_t platform_clock_t;
 volatile uint32_t *epiphany_done = (uint32_t *) 0x8f200000;
 char *epiphany_stdout = (char *) 0x8f300000;
 #define MAX_ELEMS 512
-uint8_t RAW_MEM[MAX_PARAMS * MAX_ELEMS * sizeof(uintmax_t)];
+int8_t RAW_MEM[MAX_PARAMS * MAX_ELEMS * sizeof(uintmax_t)];
 #define bench_printf(...)\
     do {\
         int __tmp;\
@@ -125,7 +125,7 @@ static void platform_print_duration(platform_clock_t start,
                                     platform_clock_t end)
 {
     if (end < start)
-        bench_printf("%" PRIu64, 0xffffffffffffffffULL);
+        bench_printf("%" PRIu64, 0xffffffffffffffffUL);
     else
         bench_printf("%" PRIu64, end - start);
 }
