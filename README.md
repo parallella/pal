@@ -289,21 +289,4 @@ STATUS REPORT
 ========================================
 https://parallella.github.io/pal-stats/summary.html
 
-BENCHMARKING
-========================================
-LINK
-=======
-* TBD
-
-BENCHMARKING
-========================================
-E=Epiphany  
-X=x86  
-A=ARM  
-CC=Clock cycles  
-  
-FUNCTION  | E-CC     | E-SIZE   | A-CC     | A-SIZE   | X-CC     |X-SIZE    |   
-----------|----------|----------|----------|----------|----------|----------|  
-p_add()   | TBD      | TBD      | TBD      | TBD      | TBD      | TBD      |  
-...       | ...      | ...      | ...      | ...      | ...      | ...      |  
 
