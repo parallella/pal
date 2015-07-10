@@ -72,7 +72,7 @@ int main(int argc, char *argv[])
     {
         p_gauss3x3_f32(data, dest, h, w);
         float_to_ubyte(data_ub, dest, size);
-        stbi_write_tga("../dataset/lena_gaussian.tga", w-2, h-2, 1, data_ub);
+        stbi_write_tga("../dataset/lena_gaussian.tga", w, h, 1, data_ub);
     }
     
     /* harris */
@@ -86,21 +86,35 @@ int main(int argc, char *argv[])
     
     /* sobel */
     {
-        p_sobel3x3_f32(data, dest, h, w);   
+        p_sobel3x3_f32(data, dest, h, w);
         float_to_ubyte(data_ub, dest, size);
         stbi_write_tga("../dataset/lena_sobel.tga", w, h, 1, data_ub);
+    }
+
+    /* scharr */
+    {
+        p_scharr3x3_f32(data, dest, h, w);
+        float_to_ubyte(data_ub, dest, size);
+        stbi_write_tga("../dataset/lena_scharr.tga", w, h, 1, data_ub);
+    }
+
+    /* prewitt */
+    {
+        p_prewitt3x3_f32(data, dest, h, w);
+        float_to_ubyte(data_ub, dest, size);
+        stbi_write_tga("../dataset/lena_prewitt.tga", w, h, 1, data_ub);
     }
     
     /* box */
     {
-        p_box3x3_f32(data, dest, h, w);   
+        p_box3x3_f32(data, dest, h, w);
         float_to_ubyte(data_ub, dest, size);
         stbi_write_tga("../dataset/lena_box.tga", w-2, h-2, 1, data_ub);
     }
     
     /* median */
     {
-        p_median3x3_f32(data, dest, h, w);   
+        p_median3x3_f32(data, dest, h, w);
         float_to_ubyte(data_ub, dest, size);
         stbi_write_tga("../dataset/lena_median.tga", w-2, h-2, 1, data_ub);
     }
