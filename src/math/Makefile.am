@@ -20,7 +20,7 @@ libpal_math_la_SOURCES = \
     p_cosh.c \
     p_div.c \
     p_dot.c \
-    p_erff.c \
+    p_erf.c \
     p_exp.c p_exp.h \
     p_ftoi.c \
     p_inv.c \

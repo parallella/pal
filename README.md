@@ -214,6 +214,7 @@ FUNCTION     | NOTES
 [p_cosh()](src/math/p_cosh.c)         | hyperbolic cosine  
 [p_div()](src/math/p_div.c)           | division  
 [p_dot()](src/math/p_dot.c)           | dot product  
+[p_erf()](src/math/p_erf.c)           | error function
 [p_exp()](src/math/p_exp.c)           | exponential
 [p_ftoi()](src/math/p_ftoi.c)         | float to  
 [p_itof()](src/math/p_itof.c)         | integer to float conversion  
