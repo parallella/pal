@@ -89,6 +89,48 @@
 //#define M_NORMALIZE_RADIANS(theta) (theta - (M_PI*2) * M_FLOOR((theta + M_PI) / (M_PI*2)))
 #define M_NORMALIZE_RADIANS(theta) ((float)(theta - (M_PI2) * M_FLOOR((theta + M_PI) * M_1_PI2)))
 
+/* Map a unary function onto an array */
+static inline void p_map_unary(float (*f)(const float),
+    const float *a, float *c, int n)
+{
+    int i, j;
+    const int N = 4;
+    const int k = n / N;
+    float a0, a1, a2, a3;
+    float c0, c1, c2, c3;
+    for (i = 0; i < k; i++) {
+        j = i * N;
+        a0 = a[j + 0];
+        a1 = a[j + 1];
+        a2 = a[j + 2];
+        a3 = a[j + 3];
+        c0 = (*f)(a0);
+        c1 = (*f)(a1);
+        c2 = (*f)(a2);
+        c3 = (*f)(a3);
+        c[j + 0] = c0;
+        c[j + 1] = c1;
+        c[j + 2] = c2;
+        c[j + 3] = c3;
+    }
+    switch (n % N) {
+        case 3:
+            c[k * N + 0] = (*f)(a[k * N + 0]);
+            c[k * N + 1] = (*f)(a[k * N + 1]);
+            c[k * N + 2] = (*f)(a[k * N + 2]);
+            break;
+        case 2:
+            c[k * N + 0] = (*f)(a[k * N + 0]);
+            c[k * N + 1] = (*f)(a[k * N + 1]);
+            break;
+        case 1:
+            c[k * N + 0] = (*f)(a[k * N + 0]);
+            break;
+        case 0:
+            break;
+    }
+}
+
 /*
  ****************************************************************
  * Basic Element Wise Vector Math Functions
