@@ -5,6 +5,7 @@
  * atan x = a1 * x + a3 * x^3 + ... + a9 * x^9 + e(x)
  * |e(x)| <= 10^-5
  */
+static inline float _p_atan(const float x) __attribute__((always_inline));
 static inline float _p_atan(const float x)
 {
     const float a1 =  0.9998660f;

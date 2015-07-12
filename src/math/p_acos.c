@@ -3,6 +3,7 @@
 #include "p_asin.h"
 
 /* acos z = pi/2 - asin z */
+static inline float _p_acos(const float z) __attribute__((always_inline));
 static inline float _p_acos(const float z)
 {
     return pi_2 - _p_asin(z);

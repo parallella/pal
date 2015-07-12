@@ -5,6 +5,7 @@
 /*
  * cosh z = (exp z + exp(-z)) / 2
  */
+static inline float _p_cosh(const float z) __attribute__((always_inline));
 static inline float _p_cosh(const float z)
 {
     float exp_z = _p_exp(z);

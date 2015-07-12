@@ -7,6 +7,7 @@
  *        = (exp z - exp -z) / (exp z + ezp -z)
  *        = (exp 2z - 1) / (exp 2z + 1)
  */
+static inline float _p_tanh(const float z) __attribute__((always_inline));
 static inline float _p_tanh(const float z)
 {
     float exp_2z = _p_exp(2.f * z);

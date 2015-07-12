@@ -60,6 +60,7 @@ static inline float __p_tan_pi(const float x)
 }
 
 /* 0 <= x <= 2pi */
+static inline float _p_tan(const float x) __attribute__((always_inline));
 static inline float _p_tan(const float x)
 {
     if (x <= pi)
