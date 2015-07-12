@@ -27,8 +27,5 @@ static inline float _p_sinh(const float z)
  */
 void p_sinh_f32(const float *a, float *c, int n)
 {
-    int i;
-    for (i = 0; i < n; i++) {
-        c[i] = _p_sinh(a[i]);
-    }
+    p_map_unary(&_p_sinh, a, c, n);
 }
