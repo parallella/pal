@@ -115,17 +115,11 @@ static inline void p_map_unary(float (*f)(const float),
     }
     switch (n % N) {
         case 3:
-            c[k * N + 0] = (*f)(a[k * N + 0]);
-            c[k * N + 1] = (*f)(a[k * N + 1]);
             c[k * N + 2] = (*f)(a[k * N + 2]);
-            break;
         case 2:
-            c[k * N + 0] = (*f)(a[k * N + 0]);
             c[k * N + 1] = (*f)(a[k * N + 1]);
-            break;
         case 1:
             c[k * N + 0] = (*f)(a[k * N + 0]);
-            break;
         case 0:
             break;
     }
