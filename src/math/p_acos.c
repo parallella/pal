@@ -2,6 +2,12 @@
 
 #include "p_asin.h"
 
+/* acos z = pi/2 - asin z */
+static inline float _p_acos(const float z)
+{
+    return pi_2 - _p_asin(z);
+}
+
 /**
  *
  * Computes the inverse cosine (arc cosine) of the input vector 'a'. Input
@@ -19,10 +25,5 @@
  */
 void p_acos_f32(const float *a, float *c, int n)
 {
-
-    int i;
-    /* acos x = pi/2 - asin x */
-    for (i = 0; i < n; i++) {
-        c[i] = pi_2 - _p_asin(a[i]);
-    }
+    p_map_unary(&_p_acos, a, c, n);
 }

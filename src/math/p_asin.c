@@ -19,9 +19,5 @@
  */
 void p_asin_f32(const float *a, float *c, int n)
 {
-
-    int i;
-    for (i = 0; i < n; i++) {
-        c[i] = _p_asin(a[i]);
-    }
+    p_map_unary(&_p_asin, a, c, n);
 }

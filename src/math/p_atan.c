@@ -36,9 +36,5 @@ static inline float _p_atan(const float x)
  */
 void p_atan_f32(const float *a, float *c, int n)
 {
-
-    int i;
-    for (i = 0; i < n; i++) {
-        c[i] = _p_atan(a[i]);
-    }
+    p_map_unary(&_p_atan, a, c, n);
 }
