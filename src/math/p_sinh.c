@@ -5,6 +5,7 @@
 /*
  * sinh z = (exp z - exp(-z)) / 2
  */
+static inline float _p_sinh(const float z) __attribute__((always_inline));
 static inline float _p_sinh(const float z)
 {
     float exp_z = _p_exp(z);
@@ -27,8 +28,5 @@ static inline float _p_sinh(const float z)
  */
 void p_sinh_f32(const float *a, float *c, int n)
 {
-    int i;
-    for (i = 0; i < n; i++) {
-        c[i] = _p_sinh(a[i]);
-    }
+    p_map_unary(&_p_sinh, a, c, n);
 }

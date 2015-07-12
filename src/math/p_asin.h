@@ -25,6 +25,7 @@ static inline float __p_asin_pos(const float x)
  * -1 <= x <= 1
  * asin(-x) = - asin x
  */
+static inline float _p_asin(const float x) __attribute__((always_inline));
 static inline float _p_asin(const float x)
 {
     if (x >= 0.f)

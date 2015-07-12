@@ -5,6 +5,7 @@
 /*
  * cosh z = (exp z + exp(-z)) / 2
  */
+static inline float _p_cosh(const float z) __attribute__((always_inline));
 static inline float _p_cosh(const float z)
 {
     float exp_z = _p_exp(z);
@@ -28,9 +29,5 @@ static inline float _p_cosh(const float z)
 
 void p_cosh_f32(const float *a, float *c, int n)
 {
-
-    int i;
-    for (i = 0; i < n; i++) {
-        c[i] = _p_cosh(a[i]);
-    }
+    p_map_unary(&_p_cosh, a, c, n);
 }

@@ -60,6 +60,7 @@ static inline float __p_tan_pi(const float x)
 }
 
 /* 0 <= x <= 2pi */
+static inline float _p_tan(const float x) __attribute__((always_inline));
 static inline float _p_tan(const float x)
 {
     if (x <= pi)
@@ -85,8 +86,5 @@ static inline float _p_tan(const float x)
  */
 void p_tan_f32(const float *a, float *c, int n)
 {
-    int i;
-    for (i = 0; i < n; i++) {
-        c[i] = _p_tan(a[i]);
-    }
+    p_map_unary(&_p_tan, a, c, n);
 }
