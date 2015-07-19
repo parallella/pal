@@ -18,7 +18,7 @@
  */
 void p_cross_f32(const float *a, const float *b, float *c, float *mag)
 {
-	float tmp;
+    float tmp;
 
     c[0] = a[1]*b[2] - a[2]*b[1];
 
@@ -28,7 +28,7 @@ void p_cross_f32(const float *a, const float *b, float *c, float *mag)
 
     if(mag)
     {
-	    tmp = c[0]*c[0] + c[1]*c[1] + c[2]*c[2];
-	    p_sqrt_f32(&tmp, mag, 1);
-	}
+        tmp = c[0]*c[0] + c[1]*c[1] + c[2]*c[2];
+        p_sqrt_f32(&tmp, mag, 1);
+    }
 }
