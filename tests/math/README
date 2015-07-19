@@ -9,6 +9,6 @@ To add a new function to test suite
 STILL TODO:
 max
 min
-mode
 popcount
-
+ftoi
+itof
