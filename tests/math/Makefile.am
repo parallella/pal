@@ -41,6 +41,7 @@ BUILT_SOURCES = \
     gold/p_mac_f32.gold.h \
     gold/p_mean_f32.gold.h \
     gold/p_median_f32.gold.h \
+    gold/p_mode_f32.gold.h \
     gold/p_mul_f32.gold.h \
     gold/p_pow_f32.gold.h \
     gold/p_sin_f32.gold.h \
@@ -143,7 +144,7 @@ check_p_max_f32_SOURCES         = notest.c
 check_p_mean_f32_SOURCES        = $(SIMPLE)
 check_p_median_f32_SOURCES      = $(SIMPLE)
 check_p_min_f32_SOURCES         = notest.c
-check_p_mode_f32_SOURCES        = notest.c
+check_p_mode_f32_SOURCES        = $(SIMPLE)
 check_p_mul_f32_SOURCES         = $(SIMPLE)
 check_p_popcount_SOURCES        = notest.c
 check_p_pow_f32_SOURCES         = $(SIMPLE) p_pow.c
@@ -189,7 +190,7 @@ check_p_max_f32_CFLAGS          = -DFUNCTION=p_max_f32                 -DSCALAR_
 check_p_mean_f32_CFLAGS         = -DFUNCTION=p_mean_f32    -DIS_UNARY  -DSCALAR_OUTPUT
 check_p_median_f32_CFLAGS       = -DFUNCTION=p_median_f32  -DIS_UNARY  -DSCALAR_OUTPUT
 check_p_min_f32_CFLAGS          = -DFUNCTION=p_min_f32                 -DSCALAR_OUTPUT
-check_p_mode_f32_CFLAGS         = -DFUNCTION=p_mode_f32                -DSCALAR_OUTPUT
+check_p_mode_f32_CFLAGS         = -DFUNCTION=p_mode_f32    -DIS_UNARY  -DSCALAR_OUTPUT
 check_p_mul_f32_CFLAGS          = -DFUNCTION=p_mul_f32     -DIS_BINARY
 check_p_popcount_CFLAGS         = -DFUNCTION=p_popcount
 # Override fault tolerance for p_pow_f32
