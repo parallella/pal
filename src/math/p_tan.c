@@ -20,13 +20,7 @@ static inline float __p_tan_pi_4(const float x)
     const float a12 = 0.0095168091f;
     float x2, tanx_x;
     x2 = x * x;
-    tanx_x = 1.f +
-         a2 * x2 +
-         a4 * x2 * x2 +
-         a6 * x2 * x2 * x2 +
-         a8 * x2 * x2 * x2 * x2 +
-        a10 * x2 * x2 * x2 * x2 * x2 +
-        a12 * x2 * x2 * x2 * x2 * x2 * x2;
+    tanx_x = 1.f + x2 * (a2 + x2 * (a4 + x2 * (a6 + x2 * (a8 + x2 * (a10 + x2 * a12)))));
     return tanx_x * x;
 }
 
