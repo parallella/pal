@@ -12,11 +12,8 @@ static inline float _p_atan(const float x)
     const float a5 =  0.1801410f;
     const float a7 = -0.0851330f;
     const float a9 =  0.0208351f;
-    return a1 * x +
-        a3 * x * x * x +
-        a5 * x * x * x * x * x +
-        a7 * x * x * x * x * x * x * x +
-        a9 * x * x * x * x * x * x * x * x * x;
+    float x2 = x * x;
+    return x * (a1 + x2 * (a3 + x2 * (a5 + x2 * (a7 + x2 * a9))));
 }
 
 /**
