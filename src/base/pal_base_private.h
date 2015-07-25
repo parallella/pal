@@ -48,14 +48,11 @@ struct p_event
 
 struct p_atom_u32
 {
-    uint32_t mutex; // resource mutex
+    p_mutex_t mutex; // resource mutex
     uint32_t var;   // atomic variable
 };
 
-struct p_mutex
-{
-    uint32_t mutex; // mutex
-};
+
 
 /*
  ***********************************************************************
