@@ -229,9 +229,6 @@ int16_t p_atomic_or_i16(int16_t *atom, int16_t n);
 int32_t p_atomic_or_i32(int32_t *atom, int32_t n);
 int64_t p_atomic_or_i64(int64_t *atom, int64_t n);
 
-/*atomic fetch and logical 'nand'*/
-int p_atomic_nand_u32(p_atom_t atom, uint32_t n);
-
 /*atomic swap*/
 int p_atomic_swap_u32(p_atom_t atom, const uint32_t *input);
 
