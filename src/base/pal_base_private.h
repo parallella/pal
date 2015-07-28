@@ -52,11 +52,6 @@ struct p_atom_u32
     uint32_t var;   // atomic variable
 };
 
-struct p_mutex
-{
-    uint32_t mutex; // mutex
-};
-
 /*
  ***********************************************************************
  * Global system variables (will be replaced with O/S real time
@@ -164,3 +159,32 @@ static inline int p_ref_get_err(const p_ref_t ref)
     else
         return 0;
 }
+
+/*
+ ***********************************************************************
+ * CPU YIELDING
+ ***********************************************************************
+ */
+
+/*
+ * Prevents excessive wastage of processing units if lock is contended
+ * when possible
+ */
+
+#if defined(__i386) || defined(__x86_64__)
+#define p_cpu_relax() __asm__ volatile("pause\n": : :"memory")
+#elif defined(__powerpc__) || defined(__ppc__) || defined(__PPC__) \
+	|| defined(__powerpc64__) || defined(__ppc64__) || defined(__PPC64__)
+#define p_cpu_relax() __asm__ volatile("or 27,27,27\n": : :"memory")
+#elif defined(__ARM_ARCH_6T2__) || defined(__ARM_ARCH_7__) || defined(__ARM_ARCH_7A__) \
+	|| defined(__ARM_ARCH_7R__) || defined(__ARM_ARCH_7M__) \
+	|| defined(__ARM_ARCH_7S__) || defined(__aarch64__)
+#define p_cpu_relax() __asm__ volatile("yield\n": : :"memory")
+#elif defined(__FreeBSD__) || defined(__linux__) || defined(__NetBSD__) \
+	|| defined(__OpenBSD__) || defined(__MACH__)
+/* Many OSes support it, but some require odd macros to get the declaration */
+int pthread_yield(void);
+#define p_cpu_relax() pthread_yield ()
+#else
+#define p_cpu_relax() ((int) 0)
+#endif
