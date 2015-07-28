@@ -5,6 +5,6 @@
 
 int p_mutex_init(p_mutex_t *m)
 {
-	m = 0;
-	return m;
+	*m = 0;
+	return *m;
 }
