@@ -209,8 +209,15 @@ int16_t p_atomic_and_i16(int16_t *atom, int16_t n);
 int32_t p_atomic_and_i32(int32_t *atom, int32_t n);
 int64_t p_atomic_and_i64(int64_t *atom, int64_t n);
 
-/*atomic fetch and logical 'xor'*/
-int p_atomic_xor_u32(p_atom_t atom, uint32_t n);
+/*atomic fetch and bitwise 'xor'*/
+uint8_t p_atomic_xor_u8(uint8_t *atom, uint8_t n);
+uint16_t p_atomic_xor_u16(uint16_t *atom, uint16_t n);
+uint32_t p_atomic_xor_u32(uint32_t *atom, uint32_t n);
+uint64_t p_atomic_xor_u64(uint64_t *atom, uint64_t n);
+int8_t p_atomic_xor_i8(int8_t *atom, int8_t n);
+int16_t p_atomic_xor_i16(int16_t *atom, int16_t n);
+int32_t p_atomic_xor_i32(int32_t *atom, int32_t n);
+int64_t p_atomic_xor_i64(int64_t *atom, int64_t n);
 
 /*atomic fetch and logical 'or'*/
 int p_atomic_or_u32(p_atom_t atom, uint32_t n);
