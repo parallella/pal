@@ -72,9 +72,10 @@ typedef p_ref_t p_symbol_t;
 typedef p_ref_t p_event_t;
 typedef p_ref_t p_mem_t;
 typedef p_ref_t p_memptr_t;
-typedef p_ref_t p_atom_t;
-typedef p_ref_t p_mutex_t;
-typedef p_ref_t p_mutex_attr_t;
+
+
+typedef int p_atom_t;
+typedef int p_mutex_t;
 
 /*
  ***********************************************************************
