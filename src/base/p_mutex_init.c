@@ -3,10 +3,8 @@
 #include "pal_base.h"
 #include "pal_base_private.h"
 
-int p_mutex_init(p_mutex_t * mp)
+int p_mutex_init(p_mutex_t *m)
 {
-
-	/*PLACE CODE HERE */
-
-	return (0);
+	m = 0;
+	return m;
 }
