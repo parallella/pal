@@ -3,12 +3,34 @@
 #include "pal_base.h"
 #include "pal_base_private.h"
 
-/*This is the generic version of an atomic exchange. It stores the contents of
- * *val into *ptr. The original value of *ptr is copied into *ret*/
+uint8_t p_atomic_swap_u8(uint8_t *atom, uint8_t n) {
+	return __sync_lock_test_and_set (atom, n);
+}
 
-int p_atomic_swap_u32(p_atom_t atom, const uint32_t *input)
-{
+uint16_t p_atomic_swap_u16(uint16_t *atom, uint16_t n) {
+	return __sync_lock_test_and_set (atom, n);
+}
 
-    /*PLACE CODE HERE*/
-    return (0);
+uint32_t p_atomic_swap_u32(uint32_t *atom, uint32_t n) {
+	return __sync_lock_test_and_set (atom, n);
+}
+
+uint64_t p_atomic_swap_u64(uint64_t *atom, uint64_t n) {
+	return __sync_lock_test_and_set (atom, n);
+}
+
+int8_t p_atomic_swap_i8(int8_t *atom, int8_t n) {
+	return __sync_lock_test_and_set (atom, n);
+}
+
+int16_t p_atomic_swap_i16(int16_t *atom, int16_t n) {
+	return __sync_lock_test_and_set (atom, n);
+}
+
+int32_t p_atomic_swap_i32(int32_t *atom, int32_t n) {
+	return __sync_lock_test_and_set (atom, n);
+}
+
+int64_t p_atomic_swap_i64(int64_t *atom, int64_t n) {
+	return __sync_lock_test_and_set (atom, n);
 }
