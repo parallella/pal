@@ -122,7 +122,7 @@ p_mem_t p_rmalloc(p_team_t team, int pid, size_t size);
 int p_free(p_mem_t mem);
 
 /*Memory fence*/
-int p_fence(p_mem_t mem);
+void p_fence(void);
 
 /*Flushes the read and write paths to a specific memory object*/
 int p_flush(p_mem_t mem);

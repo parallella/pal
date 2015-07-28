@@ -7,17 +7,13 @@
 
 /**
  *
- * A memory fence. Ensures that all read/write operations to memory object
+ * A memory fence. Ensures that all read/write operations
  * from the processor exeucting the p_fence call have completed.
  *
- * @param mem   Memory object desciptor (int)
- *
- * @return      Returns 0 if successful.
  *
  */
 
-int p_fence(p_mem_t mem)
+void p_fence(void)
 {
-    printf("Running p_fence(%p)\n", mem);
-    return (0);
+	__sync_synchronize ();
 }
