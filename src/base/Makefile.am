@@ -31,7 +31,6 @@ libpal_base_la_SOURCES = \
     p_load.c \
     p_malloc.c \
     p_memcpy.c \
-    p_mutex_destroy.c \
     p_mutex_init.c \
     p_mutex_lock.c \
     p_mutex_trylock.c \

@@ -176,9 +176,6 @@ int p_mutex_trylock(p_mutex_t *mp);
 /*Unlock a mutex*/
 int p_mutex_unlock(p_mutex_t *mp);
 
-/*Destroy a mutex*/
-int p_mutex_destroy(p_mutex_t *mp);
-
 /*atomic fetch and add*/
 uint8_t p_atomic_add_u8(uint8_t *atom, uint8_t n);
 uint16_t p_atomic_add_u16(uint16_t *atom, uint16_t n);
