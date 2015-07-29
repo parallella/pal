@@ -4,9 +4,11 @@ LIBS = -lm
 
 if HOST_IS_EPIPHANY
     SIMPLE = notest.c
+    CHECK_SCALAR_AND_INDEX = notest.c
 else
     AM_CPPFLAGS += -I$(top_srcdir)/tests
     SIMPLE = simple.c simple.h
+    CHECK_SCALAR_AND_INDEX = check_scalar_and_index.c check_scalar_and_index.h
 endif
 
 LDADD = $(top_builddir)/src/libpal.la
@@ -39,8 +41,10 @@ BUILT_SOURCES = \
     gold/p_ln_f32.gold.h \
     gold/p_log10_f32.gold.h \
     gold/p_mac_f32.gold.h \
+    gold/p_max_f32.gold.h \
     gold/p_mean_f32.gold.h \
     gold/p_median_f32.gold.h \
+    gold/p_min_f32.gold.h \
     gold/p_mode_f32.gold.h \
     gold/p_mul_f32.gold.h \
     gold/p_pow_f32.gold.h \
@@ -140,10 +144,10 @@ check_p_itof_SOURCES            = notest.c
 check_p_ln_f32_SOURCES          = $(SIMPLE) p_ln.c
 check_p_log10_f32_SOURCES       = $(SIMPLE) p_log10.c
 check_p_mac_f32_SOURCES         = $(SIMPLE)
-check_p_max_f32_SOURCES         = notest.c
+check_p_max_f32_SOURCES         = $(CHECK_SCALAR_AND_INDEX) p_max.c
 check_p_mean_f32_SOURCES        = $(SIMPLE)
 check_p_median_f32_SOURCES      = $(SIMPLE)
-check_p_min_f32_SOURCES         = notest.c
+check_p_min_f32_SOURCES         = $(CHECK_SCALAR_AND_INDEX) p_min.c
 check_p_mode_f32_SOURCES        = $(SIMPLE)
 check_p_mul_f32_SOURCES         = $(SIMPLE)
 check_p_popcount_SOURCES        = notest.c
