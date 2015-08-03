@@ -29,8 +29,6 @@ static const size_t max_output = 3;
 #include <e-lib.h>
 #endif
 
-typedef uint64_t platform_clock_t;
-
 /* Arrays */
 #define MAX_OUTPUTS 1 /* Points to same memory */
 #define MAX_INPUTS 3
@@ -67,7 +65,7 @@ int8_t RAW_MEM[MAX_PARAMS * MAX_ELEMS * sizeof(uintmax_t)];
 #endif
 
 #if defined(HAVE_CLOCK_GETTIME)
-static platform_clock_t platform_clock(void)
+static uint64_t platform_clock(void)
 {
     struct timespec ts;
     uint64_t nanosec;
@@ -79,7 +77,7 @@ static platform_clock_t platform_clock(void)
 }
 #elif defined(HAVE_MACH_TIME)
 #include <mach/mach_time.h>
-static platform_clock_t platform_clock(void)
+static uint64_t platform_clock(void)
 {
     static mach_timebase_info_data_t tb_info = {
         .numer = 0,
@@ -98,13 +96,13 @@ static platform_clock_t platform_clock(void)
     return nanosec;
 }
 #elif defined(HAVE_E_LIB_H)
-static platform_clock_t platform_clock(void)
+static uint64_t platform_clock(void)
 {
     // Assuming 600MHz clock 10^9 / (600 * 10^6)
     const float factor = 1.6666666666666666666f;
 
-    static platform_clock_t clock = 0;
-    platform_clock_t diff;
+    static uint64_t clock = 0;
+    uint64_t diff;
 
     static bool initialized = false;
 
@@ -125,14 +123,14 @@ static platform_clock_t platform_clock(void)
 
     clock += diff;
 
-    return (platform_clock_t) ((float) clock * factor);
+    return (uint64_t) ((float) clock * factor);
 }
 #else
 #error "No timing function"
 #endif
 
-static void platform_print_duration(platform_clock_t start,
-                                    platform_clock_t end)
+static void platform_print_duration(uint64_t start,
+                                    uint64_t end)
 {
     if (end < start)
         bench_printf("%" PRIu64, 0xffffffffffffffffUL);
@@ -144,8 +142,8 @@ static void platform_print_duration(platform_clock_t start,
 
 struct item_data
 {
-    platform_clock_t start;
-    platform_clock_t end;
+    uint64_t start;
+    uint64_t end;
 };
 
 static void item_preface(struct item_data *, const struct p_bench_item *);
