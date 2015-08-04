@@ -102,7 +102,7 @@ static uint64_t platform_clock(void)
     const float factor = 1.6666666666666666666f;
 
     static uint64_t clock = 0;
-    uint64_t diff;
+    uint64_t diff, nanosec;
 
     static bool initialized = false;
 
@@ -123,7 +123,9 @@ static uint64_t platform_clock(void)
 
     clock += diff;
 
-    return (uint64_t) ((float) clock * factor);
+    nanosec = (uint64_t) ((float) clock * factor);
+
+    return nanosec;
 }
 #else
 #error "No timing function"
@@ -151,14 +153,56 @@ static void item_done(struct item_data *, const struct p_bench_specification *,
                       const char *);
 static void setup_memory(struct p_bench_raw_memory *, char **raw, size_t);
 
+#ifndef __epiphany__
 int main(void)
 {
-    struct p_bench_specification spec;
+    struct p_bench_specification spec = { 0 };
     char *raw_mem = NULL;
     spec.current_size = MAX_ELEMS;
-#ifdef __epiphany__
+
+    setup_memory(&spec.mem, &raw_mem, spec.current_size);
+    bench_printf(";name, size, duration (ns)\n");
+    for (const struct p_bench_item *item = benchmark_items; item->name != NULL;
+         ++item) {
+        struct item_data data, best = { .end = ~(0ULL) };
+
+        /* Warm up caches, branch predictors etc. */
+        for (int i = 0; i < 50; i++)
+            item->benchmark(&spec);
+
+        /* Repeat tests to get more stable results between runs */
+        for (int i = 0; i < 750; i++) {
+            data.start = platform_clock();
+
+            /* Measure 10 iterations so the clocksource's resolution doesn't
+             * play tricks on us */
+            for (int j = 0; j < 10; j++)
+                item->benchmark(&spec);
+
+            data.end = platform_clock();
+
+            /* Use best measurement */
+            if (best.end - best.start > data.end - data.start)
+                best = data;
+        }
+        {
+            /* Adjust for iterations in inner loop above */
+            float tmp = best.end - best.start;
+            tmp /= 10.0f;
+            best.end = best.start + tmp;
+        }
+        item_done(&best, &spec, item->name);
+
+    }
+    return EXIT_SUCCESS;
+}
+#else /* __epiphany__ */
+int main(void)
+{
+    struct p_bench_specification spec = { 0 };
+    char *raw_mem = NULL;
+    spec.current_size = MAX_ELEMS;
     uint32_t nbench = 0;
-#endif
 
     setup_memory(&spec.mem, &raw_mem, spec.current_size);
     bench_printf(";name, size, duration (ns)\n");
@@ -166,27 +210,20 @@ int main(void)
          ++item) {
         struct item_data data;
 
-#ifndef __epiphany__
-        /* Warm up cache. We don't want to be memory-bound. */
+        data.start = platform_clock();
         item->benchmark(&spec);
-#endif
+        data.end = platform_clock();
 
-        item_preface(&data, item);
-        item->benchmark(&spec);
-        item_done(&data, &spec, item->name);
-#ifdef __epiphany__
         strcpy(epiphany_results[nbench].name, item->name);
         epiphany_results[nbench].ns = data.end - data.start;
         epiphany_results[nbench].size = (uint64_t) spec.current_size;
         nbench++;
         epiphany_status->nbench = nbench;
-#endif
     }
-#ifdef __epiphany__
     epiphany_status->done = 1;
-#endif
     return EXIT_SUCCESS;
 }
+#endif
 
 static void setup_output_pointers(struct p_bench_raw_memory *mem, void *p)
 {
@@ -288,7 +325,6 @@ static void item_done(struct item_data *data,
     assert(name != NULL);
     assert(name[0] != 0);
 
-    data->end = platform_clock();
     bench_printf("%s, %" PRIu64 ", ", name, (uint64_t) spec->current_size);
     platform_print_duration(data->start, data->end);
     bench_printf("\n");
