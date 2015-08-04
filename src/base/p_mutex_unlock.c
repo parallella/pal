@@ -3,10 +3,8 @@
 #include "pal_base.h"
 #include "pal_base_private.h"
 
-int p_mutex_unlock(p_mutex_t *mp)
+int p_mutex_unlock(p_mutex_t * m)
 {
-
-    /*PLACE CODE HERE*/
-
-    return (0);
+	__sync_lock_release(m);
+	return 0;
 }
