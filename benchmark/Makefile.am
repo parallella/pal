@@ -24,6 +24,7 @@ else
 BUILDCFLAGS = $(CFLAGS)
 BUILDLDFLAGS = $(LDFLAGS)
 RUNBENCH_SRC = runbench.default.c
+BENCHMARK_LIBS += -lm
 endif
 
 BUILT_SOURCES = runbench libbenchmark.la
