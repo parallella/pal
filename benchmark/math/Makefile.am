@@ -32,11 +32,9 @@ ALLPROGRAMS := \
     bench_p_mean_f32 \
     bench_p_median_f32 \
     bench_p_min_f32 \
-    bench_p_mode_f32 \
     bench_p_mul_f32 \
     bench_p_popcount_u32 \
     bench_p_popcount_u64 \
-    bench_p_pow_f32 \
     bench_p_rand \
     bench_p_sin_f32 \
     bench_p_sincos_f32 \
@@ -48,11 +46,13 @@ ALLPROGRAMS := \
     bench_p_sumsq_f32 \
     bench_p_tan_f32 \
     bench_p_tanh_f32
+#    bench_p_mode_f32 # Doesn't work w/ internal.ldf on epiphany
+#    bench_p_pow_f32  # Epiphany: Huge table, won't link.
 
 if HOST_IS_EPIPHANY
 noinst_PROGRAMS = $(ALLPROGRAMS)
 else
-noinst_PROGRAMS = $(ALLPROGRAMS)
+noinst_PROGRAMS = $(ALLPROGRAMS) bench_p_mode_f32 bench_p_pow_f32
 endif
 
 bench_p_absdiff_f32_SOURCES     = one.c
