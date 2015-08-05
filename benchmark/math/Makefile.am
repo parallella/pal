@@ -2,10 +2,8 @@ AUTOMAKE_OPTIONS = foreign
 
 LDADD = $(top_builddir)/benchmark/libbenchmark.la $(top_builddir)/src/libpal.la
 
-# Can only do one bench at a time (size)
 # In alphabetic order
-if HOST_IS_EPIPHANY
-noinst_PROGRAMS = \
+ALLPROGRAMS := \
     bench_p_absdiff_f32 \
     bench_p_abs_f32 \
     bench_p_acos_f32 \
@@ -50,8 +48,11 @@ noinst_PROGRAMS = \
     bench_p_sumsq_f32 \
     bench_p_tan_f32 \
     bench_p_tanh_f32
+
+if HOST_IS_EPIPHANY
+noinst_PROGRAMS = $(ALLPROGRAMS)
 else
-noinst_PROGRAMS = bench_all
+noinst_PROGRAMS = $(ALLPROGRAMS)
 endif
 
 bench_p_absdiff_f32_SOURCES     = one.c
@@ -144,4 +145,4 @@ bench_p_sumsq_f32_CFLAGS        = -DFUNCTION=p_sumsq_f32    -DIS_UNARY
 bench_p_tan_f32_CFLAGS          = -DFUNCTION=p_tan_f32      -DIS_UNARY
 bench_p_tanh_f32_CFLAGS         = -DFUNCTION=p_tanh_f32     -DIS_UNARY
 
-bench_all_SOURCES = all.c
+#bench_all_SOURCES = all.c
