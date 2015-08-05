@@ -154,6 +154,55 @@ static void item_done(struct item_data *, const struct p_bench_specification *,
 static void setup_memory(struct p_bench_raw_memory *, char **raw, size_t);
 
 #ifndef __epiphany__
+
+struct item_data item_bench(const struct p_bench_item *item,
+                            struct p_bench_specification *spec)
+{
+    struct item_data data, best = { .end = ~(0ULL) };
+    uint64_t item_start_time = platform_clock();
+
+    /* Warm up caches, branch predictors etc. */
+    /* Calculate inner loop. */
+    int inner_loop;
+    data.start = platform_clock();
+    for (int i = 0; i < 50; i++)
+        item->benchmark(spec);
+    data.end = platform_clock();
+
+    {
+        float tmp = data.end - data.start;
+        tmp /= 50.0f;
+        /* 50k us seems to work */
+        tmp = 50000.0f / tmp;
+        inner_loop = ceilf(tmp);
+    }
+
+    /* Repeat tests to get more stable results between runs */
+    while (true) {
+        /* Measure 10 iterations so the clocksource's resolution doesn't
+         * play tricks on us */
+        data.start = platform_clock();
+        for (int j = 0; j < inner_loop; j++)
+            item->benchmark(spec);
+        data.end = platform_clock();
+
+        /* Use best measurement */
+        if (best.end - best.start > data.end - data.start)
+            best = data;
+
+        /* Test each function for 1/2 second */
+        if (data.end - item_start_time >= 500000000ULL)
+            break;
+    }
+    {
+        /* Adjust for iterations in inner loop above */
+        float tmp = best.end - best.start;
+        tmp /= (float) inner_loop;
+        best.end = best.start + tmp;
+    }
+    return best;
+}
+
 int main(void)
 {
     struct p_bench_specification spec = { 0 };
@@ -164,35 +213,40 @@ int main(void)
     bench_printf(";name, size, duration (ns)\n");
     for (const struct p_bench_item *item = benchmark_items; item->name != NULL;
          ++item) {
-        struct item_data data, best = { .end = ~(0ULL) };
+        struct item_data best;
+        bool consistent = false;
 
-        /* Warm up caches, branch predictors etc. */
-        for (int i = 0; i < 50; i++)
-            item->benchmark(&spec);
+        best = item_bench(item, &spec);
+        for (int tries = 0; tries < 50; tries++) {
+            struct item_data snd;
+            float fst_time, snd_time;
 
-        /* Repeat tests to get more stable results between runs */
-        for (int i = 0; i < 750; i++) {
-            data.start = platform_clock();
+            /* Benchmark again ... */
+            snd = item_bench(item, &spec);
 
-            /* Measure 10 iterations so the clocksource's resolution doesn't
-             * play tricks on us */
-            for (int j = 0; j < 10; j++)
-                item->benchmark(&spec);
+            fst_time = best.end - best.start;
+            snd_time = snd.end - snd.start;
 
-            data.end = platform_clock();
+            /* ... and start over if results deviate too much */
+            if (fst_time / snd_time < 0.995 || snd_time / fst_time < 0.995) {
+                /* Take average so abnormally low results converge over time */
+                best.end += (snd_time - fst_time) / 2.0f;
+                usleep(100000);
 
-            /* Use best measurement */
-            if (best.end - best.start > data.end - data.start)
-                best = data;
+                continue;
+            }
+
+            if (fst_time > snd_time)
+                best = snd;
+
+            consistent = true;
+            break;
         }
-        {
-            /* Adjust for iterations in inner loop above */
-            float tmp = best.end - best.start;
-            tmp /= 10.0f;
-            best.end = best.start + tmp;
+        if (!consistent) {
+            fprintf(stderr, ";WARNING: %s not consistent\n", item->name);
+            fflush(stderr);
         }
         item_done(&best, &spec, item->name);
-
     }
     return EXIT_SUCCESS;
 }
