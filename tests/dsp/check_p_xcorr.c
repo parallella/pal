@@ -9,6 +9,7 @@ Currently, the test is only using Arm
 #include <string.h>
 #include <stdlib.h>
 #include <unistd.h>
+#include <math.h>
 #include <pal.h>
 
 #include "xcorr_test_data_1.h"

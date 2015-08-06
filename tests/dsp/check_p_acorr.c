@@ -12,6 +12,7 @@ Currently, the test is only using Arm
 #include <string.h>
 #include <stdlib.h>
 #include <unistd.h>
+#include <math.h>
 #include <pal.h>
 #include "acorr_test_data.h"
 

@@ -1,4 +1,3 @@
-#include <math.h>
 #include <pal.h>
 
 static const float pi_4 = (float) M_PI / 4.f;

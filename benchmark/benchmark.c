@@ -8,6 +8,7 @@
 #include <errno.h>
 #include <unistd.h>
 #include <string.h>
+#include <math.h>
 
 #include "config.h"
 #include "benchmark.h"

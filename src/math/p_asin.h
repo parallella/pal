@@ -1,7 +1,5 @@
 #pragma once
 
-#include <math.h>
-
 #include "p_sqrt.h"
 
 static const float pi_2 = (float) M_PI / 2.f;

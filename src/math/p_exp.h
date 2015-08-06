@@ -1,6 +1,5 @@
 #pragma once
-
-#include <math.h>
+#include <pal.h>
 
 static const float ln2 = (float) M_LN2;
 

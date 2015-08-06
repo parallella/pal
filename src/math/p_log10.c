@@ -13,7 +13,6 @@
  * @return      None
  *
  */
-#include <math.h>
 void p_log10_f32(const float *a, float *c, int n)
 {
     int i;

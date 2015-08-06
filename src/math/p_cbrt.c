@@ -1,5 +1,4 @@
 #include <pal.h>
-
 #include <math.h>
 
 /**
@@ -13,6 +12,8 @@
  * @param n     Size of 'a' and 'c' vector.
  *
  * @return      None
+ *
+ * @todo        Implement without using libm
  *
  */
 void p_cbrt_f32(const float *a, float *c, int n)

@@ -1,4 +1,5 @@
 #include <pal.h>
+#include <math.h>
 
 /**
  *
@@ -13,8 +14,9 @@
  *
  * @return      None
  *
+ * @todo        Implement without using libm
+ *
  */
-#include <math.h>
 void p_atanh_f32(const float *a, float *c, int n)
 {
 
