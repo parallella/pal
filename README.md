@@ -59,7 +59,7 @@ Instructions for contributing can be found [HERE](CONTRIBUTING.md).
 
 ###Install Prerequisites
 ``` bash
-$ sudo apt-get install libtool build-essential pkg-config autoconf doxygen
+$ sudo apt-get install libtool build-essential pkg-config autoconf automake doxygen
 ```
 
 ###Build Sequence
