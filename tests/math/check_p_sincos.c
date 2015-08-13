@@ -40,21 +40,59 @@ bool compare(float x, float y)
     return err <= EPSILON_RELMAX;
 }
 
+#ifdef __epiphany__
+void *simple_calloc(size_t nmemb, size_t size)
+{
+    void *p;
+    uint64_t *q;
+    size_t i;
+
+    /* Find program break */
+    p = sbrk(0);
+    if (!p)
+        return NULL;
+
+    /* Align by double-word */
+    if (!sbrk((8 - ((uintptr_t) p & 7)) & 7))
+        return NULL;
+
+    /* Calculate total size (assume no overflow) */
+    size *= nmemb;
+
+    /* Allocate in even double-words */
+    size = (size + 7) & ~7;
+
+    p = sbrk(size);
+    if (!p)
+        return NULL;
+
+    /* Set to zero */
+    for (i = 0, q = p; i < size; i += 8, q++)
+        *q = 0;
+
+    return p;
+}
+#define simple_free(p)
+#else
+#define simple_calloc calloc
+#define simple_free free
+#endif
+
 int setup(struct ut_suite *suite)
 {
     size_t i;
 
     (void) suite;
 
-    ai = calloc(gold_size, sizeof(float));
-    refCos = calloc(gold_size, sizeof(float));
-    refSin = calloc(gold_size, sizeof(float));
+    ai = simple_calloc(gold_size, sizeof(float));
+    refCos = simple_calloc(gold_size, sizeof(float));
+    refSin = simple_calloc(gold_size, sizeof(float));
 
     /* Allocate one extra element for res and add end marker so overwrites can
      * be detected */
-    resCos = calloc(gold_size + 1, sizeof(float));
+    resCos = simple_calloc(gold_size + 1, sizeof(float));
     resCos[gold_size] = OUTPUT_END_MARKER;
-    resSin = calloc(gold_size + 1, sizeof(float));
+    resSin = simple_calloc(gold_size + 1, sizeof(float));
     resSin[gold_size] = OUTPUT_END_MARKER;
 
     for (i = 0; i < gold_size; i++) {
@@ -66,11 +104,13 @@ int setup(struct ut_suite *suite)
 
 int teardown(struct ut_suite *suite)
 {
-    free(ai);
-    free(resCos);
-    free(resSin);
-    free(refCos);
-    free(refSin);
+    (void) suite;
+
+    simple_free(ai);
+    simple_free(resCos);
+    simple_free(resSin);
+    simple_free(refCos);
+    simple_free(refSin);
 
     return 0;
 }
@@ -128,6 +168,18 @@ DECLARE_UT_TCASE_LIST(tcases, &tc_against_gold, &tc_against_ref);
 #define FUNCTION_SUITE XCONCAT2(FUNCTION,_suite)
 DECLARE_UT_SUITE(FUNCTION_SUITE, setup, teardown, false, tcases, NULL);
 
+#ifdef __epiphany__
+struct status {
+    uint32_t done;
+    uint32_t _pad1;
+    uint32_t returncode;
+    uint32_t _pad2;
+} __attribute__((packed));
+
+volatile struct status *epiphany_status = (struct status *) 0x8f200000;
+volatile char *epiphany_results = (char *) 0x8f300000;
+#endif
+
 int main(int argc, char *argv[])
 {
     int ret;
@@ -140,8 +192,13 @@ int main(int argc, char *argv[])
     ret = ut_run(suite);
 
     ut_report(buf, ARRAY_SIZE(buf), suite, true);
-
+#ifdef __epiphany__
+    memcpy((void *) epiphany_results, buf, sizeof(buf));
+    epiphany_status->returncode = ret;
+    epiphany_status->done = 1;
+#else
     printf("%s", buf);
+#endif
 
     return ret;
 }

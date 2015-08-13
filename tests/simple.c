@@ -4,6 +4,7 @@
 #include <math.h>
 #include <stdbool.h>
 #include <string.h>
+#include <unistd.h>
 
 #include <pal.h>
 /* TODO: This relative path include is fragile */
@@ -50,23 +51,61 @@ bool compare(float x, float y)
     return err <= EPSILON_RELMAX;
 }
 
+#ifdef __epiphany__
+void *simple_calloc(size_t nmemb, size_t size)
+{
+    void *p;
+    uint64_t *q;
+    size_t i;
+
+    /* Find program break */
+    p = sbrk(0);
+    if (!p)
+        return NULL;
+
+    /* Align by double-word */
+    if (!sbrk((8 - ((uintptr_t) p & 7)) & 7))
+        return NULL;
+
+    /* Calculate total size (assume no overflow) */
+    size *= nmemb;
+
+    /* Allocate in even double-words */
+    size = (size + 7) & ~7;
+
+    p = sbrk(size);
+    if (!p)
+        return NULL;
+
+    /* Set to zero */
+    for (i = 0, q = p; i < size; i += 8, q++)
+        *q = 0;
+
+    return p;
+}
+#define simple_free(p)
+#else
+#define simple_calloc calloc
+#define simple_free free
+#endif
+
 int setup(struct ut_suite *suite)
 {
     size_t i;
 
     (void) suite;
 
-    ai = calloc(gold_size, sizeof(float));
-    bi = calloc(gold_size, sizeof(float));
-    ref = calloc(gold_size, sizeof(float));
+    ai = simple_calloc(gold_size, sizeof(float));
+    bi = simple_calloc(gold_size, sizeof(float));
+    ref = simple_calloc(gold_size, sizeof(float));
 
     /* Allocate one extra element for res and add end marker so overwrites can
      * be detected */
 #ifdef SCALAR_OUTPUT
-    res = calloc(2, sizeof(float));
+    res = simple_calloc(2, sizeof(float));
     res[1] = OUTPUT_END_MARKER;
 #else
-    res = calloc(gold_size + 1, sizeof(float));
+    res = simple_calloc(gold_size + 1, sizeof(float));
     res[gold_size] = OUTPUT_END_MARKER;
 #endif
     for (i = 0; i < gold_size; i++) {
@@ -81,18 +120,19 @@ int teardown(struct ut_suite *suite)
 {
     (void) suite;
 
-    free(ai);
-    free(bi);
-    free(res);
-    free(ref);
+    simple_free(ai);
+    simple_free(bi);
+    simple_free(res);
+    simple_free(ref);
 
     /* Need to free if we're not using built-in gold data */
     if (gold_file)
-        free(gold);
+        simple_free(gold);
 
     return 0;
 }
 
+#ifndef __epiphany__
 int tc_print_gold_e(struct ut_suite *suite, struct ut_tcase *tcase)
 {
     size_t i;
@@ -112,6 +152,7 @@ int tc_print_gold_e(struct ut_suite *suite, struct ut_tcase *tcase)
 
     return 0;
 }
+#endif
 
 int tc_against_gold_e(struct ut_suite *suite, struct ut_tcase *tcase)
 {
@@ -185,6 +226,7 @@ int tc_against_ref_v(struct ut_suite *suite, struct ut_tcase *tcase)
     return 0;
 }
 
+#ifndef __epiphany__
 void parse_options_or_die(int argc, char *argv[])
 {
     /* At some point we might to want to use getopt if this gets to messy. */
@@ -212,7 +254,9 @@ usage:
 "\t-g, --gold\tInstead of running test, generate gold data\n", argv[0]);
     exit(EXIT_FAILURE);
 }
+#endif
 
+#ifndef __epiphany__
 void read_gold_file_or_die(char *progname)
 {
     float ai, bi, res, expect;
@@ -268,9 +312,10 @@ retry:
 
 fail:
     if (gold)
-        free(gold);
+        simple_free(gold);
     exit(EXIT_FAILURE);
 }
+#endif
 
 DECLARE_UT_TCASE(tc_against_gold, tc_against_gold_e, tc_against_gold_v, NULL);
 DECLARE_UT_TCASE(tc_against_ref, NULL, tc_against_ref_v, NULL);
@@ -280,10 +325,24 @@ DECLARE_UT_TCASE_LIST(tcases, &tc_against_gold, &tc_against_ref);
 #define FUNCTION_SUITE XCONCAT2(FUNCTION,_suite)
 DECLARE_UT_SUITE(FUNCTION_SUITE, setup, teardown, false, tcases, NULL);
 
+#ifndef __epiphany__
 #define PRINT_GOLD_SUITE XCONCAT2(FUNCTION,_print_gold_suite)
 DECLARE_UT_TCASE(tc_print_gold, tc_print_gold_e, NULL, NULL);
 DECLARE_UT_TCASE_LIST(print_gold, &tc_against_gold, &tc_print_gold);
 DECLARE_UT_SUITE(PRINT_GOLD_SUITE, setup, teardown, false, print_gold, NULL);
+#endif
+
+#ifdef __epiphany__
+struct status {
+    uint32_t done;
+    uint32_t _pad1;
+    uint32_t returncode;
+    uint32_t _pad2;
+} __attribute__((packed));
+
+volatile struct status *epiphany_status = (struct status *) 0x8f200000;
+volatile char *epiphany_results = (char *) 0x8f300000;
+#endif
 
 int main(int argc, char *argv[])
 {
@@ -292,6 +351,7 @@ int main(int argc, char *argv[])
 
     struct ut_suite *suite;
 
+#ifndef __epiphany__
     parse_options_or_die(argc, argv);
 
     if (gold_file)
@@ -300,14 +360,22 @@ int main(int argc, char *argv[])
     if (generate_gold_flag) {
         suite = &PRINT_GOLD_SUITE;
     } else {
+#endif
         suite = &FUNCTION_SUITE;
+#ifndef __epiphany__
     }
+#endif
 
     ret = ut_run(suite);
 
     ut_report(buf, ARRAY_SIZE(buf), suite, true);
-
+#ifdef __epiphany__
+    memcpy((void *) epiphany_results, buf, sizeof(buf));
+    epiphany_status->returncode = ret;
+    epiphany_status->done = 1;
+#else
     printf("%s", buf);
+#endif
 
     return ret;
 }
