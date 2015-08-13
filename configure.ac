@@ -34,15 +34,14 @@ AM_SILENT_RULES([yes])
 AC_PROG_CXX
 AC_PROG_AWK
 AC_PROG_CC_C99
-AM_PROG_CC_C_O
+AX_PROG_CC_FOR_BUILD # Check for native compiler (cross-compilation)
 AC_PROG_CPP
 AC_PROG_INSTALL
 AC_PROG_LN_S
 AC_PROG_MAKE_SET
+AM_PROG_CC_C_O
 AM_PROG_AR
 
-# Check for native compiler (cross-compilation)
-AX_PROG_CC_FOR_BUILD
 
 AX_CHECK_COMPILE_FLAG([-fstack-usage],
                       [AX_APPEND_FLAG([-fstack-usage])],
