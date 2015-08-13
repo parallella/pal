@@ -1,4 +1,4 @@
-EXTRA_DIST = gold README
+EXTRA_DIST = gold README rangen.c
 
 LIBS = -lm
 
@@ -68,6 +68,7 @@ SUFFIXES = .dat .gold.h
 
 clean-local:
 	-rm -f gold/*.gold.h *.res
+	-rm -f rangen$(BUILD_EXEEXT)
 
 
 # In alphabetic order

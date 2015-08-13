@@ -23,4 +23,4 @@ runtest$(BUILD_EXEEXT): $(RUNTEST_SRC)
 check-local: runtest
 
 clean-local:
-	-rm -f runtest
+	-rm -f runtest$(BUILD_EXEEXT)
