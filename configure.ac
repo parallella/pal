@@ -119,6 +119,39 @@ AC_CONFIG_FILES([Makefile
 AM_CONDITIONAL([HOST_IS_EPIPHANY],
                [test "x$host_cpu" = "xepiphany"])
 
+AS_IF([test "x$host_cpu" = "xepiphany"],
+      [
+        # If linker script is NOT specified in LDFLAGS...
+        AS_IF([AS_CASE([$LDFLAGS], [*-T*], [false], [true])],
+              [
+                # Provide internal/fast so individual programs can override.
+                AX_APPEND_LINK_FLAGS([-Wl,-Tinternal.ldf \
+                                      -Wl,-T$EPIPHANY_HOME/bsps/current/internal.ldf],
+                                      [EPIPHANY_INTERNAL_LDFLAGS])
+
+                AX_APPEND_LINK_FLAGS([-Wl,-Tfast.ldf \
+                                      -Wl,-T$EPIPHANY_HOME/bsps/current/fast.ldf],
+                                      [EPIPHANY_FAST_LDFLAGS])
+
+                # Default to internal.ldf
+                AX_APPEND_LINK_FLAGS([-Wl,-Tinternal.ldf \
+                                      -Wl,-T$EPIPHANY_HOME/bsps/current/internal.ldf],
+                                      [AM_LDFLAGS])
+
+              ])
+
+        AS_CASE([$LDFLAGS], [*-T*], [ : ],
+                [
+                  AS_IF([test "x$EPIPHANY_INTERNAL_LDFLAGS" = "x" -o \
+                              "x$EPIPHANY_FAST_LDFLAGS" = "x"],
+                        [AC_MSG_ERROR([No linker script found. You need to either set EPIPHANY_HOME or provide one/set search path in LDFLAGS])])
+
+                ])
+      ])
+
+AC_SUBST([EPIPHANY_INTERNAL_LDFLAGS])
+AC_SUBST([EPIPHANY_FAST_LDFLAGS])
+
 # Epiphany device support
 AC_ARG_ENABLE([device_epiphany],
               AS_HELP_STRING([--enable-device-epiphany],
@@ -232,5 +265,7 @@ AS_IF([test "x$enable_assert" = "xyes"],
 # Easiest way to include header files globally
 AC_SUBST([AM_CPPFLAGS],
   ['-I$(top_srcdir)/include -I$(top_builddir) $(assert_CPPFLAGS)'])
+
+AC_SUBST([AM_LDFLAGS])
 
 AC_OUTPUT
