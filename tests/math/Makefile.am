@@ -213,4 +213,5 @@ TESTS = $(check_PROGRAMS)
 
 # Ubuntu 14.04 has automake-1.11. Need automake-1.12 for nicer test features.
 # This will have to do for now.
-TESTS_ENVIRONMENT = ../runtest
+#TESTS_ENVIRONMENT = ../runtest
+LOG_COMPILER = ../runtest
