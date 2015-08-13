@@ -6,7 +6,7 @@ before_install:
 
 script:
     - ./bootstrap
-    - ./configure
+    - ./configure "CFLAGS=-Werror"
     - echo Build using $(nproc) parallel jobs
     - make -j$(nproc)
     - make check
