@@ -1,8 +1,5 @@
 SUBDIRS = dsp image math 
 
-# TODO: Move to configure.ac. Use expansion in here instead.
-BUILD_CC=gcc
-
 EXTRA_DIST = runtest.noimpl.c runtest.simple.c
 
 if HOST_IS_EPIPHANY
@@ -11,7 +8,7 @@ else
     RUNTEST_SRC = runtest.simple.c
 endif
 
-BUILT_SOURCES = runtest libutest.la
+BUILT_SOURCES = runtest$(BUILD_EXEEXT) libutest.la
 
 noinst_LTLIBRARIES = libutest.la
 libutest_la_SOURCES = \
@@ -20,8 +17,8 @@ libutest_la_SOURCES = \
 
 noinst_HEADERS = utest.h
 
-runtest: $(RUNTEST_SRC)
-	$(BUILD_CC) $(BUILD_CFLAGS) $< -o $@ $(BUILD_LDFLAGS)
+runtest$(BUILD_EXEEXT): $(RUNTEST_SRC)
+	$(CC_FOR_BUILD) $(BUILD_CFLAGS) $< -o $@ $(BUILD_LDFLAGS)
 
 check-local: runtest
 

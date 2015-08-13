@@ -41,6 +41,9 @@ AC_PROG_LN_S
 AC_PROG_MAKE_SET
 AM_PROG_AR
 
+# Check for native compiler (cross-compilation)
+AX_PROG_CC_FOR_BUILD
+
 AX_CHECK_COMPILE_FLAG([-fstack-usage],
                       [AX_APPEND_FLAG([-fstack-usage])],
                       [AC_MSG_WARN([-fstack-usage not supported, Some reports will be incomplete.])

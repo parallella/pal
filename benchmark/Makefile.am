@@ -10,24 +10,20 @@ EXTRA_DIST = \
 
 CLEANFILES = runbench
 
-# TODO: Move to configure.ac. Use expansion in here instead.
-#
-BUILDCC = gcc
+# TODO: Move to configure.ac.
 if HOST_IS_EPIPHANY
-ESDK = /opt/adapteva/esdk
-EINCS = -I$(ESDK)/tools/host/include
-ELIBS = -L$(ESDK)/tools/host/lib
-BUILDCFLAGS = $(EINCS)
-BUILDLDFLAGS = $(ELIBS) -le-hal -le-loader
-RUNBENCH_SRC = runbench.epiphany.c
+ESDK              = /opt/adapteva/esdk
+EINCS             = -I$(ESDK)/tools/host/include
+ELIBS             = -L$(ESDK)/tools/host/lib
+CFLAGS_FOR_BUILD  += $(EINCS)
+LDFLAGS_FOR_BUILD += $(ELIBS) -le-hal -le-loader
+RUNBENCH_SRC      = runbench.epiphany.c
 else
-BUILDCFLAGS = $(CFLAGS)
-BUILDLDFLAGS = $(LDFLAGS)
-RUNBENCH_SRC = runbench.default.c
-BENCHMARK_LIBS += -lm
+RUNBENCH_SRC      = runbench.default.c
+BENCHMARK_LIBS    += -lm
 endif
 
-BUILT_SOURCES = runbench libbenchmark.la
+BUILT_SOURCES = runbench$(BUILD_EXEEXT) libbenchmark.la
 
 noinst_LTLIBRARIES = libbenchmark.la
 libbenchmark_la_SOURCES = \
@@ -43,8 +39,8 @@ example_CPPFLAGS = $(AM_CPPFLAGS) -DNDEBUG
 example_LDADD = libbenchmark.la $(top_builddir)/src/libpal.la
 
 
-runbench: $(RUNBENCH_SRC)
-	$(BUILDCC) $(BUILDCFLAGS) $< -o $@ $(BUILDLDFLAGS)
+runbench$(EXEEXT): $(RUNBENCH_SRC)
+	$(CC_FOR_BUILD) $(CFLAGS_FOR_BUILD) $< -o $@ $(LDFLAGS_FOR_BUILD)
 
-all-local: runbench
+all-local: runbench$(EXEEXT)
 	chmod +x bench-all.sh

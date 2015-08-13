@@ -12,9 +12,9 @@ endif
 LDADD = $(top_builddir)/src/libpal.la
 LDADD += $(top_builddir)/tests/libutest.la
 
-# TODO: For cross compilation: Build for build arch, not host arch.
-noinst_PROGRAMS = rangen
-rangen_SOURCES = rangen.c
+# Build for BUILD-arch when cross-compiling
+rangen$(BUILD_EXEEXT): rangen.c
+	$(CC_FOR_BUILD) $(BUILD_CFLAGS) $< -o $@ $(BUILD_LDFLAGS)
 
 BUILT_SOURCES = \
     gold/p_absdiff_f32.gold.h \
@@ -53,7 +53,8 @@ BUILT_SOURCES = \
     gold/p_sum_f32.gold.h \
     gold/p_sumsq_f32.gold.h \
     gold/p_tan_f32.gold.h \
-    gold/p_tanh_f32.gold.h
+    gold/p_tanh_f32.gold.h \
+    rangen$(BUILD_EXEEXT)
 
 SUFFIXES = .dat .gold.h
 
