@@ -36,7 +36,7 @@ int check_data(float tst, float ref, float max_diff)
   if ( diff == 0 ) return OK;
 
   if ( ref != 0 ) {
-    float rel_diff = abs(diff/ref);
+    float rel_diff = fabs(diff/ref);
     if ( rel_diff > max_diff ) {
       return NOK;
     } else {
