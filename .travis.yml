@@ -1,3 +1,9 @@
+env:
+  global:
+   # The next declaration is the encrypted COVERITY_SCAN_TOKEN, created
+   #   via the "travis encrypt" command using the project repo's public key
+   - secure: "akC7tdbmgrfEUf6EWWLwlvv3u9u2WT6/USIj2z8Cn317cM6FEIJA8TSgqbxuvD4hGBanxGzTQ9wcKzVFmW/IBGZEkoWaR1MYgHHyTuW25JQwkUx8Y6+jk1MQ6g5DXRff87TiC2whsfK8y2Yhra7QATAEYCTy0jEe0Vztng249MQ="
+
 language: c
 
 before_install:
@@ -7,8 +13,17 @@ before_install:
 script:
     - ./bootstrap
     - ./configure
-    - echo Build using $(nproc) parallel jobs
-    - make -j$(nproc)
+    - echo Build using 4 parallel jobs
+    - make -j4
     - make check
     - make distcheck
 
+addons:
+  coverity_scan:
+    project:
+      name: "parallella/pal"
+      description: "Build submitted via Travis CI"
+    notification_email: ola@adapteva.com
+    build_command_prepend: "./bootstrap; ./configure; make clean"
+    build_command:   "make -j 4"
+    branch_pattern: coverity_scan
