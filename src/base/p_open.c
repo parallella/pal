@@ -21,7 +21,7 @@
 p_team_t p_open(p_dev_t dev, int start, int count)
 {
     struct dev *pdev = (struct dev *) dev;
-    struct team *team;
+    struct team *team, *ret;
 
     if (p_ref_is_err(dev))
         return p_ref_err(EINVAL);
@@ -30,11 +30,12 @@ p_team_t p_open(p_dev_t dev, int start, int count)
     if (!team)
         return p_ref_err(ENOMEM);
 
-    team = pdev->dev_ops->open(pdev, team, start, count);
-    if (p_ref_is_err(team)) {
+    ret = pdev->dev_ops->open(pdev, team, start, count);
+    if (p_ref_is_err(ret)) {
         free(team);
-        goto out;
+        return (p_team_t) ret;
     }
+    team = ret;
 
     /* TODO: Rank ranges */
 
@@ -46,7 +47,5 @@ p_team_t p_open(p_dev_t dev, int start, int count)
         __pal_global.teams_tail = team;
     }
 
-out:
     return (p_team_t) team;
-
 }
