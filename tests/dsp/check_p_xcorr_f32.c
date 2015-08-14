@@ -79,7 +79,7 @@ int tc_against_gold_v(struct ut_suite *suite, struct ut_tcase *tcase)
 
     for (i = 0; i < ARRAY_SIZE(out2); i++) {
         ut_assert_msg(check_data(test_out2[i], out2[i], MAX_REL_DIFF) == OK,
-                      "p_xcorr_f32() Test 1: Large diff for index: %d, ref: %f, test: %f, rel: %f\n",
+                      "p_xcorr_f32() Test 2: Large diff for index: %d, ref: %f, test: %f, rel: %f\n",
                       i, out2[i], test_out2[i], test_out2[i]/out2[i]);
     }
 
