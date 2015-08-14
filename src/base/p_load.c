@@ -27,20 +27,20 @@ p_prog_t p_load(p_dev_t dev, const char *file, const char *function, int flags)
     if (p_ref_is_err(dev))
         return p_ref_err(EINVAL);
 
-    prog = malloc(sizeof(*prog));
-    if (!prog)
-        return p_ref_err(ENOMEM);
-
     len = strnlen(file, 4096);
     if (len == 4096)
         return p_ref_err(ENAMETOOLONG);
 
-    prog->path = strndup(file, len);;
-
-    if (!prog->path)
+    prog = malloc(sizeof(*prog));
+    if (!prog)
         return p_ref_err(ENOMEM);
 
-    strncpy(prog->path, file, len+1);
+    prog->path = strndup(file, len);;
+
+    if (!prog->path) {
+        free(prog);
+        return p_ref_err(ENOMEM);
+    }
 
     return prog;
 
