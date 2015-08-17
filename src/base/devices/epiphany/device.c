@@ -130,7 +130,8 @@ static struct team *dev_open(struct dev *dev, struct team *team, int start,
 }
 
 static int dev_run(struct dev *dev, struct team *team, struct prog *prog,
-        int start, int size, int argn, char *args[], int flags)
+                   const char *function, int start, int size, int argn,
+                   const void *args[], int flags)
 {
     int err;
     int i;
