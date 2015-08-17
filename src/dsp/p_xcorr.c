@@ -74,7 +74,7 @@ void p_xcorr_f32(const float *x, const float *y, float *r, int nx, int ny)
 
   // And finaly the last part of vector 1 with the first part of vector 2
   vec1_save_p = &start_data1_p[n1-n2+1];
-  for ( i1 = 0; i1 < n2; i1++ ) {
+  for ( i1 = 0; i1 < n2 - 1; i1++ ) {
     data1_p = vec1_save_p++;
     data2_p = start_data2_p;
     *r = (*data1_p++) * (*data2_p++);

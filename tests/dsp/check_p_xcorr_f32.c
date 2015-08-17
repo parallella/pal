@@ -22,8 +22,12 @@ Currently, the test is only using Arm
 #define OK 1
 #define NOK 0
 
-float test_out1[ARRAY_SIZE(out1)];
-float test_out2[ARRAY_SIZE(out2)];
+/* Twice the size so we can detect buffer overflows */
+float test_out1[ARRAY_SIZE(out1) * 2];
+float test_out2[ARRAY_SIZE(out2) * 2];
+
+float CANARY = -237.01334f;
+
 #if 0
 // This test is not used, since the code today requires nx >= ny
 float test_out3[ARRAY_SIZE(out3)];
@@ -53,6 +57,13 @@ int check_data(float tst, float ref, float max_diff)
 
 int tc_against_gold_e(struct ut_suite *suite, struct ut_tcase *tcase)
 {
+
+    for (int i = ARRAY_SIZE(out1); i < ARRAY_SIZE(test_out1); i++)
+        test_out1[i] = CANARY;
+
+    for (int i = ARRAY_SIZE(out2); i < ARRAY_SIZE(test_out2); i++)
+        test_out2[i] = CANARY;
+
     // Run test 1
     p_xcorr_f32(in11, in12, test_out1, in11_size, in12_size);
 
@@ -68,16 +79,32 @@ int tc_against_gold_e(struct ut_suite *suite, struct ut_tcase *tcase)
     return 0;
 }
 
+int tc_overflow_v(struct ut_suite *suite, struct ut_tcase *tcase)
+{
+    for (size_t i = ARRAY_SIZE(test_out1) - 1; i >= ARRAY_SIZE(out1); i--) {
+        ut_assert_msg(test_out1[i] == CANARY,
+                      "p_xcorr_f32() Test 1: Output buffer overflow. Canary overwritten. Last index: %d\n",
+                      (unsigned int) i);
+    }
+
+    for (size_t i = ARRAY_SIZE(test_out2) - 1; i >= ARRAY_SIZE(out2); i--) {
+        ut_assert_msg(test_out2[i] == CANARY,
+                      "p_xcorr_f32() Test 2: Output buffer overflow. Canary overwritten. Last index: %d\n",
+                      (unsigned int) i);
+    }
+
+    return 0;
+}
+
 int tc_against_gold_v(struct ut_suite *suite, struct ut_tcase *tcase)
 {
-    size_t i;
-    for (i = 0; i < ARRAY_SIZE(out1); i++) {
+    for (size_t i = 0; i < ARRAY_SIZE(out1); i++) {
         ut_assert_msg(check_data(test_out1[i], out1[i], MAX_REL_DIFF) == OK,
                       "p_xcorr_f32() Test 1: Large diff for index: %d, ref: %f, test: %f, rel: %f\n",
                       i, out1[i], test_out1[i], test_out1[i]/out1[i]);
     }
 
-    for (i = 0; i < ARRAY_SIZE(out2); i++) {
+    for (size_t i = 0; i < ARRAY_SIZE(out2); i++) {
         ut_assert_msg(check_data(test_out2[i], out2[i], MAX_REL_DIFF) == OK,
                       "p_xcorr_f32() Test 2: Large diff for index: %d, ref: %f, test: %f, rel: %f\n",
                       i, out2[i], test_out2[i], test_out2[i]/out2[i]);
@@ -110,7 +137,8 @@ int teardown(struct ut_suite *suite)
 }
 
 DECLARE_UT_TCASE(tc_against_gold, tc_against_gold_e, tc_against_gold_v, NULL);
-DECLARE_UT_TCASE_LIST(tcases, &tc_against_gold);
+DECLARE_UT_TCASE(tc_overflow, NULL, tc_overflow_v, NULL);
+DECLARE_UT_TCASE_LIST(tcases, &tc_against_gold, &tc_overflow);
 DECLARE_UT_SUITE(p_xcorr_f32_suite, setup, teardown, false, tcases, NULL);
 
 #ifdef __epiphany__
