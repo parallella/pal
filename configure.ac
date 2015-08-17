@@ -157,6 +157,33 @@ AC_ARG_ENABLE([device_epiphany],
                              [Enable Epiphany device]))
 AM_CONDITIONAL([ENABLE_DEV_EPIPHANY],
                [test "x$enable_device_epiphany" = "xyes"])
+
+# Same as AX_APPEND_LINK_FLAGS but stop at first good flag
+#[LIBS], 
+AC_DEFUN([AX_APPEND_LINK_FLAGS2], [
+AX_REQUIRE_DEFINED([AX_CHECK_LINK_FLAG])
+AX_REQUIRE_DEFINED([AX_APPEND_FLAG])
+for path in $2; do
+    AX_CHECK_LINK_FLAG([$1 $path], [
+        for lib in $1; do
+            AX_APPEND_FLAG([$lib], [m4_default([$3], [LDFLAGS])])
+        done
+        AX_APPEND_FLAG([$path], [m4_default([$3], [LDFLAGS])])
+        break
+    ], [continue], [$4])
+done
+])dnl AX_APPEND_LINK_FLAGS2
+
+# Same as AX_APPEND_COMPILE_FLAGS but stop at first good flag
+#   AX_APPEND_COMPILE_FLAGS2([FLAG1 FLAG2 ...], [FLAGS-VARIABLE], [EXTRA-FLAGS] [INPUT])
+AC_DEFUN([AX_APPEND_COMPILE_FLAGS2], [
+AX_REQUIRE_DEFINED([AX_CHECK_COMPILE_FLAG])
+AX_REQUIRE_DEFINED([AX_APPEND_FLAG])
+for flag in $1; do
+    AX_CHECK_COMPILE_FLAG([$flag], [AX_APPEND_FLAG([$flag], [$2]) break; ], [], [$3], [$4])
+done
+])dnl AX_APPEND_COMPILE_FLAGS2
+
 # Ensure Epiphany toolchain, libraries, and headers are present.
 # Dependency on Epiphany libs/headers will go away later, this will do for now.
 AS_IF([test "x$enable_device_epiphany" = "xyes"],
@@ -193,8 +220,13 @@ AS_IF([test "x$enable_device_epiphany" = "xyes"],
 
 
        AC_MSG_NOTICE([checking for Epiphany libraries...])
-       lib_help_str="You probably need to pass in:
-./configure LDFLAGS\"-L/opt/adapteva/esdk/tools/host.armv7l/lib\" ..."
+       lib_help_str="You need to pass in:
+./configure LDFLAGS\"-L/path/to/adapteva/esdk/tools/host.armv7l/lib\" ..."
+
+       AX_APPEND_LINK_FLAGS2([-le-hal -le-loader],
+                             [-L$EPIPHANY_HOME/tools/host.armv7l/lib \
+                              -L/opt/adapteva/esdk/tools/host.armv7l/lib])
+
        AC_CHECK_LIB([e-hal], e_init, [],
                     [AC_MSG_ERROR([$lib_help_str])])
 
@@ -202,17 +234,23 @@ AS_IF([test "x$enable_device_epiphany" = "xyes"],
                     [AC_MSG_ERROR([$lib_help_str])])
        AC_MSG_NOTICE([Epiphany libraries found])
 
-
        AC_MSG_NOTICE([checking for Epiphany headers...])
-       inc_help_str="You probably need to pass in:
-./configure CPPFLAGS\"-I/opt/adapteva/esdk/tools/host.armv7l/include\" ..."
-       AC_CHECK_HEADER([e-hal.h], [], [AC_MSG_ERROR([$inc_help_str])])
+       inc_help_str="You need to pass in:
+./configure CPPFLAGS\"-I/path/to/adapteva/esdk/tools/host.armv7l/include\" ..."
 
+       AX_APPEND_COMPILE_FLAGS2(["" \
+                                 "-I$EPIPHANY_HOME/tools/host.armv7l/include" \
+                                 "-I/opt/adapteva/esdk/tools/host.armv7l/include"],
+                               [], [],
+                               [AC_LANG_SOURCE([[#include <e-hal.h>]],
+                                               [[#include <e-loader.h>]])])
+
+       AC_CHECK_HEADER([e-hal.h], [], [AC_MSG_ERROR([$inc_help_str])])
        AC_CHECK_HEADER([e-loader.h], [], [AC_MSG_ERROR([$inc_help_str])])
+
        AC_MSG_NOTICE([Epiphany headers found])
 
 
-       #AC_SUBST([ENABLE_DEV_EPIPHANY], [yes])
        AC_DEFINE([ENABLE_DEV_EPIPHANY], [1], [Epiphany device support])
        ])
 
