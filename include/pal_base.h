@@ -100,11 +100,11 @@ p_team_t p_remove(p_team_t team, int start, int count);
 int p_close(p_team_t team);
 
 /* Loads a program from the file system into memory */
-p_prog_t p_load(p_dev_t dev, const char *file, const char *function, int flags);
+p_prog_t p_load(p_dev_t dev, const char *file, int flags);
 
 /* Run a program on N processors */
-int p_run(p_prog_t prog, p_team_t team, int start, int count, int nargs,
-              const char *args[], int flags);
+int p_run(p_prog_t prog, const char *function, p_team_t team,
+          int start, int count, int nargs, const void *args[], int flags);
 
 /*Execution barrier*/
 int p_barrier(p_team_t team);

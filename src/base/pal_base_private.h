@@ -71,8 +71,8 @@ struct dev_ops {
 
     int (*query) (struct dev *, int);
     struct team *(*open) (struct dev *, struct team *, int, int);
-    int (*run) (struct dev *, struct team *, struct prog *,
-                int, int, int, const char **, int);
+    int (*run) (struct dev *, struct team *, struct prog *, const char *,
+                int, int, int, const void **, int);
     int (*wait) (struct dev *, struct team *);
 };
 
