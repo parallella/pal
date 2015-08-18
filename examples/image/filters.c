@@ -48,7 +48,8 @@ int main(int argc, char *argv[])
         float uctof = 1.0f / 255.0f;
         
         /* read */
-        data_ub = stbi_load("../dataset/lena.tga", &w, &h, &n, 0);
+        data_ub = stbi_load(ABS_TOP_SRCDIR "/examples/image/dataset/lena.tga",
+                            &w, &h, &n, 0);
         if (! data_ub) {
             printf("unable to read image\n");
             return EXIT_FAILURE;
