@@ -17,3 +17,6 @@ harris_SOURCES = harris.c
 if HOST_IS_EPIPHANY
 harris_LDFLAGS = $(EPIPHANY_FAST_LDFLAGS)
 endif
+
+all-local:
+	$(MKDIR_P) dataset
