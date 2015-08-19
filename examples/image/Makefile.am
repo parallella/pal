@@ -5,8 +5,12 @@ LDADD = -lm $(top_builddir)/src/libpal.la
 filters_SOURCES = filters.c stb_image.h stb_image_write.h
 filters_CPPFLAGS = $(AM_CPPFLAGS) -DABS_TOP_SRCDIR=\"$(abs_top_srcdir)\"
 harris_SOURCES = harris.c
+
 filters2_host_SOURCES = filters2-host.c stb_image.h stb_image_write.h
+filters2_host_CPPFLAGS = $(AM_CPPFLAGS) -DABS_TOP_SRCDIR=\"$(abs_top_srcdir)\"
 filters2_dev_sources = filters2-dev.c
+filters2_dev_epiphany_SOURCES = filters2-dev-epiphany.c
+filters2_dev_epiphany_LDADD = $(EPIPHANY_LDADD)
 
 if HOST_IS_EPIPHANY
 std_programs = harris # filters won't compile due to compiler bug.
@@ -16,10 +20,8 @@ std_programs = filters harris
 endif
 
 if ENABLE_DEV_EPIPHANY
-filters2_dev_epiphany_SOURCES = filters2-dev-epiphany.c
 dev_epiphany_built_sources = filters2-dev-epiphany.c
 dev_epiphany_programs = filters2-host filters2-dev-epiphany
-filters2_dev_epiphany_LDADD = $(EPIPHANY_LDADD)
 endif
 
 noinst_PROGRAMS = $(std_programs) $(dev_epiphany_programs)
