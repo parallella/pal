@@ -23,6 +23,9 @@ void p_add_f32(const float *a, const float *b, float *c, int n)
     for (; n & 7; n--)
         *(c++) = *(a++) + *(b++);
 
+    if (!n)
+        return;
+
     if (!(((uintptr_t) a | (uintptr_t) b | (uintptr_t) c) & 7)) {
 //#define HW_LOOPS
                 n >>= 3;
