@@ -15,10 +15,17 @@ else
 std_programs = filters harris
 endif
 
-noinst_PROGRAMS = $(std_programs)
+if ENABLE_DEV_EPIPHANY
+filters2_dev_epiphany_SOURCES = filters2-dev-epiphany.c
+dev_epiphany_built_sources = filters2-dev-epiphany.c
+dev_epiphany_programs = filters2-host filters2-dev-epiphany
+filters2_dev_epiphany_LDADD = $(EPIPHANY_LDADD)
+endif
+
+noinst_PROGRAMS = $(std_programs) $(dev_epiphany_programs)
 
 all-local:
-	$(MKDIR_P) dataset
+	@$(MKDIR_P) dataset
 
 # TODO: Move to shared rules file
 # DEVICE_RULES: Programs and C sources with dev-XXXX suffix will be built
@@ -36,3 +43,6 @@ $(foreach flag,$(DEVICE_OVERRIDE_FLAGS),$(eval $(call DEVICE_RULES_,$(1),$(2),$(
 endef
 $(eval $(call DEVICE_RULES,epiphany,EPIPHANY))
 
+
+BUILT_SOURCES = $(dev_epiphany_built_sources)
+CLEANFILES = $(dev_epiphany_built_sources)
