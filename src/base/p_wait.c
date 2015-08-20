@@ -16,7 +16,6 @@
 int p_wait(p_team_t team)
 {
     struct team *pteam = (struct team *) team;
-    printf("Running p_wait\n");
 
     if (p_ref_is_err(team))
         return -EINVAL;
