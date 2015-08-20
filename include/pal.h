@@ -5,3 +5,10 @@
 #include "pal_dsp.h"
 #include "pal_image.h"
 #include "pal_fft.h"
+
+#ifdef __epiphany__
+/* Static library. Force a dependency so __pal_init/fini always will be
+ * included in built binary. Not pretty but works. */
+extern void __pal_init();
+void (*__pal_init_p) (void) __attribute__((weak)) = __pal_init;
+#endif
