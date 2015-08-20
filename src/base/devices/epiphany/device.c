@@ -131,7 +131,7 @@ static struct team *dev_open(struct dev *dev, struct team *team, int start,
 
 static int dev_run(struct dev *dev, struct team *team, struct prog *prog,
                    const char *function, int start, int size, int argn,
-                   const void *args[], int flags)
+                   const p_arg_t *args, int flags)
 {
     int err;
     int i;
@@ -147,6 +147,40 @@ static int dev_run(struct dev *dev, struct team *team, struct prog *prog,
 
     if (!data || !data->opened)
         return -EBADF;
+
+    /* Copy arguments to device memory (shared ram) */
+    {
+        size_t argssize = 0, totsize;
+        off_t offs = 0;
+        struct epiphany_args_header header = { .nargs = argn };
+
+        for (int i = 0; i < argn; i++) {
+            argssize += args[i].size;
+            header.size[i] = args[i].size;
+        }
+
+        if (argssize > EPIPHANY_DEV_MAX_ARGS_SIZE)
+            return -ENOMEM;
+
+        totsize = sizeof(header) + argssize;
+        totsize = (totsize + 7) & (~7);
+
+        /* Allocate memory in shared RAM. TODO: Hard coded address */
+        if (e_alloc(&data->args, ARGS_MEM_END_OFFSET - totsize, totsize) != E_OK)
+            return -ENOMEM;
+
+        e_write(&data->args, 0, 0, offs, &header, sizeof(header));
+        offs += sizeof(header);
+        for (int i = 0; i < argn; i++) {
+            e_write(&data->args, 0, 0, offs, args[i].ptr, args[i].size);
+            offs += args[i].size;
+        }
+
+        /* Write offset in control structure */
+        e_write(&data->ctrl, 0, 0,
+                offsetof(struct epiphany_ctrl_mem, argsoffset),
+                &totsize, sizeof(totsize));
+    }
 
     /* Load */
     for (i = start; i < start + size; i++) {
@@ -168,7 +202,6 @@ static int dev_run(struct dev *dev, struct team *team, struct prog *prog,
     }
 
     return 0;
-
 }
 
 
