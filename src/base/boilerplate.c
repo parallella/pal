@@ -37,7 +37,11 @@ extern struct dev_ops __pal_dev_demo_ops;
 /* Defining the table this way statically compile time depends on devs being in
  * the right order.  If we We could do this in the constructor
  * too... */
+#ifdef __epiphany__
+struct pal_global __pal_global __attribute__ ((section (".data_bank0"))) = {
+#else
 struct pal_global __pal_global = {
+#endif
     .devs = {
         DEFINE_DEV(NULL),
 #if ENABLE_DEV_EPIPHANY
