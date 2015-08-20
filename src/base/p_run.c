@@ -52,7 +52,7 @@ int p_run(p_prog_t prog, const char *function, p_team_t team,
     if (err)
         return err;
 
-    if (!(flags & 1)) // Bogus non blocking check
+    if (!(flags & P_RUN_NONBLOCK))
         return p_wait((p_team_t) team); // Inconsistent with flags to this function
 
     return 0;

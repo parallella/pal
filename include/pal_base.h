@@ -81,6 +81,10 @@ typedef int p_mutex_t;
  ***********************************************************************
  */
 
+
+#define P_RUN_NONBLOCK 0x800 /* == O_NONBLOCK */
+
+
 /*Initialize device run time*/
 p_dev_t p_init(int type, int flags);
 
