@@ -38,11 +38,13 @@ int p_run(p_prog_t prog, const char *function, p_team_t team,
 {
     int err;
     struct team *pteam = (struct team *) team;
-    struct dev *pdev = pteam->dev;
     struct prog *pprog = (struct prog *) prog;
+    struct dev *pdev;
 
     if (p_ref_is_err(prog) || p_ref_is_err(team))
         return -EINVAL;
+
+    pdev = pteam->dev;
 
     err = pdev->dev_ops->run(pdev, pteam, pprog, function, start, count, nargs,
                              args, flags);
