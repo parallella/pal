@@ -121,6 +121,8 @@ struct pal_global {
     struct mutex *mutexes_tail;
 #endif
     tinymt32_t random; // PRNG state
+
+    uint32_t rank;
 };
 
 extern struct pal_global __pal_global;

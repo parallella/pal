@@ -101,9 +101,13 @@ void __pal_init()
     const uint32_t rank = row * e_group_config.group_cols + col;
     struct epiphany_ctrl_mem *ctrl =
         (struct epiphany_ctrl_mem *) CTRL_MEM_EADDR;
+
+    __pal_global.rank = rank;
+
     ctrl->status[rank] = STATUS_RUNNING;
 #else
     /* NO-OP for now */
+    __pal_global.rank = 0;
 #endif
 }
 
