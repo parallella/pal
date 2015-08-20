@@ -16,4 +16,4 @@
 #define XSTRING(_s) STRING(_s)
 
 #define ARRAY_SIZE(_a) (sizeof(_a) / sizeof((_a)[0]))
-
+#define FIELD_SIZEOF(_t, _f) (sizeof(((_t*)0)->_f))
