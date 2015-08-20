@@ -34,7 +34,7 @@
 #include "pal_base_private.h"
 
 int p_run(p_prog_t prog, const char *function, p_team_t team,
-          int start, int count, int nargs, const void *args[], int flags)
+          int start, int count, int nargs, const p_arg_t *args, int flags)
 {
     int err;
     struct team *pteam = (struct team *) team;
@@ -45,6 +45,9 @@ int p_run(p_prog_t prog, const char *function, p_team_t team,
         return -EINVAL;
 
     pdev = pteam->dev;
+
+    if (nargs > P_RUN_MAX_ARGS)
+        return -E2BIG;
 
     err = pdev->dev_ops->run(pdev, pteam, pprog, function, start, count, nargs,
                              args, flags);

@@ -81,6 +81,11 @@ typedef int p_mutex_t;
  ***********************************************************************
  */
 
+#define P_RUN_MAX_ARGS 16
+typedef struct p_arg_t {
+    void *ptr;
+    size_t size;
+} p_arg_t;
 
 #define P_RUN_NONBLOCK 0x800 /* == O_NONBLOCK */
 
@@ -108,7 +113,7 @@ p_prog_t p_load(p_dev_t dev, const char *file, int flags);
 
 /* Run a program on N processors */
 int p_run(p_prog_t prog, const char *function, p_team_t team,
-          int start, int count, int nargs, const void *args[], int flags);
+          int start, int count, int nargs, const p_arg_t *args, int flags);
 
 /*Execution barrier*/
 int p_barrier(p_team_t team);
