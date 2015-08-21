@@ -4,6 +4,7 @@
 #include "config.h"
 #include "pal_base.h"
 #include "pal_base_private.h"
+#include <common.h>
 #if __epiphany__
 #include "devices/epiphany/ctrl.h"
 #include <e-lib.h>
@@ -93,6 +94,16 @@ struct pal_global __pal_global = {
 
 #undef DEFINE_DEV
 
+static void early_device_init()
+{
+    for (int i = 0; i < ARRAY_SIZE(__pal_global.devs); i++) {
+        struct dev *dev = &__pal_global.devs[i];
+        if (dev && dev->dev_ops && dev->dev_ops->early_init)
+            dev->dev_ops->early_init(dev);
+    }
+
+}
+
 __attribute__((constructor))
 void __pal_init()
 {
@@ -110,8 +121,8 @@ void __pal_init()
 
     ctrl->status[rank] = STATUS_RUNNING;
 #else
-    /* NO-OP for now */
     __pal_global.rank = 0;
+    early_device_init();
 #endif
 }
 
