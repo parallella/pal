@@ -1,4 +1,10 @@
 #include <string.h>
+#include <unistd.h>
+#include <sys/mman.h>
+#include <sys/types.h>
+#include <sys/stat.h>
+#include <fcntl.h>
+
 #include "config.h"
 #include "dev_epiphany.h"
 #include "ctrl.h"
@@ -7,53 +13,138 @@
 #include <e-hal.h>
 #include <e-loader.h>
 
+/* TODO: Obtain from device-tree or ioctl() call */
+#define ERAM_SIZE (32*1024*1024)
+#define ERAM_BASE 0x8e000000
+#define ERAM_PHY_BASE 0x3e000000
+
+#define EPIPHANY_DEV "/dev/epiphany"
+
+/* Returns 0 on success */
+static int setup_eram(struct dev *dev)
+{
+    struct epiphany_dev_data *dev_data = dev->dev_data;
+    long page_size;
+    unsigned npages;
+    unsigned char dummy;
+    uintptr_t addr;
+    int ret;
+
+    page_size = sysconf(_SC_PAGESIZE);
+
+    if (0 > page_size)
+        return -EINVAL;
+
+    /* Check that address space is not already mapped */
+    addr = ERAM_BASE;
+    npages = ERAM_SIZE / page_size;
+    for (int i = 0; i < npages; i++, addr += page_size) {
+again:
+        ret = mincore((void *) addr, page_size, &dummy);
+
+        if (ret == -1 && errno == EAGAIN)
+            goto again;
+
+        /* This is what we want (page is unmapped) */
+        if (ret == -1 && errno == ENOMEM)
+            continue;
+
+        return -ENOMEM;
+    }
+
+    dev_data->eram_fd = open(EPIPHANY_DEV, O_RDWR | O_SYNC);
+    if (dev_data->eram_fd == -1)
+        return -errno;
+
+    dev_data->eram = mmap((void *) ERAM_BASE, ERAM_SIZE,
+                          PROT_READ | PROT_WRITE, MAP_SHARED | MAP_FIXED,
+                          dev_data->eram_fd, ERAM_PHY_BASE);
+    if (dev_data->eram == MAP_FAILED)
+        return -errno;
+
+    return 0;
+}
+
+static int dev_early_init(struct dev *dev)
+{
+    int ret;
+    struct epiphany_dev_data *dev_data;
+
+    dev_data = malloc(sizeof(*dev_data));
+    if (!dev_data)
+        return -ENOMEM;
+
+    dev->dev_data = dev_data;
+
+    memset(dev_data, 0, sizeof(*dev_data));
+
+    ret = setup_eram(dev);
+    if (ret)
+        return ret;
+
+    dev_data->initialized = true;
+}
+
+static void dev_late_fini(struct dev *dev)
+{
+    struct epiphany_dev_data *dev_data = dev->dev_data;
+
+    if (!dev_data)
+        return;
+
+    if (!dev_data->initialized) {
+        free(dev_data);
+        dev->dev_data = NULL;
+        return;
+    }
+
+    munmap(dev_data->eram, ERAM_SIZE);
+    close(dev_data->eram_fd);
+
+    free(dev_data);
+    dev->dev_data = NULL;
+
+    return;
+}
+
+
 static p_dev_t dev_init(struct dev *dev, int flags)
 {
     int err;
-    struct epiphany_dev_data *data;
-    struct epiphany_ctrl_mem ctrl = { .status = { 0 } };
+    struct epiphany_dev_data *dev_data = dev->dev_data;
+
+    if (!dev_data)
+        return p_ref_err(ENOMEM);
+
+    if (!dev_data->initialized)
+        return p_ref_err(ENODEV);
 
     /* Be idempotent if already initialized. It might be a better idea to
      * return EBUSY instead */
-    if (dev->dev_data)
+    if (dev_data->opened)
         return dev;
 
+    dev_data->ctrl = (struct epiphany_ctrl_mem *) CTRL_MEM_EADDR;
 
     err = e_init(NULL);
     if (err)
         return p_ref_err(EIO);
+
     err = e_reset_system();
     if (err)
         return p_ref_err(EIO);
 
-    data = malloc(sizeof(*data));
-    if (!data)
+    /* Open entire device */
+    err = e_open(&dev_data->dev, 0, 0, 4, 4);
+    if (err)
         return p_ref_err(ENOMEM);
 
-    memset(data, 0, sizeof(*data));
+    /* Clear control structure */
+    memset(dev_data->ctrl, 0 , sizeof(*dev_data->ctrl));
 
-    /* Open entire device */
-    err = e_open(&data->dev, 0, 0, 4, 4);
-    if (err) {
-        err = EIO;
-        goto free_out;
-    }
-    err = e_alloc(&data->ctrl, CTRL_MEM_OFFSET, CTRL_MEM_SIZE);
-    if (err) {
-        err = ENOMEM;
-        goto free_out;
-    }
-	e_write(&data->ctrl, 0, 0, 0, &ctrl, sizeof(ctrl));
-
-    data->opened = 1;
-
-    dev->dev_data = (void *) data;
+    dev_data->opened = 1;
 
     return dev;
-
-free_out:
-    free(data);
-    return p_ref_err(err);
 }
 
 static void dev_fini(struct dev *dev)
@@ -64,13 +155,12 @@ static void dev_fini(struct dev *dev)
     if (!data)
         return;
 
-    if (data->opened)
+    if (data->opened) {
         e_close(&data->dev);
+        data->opened = false;
+    }
 
     e_finalize();
-
-    free(dev->dev_data);
-    dev->dev_data = NULL;
 }
 
 static int dev_query(struct dev *dev, int property)
@@ -165,21 +255,19 @@ static int dev_run(struct dev *dev, struct team *team, struct prog *prog,
         totsize = sizeof(header) + argssize;
         totsize = (totsize + 7) & (~7);
 
-        /* Allocate memory in shared RAM. TODO: Hard coded address */
-        if (e_alloc(&data->args, ARGS_MEM_END_OFFSET - totsize, totsize) != E_OK)
-            return -ENOMEM;
+        /* "Allocate" memory in shared RAM. TODO: Hard coded address */
+        data->args_header =
+            (struct epiphany_args_header *) (ARGS_MEM_END_EADDR - totsize);
 
-        e_write(&data->args, 0, 0, offs, &header, sizeof(header));
-        offs += sizeof(header);
+        memcpy(data->args_header, &header, sizeof(header));
+        uint8_t *argsp = (uint8_t *) &data->args_header[1];
         for (int i = 0; i < argn; i++) {
-            e_write(&data->args, 0, 0, offs, args[i].ptr, args[i].size);
+            memcpy(&argsp[offs], args[i].ptr, args[i].size);
             offs += args[i].size;
         }
 
         /* Write offset in control structure */
-        e_write(&data->ctrl, 0, 0,
-                offsetof(struct epiphany_ctrl_mem, argsoffset),
-                &totsize, sizeof(totsize));
+        data->ctrl->argsoffset = totsize;
     }
 
     /* Load */
@@ -188,12 +276,11 @@ static int dev_run(struct dev *dev, struct team *team, struct prog *prog,
         if (err)
             return -EIO;
     }
+
     /* Mark as scheduled */
-    for (i = start; i < start + size; i++) {
-        e_write(&data->ctrl, 0, 0,
-                offsetof(struct epiphany_ctrl_mem, status) + i * sizeof(uint32_t),
-                &scheduled, sizeof(scheduled));
-    }
+    for (i = start; i < start + size; i++)
+        data->ctrl->status[i] = STATUS_SCHEDULED;
+
     /* Kick off */
     for (i = start; i < start + size; i++) {
         err = e_start(&data->dev, i / 4, i % 4);
@@ -209,15 +296,13 @@ static int dev_wait(struct dev *dev, struct team *team)
 {
     unsigned i;
     bool need_wait = true;
-    struct epiphany_ctrl_mem ctrl;
     struct epiphany_dev_data *data =
         (struct epiphany_dev_data *) dev->dev_data;
 
     while (true) {
         need_wait = false;
-        e_read(&data->ctrl, 0, 0, 0, &ctrl, sizeof(ctrl));
         for (i = 0; i < 16; i++) {
-            switch (ctrl.status[i]) {
+            switch (data->ctrl->status[i]) {
             case STATUS_SCHEDULED:
                 /* TODO: Time out if same proc is in scheduled state too long.
                  * If program does not start immediately something has gone
@@ -240,7 +325,6 @@ static int dev_wait(struct dev *dev, struct team *team)
     }
 
     return 0;
-
 }
 
 struct dev_ops __pal_dev_epiphany_ops = {
@@ -249,6 +333,8 @@ struct dev_ops __pal_dev_epiphany_ops = {
     .query = dev_query,
     .open = dev_open,
     .run = dev_run,
-    .wait = dev_wait
+    .wait = dev_wait,
+    .early_init = dev_early_init,
+    .late_fini = dev_late_fini,
 };
 

@@ -1,3 +1,5 @@
+#pragma once
+
 #define STATUS_NONE 0
 #define STATUS_SCHEDULED 1 // Set by host in device.c:dev_run()
 #define STATUS_RUNNING 2   // Set by device in boilerplate.c:init()
