@@ -101,8 +101,17 @@ static void early_device_init()
         if (dev && dev->dev_ops && dev->dev_ops->early_init)
             dev->dev_ops->early_init(dev);
     }
-
 }
+
+static void late_device_fini()
+{
+    for (int i = 0; i < ARRAY_SIZE(__pal_global.devs); i++) {
+        struct dev *dev = &__pal_global.devs[i];
+        if (dev && dev->dev_ops && dev->dev_ops->late_fini)
+            dev->dev_ops->late_fini(dev);
+    }
+}
+
 
 __attribute__((constructor))
 void __pal_init()
@@ -155,6 +164,8 @@ void __pal_fini()
         // prog_fini(prog);
         prog = next_prog;
     }
+
+    late_device_fini();
 
     memset(&__pal_global, 0, sizeof(struct pal_global));
 #endif

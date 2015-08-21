@@ -67,6 +67,7 @@ struct pal_global;
 
 struct dev_ops {
     int (*early_init) (struct dev *);
+    void (*late_fini) (struct dev *);
     p_dev_t (*init) (struct dev *, int);
     void (*fini) (struct dev *);
 
