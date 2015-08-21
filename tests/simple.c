@@ -8,7 +8,7 @@
 
 #include <pal.h>
 /* TODO: This relative path include is fragile */
-#include "../../src/base/pal_base_private.h"
+#include "../src/base/pal_base_private.h"
 #include <common.h>
 
 #include "simple.h"
@@ -170,7 +170,7 @@ int tc_against_gold_v(struct ut_suite *suite, struct ut_tcase *tcase)
 {
     size_t i;
 
-    /* Skip test if we're generation gold data */
+    /* Skip test if we're generating gold data */
     if (generate_gold_flag)
         return UT_SKIP;
 
@@ -229,7 +229,7 @@ int tc_against_ref_v(struct ut_suite *suite, struct ut_tcase *tcase)
 #ifndef __epiphany__
 void parse_options_or_die(int argc, char *argv[])
 {
-    /* At some point we might to want to use getopt if this gets to messy. */
+    /* At some point we might to want to use getopt if this gets too messy. */
     for (int i = 1; i < argc; i++) {
         if (argv[i][0] != '-') {
             if (gold_file)

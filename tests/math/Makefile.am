@@ -1,4 +1,4 @@
-EXTRA_DIST = gold README rangen.c
+EXTRA_DIST = gold README rangen.c make_max_min_gold_data.py
 
 LIBS = -lm
 
@@ -6,9 +6,11 @@ AM_CPPFLAGS += -I$(top_srcdir)/tests
 if HOST_IS_EPIPHANY
 CHECKLDFLAGS=$(EPIPHANY_FAST_LDFLAGS)
 NOTEST = notest.epiphany.c
+CHECK_SCALAR_AND_INDEX = $(NOTEST)
 else
 CHECKLDFLAGS=$(AM_LDFLAGS)
 NOTEST = notest.c
+CHECK_SCALAR_AND_INDEX = check_scalar_and_index.c check_scalar_and_index.h
 endif
 
 SIMPLE = simple.c simple.h
@@ -43,8 +45,10 @@ BUILT_SOURCES = \
     gold/p_ln_f32.gold.h \
     gold/p_log10_f32.gold.h \
     gold/p_mac_f32.gold.h \
+    gold/p_max_f32.gold.h \
     gold/p_mean_f32.gold.h \
     gold/p_median_f32.gold.h \
+    gold/p_min_f32.gold.h \
     gold/p_mode_f32.gold.h \
     gold/p_mul_f32.gold.h \
     gold/p_pow_f32.gold.h \
@@ -146,10 +150,10 @@ check_p_itof_SOURCES            = $(NOTEST)
 check_p_ln_f32_SOURCES          = $(SIMPLE) p_ln.c
 check_p_log10_f32_SOURCES       = $(SIMPLE) p_log10.c
 check_p_mac_f32_SOURCES         = $(SIMPLE)
-check_p_max_f32_SOURCES         = $(NOTEST)
+check_p_max_f32_SOURCES         = $(CHECK_SCALAR_AND_INDEX) p_max.c
 check_p_mean_f32_SOURCES        = $(SIMPLE)
 check_p_median_f32_SOURCES      = $(SIMPLE)
-check_p_min_f32_SOURCES         = $(NOTEST)
+check_p_min_f32_SOURCES         = $(CHECK_SCALAR_AND_INDEX) p_min.c
 check_p_mode_f32_SOURCES        = $(SIMPLE)
 check_p_mul_f32_SOURCES         = $(SIMPLE)
 check_p_popcount_SOURCES        = $(NOTEST)
