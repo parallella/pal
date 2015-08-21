@@ -15,5 +15,4 @@ struct epiphany_args_header {
     uint32_t nargs;
     uint32_t __pad1;
     uint32_t size[P_RUN_MAX_ARGS];
-    uint32_t __pad2;
 } __attribute__((packed));
