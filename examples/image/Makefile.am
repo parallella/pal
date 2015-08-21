@@ -22,6 +22,7 @@ endif
 if ENABLE_DEV_EPIPHANY
 dev_epiphany_built_sources = filters2-dev-epiphany.c
 dev_epiphany_programs = filters2-host filters2-dev-epiphany
+filters2_host_CPPFLAGS += -DDEVICE=epiphany
 endif
 
 noinst_PROGRAMS = $(std_programs) $(dev_epiphany_programs)
