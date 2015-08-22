@@ -128,6 +128,9 @@ void p_atanh_f32(const float *a, float *c, int n);
 /*cubic root of a:  c = cbrt ( a) */
 void p_cbrt_f32(const float *a, float *c, int n);
 
+/*ceiling:  c = ceil ( a ) */
+void p_ceil_f32(const float *a, float *c, int n);
+
 /*cosine: c = cos ( a ) */
 void p_cos_f32(const float *a, float *c, int n);
 
