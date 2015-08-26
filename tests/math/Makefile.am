@@ -39,6 +39,7 @@ BUILT_SOURCES = \
     gold/p_div_f32.gold.h \
     gold/p_dot_f32.gold.h \
     gold/p_exp_f32.gold.h \
+    gold/p_floor_f32.gold.h \
     gold/p_invcbrt_f32.gold.h \
     gold/p_inv_f32.gold.h \
     gold/p_invsqrt_f32.gold.h \
@@ -97,6 +98,7 @@ check_PROGRAMS = \
 	check_p_div_f32 \
 	check_p_dot_f32 \
 	check_p_exp_f32 \
+        check_p_floor_f32 \
 	check_p_ftoi \
 	check_p_invcbrt_f32 \
 	check_p_inv_f32 \
@@ -142,6 +144,7 @@ check_p_cosh_f32_SOURCES        = $(SIMPLE) p_cosh.c
 check_p_div_f32_SOURCES         = $(SIMPLE)
 check_p_dot_f32_SOURCES         = $(SIMPLE)
 check_p_exp_f32_SOURCES         = $(SIMPLE) p_exp.c
+check_p_floor_f32_SOURCES       = $(SIMPLE) p_floor.c
 check_p_ftoi_SOURCES            = $(NOTEST)
 check_p_inv_f32_SOURCES         = $(SIMPLE)
 check_p_invcbrt_f32_SOURCES     = $(SIMPLE)
@@ -187,6 +190,7 @@ check_p_cosh_f32_CFLAGS         = -DFUNCTION=p_cosh_f32    -DIS_UNARY
 check_p_div_f32_CFLAGS          = -DFUNCTION=p_div_f32     -DIS_BINARY
 check_p_dot_f32_CFLAGS          = -DFUNCTION=p_dot_f32     -DIS_BINARY -DSCALAR_OUTPUT
 check_p_exp_f32_CFLAGS          = -DFUNCTION=p_exp_f32     -DIS_UNARY
+check_p_floor_f32_CFLAGS        = -DFUNCTION=p_floor_f32   -DIS_UNARY
 check_p_ftoi_CFLAGS             = -DFUNCTION=p_ftoi
 check_p_invcbrt_f32_CFLAGS      = -DFUNCTION=p_invcbrt_f32 -DIS_UNARY
 check_p_inv_f32_CFLAGS          = -DFUNCTION=p_inv_f32     -DIS_UNARY
@@ -234,6 +238,7 @@ check_p_cosh_f32_LDFLAGS        = $(CHECKLDFLAGS)
 check_p_div_f32_LDFLAGS         = $(CHECKLDFLAGS)
 check_p_dot_f32_LDFLAGS         = $(CHECKLDFLAGS)
 check_p_exp_f32_LDFLAGS         = $(CHECKLDFLAGS)
+check_p_floor_f32_LDFLAGS       = $(CHECKLDFLAGS)
 check_p_ftoi_LDFLAGS            = $(CHECKLDFLAGS)
 check_p_invcbrt_f32_LDFLAGS     = $(CHECKLDFLAGS)
 check_p_inv_f32_LDFLAGS         = $(CHECKLDFLAGS)

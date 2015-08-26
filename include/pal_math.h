@@ -77,6 +77,22 @@
  *
  */
 
+
+#define p_floor_f32( a, c, n) {          \
+    int i; float x;                      \
+    for ( i = 0; i < n; i++)             \
+      {                                  \
+       const float *pa = (a+i);          \
+             float *pc = (c+i);          \
+       x = *pa;                          \
+    *pc = (int)x - ((int)x > x);         \
+ }}
+
+
+
+
+
+
 /* Get the floor of x */
 #define M_FLOOR(x) ((int)((int)x - ((int)x > x)))
 
