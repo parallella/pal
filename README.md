@@ -211,7 +211,8 @@ FUNCTION     | NOTES
 [p_acosh()](src/math/p_acosh.c)       | arc hyperbolic cosine  
 [p_asin()](src/math/p_asin.c)         | arc sine  
 [p_asinh()](src/math/p_asinh.c)       | arc hyperbolic sine  
-[p_cbrt()](src/math/p_cbrt.c)         | cubic root                    
+[p_cbrt()](src/math/p_cbrt.c)         | cubic root     
+[p_ceil()](src/math/p_ceil.c)         | ceiling              
 [p_cos()](src/math/p_cos.c)           | cosine  
 [p_cosh()](src/math/p_cosh.c)         | hyperbolic cosine  
 [p_div()](src/math/p_div.c)           | division  
