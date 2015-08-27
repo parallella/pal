@@ -38,6 +38,7 @@ libpal_math_la_SOURCES = \
     p_popcount.c \
     p_pow.c \
     p_rand.c \
+    p_round.c \
     p_sin.c \
     p_sincos.c \
     p_sinh.c \

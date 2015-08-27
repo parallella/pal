@@ -233,7 +233,8 @@ FUNCTION     | NOTES
 [p_popcount()](src/math/p_popcount.c) | count the number of bits set  
 [p_pow()](src/math/p_pow.c)           | element raised to a power  
 [p_rand()](src/math/p_rand.c)         | random number generator  
-[p_randinit()](src/math/p_rand.c)     | init random number generator  
+[p_randinit()](src/math/p_rand.c)     | init random number generator
+[p_round()](src/math/p_round.c)       | round  
 [p_sort()](src/math/p_sort.c)         | heap sort  
 [p_sin()](src/math/p_sin.c)           | sine  
 [p_sinh()](src/math/p_sinh.c)         | hyperbolic sine  
