@@ -52,6 +52,7 @@ BUILT_SOURCES = \
     gold/p_mode_f32.gold.h \
     gold/p_mul_f32.gold.h \
     gold/p_pow_f32.gold.h \
+    gold/p_round_f32.gold.h \
     gold/p_sin_f32.gold.h \
     gold/p_sincos_f32.gold.h \
     gold/p_sinh_f32.gold.h \
@@ -114,6 +115,7 @@ check_PROGRAMS = \
 	check_p_popcount \
 	check_p_pow_f32 \
 	check_p_rand \
+        check_p_round_f32 \
 	check_p_sin_f32 \
 	check_p_sincos_f32 \
 	check_p_sinh_f32 \
@@ -159,6 +161,7 @@ check_p_mul_f32_SOURCES         = $(SIMPLE)
 check_p_popcount_SOURCES        = $(NOTEST)
 check_p_pow_f32_SOURCES         = $(SIMPLE) p_pow.c
 check_p_rand_SOURCES            = $(NOTEST)
+check_p_round_f32_SOURCES       = $(SIMPLE) p_round.c
 check_p_sin_f32_SOURCES         = $(SIMPLE) p_sin.c
 check_p_sincos_f32_SOURCES      = check_p_sincos.c
 check_p_sinh_f32_SOURCES        = $(SIMPLE) p_sinh.c
@@ -205,6 +208,7 @@ check_p_popcount_CFLAGS         = -DFUNCTION=p_popcount
 # Override fault tolerance for p_pow_f32
 check_p_pow_f32_CFLAGS          = -DFUNCTION=p_pow_f32     -DIS_BINARY -DEPSILON_MAX=0.003f
 check_p_rand_CFLAGS             = -DFUNCTION=p_rand                    -DSCALAR_OUTPUT
+check_p_round_f32_CFLAGS        = -DFUNCTION=p_round_f32   -DIS_UNARY
 check_p_sin_f32_CFLAGS          = -DFUNCTION=p_sin_f32     -DIS_UNARY
 check_p_sincos_f32_CFLAGS       = -DFUNCTION=p_sincos_f32
 check_p_sinh_f32_CFLAGS         = -DFUNCTION=p_sinh_f32    -DIS_UNARY
@@ -251,6 +255,7 @@ check_p_mul_f32_LDFLAGS         = $(CHECKLDFLAGS)
 check_p_popcount_LDFLAGS        = $(CHECKLDFLAGS)
 check_p_pow_f32_LDFLAGS         = $(CHECKLDFLAGS)
 check_p_rand_LDFLAGS            = $(CHECKLDFLAGS)
+check_p_round_f32_LDFLAGS       = $(CHECKLDFLAGS)
 check_p_sin_f32_LDFLAGS         = $(CHECKLDFLAGS)
 check_p_sincos_f32_LDFLAGS      = $(CHECKLDFLAGS)
 check_p_sinh_f32_LDFLAGS        = $(CHECKLDFLAGS)

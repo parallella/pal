@@ -158,6 +158,9 @@ void p_log10_f32(const float *a, float *c, int n);
 /*element raised to a power: c = pow ( a , b ) */
 void p_pow_f32(const float *a, const float *b, float *c, int n);
 
+/*round: c = round ( a ) */
+void p_round_f32(const float *a, float *c, int n);
+
 /*sine: c = sin ( a ) */
 void p_sin_f32(const float *a, float *c, int n);
 
