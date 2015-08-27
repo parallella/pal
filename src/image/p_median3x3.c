@@ -1,99 +1,122 @@
 #include <pal.h>
 
-void *memcpy(void *dest, const void *src, size_t n);
+// Combined with subtraction, this magically works faster than if(a<b)
+#define gt0(f) ((*((int *) &(f))) > 0)
 
-/*
- * The following routines have been built from knowledge gathered
- * around the Web. I am not aware of any copyright problem with
- * them, so use it as you want.
- * N. Devillard - 1998
- */
+#define SORT(a,b) \
+do { \
+	float d = a; \
+	float c = b - a; \
+	a = gt0(c) ? b : a; \
+	b = gt0(c) ? d : b; \
+} while(0) 
 
-typedef float pixelvalue ;
+static __inline __attribute__((__always_inline__))
+float my_median(
+	float v0, float v1, float v2,
+	float v3, float v4, float v5,
+	float v6, float v7, float v8);
 
-#define PIX_SORT(a,b) { if ((a)>(b)) PIX_SWAP((a),(b)); }
-#define PIX_SWAP(a,b) { pixelvalue temp=(a);(a)=(b);(b)=temp; }
-
-/*----------------------------------------------------------------------------
-   Function :   opt_med9()
-   In       :   pointer to an array of 9 pixelvalues
-   Out      :   a pixelvalue
-   Job      :   optimized search of the median of 9 pixelvalues
-   Notice   :   in theory, cannot go faster without assumptions on the
-                signal.
-                Formula from:
-                XILINX XCELL magazine, vol. 23 by John L. Smith
-  
-                The input array is *NOT* modified in the process
-                The result array is guaranteed to contain the median
-                value
- ---------------------------------------------------------------------------*/
-
-pixelvalue opt_med9(pixelvalue * pointer)
-{
-    pixelvalue p[9];
-    memcpy(p, pointer, 9*sizeof(pixelvalue) );
-    PIX_SORT(p[1], p[2]) ; PIX_SORT(p[4], p[5]) ; PIX_SORT(p[7], p[8]) ;
-    PIX_SORT(p[0], p[1]) ; PIX_SORT(p[3], p[4]) ; PIX_SORT(p[6], p[7]) ;
-    PIX_SORT(p[1], p[2]) ; PIX_SORT(p[4], p[5]) ; PIX_SORT(p[7], p[8]) ;
-    PIX_SORT(p[0], p[3]) ; PIX_SORT(p[5], p[8]) ; PIX_SORT(p[4], p[7]) ;
-    PIX_SORT(p[3], p[6]) ; PIX_SORT(p[1], p[4]) ; PIX_SORT(p[2], p[5]) ;
-    PIX_SORT(p[4], p[7]) ; PIX_SORT(p[4], p[2]) ; PIX_SORT(p[6], p[4]) ;
-    PIX_SORT(p[4], p[2]) ; return(p[4]) ;
-}
 /*
  * A median 3x3 filter.
  *
  * @param x     Pointer to input image, a 2D array of size 'rows' x 'cols'
- *
- * @param r     Pointer to output image
- *
+ * @param r     Pointer to output image, a 2D array pf size 'rows-2' x 'cols-2'
  * @param rows  Number of rows in input image
- *
  * @param cols  Number of columns in input image
- *
  * @return      None
- *
  */
 
 void p_median3x3_f32(const float *x, float *r, int rows, int cols)
 {
-    float buffer[9];
-    const float *px;
-    float *pr;
-    int i, j, buffer_col;
+	float v0,v1,v2,v3,v4,v5,v6,v7,v8;
+	const float *px = x;
+	float *pr = r;
+	int i, j;
 
-    px = x;
-    pr = r;
+	for (i = 0; i < rows - 2; i++) {
+		v3 = *(px);
+		v4 = *(px + cols);
+		v5 = *(px + 2*cols);
+		SORT(v4,v5);
+		SORT(v3,v4);
+		SORT(v4,v5);
+		v6 = *(px + 1);
+		v7 = *(px + cols + 1);
+		v8 = *(px + 2*cols + 1);
+		SORT(v7,v8);
+		SORT(v6,v7);
+		SORT(v7,v8);
+		for (j = 0; j < cols - 2; j++) {
+			v0 = v3;
+			v1 = v4;
+			v2 = v5;
+			v3 = v6;
+			v4 = v7;
+			v5 = v8;
+			v6 = *(px + 2);
+			v7 = *(px + cols + 2);
+			v8 = *(px + 2*cols + 2);
+			SORT(v7,v8);
+			SORT(v6,v7);
+			SORT(v7,v8);
 
-    for (i = 0; i < rows - 2; i++) {
-        // fully filling first window
-        buffer[0] = *px;
-        buffer[1] = *(px + 1);
-        buffer[2] = *(px + 2);
-
-        buffer[3] = *(px + cols);
-        buffer[4] = *(px + cols + 1);
-        buffer[5] = *(px + cols + 2);
-
-        buffer[6] = *(px + cols + cols);
-        buffer[7] = *(px + cols + cols + 1);
-        buffer[8] = *(px + cols + cols + 2);
-
-        p_median_f32(buffer, pr, 9);
-        pr++;
-        px += 3;
-        // other windows differ only by one column
-        // so only one is exchanged
-        for (j = 0; j < cols - 3; j++) {
-            buffer_col = j % 3;
-            buffer[buffer_col] = *px;
-            buffer[buffer_col + 3] = *(px + cols);
-            buffer[buffer_col + 6] = *(px + cols + cols);
-
-            *pr = opt_med9(buffer);
-            pr++;
-            px++;
-        }
-    }
+			*(pr++) = my_median(v0,v1,v2,v3,v4,v5,v6,v7,v8);
+			px++;
+		}
+		px += 2;
+	}
 }
+
+#define SORT_HI(a,b) \
+do { \
+	float c = b - a; \
+	b = gt0(c) ? a : b; \
+} while(0)
+
+#define SORT_LO(a,b) \
+do { \
+	float c = b - a; \
+	a = gt0(c) ? b : a; \
+} while(0)
+
+/*
+ * A specialized median 3x3 filter.
+ *
+ * The routine is inlined for performance and requires that the v0-v2,
+ * v3-v5, and v6-v8 triplets be ordered from largest to smallest. This
+ * improves performance while sweeping through columns of values.
+ * Macros handle the swapping of values and do not swap values which
+ * won't be used again.
+ *
+ * @param v0    The largest value in the triplet v0-v2
+ * @param v1    The median value in the triplet v0-v2
+ * @param v2    The smallest value in the triplet v0-v2
+ * @param v3    The largest value in the triplet v3-v5
+ * @param v4    The median value in the triplet v3-v5
+ * @param v5    The smallest value in the triplet v3-v5
+ * @param v6    The largest value in the triplet v6-v8
+ * @param v7    The median value in the triplet v6-v8
+ * @param v8    The smallest value in the triplet v6-v8
+ * @return      The median value of the set v0-v8
+ */
+
+static __inline __attribute((__always_inline__))
+float my_median(
+	float v0, float v1, float v2,
+	float v3, float v4, float v5,
+	float v6, float v7, float v8)
+{
+	SORT_HI(v0,v3);
+	SORT_LO(v5,v8);
+	SORT(v4,v7);
+	SORT_HI(v3,v6);
+	SORT_HI(v1,v4);
+	SORT_LO(v2,v5);
+	SORT_LO(v4,v7);
+	SORT(v4,v2);
+	SORT_HI(v6,v4);
+	SORT_LO(v4,v2);
+	return v4;
+}
+
