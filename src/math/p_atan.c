@@ -1,26 +1,6 @@
-#include <pal.h>
-
 /*
- * -1 <= x <= 1
- * atan x = a1 * x + a3 * x^3 + ... + a9 * x^9 + e(x)
- * |e(x)| <= 10^-5
- */
-static inline float _p_atan(const float x)
-{
-    const float a1 =  0.9998660f;
-    const float a3 = -0.3302995f;
-    const float a5 =  0.1801410f;
-    const float a7 = -0.0851330f;
-    const float a9 =  0.0208351f;
-    float x2 = x * x;
-    return x * (a1 + x2 * (a3 + x2 * (a5 + x2 * (a7 + x2 * a9))));
-}
-
-/**
  *
- * Calculates inverse tangent (arc tangent) of the input value. The function
- * returns a value between -pi/2 to pi/2 but does not check for illegal input
- * values.
+ * Calculates inverse tangent (arc tangent). 
  *
  * @param a     Pointer to input vector
  *
@@ -31,11 +11,34 @@ static inline float _p_atan(const float x)
  * @return      None
  *
  */
+
 void p_atan_f32(const float *a, float *c, int n)
 {
+    int i;int sign; float ff; float x;
+    float r,r2,r4,r6,r8;
+    float pi4 = 0.78539816339f;                      // constant=pi/4
 
-    int i;
-    for (i = 0; i < n; i++) {
-        c[i] = _p_atan(a[i]);
-    }
+    for ( i = 0; i < n; i++)
+      {
+       const float *pa = (a+i);
+             float *pc = (c+i);
+       ff = *pa;
+       if (ff >= 0) sign = 1.0; else sign = -1.0;     // store sign of input variable
+       if (ff < 0) x = ff * (-1.0f); else x = ff;     // this is equivalent of x=abs(a)
+
+       r  = (x-1)/(x+1);
+       r2 = r * r ; r4 = r2*r2 ; r6 = r4*r2 ; r8 = r4*r4 ;
+
+       float z = pi4
+        +    (+0.9999993329f*r
+        +r2 *(-0.3332985605f*r
+        +r  *(+0.1994653599f*r2
+        +    (-0.1390853351f*r4
+        +    (+0.0964200441f*r6
+        +    (-0.0559098861f*r8
+        +r4 *(+0.0218612288f*r6
+        +    (-0.0040540580f*r8))))))));
+
+       *pc = sign*z;
+      }
 }

@@ -210,7 +210,8 @@ FUNCTION     | NOTES
 [p_acos()](src/math/p_acos.c)         | arc cosine  
 [p_acosh()](src/math/p_acosh.c)       | arc hyperbolic cosine  
 [p_asin()](src/math/p_asin.c)         | arc sine  
-[p_asinh()](src/math/p_asinh.c)       | arc hyperbolic sine  
+[p_asinh()](src/math/p_asinh.c)       | arc hyperbolic sine 
+[p_atan()](src/math/p_atan.c)         | arc tan  
 [p_cbrt()](src/math/p_cbrt.c)         | cubic root                    
 [p_cos()](src/math/p_cos.c)           | cosine  
 [p_cosh()](src/math/p_cosh.c)         | hyperbolic cosine  
