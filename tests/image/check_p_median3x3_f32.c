@@ -61,10 +61,10 @@ int tc_trivial_v(struct ut_suite *suite, struct ut_tcase *tcase)
     return 0;
 }
 
-#define test5x5_COLS 5
-#define test5x5_ROWS 5
+#define TEST5x5_COLS 5
+#define TEST5x5_ROWS 5
 
-float test5x5_in[test5x5_COLS * test5x5_ROWS] = {
+float test5x5_in[TEST5x5_COLS * TEST5x5_ROWS] = {
 -0.107358,-0.049577,+0.126623,-0.106948,-0.755809,
 +0.051781,-0.265425,+0.548136,+0.051735,-0.026964,
 +0.941475,-0.975603,+0.411370,+0.755263,-0.055232,
@@ -73,19 +73,19 @@ float test5x5_in[test5x5_COLS * test5x5_ROWS] = {
 };
 
 /* Borders not computed */
-float test5x5_expected[(test5x5_COLS-2) * (test5x5_ROWS-2)] = {
+float test5x5_expected[(TEST5x5_COLS-2) * (TEST5x5_ROWS-2)] = {
 0.051781000000000001, 0.051735000000000003, 0.051735000000000003,
 -0.26542500000000002, -0.26542500000000002, -0.026963999999999998,
 -0.38025199999999998, -0.38025199999999998, -0.34690300000000002
 };
 
-float test5x5_out[(test5x5_COLS-2) * (test5x5_ROWS-2) + 1];
+float test5x5_out[(TEST5x5_COLS-2) * (TEST5x5_ROWS-2) + 1];
 
 int tc_test5x5_e(struct ut_suite *suite, struct ut_tcase *tcase)
 {
     *(int*)(&test5x5_out[ARRAY_SIZE(test5x5_out) - 1]) = CANARY;
 
-    p_median3x3_f32(test5x5_in, test5x5_out, test5x5_ROWS, test5x5_COLS);
+    p_median3x3_f32(test5x5_in, test5x5_out, TEST5x5_ROWS, TEST5x5_COLS);
 
     return 0;
 }
