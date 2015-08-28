@@ -22,53 +22,58 @@ LDADD += $(top_builddir)/tests/libutest.la
 rangen$(BUILD_EXEEXT): rangen.c
 	$(CC_FOR_BUILD) $(BUILD_CFLAGS) $< -o $@ $(BUILD_LDFLAGS)
 
+
+GOLD_SRCS = \
+	gold/p_abs_f32.gold.h \
+	gold/p_absdiff_f32.gold.h \
+	gold/p_acos_f32.gold.h \
+	gold/p_acosh_f32.gold.h \
+	gold/p_add_f32.gold.h \
+	gold/p_asin_f32.gold.h \
+	gold/p_asinh_f32.gold.h \
+	gold/p_atan2_f32.gold.h \
+	gold/p_atan_f32.gold.h \
+	gold/p_atanh_f32.gold.h \
+	gold/p_cbrt_f32.gold.h \
+	gold/p_cos_f32.gold.h \
+	gold/p_cosh_f32.gold.h \
+	gold/p_div_f32.gold.h \
+	gold/p_dot_f32.gold.h \
+	gold/p_exp_f32.gold.h \
+	gold/p_invcbrt_f32.gold.h \
+	gold/p_inv_f32.gold.h \
+	gold/p_invsqrt_f32.gold.h \
+	gold/p_ln_f32.gold.h \
+	gold/p_log10_f32.gold.h \
+	gold/p_mac_f32.gold.h \
+	gold/p_max_f32.gold.h \
+	gold/p_mean_f32.gold.h \
+	gold/p_median_f32.gold.h \
+	gold/p_min_f32.gold.h \
+	gold/p_mode_f32.gold.h \
+	gold/p_mul_f32.gold.h \
+	gold/p_pow_f32.gold.h \
+	gold/p_sin_f32.gold.h \
+	gold/p_sincos_f32.gold.h \
+	gold/p_sinh_f32.gold.h \
+	gold/p_sort_f32.gold.h \
+	gold/p_sqrt_f32.gold.h \
+	gold/p_sub_f32.gold.h \
+	gold/p_sum_f32.gold.h \
+	gold/p_sumsq_f32.gold.h \
+	gold/p_tan_f32.gold.h \
+	gold/p_tanh_f32.gold.h
+
 BUILT_SOURCES = \
-    gold/p_absdiff_f32.gold.h \
-    gold/p_abs_f32.gold.h \
-    gold/p_acos_f32.gold.h \
-    gold/p_acosh_f32.gold.h \
-    gold/p_add_f32.gold.h \
-    gold/p_asin_f32.gold.h \
-    gold/p_asinh_f32.gold.h \
-    gold/p_atan2_f32.gold.h \
-    gold/p_atan_f32.gold.h \
-    gold/p_atanh_f32.gold.h \
-    gold/p_cbrt_f32.gold.h \
-    gold/p_cos_f32.gold.h \
-    gold/p_cosh_f32.gold.h \
-    gold/p_div_f32.gold.h \
-    gold/p_dot_f32.gold.h \
-    gold/p_exp_f32.gold.h \
-    gold/p_invcbrt_f32.gold.h \
-    gold/p_inv_f32.gold.h \
-    gold/p_invsqrt_f32.gold.h \
-    gold/p_ln_f32.gold.h \
-    gold/p_log10_f32.gold.h \
-    gold/p_mac_f32.gold.h \
-    gold/p_max_f32.gold.h \
-    gold/p_mean_f32.gold.h \
-    gold/p_median_f32.gold.h \
-    gold/p_min_f32.gold.h \
-    gold/p_mode_f32.gold.h \
-    gold/p_mul_f32.gold.h \
-    gold/p_pow_f32.gold.h \
-    gold/p_sin_f32.gold.h \
-    gold/p_sincos_f32.gold.h \
-    gold/p_sinh_f32.gold.h \
-    gold/p_sort_f32.gold.h \
-    gold/p_sqrt_f32.gold.h \
-    gold/p_sub_f32.gold.h \
-    gold/p_sum_f32.gold.h \
-    gold/p_sumsq_f32.gold.h \
-    gold/p_tan_f32.gold.h \
-    gold/p_tanh_f32.gold.h \
-    rangen$(BUILD_EXEEXT)
+	$(GOLD_SRCS) \
+	rangen$(BUILD_EXEEXT)
 
 SUFFIXES = .dat .gold.h
 
 # CSV to C struct
-.dat.gold.h:
+$(GOLD_SRCS): %.gold.h: %.dat
 	@$(MKDIR_P) gold
+	@rm -f $@
 	@echo "$< --> $@"
 	@echo "struct gold builtin_gold[] = {" >> $@
 	@sed -e 's/,/f, /g;s/^/    { /g;s/$$/f },/g;s/0\.00*f/0.0f/g;$$s/,$$//g' $< >> $@
