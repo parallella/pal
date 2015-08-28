@@ -1,15 +1,14 @@
 #include <pal.h>
 
-// Combined with subtraction, this magically works faster than if(a<b)
-#define gt0(f) ((*((int *) &(f))) > 0)
-
 #define SORT(a,b) \
 do { \
-	float d = a; \
-	float c = b - a; \
-	a = gt0(c) ? b : a; \
-	b = gt0(c) ? d : b; \
-} while(0) 
+	float d; \
+	if (a < b) { \
+		d = a; \
+		a = b; \
+		b = d; \
+	} \
+} while(0)
 
 static __inline __attribute__((__always_inline__))
 float my_median(
@@ -68,17 +67,8 @@ void p_median3x3_f32(const float *x, float *r, int rows, int cols)
 	}
 }
 
-#define SORT_HI(a,b) \
-do { \
-	float c = b - a; \
-	b = gt0(c) ? a : b; \
-} while(0)
-
-#define SORT_LO(a,b) \
-do { \
-	float c = b - a; \
-	a = gt0(c) ? b : a; \
-} while(0)
+#define SORT_HI(a,b) { if (b > a) b = a; }
+#define SORT_LO(a,b) { if (a < b) a = b; }
 
 /*
  * A specialized median 3x3 filter.
