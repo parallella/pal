@@ -137,6 +137,9 @@ void p_cosh_f32(const float *a, float *c, int n);
 /*division: c =  a ./ b */
 void p_div_f32(const float *a, const float *b, float *c, int n);
 
+/*error function: c = erf ( a ) */
+void p_erf_f32(const float *a, float *c, int n);
+
 /*exponential: c = exp ( a ) */
 void p_exp_f32(const float *a, float *c, int n);
 
