@@ -1,9 +1,15 @@
 #include <pal.h>
-#include <math.h>
 
 /**
  *
  * Calculates the inverse cube root of the input vector 'a'.
+ *
+ * This routine uses a fast approximation to an inverse cube root with a similar
+ * derivation to what is known as the 'Quake fast square root'.
+ * It's highly likely that empirically better magic numbers may be determined.
+ * And the approximation of division by 3 using (683*(j >> 11)) may have a
+ * better alternative.  Regardless, the initial approximation error isn't bad
+ * and the three Newton iterations get a very accurate result. -JAR
  *
  * @param a     Pointer to input vector
  *
@@ -13,29 +19,22 @@
  *
  * @return      None
  *
- * @todo        Implement without using libm
- *
  */
 void p_invcbrt_f32(const float *a, float *c, int n)
 {
-    union {
-        float f;
-        uint32_t x;
-    } u;
-    int i;
-    float cur;
-    for (i = 0; i < n; i++) {
-        //*(c + i) = 1.0f / cbrtf(*(a + i));
-        u.f = cbrtf(*(a + i));
-        cur = u.f;
-        
-        /* First approximation */
-        u.x = 0x7EEEEBB3 - u.x;
-        /* Refine */
-        u.f = u.f * (2 - u.f * cur);
-        u.f = u.f * (2 - u.f * cur);
-        u.f = u.f * (2 - u.f * cur);
-        *(c + i) = u.f;
-        
-    }
+	int i;
+	float k = 1.33333333f;
+	for (i=0; i<n; i++) {
+		int j = *(int*)(a + i);
+		int s = 0x80000000 & j;
+		j &= 0x7fffffff;
+		float a3 = 0.33333333f*(*(float*)&j);
+		int y = 0x54a2fa8e - 683*(j >> 11);
+		float x = *(float*)&y;
+		x *= k - a3*x*x*x;
+		x *= k - a3*x*x*x;
+		x *= k - a3*x*x*x;
+		int r = (s | (*(int*)&x));
+		*(c + i) = *(float*)&r;
+	}
 }
