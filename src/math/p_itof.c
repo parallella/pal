@@ -15,6 +15,7 @@
  */
 void p_itof(const int *a, float *c, int n)
 {
-    for(int i = 0; i < n; i++)
+int i=0;    // outside of for loop for C compatibility
+    for(; i < n; i++)
         *(c + i) = (float)(*(a + i));
 }

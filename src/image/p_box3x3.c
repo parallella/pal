@@ -9,6 +9,7 @@
  *    |1 1 1|
  *
  * Notes: cols and rows must be 3 or more
+ * @todo rows isn't being used, why?
  *
  * @param x    Pointer to input image, a 2D array of size 'rows' x 'cols'
  *
@@ -23,8 +24,7 @@
 void p_box3x3_f32(const float *x, float *r, int rows, int cols)
 {
 
-    int ia, ja;
-    float E;
+    int ia, ja;    
     const float *px;
     float *pr;
     float r1avg, r2avg, r3avg;

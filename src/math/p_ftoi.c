@@ -22,10 +22,13 @@ void p_ftoi(const float *a, int *c, int n)
         float f;
         uint32_t u;
     } rounding;
+    {
+    int i=0;    // outside of for loop for C compatibility
 
-    for (int i = 0; i < n; i++) {
+    for (; i < n; i++) {
         rounding.f = *(a + i);
         rounding.u = (rounding.u & 0x80000000) | ZERO_POINT_FIVE;
         *(c+i) = (int) (*(a+i) + rounding.f);
+    }
     }
 }
