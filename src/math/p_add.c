@@ -91,6 +91,9 @@ void p_add_f32(const float *a, const float *b, float *c, int n)
         return;
     }
 #endif // __epiphany__
-    for (int i = 0; i < n; i++)
-        *(c + i) = *(a + i) + *(b + i);
+    {
+    int i=0;    // outside of "for" loop for c compatibility
+        for (; i < n; i++)
+            *(c + i) = *(a + i) + *(b + i);
+    }
 }

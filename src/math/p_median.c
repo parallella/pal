@@ -52,7 +52,7 @@ void p_median_f32(const float *a, float *c, int n)
 
     memcpy(search_a, a, sizeof(float) * n);
 
-    for (; median_index <= (n >> 1); ++median_index) {
+    for (; median_index <= ((unsigned int)n >> 1); ++median_index) {
         unsigned int right = n - 1;
         unsigned int pivot_index = 0;
 

@@ -5,7 +5,7 @@ static void _sst3x3(const float *x, float *r, int rows, int cols)
 {
     int i, j;
     int ic3 = 1 - 3 * cols;
-    int cm3 = cols - 3;
+    //int cm3 = cols - 3;
     int rm2 = rows - 2;
     int cm2 = cols - 2;
     float Dx, Dy;
@@ -70,8 +70,7 @@ void p_harris3x3_f32(const float *x, float *r, float *t, int rows, int cols)
 	int rm4 = rows - 4;
     int cm4 = cols - 4;
     int ci = (cols - 2)*3 - 8;
-    int cj = (cols - 2)*6 + 5;
-    float P1, dy2, dxy;
+    int cj = (cols - 2)*6 + 5;    
     float *pr, *pt;
 
     pr = r;

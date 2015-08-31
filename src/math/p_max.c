@@ -19,9 +19,9 @@
 void p_max_f32(const float *a, float *c, int *index, int n)
 {
     if (n==0) return; // only do work if there are elements
-    int pos = 0;
+    int pos = 0,i=1;
     
-    for (int i = 1; i < n; i++) {
+    for (; i < n; i++) {
         int greater = (*(a + i) > *(a + pos));
         pos = greater * i + (1 - greater) * pos;
     }

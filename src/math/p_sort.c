@@ -2,8 +2,8 @@
 
 #define SIFTDOWN_FUNC(name, type) \
 	static void name (type *a, const uint32_t start, const uint32_t end) \
-	{ \
-		for (uint32_t root = start; root * 2 + 1 <= end; ) { \
+    { uint32_t root=start; /* outside of for loop for c compatibility*/ \
+        for (; root * 2 + 1 <= end; ) { \
 			uint32_t child = root * 2 + 1; \
 			uint32_t swap = root; \
 			\
@@ -32,10 +32,11 @@ SIFTDOWN_FUNC(_sift_down_u32, uint32_t);
 		if (n < 1) \
 			return; \
 		\
-		int count = (uint32_t) n; \
+        uint32_t count = (uint32_t) n; \
+        uint32_t i = 0; /* outside of for loop for c compatibilty */\
 		\
 		/* copy to out */ \
-		for (uint32_t i = 0; i < count; i++) \
+        for (; i < count; i++) \
 			c[i] = a[i]; \
 		\
 		/* heapify */ \
@@ -50,13 +51,16 @@ SIFTDOWN_FUNC(_sift_down_u32, uint32_t);
 		} \
 		\
 		/* sort */ \
-		for (uint32_t end = count - 1; end > 0;) { \
+        {   \
+        uint32_t end = count-1; /* outside of for loop for c compatibility */ \
+        for (; end > 0;) { \
 			type tmp = c[end]; \
 			c[end] = c[0]; \
 			c[0] = tmp; \
 			end--; \
 			siftfunc(c, 0, end); \
 		} \
+        } \
 	}
 
 SORT_FUNC(_heapsort_f32, float, _sift_down_f32);

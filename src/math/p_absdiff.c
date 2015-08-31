@@ -22,9 +22,13 @@ void p_absdiff_f32(const float *a, const float *b, float *c, int n)
         float f;
         uint32_t u;
     } diff;
-    for (int i = 0; i < n; i++) {
-        diff.f = a[i] - b[i];
-        diff.u &= 0x7FFFFFFF;
-        c[i] = diff.f;
+    {
+        int i=0;    // outside of for loop for c compatibility
+
+        for (; i < n; i++) {
+            diff.f = a[i] - b[i];
+            diff.u &= 0x7FFFFFFF;
+            c[i] = diff.f;
+        }
     }
 }
