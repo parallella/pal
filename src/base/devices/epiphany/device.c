@@ -9,19 +9,31 @@
 #include "dev_epiphany.h"
 #include "ctrl.h"
 #include "pal_base.h"
+#include <common.h>
 #include "../../pal_base_private.h"
 #include <e-hal.h>
 #include <e-loader.h>
 
 /* TODO: Obtain from device-tree or ioctl() call */
-#define ERAM_SIZE (32*1024*1024)
-#define ERAM_BASE 0x8e000000
-#define ERAM_PHY_BASE 0x3e000000
-
+#define ERAM_SIZE       (32*1024*1024)
+#define ERAM_BASE       0x8e000000
+#define ERAM_PHY_BASE   0x3e000000
+#define CHIP_BASE       0x80800000
+#define CHIP_ROWS       4
+#define CHIP_COLS       4
+#define CORE_MEM_REGION 0x00100000
 #define EPIPHANY_DEV "/dev/epiphany"
 
+struct core_map_table {
+    off_t   base;
+    size_t  size;
+} static core_map_table[] = {
+    { 0x00000, 0x08000 }, /* SRAM */
+    { 0xf0000, 0x01000 }, /* MMR  */
+};
+
 /* Returns 0 on success */
-static int setup_eram(struct dev *dev)
+static int mmap_eram(struct dev *dev)
 {
     struct epiphany_dev_data *dev_data = dev->dev_data;
     long page_size;
@@ -52,16 +64,78 @@ again:
         return -ENOMEM;
     }
 
-    dev_data->eram_fd = open(EPIPHANY_DEV, O_RDWR | O_SYNC);
-    if (dev_data->eram_fd == -1)
-        return -errno;
-
     dev_data->eram = mmap((void *) ERAM_BASE, ERAM_SIZE,
                           PROT_READ | PROT_WRITE, MAP_SHARED | MAP_FIXED,
-                          dev_data->eram_fd, ERAM_PHY_BASE);
+                          dev_data->epiphany_fd, ERAM_PHY_BASE);
     if (dev_data->eram == MAP_FAILED)
         return -errno;
 
+    return 0;
+}
+
+/* Returns 0 on success */
+static int mmap_chip_mem(struct dev *dev)
+{
+    struct epiphany_dev_data *dev_data = dev->dev_data;
+    void *ptr;
+    long page_size;
+    unsigned npages;
+    unsigned char dummy;
+    uintptr_t addr;
+    int row, col, region;
+    int ret;
+
+    page_size = sysconf(_SC_PAGESIZE);
+
+    if (0 > page_size)
+        return -EINVAL;
+
+    /* Check that address space is not already mapped */
+    for (row = 0; row < CHIP_ROWS; row++) {
+        for (col = 0; col < CHIP_COLS; col++, addr += CORE_MEM_REGION) {
+            for (region = 0; region < ARRAY_SIZE(core_map_table); region++) {
+                addr = CHIP_BASE + (64 * row + col) * CORE_MEM_REGION +
+                       core_map_table[region].base;
+                npages = core_map_table[region].size / page_size;
+                for (int i = 0; i < npages; i++, addr += page_size) {
+again:
+                    ret = mincore((void *) addr, page_size, &dummy);
+
+                    if (ret == -1 && errno == EAGAIN)
+                        goto again;
+
+                    /* This is what we want (page is unmapped) */
+                    if (ret == -1 && errno == ENOMEM)
+                        continue;
+
+                    return -ENOMEM;
+                }
+            }
+        }
+    }
+
+    /* Allow R/W access to core regions */
+    /* Do 1:1 mapping w/ chip for now */
+    addr = CHIP_BASE;
+    for (row = 0; row < CHIP_ROWS; row++) {
+        for (col = 0; col < CHIP_COLS; col++, addr += CORE_MEM_REGION) {
+            for (region = 0; region < ARRAY_SIZE(core_map_table); region++) {
+                addr = CHIP_BASE + (64 * row + col) * CORE_MEM_REGION +
+                       core_map_table[region].base;
+
+                ptr = mmap((void *) addr, core_map_table[region].size,
+                           PROT_READ | PROT_WRITE, MAP_SHARED | MAP_FIXED,
+                           dev_data->epiphany_fd, addr);
+
+                if (ptr == MAP_FAILED)
+                    return -errno;
+                if (ptr != (void *) addr)
+                    return -ENOMEM;
+            }
+        }
+    }
+
+    dev_data->chip = (void *) CHIP_BASE;
     return 0;
 }
 
@@ -70,19 +144,29 @@ static int dev_early_init(struct dev *dev)
     int ret;
     struct epiphany_dev_data *dev_data;
 
-    dev_data = malloc(sizeof(*dev_data));
+    dev_data = calloc(1, sizeof(*dev_data));
     if (!dev_data)
         return -ENOMEM;
 
+    /* TODO: Clean up after errors */
+
     dev->dev_data = dev_data;
 
-    memset(dev_data, 0, sizeof(*dev_data));
+    dev_data->epiphany_fd = open(EPIPHANY_DEV, O_RDWR | O_SYNC);
+    if (dev_data->epiphany_fd == -1)
+        return -errno;
 
-    ret = setup_eram(dev);
+    ret = mmap_eram(dev);
+    if (ret)
+        return ret;
+
+    ret = mmap_chip_mem(dev);
     if (ret)
         return ret;
 
     dev_data->initialized = true;
+
+    return 0;
 }
 
 static void dev_late_fini(struct dev *dev)
@@ -99,12 +183,10 @@ static void dev_late_fini(struct dev *dev)
     }
 
     munmap(dev_data->eram, ERAM_SIZE);
-    close(dev_data->eram_fd);
+    close(dev_data->epiphany_fd);
 
     free(dev_data);
     dev->dev_data = NULL;
-
-    return;
 }
 
 

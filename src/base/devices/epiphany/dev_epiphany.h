@@ -17,6 +17,7 @@ struct epiphany_dev_data {
     e_epiphany_t dev;
     struct epiphany_ctrl_mem *ctrl;
     struct epiphany_args_header *args_header;
-    int eram_fd; /* File descriptor to eram */
+    int epiphany_fd; /* File descriptor to eram */
     void *eram;
+    void *chip;
 };
