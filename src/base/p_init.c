@@ -34,10 +34,10 @@ p_dev_t p_init(int type, int flags)
     if (type < P_DEV_FIRST || P_DEV_LAST < type)
         return p_ref_err(EINVAL);
 
-    dev = &__pal_global.devs[type];
+    dev = __pal_global.devs[type];
 
     /* Check if compiled in */
-    if (!dev->dev_ops)
+    if (!dev)
         return p_ref_err(ENOSYS);
 
     return dev->dev_ops->init(dev, flags);

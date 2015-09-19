@@ -66,8 +66,7 @@ struct prog;
 struct pal_global;
 
 struct dev_ops {
-    int (*early_init) (struct dev *);
-    void (*late_fini) (struct dev *);
+    /* These must be defined */
     p_dev_t (*init) (struct dev *, int);
     void (*fini) (struct dev *);
 
@@ -76,11 +75,14 @@ struct dev_ops {
     int (*run) (struct dev *, struct team *, struct prog *, const char *,
                 int, int, int, const p_arg_t *, int);
     int (*wait) (struct dev *, struct team *);
+
+    /* Optional */
+    int (*early_init) (struct dev *);
+    void (*late_fini) (struct dev *);
 };
 
 struct dev {
     struct dev_ops *dev_ops;
-    void *dev_data;
 };
 
 struct rank_range {
@@ -105,7 +107,7 @@ struct prog {
 };
 
 struct pal_global {
-    struct dev devs[P_DEV_LAST+1];
+    struct dev  *devs[P_DEV_LAST+1];
     struct team *teams_head;
     struct team *teams_tail;
     struct prog *progs_head;

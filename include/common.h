@@ -1,4 +1,5 @@
 #pragma once
+#include <stddef.h>
 
 #define CONCAT2(_a, _b)                  _a##_b
 #define CONCAT3(_a, _b, _c)              _a##_b##_c
@@ -17,3 +18,11 @@
 
 #define ARRAY_SIZE(_a) (sizeof(_a) / sizeof((_a)[0]))
 #define FIELD_SIZEOF(_t, _f) (sizeof(((_t*)0)->_f))
+
+// For an explanation, see:
+// http://www.linuxjournal.com/files/linuxjournal.com/linuxjournal/articles/067/6717/6717s2.html
+#define container_of(ptr, type, member)\
+    ({\
+        const typeof( ((type *)0)->member ) *__mptr = (ptr);\
+        (type *)( (char *)__mptr - offsetof(type,member) );\
+    })

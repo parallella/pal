@@ -32,10 +32,15 @@ struct core_map_table {
     { 0xf0000, 0x01000 }, /* MMR  */
 };
 
+static inline struct epiphany_dev *to_epiphany_dev(struct dev *dev)
+{
+    return container_of(dev, struct epiphany_dev, dev);
+}
+
 /* Returns 0 on success */
 static int mmap_eram(struct dev *dev)
 {
-    struct epiphany_dev_data *dev_data = dev->dev_data;
+    struct epiphany_dev *dev_data = to_epiphany_dev(dev);
     long page_size;
     unsigned npages;
     unsigned char dummy;
@@ -76,7 +81,7 @@ again:
 /* Returns 0 on success */
 static int mmap_chip_mem(struct dev *dev)
 {
-    struct epiphany_dev_data *dev_data = dev->dev_data;
+    struct epiphany_dev *dev_data = to_epiphany_dev(dev);
     void *ptr;
     long page_size;
     unsigned npages;
@@ -142,15 +147,7 @@ again:
 static int dev_early_init(struct dev *dev)
 {
     int ret;
-    struct epiphany_dev_data *dev_data;
-
-    dev_data = calloc(1, sizeof(*dev_data));
-    if (!dev_data)
-        return -ENOMEM;
-
-    /* TODO: Clean up after errors */
-
-    dev->dev_data = dev_data;
+    struct epiphany_dev *dev_data = to_epiphany_dev(dev);
 
     dev_data->epiphany_fd = open(EPIPHANY_DEV, O_RDWR | O_SYNC);
     if (dev_data->epiphany_fd == -1)
@@ -171,32 +168,22 @@ static int dev_early_init(struct dev *dev)
 
 static void dev_late_fini(struct dev *dev)
 {
-    struct epiphany_dev_data *dev_data = dev->dev_data;
+    struct epiphany_dev *dev_data = to_epiphany_dev(dev);
 
-    if (!dev_data)
+    if (!dev_data->initialized)
         return;
-
-    if (!dev_data->initialized) {
-        free(dev_data);
-        dev->dev_data = NULL;
-        return;
-    }
 
     munmap(dev_data->eram, ERAM_SIZE);
+    /* TODO: unmap chip here */
     close(dev_data->epiphany_fd);
 
-    free(dev_data);
-    dev->dev_data = NULL;
+    dev_data->initialized = false;
 }
-
 
 static p_dev_t dev_init(struct dev *dev, int flags)
 {
     int err;
-    struct epiphany_dev_data *dev_data = dev->dev_data;
-
-    if (!dev_data)
-        return p_ref_err(ENOMEM);
+    struct epiphany_dev *dev_data = to_epiphany_dev(dev);
 
     if (!dev_data->initialized)
         return p_ref_err(ENODEV);
@@ -217,7 +204,7 @@ static p_dev_t dev_init(struct dev *dev, int flags)
         return p_ref_err(EIO);
 
     /* Open entire device */
-    err = e_open(&dev_data->dev, 0, 0, 4, 4);
+    err = e_open(&dev_data->edev, 0, 0, 4, 4);
     if (err)
         return p_ref_err(ENOMEM);
 
@@ -231,14 +218,10 @@ static p_dev_t dev_init(struct dev *dev, int flags)
 
 static void dev_fini(struct dev *dev)
 {
-    struct epiphany_dev_data *data =
-        (struct epiphany_dev_data *) dev->dev_data;
-
-    if (!data)
-        return;
+    struct epiphany_dev *data = to_epiphany_dev(dev);
 
     if (data->opened) {
-        e_close(&data->dev);
+        e_close(&data->edev);
         data->opened = false;
     }
 
@@ -285,8 +268,7 @@ static int dev_query(struct dev *dev, int property)
 static struct team *dev_open(struct dev *dev, struct team *team, int start,
         int count)
 {
-    struct epiphany_dev_data *data =
-        (struct epiphany_dev_data *) dev->dev_data;
+    struct epiphany_dev *data = to_epiphany_dev(dev);
 
     /* Only support opening entire chip for now */
     if (start != 0 || count != 16)
@@ -308,7 +290,7 @@ static int dev_run(struct dev *dev, struct team *team, struct prog *prog,
     int err;
     int i;
     const uint32_t scheduled = STATUS_SCHEDULED;
-    struct epiphany_dev_data *data = dev->dev_data;
+    struct epiphany_dev *data = to_epiphany_dev(dev);
 
     if (start < 0 || size <= 0)
         return -EINVAL;
@@ -354,7 +336,7 @@ static int dev_run(struct dev *dev, struct team *team, struct prog *prog,
 
     /* Load */
     for (i = start; i < start + size; i++) {
-        err = e_load(prog->path, &data->dev, i / 4, i % 4, E_FALSE);
+        err = e_load(prog->path, &data->edev, i / 4, i % 4, E_FALSE);
         if (err)
             return -EIO;
     }
@@ -365,7 +347,7 @@ static int dev_run(struct dev *dev, struct team *team, struct prog *prog,
 
     /* Kick off */
     for (i = start; i < start + size; i++) {
-        err = e_start(&data->dev, i / 4, i % 4);
+        err = e_start(&data->edev, i / 4, i % 4);
         if (err)
             return -EIO;
     }
@@ -378,8 +360,7 @@ static int dev_wait(struct dev *dev, struct team *team)
 {
     unsigned i;
     bool need_wait = true;
-    struct epiphany_dev_data *data =
-        (struct epiphany_dev_data *) dev->dev_data;
+    struct epiphany_dev *data = to_epiphany_dev(dev);
 
     while (true) {
         need_wait = false;
@@ -409,7 +390,7 @@ static int dev_wait(struct dev *dev, struct team *team)
     return 0;
 }
 
-struct dev_ops __pal_dev_epiphany_ops = {
+static struct dev_ops epiphany_dev_ops = {
     .init = dev_init,
     .fini = dev_fini,
     .query = dev_query,
@@ -420,3 +401,8 @@ struct dev_ops __pal_dev_epiphany_ops = {
     .late_fini = dev_late_fini,
 };
 
+struct epiphany_dev __pal_dev_epiphany = {
+    .dev = {
+        .dev_ops = &epiphany_dev_ops,
+    },
+};

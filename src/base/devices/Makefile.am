@@ -6,5 +6,5 @@ endif
 SUBDIRS = $(MAYBE_EPIPHANY)
 
 noinst_LTLIBRARIES = libdevices.la
-libdevices_la_SOURCES = dummy.c
+libdevices_la_SOURCES = devices.h
 libdevices_la_LIBADD = $(MAYBE_LIB_EPIPHANY)
