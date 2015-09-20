@@ -12,7 +12,7 @@
 #include <common.h>
 #include "../../pal_base_private.h"
 #include <e-hal.h>
-#include <e-loader.h>
+#include "loader.h"
 
 /* TODO: Obtain from device-tree or ioctl() call */
 #define ERAM_SIZE       (32*1024*1024)
@@ -289,7 +289,6 @@ static int dev_run(struct dev *dev, struct team *team, struct prog *prog,
 {
     int err;
     int i;
-    const uint32_t scheduled = STATUS_SCHEDULED;
     struct epiphany_dev *data = to_epiphany_dev(dev);
 
     if (start < 0 || size <= 0)
@@ -334,27 +333,20 @@ static int dev_run(struct dev *dev, struct team *team, struct prog *prog,
         data->ctrl->argsoffset = totsize;
     }
 
-    /* Load */
-    for (i = start; i < start + size; i++) {
-        err = e_load(prog->path, &data->edev, i / 4, i % 4, E_FALSE);
-        if (err)
-            return -EIO;
-    }
+    epiphany_soft_reset(team, start, size);
+
+    err = epiphany_load(team, prog, start, size, flags);
+    if (err)
+        return err;
 
     /* Mark as scheduled */
     for (i = start; i < start + size; i++)
         data->ctrl->status[i] = STATUS_SCHEDULED;
 
-    /* Kick off */
-    for (i = start; i < start + size; i++) {
-        err = e_start(&data->edev, i / 4, i % 4);
-        if (err)
-            return -EIO;
-    }
+    epiphany_start(team, start, size, flags);
 
     return 0;
 }
-
 
 static int dev_wait(struct dev *dev, struct team *team)
 {
