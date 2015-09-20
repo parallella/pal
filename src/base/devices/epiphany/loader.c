@@ -20,6 +20,7 @@
 #include <common.h>
 #include "../../pal_base_private.h"
 #include "dev_epiphany.h"
+#include "epiphany-abi.h"
 
 #define MMR_R0         0xf0000
 #define MMR_DEBUGCMD   0xf0448
@@ -317,6 +318,35 @@ void epiphany_soft_reset(struct team *team, int start, int size)
     }
 }
 
+
+/* Needed by e-lib (device) */
+static void set_core_config(struct epiphany_dev *epiphany, unsigned coreid)
+{
+    const unsigned SIZEOF_IVT = (10 * 4);
+    uint8_t *corep = (uint8_t *) (coreid << 20);
+
+    /* group config comes directly after the IVT */
+    e_group_config_t *e_group_config = (e_group_config_t *) &corep[SIZEOF_IVT];
+    e_emem_config_t  *e_emem_config  = (e_emem_config_t *)  &e_group_config[1];
+
+    /* No trivial way to emulate workgroups??? Pretend each core is its own
+     * separate group for now. */
+
+    e_group_config->objtype    = E_EPI_GROUP;
+    e_group_config->chiptype   = E_E16G301; /* TODO: Or E_64G501 */
+    e_group_config->group_id   = coreid;
+    e_group_config->group_row  = coreid >> 6;
+    e_group_config->group_col  = coreid & 0x3f;
+    e_group_config->group_rows = 1;
+    e_group_config->group_cols = 1;
+    e_group_config->core_row   = 0;
+    e_group_config->core_col   = 0;
+    e_group_config->alignment_padding = 0xdeadbeef;
+
+    e_emem_config->objtype = E_EXT_MEM;
+    e_emem_config->base    = 0x8e000000;
+}
+
 int epiphany_load(struct team *team, struct prog *prog,
                   int start, int size, int flags)
 {
@@ -330,6 +360,7 @@ int epiphany_load(struct team *team, struct prog *prog,
         err = process_elf(prog->path, epiphany, coreid);
         if (err)
             return err;
+        set_core_config(epiphany, coreid);
     }
 
     return 0;
