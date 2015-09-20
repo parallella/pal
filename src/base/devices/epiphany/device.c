@@ -4,6 +4,7 @@
 #include <sys/types.h>
 #include <sys/stat.h>
 #include <fcntl.h>
+#include <stdbool.h>
 
 #include "config.h"
 #include "dev_epiphany.h"
@@ -11,7 +12,6 @@
 #include "pal_base.h"
 #include <common.h>
 #include "../../pal_base_private.h"
-#include <e-hal.h>
 #include "loader.h"
 
 /* TODO: Obtain from device-tree or ioctl() call */
@@ -183,35 +183,26 @@ static void dev_late_fini(struct dev *dev)
 static p_dev_t dev_init(struct dev *dev, int flags)
 {
     int err;
-    struct epiphany_dev *dev_data = to_epiphany_dev(dev);
+    struct epiphany_dev *epiphany = to_epiphany_dev(dev);
 
-    if (!dev_data->initialized)
+    if (!epiphany->initialized)
         return p_ref_err(ENODEV);
 
     /* Be idempotent if already initialized. It might be a better idea to
      * return EBUSY instead */
-    if (dev_data->opened)
+    if (epiphany->opened)
         return dev;
 
-    dev_data->ctrl = (struct epiphany_ctrl_mem *) CTRL_MEM_EADDR;
+    epiphany->ctrl = (struct epiphany_ctrl_mem *) CTRL_MEM_EADDR;
 
-    err = e_init(NULL);
+    err = epiphany_reset_system(epiphany);
     if (err)
-        return p_ref_err(EIO);
-
-    err = e_reset_system();
-    if (err)
-        return p_ref_err(EIO);
-
-    /* Open entire device */
-    err = e_open(&dev_data->edev, 0, 0, 4, 4);
-    if (err)
-        return p_ref_err(ENOMEM);
+        return p_ref_err(-err);
 
     /* Clear control structure */
-    memset(dev_data->ctrl, 0 , sizeof(*dev_data->ctrl));
+    memset(epiphany->ctrl, 0 , sizeof(*epiphany->ctrl));
 
-    dev_data->opened = 1;
+    epiphany->opened = true;
 
     return dev;
 }
@@ -221,11 +212,8 @@ static void dev_fini(struct dev *dev)
     struct epiphany_dev *data = to_epiphany_dev(dev);
 
     if (data->opened) {
-        e_close(&data->edev);
         data->opened = false;
     }
-
-    e_finalize();
 }
 
 static int dev_query(struct dev *dev, int property)

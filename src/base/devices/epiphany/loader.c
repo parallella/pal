@@ -3,6 +3,8 @@
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
+#include <unistd.h>
+#include <sys/mman.h>
 #include <assert.h>
 #include <stdint.h>
 #include <stdbool.h>
@@ -43,6 +45,74 @@
 #define MMR_IPEND      0xf0434
 #define MMR_DMASTART   MMR_DMA0CONFIG
 #define MMR_DMAEND     0xf0540
+
+#define E_SYS_BASE     0x70000000
+#define E_REG_LINKCFG  0xf0300
+#define E_REG_LINKTXCFG 0xf0304
+#define E_REG_LINKRXCFG 0xf0308
+
+// Epiphany system registers
+typedef enum {
+    E_SYS_RESET     = 0x0040,
+    E_SYS_CFGTX     = 0x0044,
+    E_SYS_CFGRX     = 0x0048,
+    E_SYS_CFGCLK    = 0x004c,
+    E_SYS_COREID    = 0x0050,
+    E_SYS_VERSION   = 0x0054,
+    E_SYS_GPIOIN    = 0x0058,
+    E_SYS_GPIOOUT   = 0x005c
+} e_sys_reg_id_t;
+
+typedef union {
+    unsigned int reg;
+    struct {
+        unsigned int enable:1;
+        unsigned int mmu:1;
+        unsigned int mode:2;      // 0=Normal, 1=GPIO
+        unsigned int ctrlmode:4;
+        unsigned int clkmode:4;   // 0=Full speed, 1=1/2 speed
+        unsigned int resvd:20;
+    };
+} e_syscfg_tx_t;
+
+typedef union {
+    unsigned int reg;
+    struct {
+        unsigned int enable:1;
+        unsigned int mmu:1;
+        unsigned int path:2;    // 0=Normal, 1=GPIO, 2=Loopback
+        unsigned int monitor:1;
+        unsigned int resvd:27;
+    };
+} e_syscfg_rx_t;
+
+typedef union {
+    unsigned int reg;
+    struct {
+        unsigned int divider:4;  // 0=off, 1=F/64 ... 7=F/1
+        unsigned int pll:4;      // TBD
+        unsigned int resvd:24;
+    };
+} e_syscfg_clk_t;
+
+typedef union {
+    unsigned int reg;
+    struct {
+        unsigned int col:6;
+        unsigned int row:6;
+        unsigned int resvd:20;
+    };
+} e_syscfg_coreid_t;
+
+typedef union {
+    unsigned int reg;
+    struct {
+        unsigned int revision:8;
+        unsigned int type:8;
+        unsigned int platform:8;
+        unsigned int generation:8;
+    };
+} e_syscfg_version_t;
 
 #define EM_ADAPTEVA_EPIPHANY   0x1223  /* Adapteva's Epiphany architecture.  */
 
@@ -278,4 +348,143 @@ void epiphany_start(struct team *team, int start, int size, int flags)
         corep[MMR_ILATST   >> 2] = 1;
         corep[MMR_DEBUGCMD >> 2] = 0;
     }
+}
+
+int epiphany_reset_system(struct epiphany_dev *epiphany)
+{
+    e_syscfg_tx_t txcfg;
+
+    union ptr {
+        void *v;
+        uint8_t *u8;
+        /* Make volatile so compiler can't reorder so we don't have to issue
+         * barrier after *every* access (ordering matters). */
+        volatile uint32_t *u32;
+    } host_elink, east_elink;
+
+    host_elink.v = mmap(NULL, 4096, PROT_READ | PROT_WRITE, MAP_SHARED,
+                   epiphany->epiphany_fd, E_SYS_BASE);
+
+    if (host_elink.v == MAP_FAILED)
+        return -errno;
+
+    /* FPGA elink reset routine */
+    {
+        e_syscfg_rx_t rxcfg;
+        e_syscfg_clk_t clkcfg;
+        uint32_t resetcfg;
+
+        resetcfg = 1;
+        host_elink.u32[E_SYS_RESET >> 2] = resetcfg;
+        usleep(1000);
+
+        txcfg.reg = 0;
+        host_elink.u32[E_SYS_CFGTX >> 2] = txcfg.reg;
+        usleep(1000);
+
+        rxcfg.reg = 0;
+        host_elink.u32[E_SYS_CFGRX >> 2] = rxcfg.reg;
+        usleep(1000);
+
+        clkcfg.divider = 7; // Full speed
+        host_elink.u32[E_SYS_CFGCLK >> 2] = clkcfg.reg;
+        usleep(1000);
+
+        clkcfg.divider = 0; // Stop clock
+        host_elink.u32[E_SYS_CFGCLK >> 2] = clkcfg.reg;
+        usleep(1000);
+
+        resetcfg = 0;
+        host_elink.u32[E_SYS_RESET >> 2] = resetcfg;
+        usleep(1000);
+
+        clkcfg.divider = 7; // Full speed
+        host_elink.u32[E_SYS_CFGCLK >> 2] = clkcfg.reg;
+        usleep(1000);
+
+        txcfg.clkmode = 0; // Full speed
+        txcfg.enable  = 1;
+        host_elink.u32[E_SYS_CFGTX >> 2] = txcfg.reg;
+        usleep(1000);
+
+        rxcfg.enable = 1;
+        host_elink.u32[E_SYS_CFGRX >> 2] = rxcfg.reg;
+        usleep(1000);
+    }
+
+    /* Set chip link TX divider */
+    {
+        uint32_t divider;
+
+        /* Chip east elink core */
+        east_elink.u8 = (uint8_t *) epiphany->chip + ((2 << 6 | 3) << 20);
+
+        txcfg.ctrlmode = 0x5; /* Force east */
+        host_elink.u32[E_SYS_CFGTX >> 2] = txcfg.reg;
+        usleep(1000);
+
+        divider = 1; /* Divide by 4, see data sheet */
+        east_elink.u32[E_REG_LINKCFG >> 2] = divider;
+        usleep(1000);
+
+        txcfg.ctrlmode = 0x0;
+        host_elink.u32[E_SYS_CFGTX >> 2] = txcfg.reg;
+        usleep(1000);
+    }
+
+    /* Reset cores */
+    for (unsigned i = 0; i < 16; i++) {
+        unsigned row = 32 + i / 4;
+        unsigned col =  8 + i % 4;
+        unsigned coreid = (row << 6) | col;
+        ecore_soft_reset(epiphany, coreid);
+    }
+
+    /* Disable disconnected chip elinks */
+    {
+        unsigned data = 0xfff;
+        struct {
+            union ptr elink;
+            unsigned  ctrlmode;
+        } disable[] = {
+            {
+                /* north */
+                .elink = {
+                    .u8 = (uint8_t *) epiphany->chip + ((0 << 6 | 2) << 20)
+                },
+                .ctrlmode = 0x1,
+            },
+            {
+                /* south */
+                /* TODO: Different coords on E64... */
+                .elink = {
+                    .u8 = (uint8_t *) epiphany->chip + ((3 << 6 | 2) << 20)
+                },
+                .ctrlmode = 0x9,
+            },
+            {
+                /* west */
+                .elink = {
+                    .u8 = (uint8_t *) epiphany->chip + ((2 << 6 | 0) << 20)
+                },
+                .ctrlmode = 0xd,
+            },
+        };
+        for (unsigned i = 0; i < ARRAY_SIZE(disable); i++) {
+            txcfg.ctrlmode = disable[i].ctrlmode;
+            host_elink.u32[E_SYS_CFGTX >> 2] = txcfg.reg;
+            usleep(1000);
+            disable[i].elink.u32[E_REG_LINKTXCFG >> 2] = data;
+            disable[i].elink.u32[E_REG_LINKRXCFG >> 2] = data;
+            usleep(1000);
+        }
+        txcfg.ctrlmode = 0x0;
+        host_elink.u32[E_SYS_CFGTX >> 2] = txcfg.reg;
+        usleep(1000);
+    }
+
+    if (-1 == munmap(host_elink.v, 4096))
+        return -errno;
+
+    return 0;
 }

@@ -1,6 +1,5 @@
 #pragma once
 
-#include <e-hal.h>
 #include "pal_base.h"
 #include "../../pal_base_private.h"
 #include "ctrl.h"
@@ -15,7 +14,6 @@ struct epiphany_dev {
     struct dev dev;     /* Generic device */
     bool initialized;   /* True if dev_early_init() succeeded */
     bool opened;        /* Opened by user call to p_init() */
-    e_epiphany_t edev;  /* e-hal device structure */
     struct epiphany_ctrl_mem *ctrl;
     struct epiphany_args_header *args_header;
     int epiphany_fd;    /* File descriptor for epiphany device */

@@ -6,3 +6,4 @@ extern int epiphany_load(struct team *team, struct prog *prog,
 
 extern void epiphany_start(struct team *team, int start, int size, int flags);
 extern void epiphany_soft_reset(struct team *team, int start, int size);
+int epiphany_reset_system(struct epiphany_dev *epiphany);
