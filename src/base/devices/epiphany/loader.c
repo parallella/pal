@@ -10,9 +10,12 @@
 #include <stdbool.h>
 #include <alloca.h>
 #include <errno.h>
+#include <sys/types.h>
+#include <sys/stat.h>
+#include <fcntl.h>
+#include <sys/stat.h>
 
-/* Use gelf.h API instead? */
-#include <elf.h>
+#include <libelf.h>
 
 #include "config.h"
 
@@ -150,7 +153,8 @@ static inline bool is_valid_addr(uint32_t addr, uint32_t coreid)
 
 static inline bool is_epiphany_exec_elf(Elf32_Ehdr *ehdr)
 {
-    return memcmp(ehdr->e_ident, ELFMAG, SELFMAG) == 0
+    return ehdr
+        && memcmp(ehdr->e_ident, ELFMAG, SELFMAG) == 0
         && ehdr->e_ident[EI_CLASS] == ELFCLASS32
         && ehdr->e_type == ET_EXEC
         && ehdr->e_version == EV_CURRENT
@@ -163,36 +167,49 @@ static inline bool is_epiphany_exec_elf(Elf32_Ehdr *ehdr)
 static int process_elf(const char *executable, struct epiphany_dev *epiphany,
                        unsigned coreid)
 {
-    FILE       *stream;
-    Elf32_Ehdr ehdr;
-    Elf32_Phdr *phdr;
-    unsigned   i;
-    void       *ptr;
-    int        rc = 0;
+    int         fd;
+    struct stat st;
+    Elf         *elf;
+    Elf32_Ehdr  *ehdr;
+    Elf32_Phdr  *phdr;
+    void        *dst;
+    int         rc = 0;
 
-    stream = fopen(executable, "rb");
-    if (!stream)
+    union {
+        void *v;
+        char *c;
+    } file;
+
+    if (elf_version(EV_CURRENT) == EV_NONE)
+        return -ENOSYS;
+
+    fd = open(executable, O_RDONLY);
+    if (fd == -1)
         return -errno;
 
-    if (1 != fread(&ehdr, sizeof(ehdr), 1, stream)) {
-        rc = -EIO;
-        goto out;
+    if (fstat(fd, &st) == -1) {
+        close(fd);
+        return -errno;
     }
-    if (!is_epiphany_exec_elf(&ehdr)) {
+
+    file.v = mmap(0, st.st_size, PROT_READ, MAP_PRIVATE, fd, 0);
+    if (file.v == MAP_FAILED) {
+        close(fd);
+        return -errno;
+    }
+
+    elf = elf_memory(file.c, st.st_size);
+
+    ehdr = elf32_getehdr(elf);
+
+    if (!is_epiphany_exec_elf(ehdr)) {
         rc = -EINVAL;
         goto out;
     }
-    phdr = alloca(sizeof(*phdr) * ehdr.e_phnum);
-    if (-1 == fseek(stream, ehdr.e_phoff, SEEK_SET)) {
-        rc = -EIO;
-        goto out;
-    }
-    if (ehdr.e_phnum != fread(phdr, sizeof(*phdr), ehdr.e_phnum, stream)) {
-        rc = -EIO;
-        goto out;
-    }
 
-    for (i = 0; i < ehdr.e_phnum; i++) {
+    phdr = (Elf32_Phdr *) &file.c[ehdr->e_phoff];
+
+    for (unsigned i = 0; i < ehdr->e_phnum; i++) {
         // TODO: should this be p_paddr instead of p_vaddr?
         if (!is_valid_addr(phdr[i].p_vaddr, coreid)) {
             rc = -EINVAL;
@@ -200,27 +217,22 @@ static int process_elf(const char *executable, struct epiphany_dev *epiphany,
         }
     }
 
-    for (i = 0; i < ehdr.e_phnum; i++) {
+    for (unsigned i = 0; i < ehdr->e_phnum; i++) {
         // TODO: should this be p_paddr instead of p_vaddr?
         uint32_t addr = phdr[i].p_vaddr;
-        ptr = is_local(addr) ?
+        dst = is_local(addr) ?
             (void *) ((coreid << 20) | addr) : (void *) addr;
 
-        if (-1 == fseek(stream, phdr[i].p_offset, SEEK_SET)) {
-            rc = -EIO;
-            goto out;
-        }
-        if (!fread(ptr, phdr[i].p_filesz, 1, stream)) {
-            rc = -EIO;
-            goto out;
-        }
+        memcpy(dst, &file.c[phdr[i].p_offset], phdr[i].p_filesz);
         /* This is where we would have cleared .bss (p_memsz - p_filesz), but
          * since we assume SRAM is already cleared there's no need for that.
          */
     }
 
 out:
-    fclose(stream);
+    elf_end(elf);
+    munmap(file.v, st.st_size);
+    close(fd);
     return rc;
 }
 

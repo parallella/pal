@@ -250,9 +250,10 @@ AS_IF([test "x$enable_device_epiphany" = "xyes"],
 
        AC_MSG_NOTICE([Epiphany headers found])
 
-       AC_CHECK_HEADER([elf.h], [], [AC_MSG_ERROR([Need elf.h for loading binaries])])
+       PKG_CHECK_MODULES([LIBELF], [libelf >= 0.8])
 
        AC_DEFINE([ENABLE_DEV_EPIPHANY], [1], [Epiphany device support])
+
        ])
 
 AC_ARG_ENABLE([tests],
