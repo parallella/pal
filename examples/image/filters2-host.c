@@ -70,21 +70,23 @@ int main(int argc, char *argv[])
     // Open team. FIXME: must be 16 for Epiphany
     p_team_t team = p_open(dev, 0, 16); // create a team
 
-    // Copy data to device. TODO: We need a API call for this
+    // "Allocate" output buffer. TODO: We need an API call for this
     float *out = (float *) 0x8f900000;
     memset(out, 0, size * sizeof(float));
 
     // Construct program arguments
-    // TODO: Uncessary copy even if data pointed to is already in
-    // memory device can access.
+    // TODO: We can hide the is_primitive bool param with a macro
+    // __builtin_types_compatible_p(x, int8) || compatible(i16) ...
+    // I.e, P_ARG(h, sizeof(h)) --> { &h, sizeof(h), true }
+    // ((!is_primitive) == pass_by_reference)
     p_arg_t args[] = {
-        &h, sizeof(h),
-        &w, sizeof(w),
-        data, (size * sizeof(float)),
-        &out, sizeof(out),
+        { data, (size * sizeof(float)), false },
+        { out, sizeof(out), false },
+        { &h, sizeof(h), true },
+        { &w, sizeof(w), true },
     };
 
-    // Run program. TODO: Function name argument is no-op.
+    // Run program
     err = p_run(prog, "gauss3x3", team, 0, 1, ARRAY_SIZE(args), args, 0);
 
     // Read back result. TODO: Use PAL API.
@@ -97,7 +99,7 @@ int main(int argc, char *argv[])
 
     stbi_image_free(data_ub);
 
-    // TODO: These are no-ops atm.
+    // TODO: This is no-op atm.
     p_close(team);
 
     p_finalize(dev);

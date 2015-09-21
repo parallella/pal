@@ -1,9 +1,6 @@
 /* filters 2 device file */
 #include <pal.h>
-#include <stdint.h>
-#include <unistd.h>
 #include <string.h>
-#include <stdio.h>
 
 #ifndef __epiphany__
 #error "Atm. only Epiphany is supported"
@@ -31,54 +28,8 @@ void gauss3x3(float *x, float *r, int rows, int cols)
     memcpy(r, my_r, size * sizeof(float));
 }
 
-#if 1
-// HACK: PAL will automagically do the function call for us
-// Everything below will unnecessary
-struct epiphany_ctrl_mem {
-    uint32_t status[16]; // status field for team
-    uint32_t argsoffset;
-} __attribute__((packed));
-
-struct epiphany_args_header {
-    uint32_t nargs;
-    uint32_t __pad1;
-    uint32_t size[P_RUN_MAX_ARGS];
-} __attribute__((packed));
-
-int main()
+/* We still need a symbol for main, even though we won't use it.
+ * Without it the program cannot link. */
+void main()
 {
-    float *out = (float *) 0xdeadbeef;
-    float *img;
-    int h, w;
-
-#define CTRL_MEM_SIZE 4096
-#define CTRL_MEM_EADDR (0x90000000-CTRL_MEM_SIZE)
-#define ARGS_MEM_END_EADDR CTRL_MEM_EADDR
-    volatile struct epiphany_ctrl_mem *ctrl =
-        (struct epiphany_ctrl_mem *) CTRL_MEM_EADDR;
-
-    uintptr_t argsoffset = ctrl->argsoffset;
-
-    struct epiphany_args_header *header = (struct epiphany_args_header *)
-        (((uintptr_t) ARGS_MEM_END_EADDR) - argsoffset);
-
-    uint8_t *arg0 = (void *) &header[1];
-
-    uint8_t *argp = arg0;
-
-    memcpy(&h, argp, sizeof(h));
-    argp += sizeof(h);
-    memcpy(&w, argp, sizeof(w));
-    argp += sizeof(w);
-
-    size_t size = w * h;
-    img = (float *) argp;
-    argp += size * sizeof(float);
-    memcpy(&out, argp, sizeof(out));
-    argp += sizeof(out);
-
-    gauss3x3(img, out, h, w);
-
-    return 0;
 }
-#endif
