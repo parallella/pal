@@ -353,6 +353,11 @@ static void lookup_symbols(const void *file, size_t file_size,
     elf_end(elf);
 }
 
+static inline bool is_passed_by_value(const p_arg_t *arg)
+{
+    return (arg->is_primitive && arg->size <= 8);
+}
+
 static void setup_function_args(struct epiphany_dev *epiphany, unsigned coreid,
                                 int argn, const p_arg_t *args,
                                 uint32_t function_addr,
@@ -376,9 +381,7 @@ static void setup_function_args(struct epiphany_dev *epiphany, unsigned coreid,
 
     /* Set up register args */
     for (unsigned reg = 0; reg < 4 && arg < argn; /* nop */) {
-        if (args[arg].is_primitive && args[arg].size <= 8) {
-            /* Argument is passed by value */
-
+        if (is_passed_by_value(&args[arg])) {
             if (reg & 1 && args[arg].size > 4) {
                 reg++;
                 if (reg > 2)
@@ -418,8 +421,50 @@ static void setup_function_args(struct epiphany_dev *epiphany, unsigned coreid,
     if (arg == argn)
         return;
 
-    /* TODO: Stack args is not implemented */
-    abort();
+    uint32_t ptrslot[P_RUN_MAX_ARGS];
+
+    /* Copy rest of args that are passed by reference onto argsstack */
+    for (unsigned i = arg; i < argn; i++) {
+        /* Don't need to copy arguments passed by value */
+        if (is_passed_by_value(&args[i]))
+            continue;
+
+        /* No need to copy arg if it's already accessible by core */
+        if (is_valid_addr((uint32_t) args[i].ptr, coreid) &&
+            /* On the off chance the host ptr is in the first 1M */
+            !is_local((uint32_t) args[i].ptr)) {
+
+            ptrslot[i] = (uint32_t) args[i].ptr;
+        } else {
+            argstackp -= (args[i].size + 7) & (~7);
+            memcpy(argstackp, args[i].ptr, args[i].size);
+            ptrslot[i] = (uint32_t) argstackp;
+        }
+    }
+
+    /* Allocate the maximum possible size for actual stack arguments,
+     * 8 bytes / entry. */
+    argstackp -= (argn - arg) * 8;
+
+    loader_args->stack_spill_ptr = (uint32_t) argstackp;
+
+    for (; arg < argn; arg++) {
+        if (is_passed_by_value(&args[arg])) {
+            if (args[arg].size > 4)
+                argstackp = (uint8_t *) (((uintptr_t) &argstackp[7]) & (~7));
+
+            memcpy(argstackp, args[arg].ptr, args[arg].size);
+            argstackp += (args[arg].size + 3) & (~3);
+        } else {
+            memcpy(argstackp, &ptrslot[arg], 4);
+            argstackp += 4;
+        }
+    }
+    /* Align size on 8-byte boundary, */
+    argstackp = (uint8_t *) (((uintptr_t) &argstackp[7]) & (~7));
+
+    loader_args->stack_spill_size =
+        (uint32_t) ((uintptr_t) argstackp - loader_args->stack_spill_ptr);
 }
 
 /* Data needed by device (e-lib and crt0) */
