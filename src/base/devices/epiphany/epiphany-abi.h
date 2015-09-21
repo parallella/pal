@@ -3,6 +3,8 @@
 
 /* Structs needed by e-lib */
 
+#ifndef __epiphany__
+/* These are already defined by e-lib.h */
 typedef enum {
     E_NULL         = 0,
     E_EPI_PLATFORM = 1,
@@ -36,6 +38,7 @@ typedef struct {
     uint32_t objtype;           // 0x50
     uint32_t base;              // 0x54
 } __attribute__((packed)) e_emem_config_t;
+#endif
 
 struct loader_args {
     uint32_t r0;
@@ -54,9 +57,11 @@ struct loader_args {
 #define LOADER_BSS_CLEARED_FLAG 1
 #define LOADER_CUSTOM_ARGS_FLAG 2
 
-
+#if 0
+/* Already defined by e-hal.h */
 #ifdef __epiphany__
 extern const e_group_config_t e_group_config;
 extern const e_emem_config_t  e_emem_config;
+#endif
 #endif
 
