@@ -16,6 +16,7 @@
 #include <sys/stat.h>
 
 #include <libelf.h>
+#include <gelf.h>
 
 #include "config.h"
 
@@ -122,6 +123,12 @@ typedef union {
 
 #define COREID(_addr) ((_addr) >> 20)
 
+struct symbol_info {
+    const char *name;
+    bool found;
+    GElf_Sym sym;
+};
+
 static inline bool is_local(uint32_t addr)
 {
     return COREID(addr) == 0;
@@ -136,7 +143,6 @@ static bool is_on_chip(uint32_t addr)
     return is_local(addr)
         || ((0x20 <= row && row < 0x24) && (0x08 <= col && row < 0x0c));
 }
-
 
 static inline bool is_in_eram(uint32_t addr)
 {
@@ -164,57 +170,22 @@ static inline bool is_epiphany_exec_elf(Elf32_Ehdr *ehdr)
 /* Assumes 32 bit ... */
 /* Assumes core is valid */
 /* Assumes core mem and regs are cleared, core is idle / halted */
-static int process_elf(const char *executable, struct epiphany_dev *epiphany,
+/* Assumes valid elf file */
+static int process_elf(const void *file, struct epiphany_dev *epiphany,
                        unsigned coreid)
 {
-    int         fd;
-    struct stat st;
-    Elf         *elf;
-    Elf32_Ehdr  *ehdr;
-    Elf32_Phdr  *phdr;
-    void        *dst;
-    int         rc = 0;
+    Elf32_Ehdr    *ehdr;
+    Elf32_Phdr    *phdr;
+    void          *dst;
+    const uint8_t *src = (uint8_t *) file;
 
-    union {
-        void *v;
-        char *c;
-    } file;
-
-    if (elf_version(EV_CURRENT) == EV_NONE)
-        return -ENOSYS;
-
-    fd = open(executable, O_RDONLY);
-    if (fd == -1)
-        return -errno;
-
-    if (fstat(fd, &st) == -1) {
-        close(fd);
-        return -errno;
-    }
-
-    file.v = mmap(0, st.st_size, PROT_READ, MAP_PRIVATE, fd, 0);
-    if (file.v == MAP_FAILED) {
-        close(fd);
-        return -errno;
-    }
-
-    elf = elf_memory(file.c, st.st_size);
-
-    ehdr = elf32_getehdr(elf);
-
-    if (!is_epiphany_exec_elf(ehdr)) {
-        rc = -EINVAL;
-        goto out;
-    }
-
-    phdr = (Elf32_Phdr *) &file.c[ehdr->e_phoff];
+    ehdr = (Elf32_Ehdr *) &src[0];
+    phdr = (Elf32_Phdr *) &src[ehdr->e_phoff];
 
     for (unsigned i = 0; i < ehdr->e_phnum; i++) {
         // TODO: should this be p_paddr instead of p_vaddr?
-        if (!is_valid_addr(phdr[i].p_vaddr, coreid)) {
-            rc = -EINVAL;
-            goto out;
-        }
+        if (!is_valid_addr(phdr[i].p_vaddr, coreid))
+            return -EINVAL;
     }
 
     for (unsigned i = 0; i < ehdr->e_phnum; i++) {
@@ -223,17 +194,13 @@ static int process_elf(const char *executable, struct epiphany_dev *epiphany,
         dst = is_local(addr) ?
             (void *) ((coreid << 20) | addr) : (void *) addr;
 
-        memcpy(dst, &file.c[phdr[i].p_offset], phdr[i].p_filesz);
+        memcpy(dst, &src[phdr[i].p_offset], phdr[i].p_filesz);
         /* This is where we would have cleared .bss (p_memsz - p_filesz), but
          * since we assume SRAM is already cleared there's no need for that.
          */
     }
 
-out:
-    elf_end(elf);
-    munmap(file.v, st.st_size);
-    close(fd);
-    return rc;
+    return 0;
 }
 
 static void ecore_soft_reset(struct epiphany_dev *epiphany, unsigned coreid)
@@ -330,16 +297,90 @@ void epiphany_soft_reset(struct team *team, int start, int size)
     }
 }
 
-
-/* Needed by e-lib (device) */
-static void set_core_config(struct epiphany_dev *epiphany, unsigned coreid)
+static void lookup_symbols(const void *file, size_t file_size,
+                           struct symbol_info *tbl, size_t tbl_size)
 {
-    const unsigned SIZEOF_IVT = (10 * 4);
-    uint8_t *corep = (uint8_t *) (coreid << 20);
+    Elf        *elf;
+    Elf_Scn    *scn = NULL;
+    Elf_Data   *edata = NULL;
+    GElf_Shdr  shdr;
+    GElf_Sym   sym;
+    const char *sym_name;
 
-    /* group config comes directly after the IVT */
-    e_group_config_t *e_group_config = (e_group_config_t *) &corep[SIZEOF_IVT];
-    e_emem_config_t  *e_emem_config  = (e_emem_config_t *)  &e_group_config[1];
+    if (elf_version(EV_CURRENT) == EV_NONE)
+        return;
+
+    elf = elf_memory((char *) file, file_size);
+
+    /* Find loader symbols */
+    while ((scn = elf_nextscn(elf, scn)) != NULL) {
+        gelf_getshdr(scn, &shdr);
+
+        if (shdr.sh_type != SHT_SYMTAB)
+            continue;
+
+        edata = elf_getdata(scn, edata);
+
+        int symbol_count = shdr.sh_size / shdr.sh_entsize;
+
+        for (unsigned i = 0; i < symbol_count; i++) {
+            gelf_getsym(edata, i, &sym);
+
+            /* Only accept global or weak symbols */
+            switch (ELF32_ST_BIND(sym.st_info)) {
+            default:
+                continue;
+            case STB_GLOBAL:
+            case STB_WEAK:
+                ;
+            }
+
+            sym_name = elf_strptr(elf, shdr.sh_link, sym.st_name);
+            for (unsigned j = 0; j < tbl_size; j++) {
+                if (strcmp(sym_name, tbl[j].name) != 0)
+                    continue;
+
+                if (tbl[j].found
+                    && ELF32_ST_BIND(tbl[j].sym.st_info) == STB_GLOBAL)
+                    continue;
+
+                tbl[j].found = true;
+                memcpy(&tbl[j].sym, &sym, sizeof(sym));
+            }
+        }
+    }
+
+    elf_end(elf);
+}
+
+/* Data needed by device (e-lib and crt0) */
+static int set_core_config(struct epiphany_dev *epiphany, unsigned coreid,
+                           const void *file, size_t file_size)
+{
+    uint8_t *corep = (uint8_t *) (coreid << 20);
+    uint8_t *nullp = (uint8_t *) 0;
+    e_group_config_t *e_group_config;
+    e_emem_config_t  *e_emem_config;
+
+    struct symbol_info tbl[] = {
+        { .name = "e_group_config"    },
+        { .name = "e_emem_config"     },
+    };
+    lookup_symbols(file, file_size, tbl, ARRAY_SIZE(tbl));
+    for (unsigned i; i < ARRAY_SIZE(tbl); i++) {
+        if (!tbl[i].found)
+            return -ENOENT;
+
+        /* ???: Should perhaps only allow local addresses */
+        if (!is_valid_addr(tbl[i].sym.st_value, coreid))
+            return -EINVAL;
+    }
+    e_group_config = is_local(tbl[0].sym.st_value) ?
+        (e_group_config_t *) &corep[tbl[0].sym.st_value] :
+        (e_group_config_t *) &nullp[tbl[0].sym.st_value];
+    e_emem_config = is_local(tbl[1].sym.st_value) ?
+        (e_emem_config_t *) &corep[tbl[1].sym.st_value] :
+        (e_emem_config_t *) &nullp[tbl[1].sym.st_value];
 
     /* No trivial way to emulate workgroups??? Pretend each core is its own
      * separate group for now. */
@@ -357,25 +398,57 @@ static void set_core_config(struct epiphany_dev *epiphany, unsigned coreid)
 
     e_emem_config->objtype = E_EXT_MEM;
     e_emem_config->base    = 0x8e000000;
+
+    return 0;
 }
 
 int epiphany_load(struct team *team, struct prog *prog,
                   int start, int size, int flags)
 {
-    int err;
+    int rc;
+    int fd;
+    struct stat st;
+    void *file;
+
     struct epiphany_dev *epiphany = to_epiphany_dev(team->dev);
+
+    /* TODO: File opening should be done in p_load() */
+    fd = open(prog->path, O_RDONLY);
+    if (fd == -1)
+        return -errno;
+
+    if (fstat(fd, &st) == -1) {
+        close(fd);
+        return -errno;
+    }
+
+    file = mmap(NULL, st.st_size, PROT_READ, MAP_PRIVATE, fd, 0);
+    if (file == MAP_FAILED) {
+        close(fd);
+        return -errno;
+    }
+
+    if (!is_epiphany_exec_elf((Elf32_Ehdr *) file)) {
+        rc = -EINVAL;
+        goto out;
+    }
 
     for (unsigned i = (unsigned) start; i < (unsigned) (start + size); i++) {
         unsigned row = 32 + i / 4;
         unsigned col =  8 + i % 4;
         unsigned coreid = (row << 6) | col;
-        err = process_elf(prog->path, epiphany, coreid);
-        if (err)
-            return err;
-        set_core_config(epiphany, coreid);
+        rc = process_elf(file, epiphany, coreid);
+        if (rc)
+            goto out;
+        rc = set_core_config(epiphany, coreid, file, st.st_size);
+        if (rc)
+            goto out;
     }
 
-    return 0;
+out:
+    munmap(file, st.st_size);
+    close(fd);
+    return rc;
 }
 
 void epiphany_start(struct team *team, int start, int size, int flags)
