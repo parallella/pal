@@ -3,6 +3,7 @@
 #include <stdlib.h>
 #include <stdint.h>
 #include <unistd.h>
+#include <stdbool.h>
 
 /*
  ***********************************************************************
@@ -85,6 +86,9 @@ typedef int p_mutex_t;
 typedef struct p_arg_t {
     void *ptr;
     size_t size;
+    /* Needed for calling convention: Args are passed on stack, or as pointers,
+     * depending on type and size. */
+    bool is_primitive;
 } p_arg_t;
 
 #define P_RUN_NONBLOCK 0x800 /* == O_NONBLOCK */

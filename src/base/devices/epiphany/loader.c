@@ -353,21 +353,106 @@ static void lookup_symbols(const void *file, size_t file_size,
     elf_end(elf);
 }
 
+static void setup_function_args(struct epiphany_dev *epiphany, unsigned coreid,
+                                int argn, const p_arg_t *args,
+                                uint32_t function_addr,
+                                uint32_t *loader_args_ptr)
+{
+    unsigned rel_row = (coreid - 0x808) >> 6;
+    unsigned rel_col = (coreid - 0x808) & 0x3f;
+    unsigned rel_coreid = (rel_row << 2) + rel_col;
+    struct loader_args *loader_args = &epiphany->ctrl->loader_args[rel_coreid];
+    uint32_t *regs = &loader_args->r0;
+    unsigned arg = 0;
+    /* TODO: Obviously this doesn't work with more than one core */
+    uint8_t *argstackp = (uint8_t *) epiphany->ctrl;
+
+    /* Set cores's args ptr */
+    *loader_args_ptr = (uint32_t) loader_args;
+
+    memset(loader_args, 0 , sizeof(*loader_args));
+
+    loader_args->function_ptr = function_addr;
+
+    /* Set up register args */
+    for (unsigned reg = 0; reg < 4 && arg < argn; /* nop */) {
+        if (args[arg].is_primitive && args[arg].size <= 8) {
+            /* Argument is passed by value */
+
+            if (reg & 1 && args[arg].size > 4) {
+                reg++;
+                if (reg > 2)
+                    break;
+
+                memcpy(&regs[reg], args[arg].ptr, args[arg].size);
+                arg++;
+
+                /* No more register slots */
+                break;
+            } else {
+                memcpy(&regs[reg], args[arg].ptr, args[arg].size);
+                reg += args[arg].size > 4 ? 2 : 1;
+                arg++;
+            }
+        } else {
+            /* Argument is passed by reference */
+
+            /* No need to copy arg if it's already accessible by core */
+            if (is_valid_addr((uint32_t) args[arg].ptr, coreid) &&
+                /* On the off chance the host ptr is in the first 1M */
+                !is_local((uint32_t) args[arg].ptr)) {
+
+                regs[reg] = (uint32_t) args[arg].ptr;
+
+            } else {
+                argstackp -= (args[arg].size + 7) & (~7);
+                memcpy(argstackp, args[arg].ptr, args[arg].size);
+                regs[reg] = (uint32_t) argstackp;
+            }
+            reg++;
+            arg++;
+        }
+    }
+
+    /* No stack spill */
+    if (arg == argn)
+        return;
+
+    /* TODO: Stack args is not implemented */
+    abort();
+}
+
 /* Data needed by device (e-lib and crt0) */
 static int set_core_config(struct epiphany_dev *epiphany, unsigned coreid,
-                           const void *file, size_t file_size)
+                           const void *file, size_t file_size, int argn,
+                           const p_arg_t *args, const char *function)
 {
     uint8_t *corep = (uint8_t *) (coreid << 20);
     uint8_t *nullp = (uint8_t *) 0;
     e_group_config_t *e_group_config;
     e_emem_config_t  *e_emem_config;
+    uint32_t *loader_flags, *loader_args_ptr;
+    uint32_t function_addr;
+    char *function_plt;
+
+    {
+        size_t function_len = strlen(function);
+        function_plt = alloca(function_len + sizeof("@PLT"));
+        memcpy(&function_plt[function_len], "@PLT", sizeof("@PLT"));
+    }
 
     struct symbol_info tbl[] = {
         { .name = "e_group_config"    },
         { .name = "e_emem_config"     },
+        { .name = "__loader_args_ptr" },
+        { .name = "__loader_flags"    },
+        { .name = function            },
+        { .name = function_plt        },
     };
     lookup_symbols(file, file_size, tbl, ARRAY_SIZE(tbl));
-    for (unsigned i; i < ARRAY_SIZE(tbl); i++) {
+
+    /* Check everything except PLT entry (only exists when compiled w/ -fpic) */
+    for (unsigned i; i < ARRAY_SIZE(tbl) - 1; i++) {
         if (!tbl[i].found)
             return -ENOENT;
 
@@ -375,16 +460,29 @@ static int set_core_config(struct epiphany_dev *epiphany, unsigned coreid,
         if (!is_valid_addr(tbl[i].sym.st_value, coreid))
             return -EINVAL;
     }
+
     e_group_config = is_local(tbl[0].sym.st_value) ?
         (e_group_config_t *) &corep[tbl[0].sym.st_value] :
         (e_group_config_t *) &nullp[tbl[0].sym.st_value];
     e_emem_config = is_local(tbl[1].sym.st_value) ?
         (e_emem_config_t *) &corep[tbl[1].sym.st_value] :
         (e_emem_config_t *) &nullp[tbl[1].sym.st_value];
+    loader_args_ptr = is_local(tbl[2].sym.st_value) ?
+        (uint32_t *) &corep[tbl[2].sym.st_value] :
+        (uint32_t *) &nullp[tbl[2].sym.st_value];
+    loader_flags = is_local(tbl[3].sym.st_value) ?
+        (uint32_t *) &corep[tbl[3].sym.st_value] :
+        (uint32_t *) &nullp[tbl[3].sym.st_value];
+
+    /* Prefer PLT entry */
+    /* No need to adjust function address if it's local */
+    if (tbl[5].found && is_valid_addr(tbl[5].sym.st_value, coreid))
+        function_addr = tbl[5].sym.st_value;
+    else
+        function_addr = tbl[4].sym.st_value;
 
     /* No trivial way to emulate workgroups??? Pretend each core is its own
      * separate group for now. */
-
     e_group_config->objtype    = E_EPI_GROUP;
     e_group_config->chiptype   = E_E16G301; /* TODO: Or E_64G501 */
     e_group_config->group_id   = coreid;
@@ -399,11 +497,19 @@ static int set_core_config(struct epiphany_dev *epiphany, unsigned coreid,
     e_emem_config->objtype = E_EXT_MEM;
     e_emem_config->base    = 0x8e000000;
 
+    setup_function_args(epiphany, coreid, argn, args, function_addr,
+                        loader_args_ptr);
+
+    // Instruct crt0 .bss is cleared and that we've provided custom args.
+    *loader_flags = LOADER_BSS_CLEARED_FLAG | LOADER_CUSTOM_ARGS_FLAG;
+
     return 0;
 }
 
 int epiphany_load(struct team *team, struct prog *prog,
-                  int start, int size, int flags)
+                  int start, int size, int flags, int argn,
+                  const p_arg_t *args, const char *function)
+
 {
     int rc;
     int fd;
@@ -440,7 +546,8 @@ int epiphany_load(struct team *team, struct prog *prog,
         rc = process_elf(file, epiphany, coreid);
         if (rc)
             goto out;
-        rc = set_core_config(epiphany, coreid, file, st.st_size);
+        rc = set_core_config(epiphany, coreid, file, st.st_size, argn, args,
+                             function);
         if (rc)
             goto out;
     }

@@ -277,7 +277,7 @@ static int dev_run(struct dev *dev, struct team *team, struct prog *prog,
 {
     int err;
     int i;
-    struct epiphany_dev *data = to_epiphany_dev(dev);
+    struct epiphany_dev *epiphany = to_epiphany_dev(dev);
 
     if (start < 0 || size <= 0)
         return -EINVAL;
@@ -286,50 +286,18 @@ static int dev_run(struct dev *dev, struct team *team, struct prog *prog,
     if (16 < start + size)
         return -EINVAL;
 
-    if (!data || !data->opened)
+    if (!epiphany->opened)
         return -EBADF;
-
-    /* Copy arguments to device memory (shared ram) */
-    {
-        size_t argssize = 0, totsize;
-        off_t offs = 0;
-        struct epiphany_args_header header = { .nargs = argn };
-
-        for (int i = 0; i < argn; i++) {
-            argssize += args[i].size;
-            header.size[i] = args[i].size;
-        }
-
-        if (argssize > EPIPHANY_DEV_MAX_ARGS_SIZE)
-            return -ENOMEM;
-
-        totsize = sizeof(header) + argssize;
-        totsize = (totsize + 7) & (~7);
-
-        /* "Allocate" memory in shared RAM. TODO: Hard coded address */
-        data->args_header =
-            (struct epiphany_args_header *) (ARGS_MEM_END_EADDR - totsize);
-
-        memcpy(data->args_header, &header, sizeof(header));
-        uint8_t *argsp = (uint8_t *) &data->args_header[1];
-        for (int i = 0; i < argn; i++) {
-            memcpy(&argsp[offs], args[i].ptr, args[i].size);
-            offs += args[i].size;
-        }
-
-        /* Write offset in control structure */
-        data->ctrl->argsoffset = totsize;
-    }
 
     epiphany_soft_reset(team, start, size);
 
-    err = epiphany_load(team, prog, start, size, flags);
+    err = epiphany_load(team, prog, start, size, flags, argn, args, function);
     if (err)
         return err;
 
     /* Mark as scheduled */
     for (i = start; i < start + size; i++)
-        data->ctrl->status[i] = STATUS_SCHEDULED;
+        epiphany->ctrl->status[i] = STATUS_SCHEDULED;
 
     epiphany_start(team, start, size, flags);
 

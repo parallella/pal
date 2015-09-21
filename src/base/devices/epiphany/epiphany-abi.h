@@ -37,6 +37,24 @@ typedef struct {
     uint32_t base;              // 0x54
 } __attribute__((packed)) e_emem_config_t;
 
+struct loader_args {
+    uint32_t r0;
+    uint32_t r1;
+    uint32_t r2;
+    uint32_t r3;
+    uint32_t function_ptr;
+    uint32_t function_ptr_hi32;    // upper 32 bits
+    uint32_t stack_spill_size;     // (8-byte aligned)
+    uint32_t __pad;                // Reserved, must be 0
+    uint32_t stack_spill_ptr;      // (8-byte aligned)
+    uint32_t stack_spill_ptr_hi32; // upper 32 bits
+} __attribute__((packed));
+
+// Loader flags for crt0
+#define LOADER_BSS_CLEARED_FLAG 1
+#define LOADER_CUSTOM_ARGS_FLAG 2
+
+
 #ifdef __epiphany__
 extern const e_group_config_t e_group_config;
 extern const e_emem_config_t  e_emem_config;

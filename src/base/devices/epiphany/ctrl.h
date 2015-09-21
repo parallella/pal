@@ -1,4 +1,5 @@
 #pragma once
+#include "epiphany-abi.h"
 
 #define STATUS_NONE 0
 #define STATUS_SCHEDULED 1 // Set by host in device.c:dev_run()
@@ -15,7 +16,7 @@
 
 struct epiphany_ctrl_mem {
     uint32_t status[16]; // status field for team
-    uint32_t argsoffset;
+    struct loader_args loader_args[16];
 } __attribute__((packed)); // since this is referenced cross-architecture we
                            // need to pack struct explicitly to avoid surprises
 
