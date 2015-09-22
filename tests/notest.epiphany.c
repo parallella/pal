@@ -11,6 +11,10 @@ struct status {
 volatile struct status *epiphany_status = (struct status *) 0x8f200000;
 volatile char *epiphany_results = (char *) 0x8f300000;
 
+/* HACK: Provide symbol to work around GCC 5 link error for
+ * math/check_p_{max,min} */
+float *ai;
+
 int main(int argc, char *argv[])
 {
     epiphany_status->returncode = SKIP;
