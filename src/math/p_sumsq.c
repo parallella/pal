@@ -18,8 +18,8 @@ void p_sumsq_f32(const float *a, float *c, int n)
 {
     float tmp = 0.0f;
 
-    for (; n > 0; n--) {
-        tmp += *(a) * *(a++);
+    for (; n > 0; n--, a++) {
+        tmp += *(a) * *(a);
     }
     *c = tmp;
 }
