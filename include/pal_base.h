@@ -3,6 +3,7 @@
 #include <stdlib.h>
 #include <stdint.h>
 #include <unistd.h>
+#include <stdbool.h>
 
 /*
  ***********************************************************************
@@ -81,6 +82,18 @@ typedef int p_mutex_t;
  ***********************************************************************
  */
 
+#define P_RUN_MAX_ARGS 16
+typedef struct p_arg_t {
+    void *ptr;
+    size_t size;
+    /* Needed for calling convention: Args are passed on stack, or as pointers,
+     * depending on type and size. */
+    bool is_primitive;
+} p_arg_t;
+
+#define P_RUN_NONBLOCK 0x800 /* == O_NONBLOCK */
+
+
 /*Initialize device run time*/
 p_dev_t p_init(int type, int flags);
 
@@ -100,11 +113,11 @@ p_team_t p_remove(p_team_t team, int start, int count);
 int p_close(p_team_t team);
 
 /* Loads a program from the file system into memory */
-p_prog_t p_load(p_dev_t dev, const char *file, const char *function, int flags);
+p_prog_t p_load(p_dev_t dev, const char *file, int flags);
 
 /* Run a program on N processors */
-int p_run(p_prog_t prog, p_team_t team, int start, int count, int nargs,
-              const char *args[], int flags);
+int p_run(p_prog_t prog, const char *function, p_team_t team,
+          int start, int count, int nargs, const p_arg_t *args, int flags);
 
 /*Execution barrier*/
 int p_barrier(p_team_t team);

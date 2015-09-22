@@ -66,19 +66,23 @@ struct prog;
 struct pal_global;
 
 struct dev_ops {
+    /* These must be defined */
     p_dev_t (*init) (struct dev *, int);
     void (*fini) (struct dev *);
 
     int (*query) (struct dev *, int);
     struct team *(*open) (struct dev *, struct team *, int, int);
-    int (*run) (struct dev *, struct team *, struct prog *,
-                int, int, int, const char **, int);
+    int (*run) (struct dev *, struct team *, struct prog *, const char *,
+                int, int, int, const p_arg_t *, int);
     int (*wait) (struct dev *, struct team *);
+
+    /* Optional */
+    int (*early_init) (struct dev *);
+    void (*late_fini) (struct dev *);
 };
 
 struct dev {
     struct dev_ops *dev_ops;
-    void *dev_data;
 };
 
 struct rank_range {
@@ -103,7 +107,7 @@ struct prog {
 };
 
 struct pal_global {
-    struct dev devs[P_DEV_LAST+1];
+    struct dev  *devs[P_DEV_LAST+1];
     struct team *teams_head;
     struct team *teams_tail;
     struct prog *progs_head;
@@ -121,6 +125,8 @@ struct pal_global {
     struct mutex *mutexes_tail;
 #endif
     tinymt32_t random; // PRNG state
+
+    uint32_t rank;
 };
 
 extern struct pal_global __pal_global;

@@ -13,13 +13,12 @@
  *
  * @param dev       Pointer to object containing device information
  * @param file      File name of executable to load.
- * @param function  Name of function within 'prog' to run
  * @param flags     Optional flags
  *
  * @return          Returns a reference. Negative value indicates error.
  *
  */
-p_prog_t p_load(p_dev_t dev, const char *file, const char *function, int flags)
+p_prog_t p_load(p_dev_t dev, const char *file, int flags)
 {
     size_t len;
     struct prog *prog;
