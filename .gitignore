@@ -43,7 +43,6 @@
 Makefile.in
 /configure
 /config.h.in
-/config
 /aclocal.m4
 /config.h
 /stamp-h1
@@ -55,6 +54,21 @@ Makefile.in
 **/Makefile
 /libtool
 **/.dirstamp
+/config/ar-lib
+/config/compile
+/config/config.guess
+/config/config.sub
+/config/depcomp
+/config/install-sh
+/config/ltmain.sh
+/config/missing
+/config/test-driver
+# Libtools
+/config/m4/libtool.m4
+/config/m4/lt~obsolete.m4
+/config/m4/ltoptions.m4
+/config/m4/ltsugar.m4
+/config/m4/ltversion.m4
 
 # Erlang
 *.beam
