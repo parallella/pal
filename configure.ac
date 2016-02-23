@@ -92,27 +92,7 @@ AC_CHECK_FUNCS(clock_gettime, [], [
 AC_SUBST([BENCHMARK_LIBS])
 
 AC_CONFIG_FILES([Makefile
-                 include/Makefile
-                 src/Makefile
-                 src/base/Makefile
-                 src/base/devices/Makefile
-                 src/base/devices/epiphany/Makefile
-                 src/dsp/Makefile
-                 src/fft/Makefile
-                 src/image/Makefile
-                 src/math/Makefile
-                 benchmark/Makefile
-                 benchmark/bench-all.sh
-                 benchmark/image/Makefile
-                 benchmark/math/Makefile
-                 examples/Makefile
-                 examples/base/Makefile
-                 examples/image/Makefile
-                 tests/Makefile
-                 tests/dsp/Makefile
-                 tests/math/Makefile
-                 tests/image/Makefile
-                 doc/Makefile])
+                 benchmark/bench-all.sh])
 
 # Epiphany host support
 AM_CONDITIONAL([HOST_IS_EPIPHANY],

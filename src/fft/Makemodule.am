@@ -1,0 +1,3 @@
+noinst_LTLIBRARIES += src/fft/libpal-fft.la
+src_fft_libpal_fft_la_SOURCES = src/fft/p_cfft.c
+src_fft_libpal_fft_la_LIBADD  = -lm

@@ -1,0 +1,354 @@
+EXTRA_DIST +=                         \
+tests/math/gold                       \
+tests/math/README                     \
+tests/math/rangen.c                   \
+tests/math/make_max_min_gold_data.py
+
+CPPFLAGS_tests_math =        \
+-I$(top_srcdir)/tests/math   \
+-I$(top_builddir)/tests/math \
+$(CPPFLAGS_tests)
+
+if HOST_IS_EPIPHANY
+CHECK_SCALAR_AND_INDEX = $(NOTEST)
+else
+CHECK_SCALAR_AND_INDEX =            \
+tests/math/check_scalar_and_index.c \
+tests/math/check_scalar_and_index.h
+endif
+
+# Build for BUILD-arch when cross-compiling
+tests/math/rangen$(BUILD_EXEEXT): tests/math/rangen.c
+	$(CC_FOR_BUILD) $(BUILD_CFLAGS) $< -o $@ $(BUILD_LDFLAGS)
+
+
+tests_math_GOLD_SRCS = \
+tests/math/gold/p_abs_f32.gold.h \
+tests/math/gold/p_absdiff_f32.gold.h \
+tests/math/gold/p_acos_f32.gold.h \
+tests/math/gold/p_acosh_f32.gold.h \
+tests/math/gold/p_add_f32.gold.h \
+tests/math/gold/p_asin_f32.gold.h \
+tests/math/gold/p_asinh_f32.gold.h \
+tests/math/gold/p_atan2_f32.gold.h \
+tests/math/gold/p_atan_f32.gold.h \
+tests/math/gold/p_atanh_f32.gold.h \
+tests/math/gold/p_cbrt_f32.gold.h \
+tests/math/gold/p_cos_f32.gold.h \
+tests/math/gold/p_cosh_f32.gold.h \
+tests/math/gold/p_div_f32.gold.h \
+tests/math/gold/p_dot_f32.gold.h \
+tests/math/gold/p_exp_f32.gold.h \
+tests/math/gold/p_invcbrt_f32.gold.h \
+tests/math/gold/p_inv_f32.gold.h \
+tests/math/gold/p_invsqrt_f32.gold.h \
+tests/math/gold/p_ln_f32.gold.h \
+tests/math/gold/p_log10_f32.gold.h \
+tests/math/gold/p_mac_f32.gold.h \
+tests/math/gold/p_max_f32.gold.h \
+tests/math/gold/p_mean_f32.gold.h \
+tests/math/gold/p_median_f32.gold.h \
+tests/math/gold/p_min_f32.gold.h \
+tests/math/gold/p_mode_f32.gold.h \
+tests/math/gold/p_mul_f32.gold.h \
+tests/math/gold/p_pow_f32.gold.h \
+tests/math/gold/p_sin_f32.gold.h \
+tests/math/gold/p_sincos_f32.gold.h \
+tests/math/gold/p_sinh_f32.gold.h \
+tests/math/gold/p_sort_f32.gold.h \
+tests/math/gold/p_sqrt_f32.gold.h \
+tests/math/gold/p_sub_f32.gold.h \
+tests/math/gold/p_sum_f32.gold.h \
+tests/math/gold/p_sumsq_f32.gold.h \
+tests/math/gold/p_tan_f32.gold.h \
+tests/math/gold/p_tanh_f32.gold.h
+
+BUILT_SOURCES += $(tests_math_GOLD_SRCS) tests/math/rangen$(BUILD_EXEEXT)
+
+SUFFIXES += .dat .gold.h
+
+# CSV to C struct
+$(tests_math_GOLD_SRCS): %.gold.h: %.dat
+	@$(MKDIR_P) $(top_builddir)/tests/math/gold
+	@rm -f $@
+	@echo "$< --> $@"
+	@echo "struct gold builtin_gold[] = {" >> $@
+	@sed -e 's/,/f, /g;s/^/    { /g;s/$$/f },/g;s/0\.00*f/0.0f/g;$$s/,$$//g' $< >> $@
+	@echo "};" >> $@
+
+CLEAN_LOCAL_TARGETS += clean-local-tests-math
+clean-local-tests-math:
+	-rm -f tests/math/gold/*.gold.h tests/math/*.res
+	-rm -f tests/math/rangen$(BUILD_EXEEXT)
+
+# In alphabetic order
+check_PROGRAMS +=                 \
+tests/math/check_p_absdiff_f32    \
+tests/math/check_p_abs_f32        \
+tests/math/check_p_acos_f32       \
+tests/math/check_p_acosh_f32      \
+tests/math/check_p_add_f32        \
+tests/math/check_p_asin_f32       \
+tests/math/check_p_asinh_f32      \
+tests/math/check_p_atan2_f32      \
+tests/math/check_p_atan_f32       \
+tests/math/check_p_atanh_f32      \
+tests/math/check_p_cbrt_f32       \
+tests/math/check_p_cos_f32        \
+tests/math/check_p_cosh_f32       \
+tests/math/check_p_div_f32        \
+tests/math/check_p_dot_f32        \
+tests/math/check_p_exp_f32        \
+tests/math/check_p_ftoi           \
+tests/math/check_p_invcbrt_f32    \
+tests/math/check_p_inv_f32        \
+tests/math/check_p_invsqrt_f32    \
+tests/math/check_p_itof           \
+tests/math/check_p_ln_f32         \
+tests/math/check_p_log10_f32      \
+tests/math/check_p_mac_f32        \
+tests/math/check_p_max_f32        \
+tests/math/check_p_mean_f32       \
+tests/math/check_p_median_f32     \
+tests/math/check_p_min_f32        \
+tests/math/check_p_mode_f32       \
+tests/math/check_p_mul_f32        \
+tests/math/check_p_popcount       \
+tests/math/check_p_pow_f32        \
+tests/math/check_p_rand           \
+tests/math/check_p_sin_f32        \
+tests/math/check_p_sincos_f32     \
+tests/math/check_p_sinh_f32       \
+tests/math/check_p_sort_f32       \
+tests/math/check_p_sqrt_f32       \
+tests/math/check_p_sub_f32        \
+tests/math/check_p_sum_f32        \
+tests/math/check_p_sumsq_f32      \
+tests/math/check_p_tan_f32        \
+tests/math/check_p_tanh_f32
+
+# In alphabetic order
+tests_math_check_p_abs_f32_SOURCES         = $(SIMPLETEST) tests/math/p_abs.c
+tests_math_check_p_absdiff_f32_SOURCES     = $(SIMPLETEST)
+tests_math_check_p_acos_f32_SOURCES        = $(SIMPLETEST) tests/math/p_acos.c
+tests_math_check_p_acosh_f32_SOURCES       = $(SIMPLETEST) tests/math/p_acosh.c
+tests_math_check_p_add_f32_SOURCES         = $(SIMPLETEST)
+tests_math_check_p_asin_f32_SOURCES        = $(SIMPLETEST) tests/math/p_asin.c
+tests_math_check_p_asinh_f32_SOURCES       = $(SIMPLETEST) tests/math/p_asinh.c
+tests_math_check_p_atan2_f32_SOURCES       = $(SIMPLETEST) tests/math/p_atan2.c
+tests_math_check_p_atan_f32_SOURCES        = $(SIMPLETEST) tests/math/p_atan.c
+tests_math_check_p_atanh_f32_SOURCES       = $(SIMPLETEST) tests/math/p_atanh.c
+tests_math_check_p_cbrt_f32_SOURCES        = $(SIMPLETEST) tests/math/p_cbrt.c
+tests_math_check_p_cos_f32_SOURCES         = $(SIMPLETEST) tests/math/p_cos.c
+tests_math_check_p_cosh_f32_SOURCES        = $(SIMPLETEST) tests/math/p_cosh.c
+tests_math_check_p_div_f32_SOURCES         = $(SIMPLETEST)
+tests_math_check_p_dot_f32_SOURCES         = $(SIMPLETEST)
+tests_math_check_p_exp_f32_SOURCES         = $(SIMPLETEST) tests/math/p_exp.c
+tests_math_check_p_ftoi_SOURCES            = $(NOTEST)
+tests_math_check_p_inv_f32_SOURCES         = $(SIMPLETEST)
+tests_math_check_p_invcbrt_f32_SOURCES     = $(SIMPLETEST)
+tests_math_check_p_invsqrt_f32_SOURCES     = $(SIMPLETEST) tests/math/p_invsqrt.c
+tests_math_check_p_itof_SOURCES            = $(NOTEST)
+tests_math_check_p_ln_f32_SOURCES          = $(SIMPLETEST) tests/math/p_ln.c
+tests_math_check_p_log10_f32_SOURCES       = $(SIMPLETEST) tests/math/p_log10.c
+tests_math_check_p_mac_f32_SOURCES         = $(SIMPLETEST)
+tests_math_check_p_max_f32_SOURCES         = $(CHECK_SCALAR_AND_INDEX) tests/math/p_max.c
+tests_math_check_p_mean_f32_SOURCES        = $(SIMPLETEST)
+tests_math_check_p_median_f32_SOURCES      = $(SIMPLETEST)
+tests_math_check_p_min_f32_SOURCES         = $(CHECK_SCALAR_AND_INDEX) tests/math/p_min.c
+tests_math_check_p_mode_f32_SOURCES        = $(SIMPLETEST)
+tests_math_check_p_mul_f32_SOURCES         = $(SIMPLETEST)
+tests_math_check_p_popcount_SOURCES        = $(NOTEST)
+tests_math_check_p_pow_f32_SOURCES         = $(SIMPLETEST) tests/math/p_pow.c
+tests_math_check_p_rand_SOURCES            = $(NOTEST)
+tests_math_check_p_sin_f32_SOURCES         = $(SIMPLETEST) tests/math/p_sin.c
+tests_math_check_p_sincos_f32_SOURCES      = tests/math/check_p_sincos.c
+tests_math_check_p_sinh_f32_SOURCES        = $(SIMPLETEST) tests/math/p_sinh.c
+tests_math_check_p_sort_f32_SOURCES        = $(SIMPLETEST) tests/math/p_sort.c
+tests_math_check_p_sqrt_f32_SOURCES        = $(SIMPLETEST) tests/math/p_sqrt.c
+tests_math_check_p_sub_f32_SOURCES         = $(SIMPLETEST)
+tests_math_check_p_sum_f32_SOURCES         = $(SIMPLETEST)
+tests_math_check_p_sumsq_f32_SOURCES       = $(SIMPLETEST)
+tests_math_check_p_tan_f32_SOURCES         = $(SIMPLETEST) tests/math/p_tan.c
+tests_math_check_p_tanh_f32_SOURCES        = $(SIMPLETEST) tests/math/p_tanh.c
+
+# In alphabetic order
+tests_math_check_p_abs_f32_CFLAGS          = -DFUNCTION=p_abs_f32     -DIS_UNARY
+tests_math_check_p_absdiff_f32_CFLAGS      = -DFUNCTION=p_absdiff_f32 -DIS_BINARY
+tests_math_check_p_acos_f32_CFLAGS         = -DFUNCTION=p_acos_f32    -DIS_UNARY
+tests_math_check_p_acosh_f32_CFLAGS        = -DFUNCTION=p_acosh_f32   -DIS_UNARY
+tests_math_check_p_add_f32_CFLAGS          = -DFUNCTION=p_add_f32     -DIS_BINARY
+tests_math_check_p_asin_f32_CFLAGS         = -DFUNCTION=p_asin_f32    -DIS_UNARY
+tests_math_check_p_asinh_f32_CFLAGS        = -DFUNCTION=p_asinh_f32   -DIS_UNARY
+tests_math_check_p_atan2_f32_CFLAGS        = -DFUNCTION=p_atan2_f32   -DIS_BINARY
+tests_math_check_p_atan_f32_CFLAGS         = -DFUNCTION=p_atan_f32    -DIS_UNARY
+tests_math_check_p_atanh_f32_CFLAGS        = -DFUNCTION=p_atanh_f32   -DIS_UNARY
+tests_math_check_p_cbrt_f32_CFLAGS         = -DFUNCTION=p_cbrt_f32    -DIS_UNARY
+tests_math_check_p_cos_f32_CFLAGS          = -DFUNCTION=p_cos_f32     -DIS_UNARY
+tests_math_check_p_cosh_f32_CFLAGS         = -DFUNCTION=p_cosh_f32    -DIS_UNARY
+tests_math_check_p_div_f32_CFLAGS          = -DFUNCTION=p_div_f32     -DIS_BINARY
+tests_math_check_p_dot_f32_CFLAGS          = -DFUNCTION=p_dot_f32     -DIS_BINARY -DSCALAR_OUTPUT
+tests_math_check_p_exp_f32_CFLAGS          = -DFUNCTION=p_exp_f32     -DIS_UNARY
+tests_math_check_p_ftoi_CFLAGS             = -DFUNCTION=p_ftoi
+tests_math_check_p_invcbrt_f32_CFLAGS      = -DFUNCTION=p_invcbrt_f32 -DIS_UNARY
+tests_math_check_p_inv_f32_CFLAGS          = -DFUNCTION=p_inv_f32     -DIS_UNARY
+tests_math_check_p_invsqrt_f32_CFLAGS      = -DFUNCTION=p_invsqrt_f32 -DIS_UNARY
+tests_math_check_p_itof_CFLAGS             = -DFUNCTION=p_itof
+tests_math_check_p_ln_f32_CFLAGS           = -DFUNCTION=p_ln_f32      -DIS_UNARY
+tests_math_check_p_log10_f32_CFLAGS        = -DFUNCTION=p_log10_f32   -DIS_UNARY
+tests_math_check_p_mac_f32_CFLAGS          = -DFUNCTION=p_mac_f32     -DIS_BINARY
+tests_math_check_p_max_f32_CFLAGS          = -DFUNCTION=p_max_f32                 -DSCALAR_OUTPUT
+tests_math_check_p_mean_f32_CFLAGS         = -DFUNCTION=p_mean_f32    -DIS_UNARY  -DSCALAR_OUTPUT
+tests_math_check_p_median_f32_CFLAGS       = -DFUNCTION=p_median_f32  -DIS_UNARY  -DSCALAR_OUTPUT
+tests_math_check_p_min_f32_CFLAGS          = -DFUNCTION=p_min_f32                 -DSCALAR_OUTPUT
+tests_math_check_p_mode_f32_CFLAGS         = -DFUNCTION=p_mode_f32    -DIS_UNARY  -DSCALAR_OUTPUT
+tests_math_check_p_mul_f32_CFLAGS          = -DFUNCTION=p_mul_f32     -DIS_BINARY
+tests_math_check_p_popcount_CFLAGS         = -DFUNCTION=p_popcount
+# Override fault tolerance for p_pow_f32
+tests_math_check_p_pow_f32_CFLAGS          = -DFUNCTION=p_pow_f32     -DIS_BINARY -DEPSILON_MAX=0.003f
+tests_math_check_p_rand_CFLAGS             = -DFUNCTION=p_rand                    -DSCALAR_OUTPUT
+tests_math_check_p_sin_f32_CFLAGS          = -DFUNCTION=p_sin_f32     -DIS_UNARY
+tests_math_check_p_sincos_f32_CFLAGS       = -DFUNCTION=p_sincos_f32
+tests_math_check_p_sinh_f32_CFLAGS         = -DFUNCTION=p_sinh_f32    -DIS_UNARY
+tests_math_check_p_sort_f32_CFLAGS         = -DFUNCTION=p_sort_f32    -DIS_UNARY
+tests_math_check_p_sqrt_f32_CFLAGS         = -DFUNCTION=p_sqrt_f32    -DIS_UNARY
+tests_math_check_p_sub_f32_CFLAGS          = -DFUNCTION=p_sub_f32     -DIS_BINARY
+tests_math_check_p_sum_f32_CFLAGS          = -DFUNCTION=p_sum_f32     -DIS_UNARY  -DSCALAR_OUTPUT
+tests_math_check_p_sumsq_f32_CFLAGS        = -DFUNCTION=p_sumsq_f32   -DIS_UNARY  -DSCALAR_OUTPUT
+tests_math_check_p_tan_f32_CFLAGS          = -DFUNCTION=p_tan_f32     -DIS_UNARY
+tests_math_check_p_tanh_f32_CFLAGS         = -DFUNCTION=p_tanh_f32    -DIS_UNARY
+
+# In alphabetic order
+tests_math_check_p_abs_f32_CPPFLAGS         = $(CPPFLAGS_tests_math)
+tests_math_check_p_absdiff_f32_CPPFLAGS     = $(CPPFLAGS_tests_math)
+tests_math_check_p_acos_f32_CPPFLAGS        = $(CPPFLAGS_tests_math)
+tests_math_check_p_acosh_f32_CPPFLAGS       = $(CPPFLAGS_tests_math)
+tests_math_check_p_add_f32_CPPFLAGS         = $(CPPFLAGS_tests_math)
+tests_math_check_p_asin_f32_CPPFLAGS        = $(CPPFLAGS_tests_math)
+tests_math_check_p_asinh_f32_CPPFLAGS       = $(CPPFLAGS_tests_math)
+tests_math_check_p_atan2_f32_CPPFLAGS       = $(CPPFLAGS_tests_math)
+tests_math_check_p_atan_f32_CPPFLAGS        = $(CPPFLAGS_tests_math)
+tests_math_check_p_atanh_f32_CPPFLAGS       = $(CPPFLAGS_tests_math)
+tests_math_check_p_cbrt_f32_CPPFLAGS        = $(CPPFLAGS_tests_math)
+tests_math_check_p_cos_f32_CPPFLAGS         = $(CPPFLAGS_tests_math)
+tests_math_check_p_cosh_f32_CPPFLAGS        = $(CPPFLAGS_tests_math)
+tests_math_check_p_div_f32_CPPFLAGS         = $(CPPFLAGS_tests_math)
+tests_math_check_p_dot_f32_CPPFLAGS         = $(CPPFLAGS_tests_math)
+tests_math_check_p_exp_f32_CPPFLAGS         = $(CPPFLAGS_tests_math)
+tests_math_check_p_ftoi_CPPFLAGS            = $(CPPFLAGS_tests_math)
+tests_math_check_p_invcbrt_f32_CPPFLAGS     = $(CPPFLAGS_tests_math)
+tests_math_check_p_inv_f32_CPPFLAGS         = $(CPPFLAGS_tests_math)
+tests_math_check_p_invsqrt_f32_CPPFLAGS     = $(CPPFLAGS_tests_math)
+tests_math_check_p_itof_CPPFLAGS            = $(CPPFLAGS_tests_math)
+tests_math_check_p_ln_f32_CPPFLAGS          = $(CPPFLAGS_tests_math)
+tests_math_check_p_log10_f32_CPPFLAGS       = $(CPPFLAGS_tests_math)
+tests_math_check_p_mac_f32_CPPFLAGS         = $(CPPFLAGS_tests_math)
+tests_math_check_p_max_f32_CPPFLAGS         = $(CPPFLAGS_tests_math)
+tests_math_check_p_mean_f32_CPPFLAGS        = $(CPPFLAGS_tests_math)
+tests_math_check_p_median_f32_CPPFLAGS      = $(CPPFLAGS_tests_math)
+tests_math_check_p_min_f32_CPPFLAGS         = $(CPPFLAGS_tests_math)
+tests_math_check_p_mode_f32_CPPFLAGS        = $(CPPFLAGS_tests_math)
+tests_math_check_p_mul_f32_CPPFLAGS         = $(CPPFLAGS_tests_math)
+tests_math_check_p_popcount_CPPFLAGS        = $(CPPFLAGS_tests_math)
+tests_math_check_p_pow_f32_CPPFLAGS         = $(CPPFLAGS_tests_math)
+tests_math_check_p_rand_CPPFLAGS            = $(CPPFLAGS_tests_math)
+tests_math_check_p_sin_f32_CPPFLAGS         = $(CPPFLAGS_tests_math)
+tests_math_check_p_sincos_f32_CPPFLAGS      = $(CPPFLAGS_tests_math)
+tests_math_check_p_sinh_f32_CPPFLAGS        = $(CPPFLAGS_tests_math)
+tests_math_check_p_sort_f32_CPPFLAGS        = $(CPPFLAGS_tests_math)
+tests_math_check_p_sqrt_f32_CPPFLAGS        = $(CPPFLAGS_tests_math)
+tests_math_check_p_sub_f32_CPPFLAGS         = $(CPPFLAGS_tests_math)
+tests_math_check_p_sum_f32_CPPFLAGS         = $(CPPFLAGS_tests_math)
+tests_math_check_p_sumsq_f32_CPPFLAGS       = $(CPPFLAGS_tests_math)
+tests_math_check_p_tan_f32_CPPFLAGS         = $(CPPFLAGS_tests_math)
+tests_math_check_p_tanh_f32_CPPFLAGS        = $(CPPFLAGS_tests_math)
+
+# In alphabetic order
+tests_math_check_p_abs_f32_LDFLAGS         = $(LDFLAGS_tests)
+tests_math_check_p_absdiff_f32_LDFLAGS     = $(LDFLAGS_tests)
+tests_math_check_p_acos_f32_LDFLAGS        = $(LDFLAGS_tests)
+tests_math_check_p_acosh_f32_LDFLAGS       = $(LDFLAGS_tests)
+tests_math_check_p_add_f32_LDFLAGS         = $(LDFLAGS_tests)
+tests_math_check_p_asin_f32_LDFLAGS        = $(LDFLAGS_tests)
+tests_math_check_p_asinh_f32_LDFLAGS       = $(LDFLAGS_tests)
+tests_math_check_p_atan2_f32_LDFLAGS       = $(LDFLAGS_tests)
+tests_math_check_p_atan_f32_LDFLAGS        = $(LDFLAGS_tests)
+tests_math_check_p_atanh_f32_LDFLAGS       = $(LDFLAGS_tests)
+tests_math_check_p_cbrt_f32_LDFLAGS        = $(LDFLAGS_tests)
+tests_math_check_p_cos_f32_LDFLAGS         = $(LDFLAGS_tests)
+tests_math_check_p_cosh_f32_LDFLAGS        = $(LDFLAGS_tests)
+tests_math_check_p_div_f32_LDFLAGS         = $(LDFLAGS_tests)
+tests_math_check_p_dot_f32_LDFLAGS         = $(LDFLAGS_tests)
+tests_math_check_p_exp_f32_LDFLAGS         = $(LDFLAGS_tests)
+tests_math_check_p_ftoi_LDFLAGS            = $(LDFLAGS_tests)
+tests_math_check_p_invcbrt_f32_LDFLAGS     = $(LDFLAGS_tests)
+tests_math_check_p_inv_f32_LDFLAGS         = $(LDFLAGS_tests)
+tests_math_check_p_invsqrt_f32_LDFLAGS     = $(LDFLAGS_tests)
+tests_math_check_p_itof_LDFLAGS            = $(LDFLAGS_tests)
+tests_math_check_p_ln_f32_LDFLAGS          = $(LDFLAGS_tests)
+tests_math_check_p_log10_f32_LDFLAGS       = $(LDFLAGS_tests)
+tests_math_check_p_mac_f32_LDFLAGS         = $(LDFLAGS_tests)
+tests_math_check_p_max_f32_LDFLAGS         = $(LDFLAGS_tests)
+tests_math_check_p_mean_f32_LDFLAGS        = $(LDFLAGS_tests)
+tests_math_check_p_median_f32_LDFLAGS      = $(LDFLAGS_tests)
+tests_math_check_p_min_f32_LDFLAGS         = $(LDFLAGS_tests)
+tests_math_check_p_mode_f32_LDFLAGS        = $(LDFLAGS_tests)
+tests_math_check_p_mul_f32_LDFLAGS         = $(LDFLAGS_tests)
+tests_math_check_p_popcount_LDFLAGS        = $(LDFLAGS_tests)
+tests_math_check_p_pow_f32_LDFLAGS         = $(LDFLAGS_tests)
+tests_math_check_p_rand_LDFLAGS            = $(LDFLAGS_tests)
+tests_math_check_p_sin_f32_LDFLAGS         = $(LDFLAGS_tests)
+tests_math_check_p_sincos_f32_LDFLAGS      = $(LDFLAGS_tests)
+tests_math_check_p_sinh_f32_LDFLAGS        = $(LDFLAGS_tests)
+tests_math_check_p_sort_f32_LDFLAGS        = $(LDFLAGS_tests)
+tests_math_check_p_sqrt_f32_LDFLAGS        = $(LDFLAGS_tests)
+tests_math_check_p_sub_f32_LDFLAGS         = $(LDFLAGS_tests)
+tests_math_check_p_sum_f32_LDFLAGS         = $(LDFLAGS_tests)
+tests_math_check_p_sumsq_f32_LDFLAGS       = $(LDFLAGS_tests)
+tests_math_check_p_tan_f32_LDFLAGS         = $(LDFLAGS_tests)
+tests_math_check_p_tanh_f32_LDFLAGS        = $(LDFLAGS_tests)
+
+# In alphabetic order
+tests_math_check_p_abs_f32_LDADD           = $(LDADD_tests)
+tests_math_check_p_absdiff_f32_LDADD       = $(LDADD_tests)
+tests_math_check_p_acos_f32_LDADD          = $(LDADD_tests)
+tests_math_check_p_acosh_f32_LDADD         = $(LDADD_tests)
+tests_math_check_p_add_f32_LDADD           = $(LDADD_tests)
+tests_math_check_p_asin_f32_LDADD          = $(LDADD_tests)
+tests_math_check_p_asinh_f32_LDADD         = $(LDADD_tests)
+tests_math_check_p_atan2_f32_LDADD         = $(LDADD_tests)
+tests_math_check_p_atan_f32_LDADD          = $(LDADD_tests)
+tests_math_check_p_atanh_f32_LDADD         = $(LDADD_tests)
+tests_math_check_p_cbrt_f32_LDADD          = $(LDADD_tests)
+tests_math_check_p_cos_f32_LDADD           = $(LDADD_tests)
+tests_math_check_p_cosh_f32_LDADD          = $(LDADD_tests)
+tests_math_check_p_div_f32_LDADD           = $(LDADD_tests)
+tests_math_check_p_dot_f32_LDADD           = $(LDADD_tests)
+tests_math_check_p_exp_f32_LDADD           = $(LDADD_tests)
+tests_math_check_p_ftoi_LDADD              = $(LDADD_tests)
+tests_math_check_p_invcbrt_f32_LDADD       = $(LDADD_tests)
+tests_math_check_p_inv_f32_LDADD           = $(LDADD_tests)
+tests_math_check_p_invsqrt_f32_LDADD       = $(LDADD_tests)
+tests_math_check_p_itof_LDADD              = $(LDADD_tests)
+tests_math_check_p_ln_f32_LDADD            = $(LDADD_tests)
+tests_math_check_p_log10_f32_LDADD         = $(LDADD_tests)
+tests_math_check_p_mac_f32_LDADD           = $(LDADD_tests)
+tests_math_check_p_max_f32_LDADD           = $(LDADD_tests)
+tests_math_check_p_mean_f32_LDADD          = $(LDADD_tests)
+tests_math_check_p_median_f32_LDADD        = $(LDADD_tests)
+tests_math_check_p_min_f32_LDADD           = $(LDADD_tests)
+tests_math_check_p_mode_f32_LDADD          = $(LDADD_tests)
+tests_math_check_p_mul_f32_LDADD           = $(LDADD_tests)
+tests_math_check_p_popcount_LDADD          = $(LDADD_tests)
+tests_math_check_p_pow_f32_LDADD           = $(LDADD_tests)
+tests_math_check_p_rand_LDADD              = $(LDADD_tests)
+tests_math_check_p_sin_f32_LDADD           = $(LDADD_tests)
+tests_math_check_p_sincos_f32_LDADD        = $(LDADD_tests)
+tests_math_check_p_sinh_f32_LDADD          = $(LDADD_tests)
+tests_math_check_p_sort_f32_LDADD          = $(LDADD_tests)
+tests_math_check_p_sqrt_f32_LDADD          = $(LDADD_tests)
+tests_math_check_p_sub_f32_LDADD           = $(LDADD_tests)
+tests_math_check_p_sum_f32_LDADD           = $(LDADD_tests)
+tests_math_check_p_sumsq_f32_LDADD         = $(LDADD_tests)
+tests_math_check_p_tan_f32_LDADD           = $(LDADD_tests)
+tests_math_check_p_tanh_f32_LDADD          = $(LDADD_tests)

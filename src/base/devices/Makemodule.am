@@ -1,0 +1,12 @@
+# src/base/devices
+noinst_LTLIBRARIES += src/base/devices/libdevices.la
+
+src_base_devices_libdevices_la_SOURCES = src/base/devices/devices.h
+src_base_devices_libdevices_la_LIBADD  =
+
+if ENABLE_DEV_EPIPHANY
+src_base_devices_libdevices_la_LIBADD += src/base/devices/epiphany/libdevice.la
+include src/base/devices/epiphany/Makemodule.am
+endif
+
+

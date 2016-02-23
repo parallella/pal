@@ -1,0 +1,41 @@
+EXTRA_DIST +=                 \
+benchmark/runbench.default.c  \
+benchmark/runbench.noimpl.c   \
+benchmark/runbench.epiphany.c \
+benchmark/bench-all.sh.in
+
+CLEANFILES += benchmark/runbench
+
+if HOST_IS_EPIPHANY
+RUNBENCH_SRC      = benchmark/runbench.epiphany.c
+else
+RUNBENCH_SRC      = benchmark/runbench.default.c
+BENCHMARK_LIBS    += -lm
+endif
+
+BUILT_SOURCES += benchmark/runbench$(BUILD_EXEEXT)
+
+noinst_LTLIBRARIES += benchmark/libbenchmark.la
+benchmark_libbenchmark_la_SOURCES = \
+benchmark/benchmark.c
+
+benchmark_libbenchmark_la_CPPFLAGS = $(AM_CPPFLAGS) -DNDEBUG
+benchmark_libbenchmark_la_LIBADD = $(BENCHMARK_LIBS)
+
+noinst_HEADERS  += benchmark/benchmark.h benchmark/bench_tmpl.h
+noinst_PROGRAMS += benchmark/example
+
+benchmark_example_SOURCES = benchmark/example.c
+benchmark_example_CPPFLAGS = $(AM_CPPFLAGS) -DNDEBUG
+benchmark_example_LDADD = benchmark/libbenchmark.la src/libpal.la
+
+
+benchmark/runbench$(EXEEXT): $(RUNBENCH_SRC)
+	$(CC_FOR_BUILD) $(CFLAGS_FOR_BUILD) $< -o $@ $(LDFLAGS_FOR_BUILD)
+
+ALL_LOCAL_TARGETS += all-local-benchmark
+all-local-benchmark: benchmark/runbench$(EXEEXT)
+	chmod +x benchmark/bench-all.sh
+
+include benchmark/image/Makemodule.am
+include benchmark/math/Makemodule.am

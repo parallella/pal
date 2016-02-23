@@ -1,0 +1,17 @@
+# TODO: add host target conditional subdirs
+EXTRA_DIST += src/dsp/asm
+
+noinst_LTLIBRARIES += src/dsp/libpal-dsp.la
+src_dsp_libpal_dsp_la_SOURCES = \
+src/dsp/p_acorr.c               \
+src/dsp/p_conv.c                \
+src/dsp/p_fir.c                 \
+src/dsp/p_firdec.c              \
+src/dsp/p_firint.c              \
+src/dsp/p_firsym.c              \
+src/dsp/p_iir.c                 \
+src/dsp/p_xcorr.c
+
+src_dsp_libpal_dsp_la_LIBADD = -lm
+
+

@@ -1,0 +1,59 @@
+benchmark_image_LDADD = benchmark/libbenchmark.la src/libpal.la
+
+# In alphabetic order
+noinst_PROGRAMS +=                     \
+benchmark/image/bench_p_box3x3_f32     \
+benchmark/image/bench_p_gauss3x3_f32   \
+benchmark/image/bench_p_laplace3x3_f32 \
+benchmark/image/bench_p_median3x3_f32  \
+benchmark/image/bench_p_prewitt3x3_f32 \
+benchmark/image/bench_p_scharr3x3_f32  \
+benchmark/image/bench_p_sobel3x3_f32
+
+
+# Not implemented
+    #bench_p_conv2d_f32 \
+    #bench_p_harris3x3_f32 \
+    #bench_p_grayscale_f32 \
+    #bench_p_sad16x16_f32 \
+    #bench_p_sad8x8_f32
+
+benchmark_image_bench_p_box3x3_f32_SOURCES      = benchmark/image/one.c
+#benchmark_image_bench_p_conv2d_f32_SOURCES      = benchmark/image/p_conv2d_f32.c
+benchmark_image_bench_p_gauss3x3_f32_SOURCES    = benchmark/image/one.c
+#benchmark_image_bench_p_grayscale_f32_SOURCES   = benchmark/image/one.c
+#benchmark_image_bench_p_harris3x3_f32_SOURCES   = benchmark/image/one.c
+benchmark_image_bench_p_laplace3x3_f32_SOURCES  = benchmark/image/one.c
+benchmark_image_bench_p_median3x3_f32_SOURCES   = benchmark/image/one.c
+benchmark_image_bench_p_prewitt3x3_f32_SOURCES  = benchmark/image/one.c
+#benchmark_image_bench_p_sad16x16_f32_SOURCES    = benchmark/image/p_sad.c
+#benchmark_image_bench_p_sad8x8_f32_SOURCES      = benchmark/image/p_sad.c
+benchmark_image_bench_p_scharr3x3_f32_SOURCES   = benchmark/image/one.c
+benchmark_image_bench_p_sobel3x3_f32_SOURCES    = benchmark/image/one.c
+
+benchmark_image_bench_p_box3x3_f32_CFLAGS       = -DFUNCTION=p_box3x3_f32
+benchmark_image_bench_p_conv2d_f32_CFLAGS       = -DFUNCTION=p_conv2d_f32
+benchmark_image_bench_p_gauss3x3_f32_CFLAGS     = -DFUNCTION=p_gauss3x3_f32
+benchmark_image_bench_p_grayscale_f32_CFLAGS    = -DFUNCTION=p_grayscale_f32
+#benchmark_image_bench_p_harris3x3_f32_CFLAGS    = -DFUNCTION=p_harris3x3_f32
+benchmark_image_bench_p_laplace3x3_f32_CFLAGS   = -DFUNCTION=p_laplace3x3_f32
+benchmark_image_bench_p_median3x3_f32_CFLAGS    = -DFUNCTION=p_median3x3_f32
+benchmark_image_bench_p_prewitt3x3_f32_CFLAGS   = -DFUNCTION=p_prewitt3x3_f32
+benchmark_image_bench_p_sad16x16_f32_CFLAGS     = -DFUNCTION=p_sad16x16_f32
+benchmark_image_bench_p_sad8x8_f32_CFLAGS       = -DFUNCTION=p_sad8x8_f32
+benchmark_image_bench_p_scharr3x3_f32_CFLAGS    = -DFUNCTION=p_scharr3x3_f32
+benchmark_image_bench_p_sobel3x3_f32_CFLAGS     = -DFUNCTION=p_sobel3x3_f32
+#benchmark_image_bench_all_SOURCES = benchmark/image/all.c
+
+benchmark_image_bench_p_box3x3_f32_LDADD        = $(benchmark_image_LDADD)
+#benchmark_image_bench_p_conv2d_f32_LDADD        = $(benchmark_image_LDADD)
+benchmark_image_bench_p_gauss3x3_f32_LDADD      = $(benchmark_image_LDADD)
+#benchmark_image_bench_p_grayscale_f32_LDADD     = $(benchmark_image_LDADD)
+#benchmark_image_bench_p_harris3x3_f32_LDADD     = $(benchmark_image_LDADD)
+benchmark_image_bench_p_laplace3x3_f32_LDADD    = $(benchmark_image_LDADD)
+benchmark_image_bench_p_median3x3_f32_LDADD     = $(benchmark_image_LDADD)
+benchmark_image_bench_p_prewitt3x3_f32_LDADD    = $(benchmark_image_LDADD)
+#benchmark_image_bench_p_sad16x16_f32_LDADD      = $(benchmark_image_LDADD)
+#benchmark_image_bench_p_sad8x8_f32_LDADD        = $(benchmark_image_LDADD)
+benchmark_image_bench_p_scharr3x3_f32_LDADD     = $(benchmark_image_LDADD)
+benchmark_image_bench_p_sobel3x3_f32_LDADD      = $(benchmark_image_LDADD)

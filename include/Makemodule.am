@@ -1,0 +1,11 @@
+palincludedir = $(includedir)/pal
+
+palinclude_HEADERS = \
+include/pal.h        \
+include/pal_base.h   \
+include/pal_dsp.h    \
+include/pal_fft.h    \
+include/pal_image.h  \
+include/pal_math.h
+
+noinst_HEADERS += include/common.h

@@ -1,0 +1,18 @@
+noinst_LTLIBRARIES += src/image/libpal-image.la
+src_image_libpal_image_la_SOURCES = \
+src/image/p_box3x3.c                \
+src/image/p_conv2d.c                \
+src/image/p_gauss3x3.c              \
+src/image/p_laplace3x3.c            \
+src/image/p_median3x3.c             \
+src/image/p_prewitt3x3.c            \
+src/image/p_sad16x16.c              \
+src/image/p_sad8x8.c                \
+src/image/p_scharr3x3.c             \
+src/image/p_sobel3x3.c              \
+src/image/p_harris3x3.c             \
+src/image/p_grayscale.c
+
+src_image_libpal_image_la_LIBADD = -lm
+
+

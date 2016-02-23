@@ -1,0 +1,29 @@
+noinst_PROGRAMS +=           \
+examples/base/hello_task     \
+examples/base/simple_example \
+examples/base/sine_task      \
+examples/base/sort_task      \
+examples/base/median_task    \
+examples/base/mode_task
+
+examples_base_hello_task_SOURCES     = examples/base/hello_task.c
+examples_base_simple_example_SOURCES = examples/base/simple_example.c
+examples_base_sine_task_SOURCES      = examples/base/sine_task.c
+examples_base_sort_task_SOURCES      = examples/base/sort_task.c
+examples_base_median_task_SOURCES    = examples/base/median_task.c
+examples_base_mode_task_SOURCES      = examples/base/mode_task.c
+
+examples_base_hello_task_LDADD       = src/libpal.la
+examples_base_simple_example_LDADD   = src/libpal.la
+examples_base_sine_task_LDADD        = src/libpal.la
+examples_base_sort_task_LDADD        = src/libpal.la
+examples_base_median_task_LDADD      = src/libpal.la
+examples_base_mode_task_LDADD        = src/libpal.la
+
+if HOST_IS_EPIPHANY
+examples_base_hello_task_LDFLAGS     = $(EPIPHANY_FAST_LDFLAGS)
+examples_base_simple_example_LDFLAGS = $(EPIPHANY_FAST_LDFLAGS)
+examples_base_sort_task_LDFLAGS      = $(EPIPHANY_FAST_LDFLAGS)
+examples_base_median_task_LDFLAGS    = $(EPIPHANY_FAST_LDFLAGS)
+examples_base_mode_task_LDFLAGS      = $(EPIPHANY_FAST_LDFLAGS)
+endif
