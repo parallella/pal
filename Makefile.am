@@ -98,8 +98,12 @@ include src/Makemodule.am
 if ENABLE_DOC
 include doc/Makemodule.am
 endif
+if ENABLE_EXAMPLES
 include examples/Makemodule.am
+endif
+if ENABLE_BENCHMARK
 include benchmark/Makemodule.am
+endif
 if ENABLE_TESTS
 include tests/Makemodule.am
 endif

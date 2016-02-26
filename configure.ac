@@ -234,6 +234,12 @@ AS_IF([test "x$enable_device_epiphany" = "xyes"],
 
        ])
 
+AC_ARG_ENABLE([benchmark], AS_HELP_STRING([--disable-benchmark], [Disable building benchmark binaries]))
+AM_CONDITIONAL([ENABLE_BENCHMARK], [test "x$enable_benchmark" != "xno"])
+
+AC_ARG_ENABLE([examples], AS_HELP_STRING([--disable-examples], [Disable building examples]))
+AM_CONDITIONAL([ENABLE_EXAMPLES], [test "x$enable_examples" != "xno"])
+
 AC_ARG_ENABLE([tests],
               AS_HELP_STRING([--disable-tests],
                              [Disable building unit tests]))
