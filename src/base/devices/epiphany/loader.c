@@ -24,6 +24,7 @@
 #include "../../pal_base_private.h"
 #include "dev_epiphany.h"
 #include "epiphany-abi.h"
+#include "epiphany-kernel-abi.h"
 
 #define MMR_R0         0xf0000
 #define MMR_DEBUGCMD   0xf0448
@@ -627,138 +628,7 @@ void epiphany_start(struct team *team, int start, int size, int flags)
 
 int epiphany_reset_system(struct epiphany_dev *epiphany)
 {
-    e_syscfg_tx_t txcfg;
-
-    union ptr {
-        void *v;
-        uint8_t *u8;
-        /* Make volatile so compiler can't reorder so we don't have to issue
-         * barrier after *every* access (ordering matters). */
-        volatile uint32_t *u32;
-    } host_elink, east_elink;
-
-    host_elink.v = mmap(NULL, 4096, PROT_READ | PROT_WRITE, MAP_SHARED,
-                   epiphany->epiphany_fd, E_SYS_BASE);
-
-    if (host_elink.v == MAP_FAILED)
-        return -errno;
-
-    /* FPGA elink reset routine */
-    {
-        e_syscfg_rx_t rxcfg;
-        e_syscfg_clk_t clkcfg;
-        uint32_t resetcfg;
-
-        resetcfg = 1;
-        host_elink.u32[E_SYS_RESET >> 2] = resetcfg;
-        usleep(1000);
-
-        txcfg.reg = 0;
-        host_elink.u32[E_SYS_CFGTX >> 2] = txcfg.reg;
-        usleep(1000);
-
-        rxcfg.reg = 0;
-        host_elink.u32[E_SYS_CFGRX >> 2] = rxcfg.reg;
-        usleep(1000);
-
-        clkcfg.divider = 7; // Full speed
-        host_elink.u32[E_SYS_CFGCLK >> 2] = clkcfg.reg;
-        usleep(1000);
-
-        clkcfg.divider = 0; // Stop clock
-        host_elink.u32[E_SYS_CFGCLK >> 2] = clkcfg.reg;
-        usleep(1000);
-
-        resetcfg = 0;
-        host_elink.u32[E_SYS_RESET >> 2] = resetcfg;
-        usleep(1000);
-
-        clkcfg.divider = 7; // Full speed
-        host_elink.u32[E_SYS_CFGCLK >> 2] = clkcfg.reg;
-        usleep(1000);
-
-        txcfg.clkmode = 0; // Full speed
-        txcfg.enable  = 1;
-        host_elink.u32[E_SYS_CFGTX >> 2] = txcfg.reg;
-        usleep(1000);
-
-        rxcfg.enable = 1;
-        host_elink.u32[E_SYS_CFGRX >> 2] = rxcfg.reg;
-        usleep(1000);
-    }
-
-    /* Set chip link TX divider */
-    {
-        uint32_t divider;
-
-        /* Chip east elink core */
-        east_elink.u8 = (uint8_t *) epiphany->chip + ((2 << 6 | 3) << 20);
-
-        txcfg.ctrlmode = 0x5; /* Force east */
-        host_elink.u32[E_SYS_CFGTX >> 2] = txcfg.reg;
-        usleep(1000);
-
-        divider = 1; /* Divide by 4, see data sheet */
-        east_elink.u32[E_REG_LINKCFG >> 2] = divider;
-        usleep(1000);
-
-        txcfg.ctrlmode = 0x0;
-        host_elink.u32[E_SYS_CFGTX >> 2] = txcfg.reg;
-        usleep(1000);
-    }
-
-    /* Reset cores */
-    for (unsigned i = 0; i < 16; i++) {
-        unsigned row = 32 + i / 4;
-        unsigned col =  8 + i % 4;
-        unsigned coreid = (row << 6) | col;
-        ecore_soft_reset(epiphany, coreid);
-    }
-
-    /* Disable disconnected chip elinks */
-    {
-        unsigned data = 0xfff;
-        struct {
-            union ptr elink;
-            unsigned  ctrlmode;
-        } disable[] = {
-            {
-                /* north */
-                .elink = {
-                    .u8 = (uint8_t *) epiphany->chip + ((0 << 6 | 2) << 20)
-                },
-                .ctrlmode = 0x1,
-            },
-            {
-                /* south */
-                /* TODO: Different coords on E64... */
-                .elink = {
-                    .u8 = (uint8_t *) epiphany->chip + ((3 << 6 | 2) << 20)
-                },
-                .ctrlmode = 0x9,
-            },
-            {
-                /* west */
-                .elink = {
-                    .u8 = (uint8_t *) epiphany->chip + ((2 << 6 | 0) << 20)
-                },
-                .ctrlmode = 0xd,
-            },
-        };
-        for (unsigned i = 0; i < ARRAY_SIZE(disable); i++) {
-            txcfg.ctrlmode = disable[i].ctrlmode;
-            host_elink.u32[E_SYS_CFGTX >> 2] = txcfg.reg;
-            usleep(1000);
-            disable[i].elink.u32[E_REG_LINKTXCFG >> 2] = data;
-            disable[i].elink.u32[E_REG_LINKRXCFG >> 2] = data;
-            usleep(1000);
-        }
-        txcfg.ctrlmode = 0x0;
-        host_elink.u32[E_SYS_CFGTX >> 2] = txcfg.reg;
-        usleep(1000);
-    }
-
-    if (-1 == munmap(host_elink.v, 4096))
+    if (ioctl(epiphany->epiphany_fd, E_IOCTL_RESET))
         return -errno;
 
     return 0;

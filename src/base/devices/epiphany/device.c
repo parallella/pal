@@ -22,7 +22,7 @@
 #define CHIP_ROWS       4
 #define CHIP_COLS       4
 #define CORE_MEM_REGION 0x00100000
-#define EPIPHANY_DEV "/dev/epiphany"
+#define EPIPHANY_DEV "/dev/epiphany/mesh0"
 
 struct core_map_table {
     off_t   base;
@@ -71,7 +71,7 @@ again:
 
     dev_data->eram = mmap((void *) ERAM_BASE, ERAM_SIZE,
                           PROT_READ | PROT_WRITE, MAP_SHARED | MAP_FIXED,
-                          dev_data->epiphany_fd, ERAM_PHY_BASE);
+                          dev_data->epiphany_fd, ERAM_BASE);
     if (dev_data->eram == MAP_FAILED)
         return -errno;
 
@@ -195,9 +195,12 @@ static p_dev_t dev_init(struct dev *dev, int flags)
 
     epiphany->ctrl = (struct epiphany_ctrl_mem *) CTRL_MEM_EADDR;
 
+#if 0
+    /* I don't think this is needed here, soft reset on load should be enough */
     err = epiphany_reset_system(epiphany);
     if (err)
         return p_ref_err(-err);
+#endif
 
     /* Clear control structure */
     memset(epiphany->ctrl, 0 , sizeof(*epiphany->ctrl));
