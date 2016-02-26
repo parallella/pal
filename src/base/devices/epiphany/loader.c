@@ -15,8 +15,7 @@
 #include <fcntl.h>
 #include <sys/stat.h>
 
-#include <libelf.h>
-#include <gelf.h>
+#include <elf.h>
 
 #include "config.h"
 
@@ -126,7 +125,7 @@ typedef union {
 struct symbol_info {
     const char *name;
     bool found;
-    GElf_Sym sym;
+    Elf32_Sym sym;
 };
 
 static inline bool is_local(uint32_t addr)
@@ -300,34 +299,45 @@ void epiphany_soft_reset(struct team *team, int start, int size)
 static void lookup_symbols(const void *file, size_t file_size,
                            struct symbol_info *tbl, size_t tbl_size)
 {
-    Elf        *elf;
-    Elf_Scn    *scn = NULL;
-    Elf_Data   *edata = NULL;
-    GElf_Shdr  shdr;
-    GElf_Sym   sym;
-    const char *sym_name;
+    uint8_t *elf;
+    unsigned shnum;
+    Elf32_Ehdr *ehdr;
+    Elf32_Phdr *phdr;
+    Elf32_Shdr *shdrs, *shdr, *shdr_symstrtab;
+    const char *strtab;
 
-    if (elf_version(EV_CURRENT) == EV_NONE)
-        return;
+    elf   = (uint8_t *) file;
+    ehdr  = (Elf32_Ehdr *) &elf[0];
+    phdr  = (Elf32_Phdr *) &elf[ehdr->e_phoff];
+    shdr  = (Elf32_Shdr *) &elf[ehdr->e_shoff];
+    shdrs = (Elf32_Shdr *) &elf[ehdr->e_shoff];
 
-    elf = elf_memory((char *) file, file_size);
+    shnum = ehdr->e_shnum;
 
-    /* Find loader symbols */
-    while ((scn = elf_nextscn(elf, scn)) != NULL) {
-        gelf_getshdr(scn, &shdr);
+    for (shnum = ehdr->e_shnum; shnum; shnum--, shdr++) {
+        Elf32_Sym  *sym;
+        const char *sym_strtab;
+        int symbol_count;
 
-        if (shdr.sh_type != SHT_SYMTAB)
+        if (shdr->sh_type != SHT_SYMTAB)
             continue;
 
-        edata = elf_getdata(scn, edata);
+        if (!shdr->sh_size || !shdr->sh_entsize)
+            continue;
 
-        int symbol_count = shdr.sh_size / shdr.sh_entsize;
+        shdr_symstrtab = &shdrs[shdr->sh_link];
+        sym_strtab     = &elf[shdr_symstrtab->sh_offset];
 
-        for (unsigned i = 0; i < symbol_count; i++) {
-            gelf_getsym(edata, i, &sym);
+        symbol_count   = shdr->sh_size / shdr->sh_entsize;
+        sym            = (Elf32_Sym *) &elf[shdr->sh_offset];
 
-            /* Only accept global or weak symbols */
-            switch (ELF32_ST_BIND(sym.st_info)) {
+        for (; symbol_count; symbol_count--, sym++) {
+            const char *sym_name = &sym_strtab[sym->st_name];
+
+            if (sym->st_shndx == SHN_UNDEF)
+                continue;
+
+            switch (ELF32_ST_BIND(sym->st_info)) {
             default:
                 continue;
             case STB_GLOBAL:
@@ -335,22 +345,19 @@ static void lookup_symbols(const void *file, size_t file_size,
                 ;
             }
 
-            sym_name = elf_strptr(elf, shdr.sh_link, sym.st_name);
-            for (unsigned j = 0; j < tbl_size; j++) {
-                if (strcmp(sym_name, tbl[j].name) != 0)
+            for (unsigned i = 0; i < tbl_size; i++) {
+                if (strcmp(sym_name, tbl[i].name) != 0)
                     continue;
 
-                if (tbl[j].found
-                    && ELF32_ST_BIND(tbl[j].sym.st_info) == STB_GLOBAL)
+                if (tbl[i].found
+                    && ELF32_ST_BIND(tbl[i].sym.st_info) == STB_GLOBAL)
                     continue;
 
-                tbl[j].found = true;
-                memcpy(&tbl[j].sym, &sym, sizeof(sym));
+                tbl[i].found = true;
+                memcpy(&tbl[i].sym, sym, sizeof(*sym));
             }
         }
     }
-
-    elf_end(elf);
 }
 
 static inline bool is_passed_by_value(const p_arg_t *arg)

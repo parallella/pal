@@ -230,8 +230,6 @@ AS_IF([test "x$enable_device_epiphany" = "xyes"],
 
        AC_MSG_NOTICE([Epiphany headers found])
 
-       PKG_CHECK_MODULES([LIBELF], [libelf >= 0.8])
-
        AC_DEFINE([ENABLE_DEV_EPIPHANY], [1], [Epiphany device support])
 
        ])
