@@ -26,35 +26,52 @@
 #include "epiphany-abi.h"
 #include "epiphany-kernel-abi.h"
 
-#define MMR_R0         0xf0000
-#define MMR_DEBUGCMD   0xf0448
-#define MMR_MEMPROTECT 0xf0608
-#define MMR_MEMSTATUS  0xf0604
-#define MMR_MESHCONFIG 0xf0700
-#define MMR_DMA0CONFIG 0xf0500
-#define MMR_DMA1CONFIG 0xf0520
-#define MMR_CONFIG     0xf0400
-#define MMR_STATUS     0xf0404
-#define MMR_FSTATUS    0xf0440
-#define MMR_CTIMER0    0xf0438
-#define MMR_CTIMER1    0xf043c
-#define MMR_PC         0xf0408
-#define MMR_MULTICAST  0xf0704
-#define MMR_LC         0xf0414
-#define MMR_LS         0xf0418
-#define MMR_LE         0xf041c
-#define MMR_IRET       0xf0420
-#define MMR_IMASK      0xf0424
-#define MMR_ILATST     0xf042c
-#define MMR_ILATCL     0xf0430
-#define MMR_IPEND      0xf0434
-#define MMR_DMASTART   MMR_DMA0CONFIG
-#define MMR_DMAEND     0xf0540
+#define MMR_R0           0xf0000
+#define MMR_CONFIG       0xf0400
+#define MMR_STATUS       0xf0404
+#define MMR_PC           0xf0408
+#define MMR_DEBUGSTATUS  0xf040c
+#define MMR_LC           0xf0414
+#define MMR_LS           0xf0418
+#define MMR_LE           0xf041c
+#define MMR_IRET         0xf0420
+#define MMR_IMASK        0xf0424
+#define MMR_ILAT         0xf0428
+#define MMR_ILATST       0xf042c
+#define MMR_ILATCL       0xf0430
+#define MMR_IPEND        0xf0434
+#define MMR_CTIMER0      0xf0438
+#define MMR_CTIMER1      0xf043c
+#define MMR_FSTATUS      0xf0440
+#define MMR_DEBUGCMD     0xf0448
+#define MMR_DMA0CONFIG   0xf0500
+#define MMR_DMA0STRIDE   0xf0504
+#define MMR_DMA0COUNT    0xf0508
+#define MMR_DMA0SRCADDR  0xf050c
+#define MMR_DMA0DSTADDR  0xf0510
+#define MMR_DMA0AUTODMA0 0xf0514
+#define MMR_DMA0AUTODMA1 0xf0518
+#define MMR_DMA0STATUS   0xf051c
+#define MMR_DMA1CONFIG   0xf0520
+#define MMR_DMA1STRIDE   0xf0524
+#define MMR_DMA1COUNT    0xf0528
+#define MMR_DMA1SRCADDR  0xf052c
+#define MMR_DMA1DSTADDR  0xf0530
+#define MMR_DMA1AUTODMA0 0xf0534
+#define MMR_DMA1AUTODMA1 0xf0538
+#define MMR_DMA1STATUS   0xf053c
+#define MMR_MEMSTATUS    0xf0604
+#define MMR_MEMPROTECT   0xf0608
+#define MMR_MESHCONFIG   0xf0700
+#define MMR_MULTICAST    0xf0704
 
-#define E_SYS_BASE     0x70000000
-#define E_REG_LINKCFG  0xf0300
-#define E_REG_LINKTXCFG 0xf0304
-#define E_REG_LINKRXCFG 0xf0308
+#define MMR_DMASTART     MMR_DMA0CONFIG
+#define MMR_DMAEND       0xf0540
+
+#define E_SYS_BASE       0x70000000
+#define MMR_LINKCFG      0xf0300
+#define MMR_LINKTXCFG    0xf0304
+#define MMR_LINKRXCFG    0xf0308
 
 // Epiphany system registers
 typedef enum {
@@ -203,82 +220,251 @@ static int process_elf(const void *file, struct epiphany_dev *epiphany,
     return 0;
 }
 
-static void ecore_soft_reset(struct epiphany_dev *epiphany, unsigned coreid)
+static inline uint32_t reg_read(volatile void *base, uintptr_t offset)
 {
+    volatile uint32_t *reg = (uint32_t *) ((uintptr_t) base + offset);
+    return *reg;
+}
+
+static inline uint32_t reg_write(volatile void *base, uintptr_t offset,
+                                 uint32_t val)
+{
+    volatile uint32_t *reg = (uint32_t *) ((uintptr_t) base + offset);
+    *reg = val;
+}
+
+int ecore_soft_reset_dma(struct epiphany_dev *epiphany, unsigned coreid)
+{
+    uint32_t config;
+    bool fail0, fail1;
+    int i;
+    /* HACK: Depends on that we do an explicit mmap of Epiphany addresses space
+     * in device.c:mmap_chip_mem() */
+    volatile void *core = (void *) (coreid << 20);
+
+    /* pause DMA */
+    config = reg_read(core, MMR_CONFIG) | 0x01000000;
+    reg_write(core, MMR_CONFIG, config);
+
+    reg_write(core, MMR_DMA0CONFIG, 0);
+    reg_write(core, MMR_DMA0STRIDE, 0);
+    reg_write(core, MMR_DMA0COUNT, 0);
+    reg_write(core, MMR_DMA0SRCADDR, 0);
+    reg_write(core, MMR_DMA0DSTADDR, 0);
+    reg_write(core, MMR_DMA0STATUS, 0);
+    reg_write(core, MMR_DMA1CONFIG, 0);
+    reg_write(core, MMR_DMA1STRIDE, 0);
+    reg_write(core, MMR_DMA1COUNT, 0);
+    reg_write(core, MMR_DMA1SRCADDR, 0);
+    reg_write(core, MMR_DMA1DSTADDR, 0);
+    reg_write(core, MMR_DMA1STATUS, 0);
+
+    /* unpause DMA */
+    config &= ~0x01000000;
+    reg_write(core, MMR_CONFIG, config);
+
+    fail0 = true;
+    for (i = 0; i < 1000; i++) {
+        if (!(reg_read(core, MMR_DMA0STATUS) & 7)) {
+            fail0 = false;
+            break;
+        }
+        usleep(10);
+    }
+    if (fail0)
+        /* warnx("%s(): (%d) DMA0 NOT IDLE after dma reset", __func__, coreid); */
+        ;
+
+    fail1 = true;
+    for (i = 0; i < 1000; i++) {
+        if (!(reg_read(core, MMR_DMA1STATUS) & 7)) {
+            fail1 = false;
+            break;
+        }
+        usleep(10);
+    }
+    if (fail1)
+        /* warnx("%s(): (%d) DMA1 NOT IDLE after dma reset", __func__, coreid); */
+        ;
+
+    return (fail0 || fail1) ? -EIO : 0;
+}
+
+int ecore_reset_regs(struct epiphany_dev *epiphany, unsigned coreid,
+                     bool reset_dma)
+{
+    unsigned i;
+    /* HACK: Depends on that we do an explicit mmap of Epiphany addresses space
+     * in device.c:mmap_chip_mem() */
+    volatile void *core = (void *) (coreid << 20);
+
+    /* General purpose registers */
+    memset((void *) ((uintptr_t) core + MMR_R0), 0, 64 * 4);
+
+    if (reset_dma)
+        if (ecore_soft_reset_dma(epiphany, coreid))
+            return -EIO;
+
+    /* Enable clock gating */
+    reg_write(core, MMR_CONFIG, 0x00400000);
+    reg_write(core, MMR_FSTATUS, 0);
+    /* reg_write(core, MMR_PC, 0); */
+    reg_write(core, MMR_LC, 0);
+    reg_write(core, MMR_LS, 0);
+    reg_write(core, MMR_LE, 0);
+    reg_write(core, MMR_IRET, 0);
+    /* Mask all but SYNC irq */
+    reg_write(core, MMR_IMASK, ~1);
+    reg_write(core, MMR_ILATCL, ~0);
+    reg_write(core, MMR_CTIMER0, 0);
+    reg_write(core, MMR_CTIMER1, 0);
+    reg_write(core, MMR_MEMSTATUS, 0);
+    reg_write(core, MMR_MEMPROTECT, 0);
+    /* Enable clock gating */
+    reg_write(core, MMR_MESHCONFIG, 2);
+
+    return 0;
+}
+
+void ecore_clear_sram(struct epiphany_dev *epiphany, unsigned coreid)
+{
+    const unsigned ivt_size = 9 * 4;
+    const uint32_t insn = 0xffe017e2; /* entry: trap #5; b.s entry; */
+    unsigned i;
+    /* HACK: Depends on that we do an explicit mmap of Epiphany addresses space
+     * in device.c:mmap_chip_mem() */
+    union {
+        void     *v;
+        uint32_t *u32;
+        uint8_t  *u8;
+    } core = { .v = (void *) (coreid << 20) };
+
+    /* Set IVT entries to a safe instruction */
+    for (i = 0; i < ivt_size / 4; i++)
+        core.u32[i] = insn;
+
+    memset(&core.u8[ivt_size], 0, 32768 - ivt_size);
+}
+
+
+static uint8_t soft_reset_payload[] = {
+    0xe8, 0x16, 0x00, 0x00, 0xe8, 0x14, 0x00, 0x00, 0xe8, 0x12, 0x00, 0x00,
+    0xe8, 0x10, 0x00, 0x00, 0xe8, 0x0e, 0x00, 0x00, 0xe8, 0x0c, 0x00, 0x00,
+    0xe8, 0x0a, 0x00, 0x00, 0xe8, 0x08, 0x00, 0x00, 0xe8, 0x06, 0x00, 0x00,
+    0xe8, 0x04, 0x00, 0x00, 0xe8, 0x02, 0x00, 0x00, 0x1f, 0x15, 0x02, 0x04,
+    0x7a, 0x00, 0x00, 0x03, 0xd2, 0x01, 0xe0, 0xfb, 0x92, 0x01, 0xb2, 0x01,
+    0xe0, 0xfe
+};
+
+/*
+ *        ivt:
+ *   0:              b.l     clear_ipend
+ *   4:              b.l     clear_ipend
+ *   8:              b.l     clear_ipend
+ *   c:              b.l     clear_ipend
+ *  10:              b.l     clear_ipend
+ *  14:              b.l     clear_ipend
+ *  18:              b.l     clear_ipend
+ *  1c:              b.l     clear_ipend
+ *  20:              b.l     clear_ipend
+ *  24:              b.l     clear_ipend
+ *  28:              b.l     clear_ipend
+ *        clear_ipend:
+ *  2c:              movfs   r0, ipend
+ *  30:              orr     r0, r0, r0
+ *  32:              beq     1f
+ *  34:              rti
+ *  36:              b       clear_ipend
+ *        1:
+ *  38:              gie
+ *  3a:              idle
+ *  3c:              b       1b
+ */
+
+static int ecore_soft_reset(struct epiphany_dev *epiphany, unsigned coreid)
+{
+    int i;
+    uint32_t status;
+    bool fail;
+    /* HACK: Depends on that we do an explicit mmap of Epiphany addresses space
+     * in device.c:mmap_chip_mem() */
+    volatile void *core = (void *) (coreid << 20);
+
     /* (TODO: Wait for dma to complete??? istead of cancelling transfers ???) */
 
     /* Assumes no Write-after-Write or Read-after-Write hazards */
 
-    union {
-        void *v;
-        uint8_t *u8;
-        /* Make volatile so compiler can't reorder so we don't have to issue
-         * barrier after *every* access (some of the ordering does matter) */
-        volatile uint32_t *u32;
-    } corep = { .v = (void *) (coreid << 20) };
+    if (!(reg_read(core, MMR_DEBUGSTATUS) & 1)) {
+        /* WARN: No clean previous exit */
+        reg_write(core, MMR_DEBUGCMD, 1);
+    }
 
-    /* Halt core */
-    corep.u32[MMR_DEBUGCMD   >> 2] = 0x00000001;
+    /* Wait for external fetch */
+    fail = true;
+    for (i = 0; i < 1000; i++) {
+        if (!(reg_read(core, MMR_DEBUGSTATUS) & 2)) {
+            fail = false;
+            break;
+        }
+        usleep(10);
+    }
+    if (fail) {
+        /* warnx("%s(): (%d) stuck. Full system reset needed", __func__, coreid); */
+        return -EIO;
+    }
 
-    /* Stop DMA transfers ??? */
-    corep.u32[MMR_DMA0CONFIG >> 2] = 0x00000000;
-    corep.u32[MMR_DMA1CONFIG >> 2] = 0x00000000;
+    if (reg_read(core, MMR_DMA0STATUS) & 7)
+        /* warnx("%s(): (%d) DMA0 NOT IDLE", __func__, coreid); */
+        ;
 
-    /* Reset config, enable clock gating */
-    corep.u32[MMR_CONFIG     >> 2] = 0x00400000;
+    if (reg_read(core, MMR_DMA1STATUS) & 7)
+        /* warnx("%s(): (%d) DMA1 NOT IDLE", __func__, coreid); */
+        ;
 
-    /* Clear all bits STATUS */
-    corep.u32[MMR_FSTATUS    >> 2] = 0x00000000;
+    /* Abort DMA transfers */
+    if (ecore_soft_reset_dma(epiphany, coreid))
+        return -EIO;
 
-    /* Set PC to SYNC IVT */
-    corep.u32[MMR_PC         >> 2] = 0x00000000;
+    /* Disable timers */
+    reg_write(core, MMR_CONFIG, 0);
 
-    /* Hardware loops */
-    corep.u32[MMR_LC         >> 2] = 0x00000000;
-    corep.u32[MMR_LS         >> 2] = 0x000effff;
-    corep.u32[MMR_LE         >> 2] = 0x000effff;
+    reg_write(core, MMR_ILATCL, ~0);
 
-    /* Reset interrupt regs */
-    /* IRET */
-    corep.u32[MMR_IRET       >> 2] = 0x00000000;
-    /* ??? IMASK: Temporarily enable all to be able to clear pending */
-    corep.u32[MMR_IMASK      >> 2] = 0x00000000;
-    /* ILATCL */
-    corep.u32[MMR_ILATCL     >> 2] = 0xffffffff;
-    /* ??? IPEND: Clear pending (does it work???) */
-    corep.u32[MMR_IPEND      >> 2] = 0x00000000;
-    /* IMASK: Mask all but SYNC */
-    corep.u32[MMR_IMASK      >> 2] = 0xfffffffe;
+    reg_write(core, MMR_IMASK, 0);
 
-    /* Reset MULTICAST */
-    corep.u32[MMR_MULTICAST  >> 2] = 0x00000000;
+    reg_write(core, MMR_IRET, 0x2c); /* clear_ipend */
 
-    /* Reset timers */
-    corep.u32[MMR_CTIMER0    >> 2] = 0x00000000;
-    corep.u32[MMR_CTIMER1    >> 2] = 0x00000000;
+    reg_write(core, MMR_PC, 0x2c); /* clear_ipend */
 
-    /* Clear DMA regs */
-    memset(&corep.u8[MMR_DMA0CONFIG], 0, MMR_DMAEND - MMR_DMASTART);
+    memcpy((void *) core, soft_reset_payload, sizeof(soft_reset_payload));
 
-    /* Enable clock gating */
-    corep.u32[MMR_MESHCONFIG >> 2] = 0x00000002;
+    /* Set active bit */
+    reg_write(core, MMR_FSTATUS, 1);
 
-    /* Clear mem protection bits */
-    corep.u32[MMR_MEMPROTECT >> 2] = 0x00000000;
-    /* Clear faults */
-    corep.u32[MMR_MEMSTATUS  >> 2] = 0x00000000;
+    reg_write(core, MMR_DEBUGCMD, 0);
 
-    /* Clear r0 - r63 */
-    memset(&corep.u8[MMR_R0], 0 , 64 * 4);
+    fail = true;
+    for (i = 0; i < 10000; i++) {
+        if (!reg_read(core, MMR_IPEND) &&
+                !reg_read(core, MMR_ILAT) &&
+                !(reg_read(core, MMR_STATUS) & 1)) {
+            fail = false;
+            break;
+        }
+        usleep(10);
+    }
+    if (fail) {
+        /* warnx("%s: (%d) Not idle", __func__, coreid); */
+        return -EIO;
+    }
 
-    /* Clear SRAM */
-    memset(corep.v, 0, 32768);
+    /* Reset regs, excluding DMA (already done above) */
+    if (ecore_reset_regs(epiphany, coreid, false))
+        return -EIO;
 
-    /* Set all IVT vectors to "b.l 0" */
-    for (unsigned i = 0; i < 10; i++)
-        corep.u32[i] = 0xe8000000;
+    ecore_clear_sram(epiphany, coreid);
 
-    /* Core still halted here */
+    return 0;
 }
 
 static inline struct epiphany_dev *to_epiphany_dev(struct dev *dev)
@@ -286,15 +472,19 @@ static inline struct epiphany_dev *to_epiphany_dev(struct dev *dev)
     return container_of(dev, struct epiphany_dev, dev);
 }
 
-void epiphany_soft_reset(struct team *team, int start, int size)
+int epiphany_soft_reset(struct team *team, int start, int size)
 {
+    int ret;
     struct epiphany_dev *epiphany = to_epiphany_dev(team->dev);
     for (unsigned i = (unsigned) start; i < (unsigned) (start + size); i++) {
         unsigned row = 32 + i / 4;
         unsigned col =  8 + i % 4;
         unsigned coreid = (row << 6) | col;
-        ecore_soft_reset(epiphany, coreid);
+        ret = ecore_soft_reset(epiphany, coreid);
+        if (ret)
+            return ret;
     }
+    return 0;
 }
 
 static void lookup_symbols(const void *file, size_t file_size,
@@ -621,8 +811,7 @@ void epiphany_start(struct team *team, int start, int size, int flags)
         unsigned coreid = (row << 6) | col;
         volatile uint32_t *corep = (uint32_t *) (coreid << 20);
 
-        corep[MMR_ILATST   >> 2] = 1;
-        corep[MMR_DEBUGCMD >> 2] = 0;
+        reg_write(corep, MMR_ILATST, 1);
     }
 }
 

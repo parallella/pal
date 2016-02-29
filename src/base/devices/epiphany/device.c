@@ -292,7 +292,11 @@ static int dev_run(struct dev *dev, struct team *team, struct prog *prog,
     if (!epiphany->opened)
         return -EBADF;
 
-    epiphany_soft_reset(team, start, size);
+    err = epiphany_soft_reset(team, start, size);
+    if (err) {
+        /* WARN: soft reset failed */
+        return err;
+    }
 
     err = epiphany_load(team, prog, start, size, flags, argn, args, function);
     if (err)
