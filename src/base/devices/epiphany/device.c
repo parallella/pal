@@ -345,6 +345,35 @@ static int dev_wait(struct dev *dev, struct team *team)
     return 0;
 }
 
+static void *dev_map_member(struct team *team, int member,
+                            unsigned long offset, unsigned long size)
+{
+    /* HACK */
+    unsigned coreid, row, col;
+    uintptr_t addr;
+
+    if (member < 0 || 15 < member)
+        return NULL;
+
+    if (offset >= (1 << 20) || (offset + size) > (1 << 20))
+
+    row = member / 4;
+    col = member % 4;
+
+    coreid = 0x808 + (row << 6 | col << 0);
+
+    addr = coreid << 20 | offset;
+
+    return (void *) addr;
+}
+
+static int dev_unmap(struct team *team, void *addr)
+{
+    /* HACK */
+
+    return 0;
+}
+
 static struct dev_ops epiphany_dev_ops = {
     .init = dev_init,
     .fini = dev_fini,
@@ -354,6 +383,8 @@ static struct dev_ops epiphany_dev_ops = {
     .wait = dev_wait,
     .early_init = dev_early_init,
     .late_fini = dev_late_fini,
+    .map_member = dev_map_member,
+    .unmap = dev_unmap,
 };
 
 struct epiphany_dev __pal_dev_epiphany = {
