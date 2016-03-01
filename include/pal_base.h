@@ -109,6 +109,11 @@ p_team_t p_append(p_team_t team, int start, int count);
 /*Remove team members*/
 p_team_t p_remove(p_team_t team, int start, int count);
 
+/*Map team member, not all devices will support this*/
+void *p_map_member(p_team_t team, int member, unsigned long off,
+                   unsigned long size);
+#define p_unmap munmap
+
 /*Close a team of processors*/
 int p_close(p_team_t team);
 

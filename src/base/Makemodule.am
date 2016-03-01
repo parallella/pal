@@ -26,6 +26,7 @@ src/base/p_getsymbol.c            \
 src/base/p_init.c                 \
 src/base/p_load.c                 \
 src/base/p_malloc.c               \
+src/base/p_map_member.c           \
 src/base/p_memcpy.c               \
 src/base/p_mutex_init.c           \
 src/base/p_mutex_lock.c           \
