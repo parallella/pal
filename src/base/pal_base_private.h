@@ -76,6 +76,7 @@ struct dev_ops {
                 int, int, int, const p_arg_t *, int);
     int (*wait) (struct dev *, struct team *);
     void * (*map_member) (struct team *, int, unsigned long, unsigned long);
+    int (*unmap) (struct team *, void *addr);
 
     /* Optional */
     int (*early_init) (struct dev *);
