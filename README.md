@@ -148,7 +148,7 @@ FUNCTION     | NOTES
 [p_init()](src/base/p_init.c)            | initialize the run time
 [p_query()](src/base/p_query.c)          | query a device object
 [p_load()](src/base/p_load.c)            | load binary elf file into memory
-[p_run()](src/base/p_run.c)              | run a program on a team of processor
+[p_run()](src/base/p_run.c)              | run a program on a team of processors
 [p_open()](src/base/p_open.c)            | open a team of processors
 [p_append()](src/base/p_append.c)        | add members to team
 [p_remove()](src/base/p_remove.c)        | remove members from team
