@@ -235,6 +235,11 @@ void p_min_f32(const float *a, float *c, int *index, int n);
  *
  ****************************************************************
  */
+/*means of columns of matrix: c = mean ( a[, n-1:0] ) */
+void p_colmeans_f32(const float *a, float *c, size_t m, size_t n);
+
+/*sum of columns of matrix: c = sum ( a[, n-1:0] ) */
+void p_colsums_f32(const float *a, float *c, size_t m, size_t n);
 
 /*sort an array*/
 void p_sort_f32(const float *a, float *c, int n);
