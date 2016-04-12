@@ -29,6 +29,7 @@ libpal_math_la_SOURCES = \
     p_ln.c \
     p_log10.c \
     p_mac.c \
+    p_matrix_mul_f32.c \
     p_max.c \
     p_mean.c \
     p_median.c \
@@ -41,6 +42,7 @@ libpal_math_la_SOURCES = \
     p_sin.c \
     p_sincos.c \
     p_sinh.c \
+    p_smul_f32.c \
     p_sort.c \
     p_sqrt.c p_sqrt.h \
     p_stddev.c \
