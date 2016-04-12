@@ -18,6 +18,7 @@ libpal_math_la_SOURCES = \
     p_cbrt.c \
     p_cos.c \
     p_cosh.c \
+    p_cross.c \
     p_div.c \
     p_dot.c \
     p_exp.c p_exp.h \
@@ -53,5 +54,3 @@ libpal_math_la_SOURCES = \
     tinymt/tinymt32.h
 
 libpal_math_la_LIBADD = -lm
-
-
