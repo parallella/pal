@@ -172,6 +172,48 @@ tests_math_check_p_sumsq_f32_SOURCES       = $(SIMPLETEST)
 tests_math_check_p_tan_f32_SOURCES         = $(SIMPLETEST) tests/math/p_tan.c
 tests_math_check_p_tanh_f32_SOURCES        = $(SIMPLETEST) tests/math/p_tanh.c
 
+# GOLD data
+# In alphabetic order
+tests_math_check_p_abs_f32_SOURCES        += tests/math/gold/p_abs_f32.gold.h
+tests_math_check_p_absdiff_f32_SOURCES    += tests/math/gold/p_absdiff_f32.gold.h
+tests_math_check_p_acos_f32_SOURCES       += tests/math/gold/p_acos_f32.gold.h
+tests_math_check_p_acosh_f32_SOURCES      += tests/math/gold/p_acosh_f32.gold.h
+tests_math_check_p_add_f32_SOURCES        += tests/math/gold/p_add_f32.gold.h
+tests_math_check_p_asin_f32_SOURCES       += tests/math/gold/p_asin_f32.gold.h
+tests_math_check_p_asinh_f32_SOURCES      += tests/math/gold/p_asinh_f32.gold.h
+tests_math_check_p_atan2_f32_SOURCES      += tests/math/gold/p_atan2_f32.gold.h
+tests_math_check_p_atan_f32_SOURCES       += tests/math/gold/p_atan_f32.gold.h
+tests_math_check_p_atanh_f32_SOURCES      += tests/math/gold/p_atanh_f32.gold.h
+tests_math_check_p_cbrt_f32_SOURCES       += tests/math/gold/p_cbrt_f32.gold.h
+tests_math_check_p_cos_f32_SOURCES        += tests/math/gold/p_cos_f32.gold.h
+tests_math_check_p_cosh_f32_SOURCES       += tests/math/gold/p_cosh_f32.gold.h
+tests_math_check_p_div_f32_SOURCES        += tests/math/gold/p_div_f32.gold.h
+tests_math_check_p_dot_f32_SOURCES        += tests/math/gold/p_dot_f32.gold.h
+tests_math_check_p_exp_f32_SOURCES        += tests/math/gold/p_exp_f32.gold.h
+tests_math_check_p_inv_f32_SOURCES        += tests/math/gold/p_inv_f32.gold.h
+tests_math_check_p_invcbrt_f32_SOURCES    += tests/math/gold/p_invcbrt_f32.gold.h
+tests_math_check_p_invsqrt_f32_SOURCES    += tests/math/gold/p_invsqrt_f32.gold.h
+tests_math_check_p_ln_f32_SOURCES         += tests/math/gold/p_ln_f32.gold.h
+tests_math_check_p_log10_f32_SOURCES      += tests/math/gold/p_log10_f32.gold.h
+tests_math_check_p_mac_f32_SOURCES        += tests/math/gold/p_mac_f32.gold.h
+tests_math_check_p_max_f32_SOURCES        += tests/math/gold/p_max_f32.gold.h
+tests_math_check_p_mean_f32_SOURCES       += tests/math/gold/p_mean_f32.gold.h
+tests_math_check_p_median_f32_SOURCES     += tests/math/gold/p_median_f32.gold.h
+tests_math_check_p_min_f32_SOURCES        += tests/math/gold/p_min_f32.gold.h
+tests_math_check_p_mode_f32_SOURCES       += tests/math/gold/p_mode_f32.gold.h
+tests_math_check_p_mul_f32_SOURCES        += tests/math/gold/p_mul_f32.gold.h
+tests_math_check_p_pow_f32_SOURCES        += tests/math/gold/p_pow_f32.gold.h
+tests_math_check_p_sin_f32_SOURCES        += tests/math/gold/p_sin_f32.gold.h
+tests_math_check_p_sincos_f32_SOURCES     += tests/math/gold/p_sincos_f32.gold.h
+tests_math_check_p_sinh_f32_SOURCES       += tests/math/gold/p_sinh_f32.gold.h
+tests_math_check_p_sort_f32_SOURCES       += tests/math/gold/p_sort_f32.gold.h
+tests_math_check_p_sqrt_f32_SOURCES       += tests/math/gold/p_sqrt_f32.gold.h
+tests_math_check_p_sub_f32_SOURCES        += tests/math/gold/p_sub_f32.gold.h
+tests_math_check_p_sum_f32_SOURCES        += tests/math/gold/p_sum_f32.gold.h
+tests_math_check_p_sumsq_f32_SOURCES      += tests/math/gold/p_sumsq_f32.gold.h
+tests_math_check_p_tan_f32_SOURCES        += tests/math/gold/p_tan_f32.gold.h
+tests_math_check_p_tanh_f32_SOURCES       += tests/math/gold/p_tanh_f32.gold.h
+
 # In alphabetic order
 tests_math_check_p_abs_f32_CFLAGS          = -DFUNCTION=p_abs_f32     -DIS_UNARY
 tests_math_check_p_absdiff_f32_CFLAGS      = -DFUNCTION=p_absdiff_f32 -DIS_BINARY

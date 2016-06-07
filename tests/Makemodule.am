@@ -19,7 +19,7 @@ noinst_HEADERS += tests/utest.h
 tests/runtest$(BUILD_EXEEXT): $(RUNTEST_SRC)
 	$(CC_FOR_BUILD) $(CFLAGS_FOR_BUILD) $< -o $@ $(LDFLAGS_FOR_BUILD)
 
-check-local-tests: tests/runtest
+check-local-tests: tests/runtest$(BUILD_EXEEXT)
 
 clean-local-tests:
 	-rm -f tests/runtest$(BUILD_EXEEXT)
@@ -30,6 +30,10 @@ CHECK_LOCAL_TARGETS += check-local-tests
 
 
 TESTS = $(check_PROGRAMS)
+
+# Add target that only compiles the test
+tests: $(check_PROGRAMS) tests/runtest$(BUILD_EXEEXT)
+PHONIES += tests
 
 # Ubuntu 14.04 has automake-1.11. Need automake-1.12 for nicer test features.
 # This will have to do for now.
