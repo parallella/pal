@@ -51,6 +51,9 @@ bool compare(float x, float y)
     return err <= EPSILON_RELMAX;
 }
 
+
+#define SBRK_FAILED ((void *) -1)
+
 #ifdef __epiphany__
 void *simple_calloc(size_t nmemb, size_t size)
 {
@@ -60,11 +63,12 @@ void *simple_calloc(size_t nmemb, size_t size)
 
     /* Find program break */
     p = sbrk(0);
-    if (!p)
+    if (p == SBRK_FAILED)
         return NULL;
 
     /* Align by double-word */
-    if (!sbrk((8 - ((uintptr_t) p & 7)) & 7))
+    p = sbrk((8 - ((uintptr_t) p & 7)) & 7);
+    if (p == SBRK_FAILED)
         return NULL;
 
     /* Calculate total size (assume no overflow) */
@@ -74,7 +78,7 @@ void *simple_calloc(size_t nmemb, size_t size)
     size = (size + 7) & ~7;
 
     p = sbrk(size);
-    if (!p)
+    if (p == SBRK_FAILED)
         return NULL;
 
     /* Set to zero */
@@ -99,13 +103,20 @@ int setup(struct ut_suite *suite)
     bi = simple_calloc(gold_size, sizeof(float));
     ref = simple_calloc(gold_size, sizeof(float));
 
+    if (!ai || !bi || !ref)
+        return ENOMEM;
+
     /* Allocate one extra element for res and add end marker so overwrites can
      * be detected */
 #ifdef SCALAR_OUTPUT
     res = simple_calloc(2, sizeof(float));
+    if (!res)
+        return ENOMEM;
     res[1] = OUTPUT_END_MARKER;
 #else
     res = simple_calloc(gold_size + 1, sizeof(float));
+    if (!res)
+        return ENOMEM;
     res[gold_size] = OUTPUT_END_MARKER;
 #endif
     for (i = 0; i < gold_size; i++) {
