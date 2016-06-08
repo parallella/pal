@@ -31,8 +31,10 @@ CHECK_LOCAL_TARGETS += check-local-tests
 
 TESTS = $(check_PROGRAMS)
 
-# Add target that only compiles the test
-tests: $(check_PROGRAMS) tests/runtest$(BUILD_EXEEXT)
+# Target that only compiles the tests and doesn't run them
+tests:
+	+$(MAKE) -C $(top_builddir) $(TESTS)
+
 PHONIES += tests
 
 # Ubuntu 14.04 has automake-1.11. Need automake-1.12 for nicer test features.
