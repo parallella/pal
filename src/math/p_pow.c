@@ -19,7 +19,11 @@ THIS SOFTWARE IS PROVIDED BY THE AUTHOR "AS IS" AND ANY EXPRESS OR IMPLIED WARRA
 #define M_2POW23 8388608.0f
 
 const unsigned int pow_mantissa_table_shift = 11;
+#ifdef __epiphany__
+unsigned int const pow_mantissa_table[] __attribute__((section("shared_dram"))) = {
+#else
 unsigned int const pow_mantissa_table[] = {
+#endif
 0x58c, 0x10a4, 0x1bbd, 0x26d7, 0x31f2, 0x3d0e, 0x482b, 0x5349, 0x5e67,
 0x6987, 0x74a8, 0x7fca, 0x8aec, 0x9610, 0xa135, 0xac5a, 0xb781,
 0xc2a8, 0xcdd1, 0xd8fa, 0xe425, 0xef50, 0xfa7c, 0x105aa, 0x110d8,
