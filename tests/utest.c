@@ -59,7 +59,8 @@ int ut_run(struct ut_suite *suite)
     struct ut_tcase **p;
 
     if (suite->setup) {
-        if (suite->setup(suite)) {
+        suite->setup_status = suite->setup(suite);
+        if (suite->setup_status) {
             rc = UT_HARD_ERROR;
             goto out;
         }
@@ -67,6 +68,7 @@ int ut_run(struct ut_suite *suite)
 
     for (p = suite->tcases; *p; p++)
         suite->ntot++;
+
 
     for (p = suite->tcases; *p; p++) {
         __ut_curr_tcase = *p;
@@ -133,7 +135,8 @@ check_independent:
         rc = UT_FAIL;
 
     if (suite->teardown) {
-        if (suite->teardown(suite)) {
+        suite->teardown_status = suite->teardown(suite);
+        if (suite->teardown_status) {
             rc = UT_HARD_ERROR;
             goto out;
         }

@@ -87,7 +87,18 @@ int ut_report(char *buf, size_t n, struct ut_suite *suite, bool verbose)
     P(" Fail: "); P(nfail);
     P(" Hard errors: "); P(nharderror);
     P("\n");
+
+    if (suite->setup_status) {
+        P("setup failed\n");
         return 0;
+    }
+
+    if (!verbose && !suite->nfail && !suite->nharderror
+        && !suite->teardown_status)
+        return 0;
+
+    if (suite->teardown_status)
+        P("teardown failed\n");
 
     for (p = suite->tcases; *p; p++) {
         tcase = *p;

@@ -11,6 +11,10 @@
 #include <stdbool.h>
 #include <stdlib.h>
 
+#ifndef ARRAY_SIZE
+#define ARRAY_SIZE(_a) (sizeof(_a) / sizeof((_a)[0]))
+#endif
+
 /* https://www.gnu.org/software/automake/manual/html_node/Scripts_002dbased-Testsuites.html */
 #define UT_PASS        0
 #define UT_FAIL        1
@@ -58,6 +62,8 @@ struct ut_suite {
     void *data;
 
     /* Read-only for user */
+    int setup_status;
+    int teardown_status;
     int npass;
     int nfail;
     int nskip;
