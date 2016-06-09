@@ -24,6 +24,7 @@ void __ut_assert_msg(const char *file, const char *func, int line,
     if (!__ut_curr_tcase)
         exit(UT_HARD_ERROR);
 
+#ifndef UT_NO_PRINTF
     n = snprintf(__ut_curr_tcase->msg, UT_TCASE_LOG_LEN, "%s:%s():%d: %s\n",
                  file, func, line, str);
 
@@ -34,6 +35,7 @@ void __ut_assert_msg(const char *file, const char *func, int line,
     /* Don't care if string gets truncated */
     vsnprintf(&__ut_curr_tcase->msg[n], UT_TCASE_LOG_LEN - n, format, args);
     va_end(args);
+#endif
 }
 
 void ut_log_msg(const char *format, ...)
@@ -43,10 +45,12 @@ void ut_log_msg(const char *format, ...)
     if (!__ut_curr_tcase)
         exit(UT_HARD_ERROR);
 
+#ifndef UT_NO_PRINTF
     va_start(args, format);
     /* Don't care if string gets truncated */
     vsnprintf(__ut_curr_tcase->msg, UT_TCASE_LOG_LEN, format, args);
     va_end(args);
+#endif
 }
 
 int ut_run(struct ut_suite *suite)

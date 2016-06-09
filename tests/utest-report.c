@@ -11,29 +11,82 @@
 #include <stdio.h>
 #include <string.h>
 #include <errno.h>
+#include <stdint.h>
+#include <stddef.h>
 #include "utest.h"
+
+
+/* ut_utoa:  convert unsigned integer to string */
+static unsigned ut_utoa(unsigned n, char *s)
+{
+    unsigned len = 0, i, j;
+    char tmp;
+
+    for (len = 0; n || !len; len++, n /= 10)
+        s[len] = n % 10 + '0';
+
+    for (i = 0, j = len - 1; i < j; i++, j--) {
+        tmp = s[i];
+        s[i] = s[j];
+        s[j] = tmp;
+    }
+
+    s[len++] = '\0';
+
+    return len;
+}
 
 int ut_report(char *buf, size_t n, struct ut_suite *suite, bool verbose)
 {
     size_t s, i = 0;
     struct ut_tcase **p, *tcase;
     char *status;
-    int proc = 0;
+    unsigned proc = 0;
     bool dep_chain_broken = false;
+
+    char sproc[13] = "  ";
+    char ntot[11];
+    char nrun[11];
+    char npass[11];
+    char nskip[11];
+    char nfail[11];
+    char nharderror[11];
+
+    ut_utoa(suite->ntot, ntot);
+    ut_utoa(suite->nrun, nrun);
+    ut_utoa(suite->npass, npass);
+    ut_utoa(suite->nskip, nskip);
+    ut_utoa(suite->nfail, nfail);
+    ut_utoa(suite->nharderror, nharderror);
 
     if (suite->ntot - suite->nskip)
         proc = (100 * (suite->npass)) / (suite->ntot - suite->nskip);
 
-    s = snprintf(&buf[i], n - i,
-                 "Suite: %s\n"
-                 "%3d%%: Tests: %d, Run: %d, Pass: %d, Skip: %d, Fail: %d, Hard errors: %d\n",
-                 suite->name, proc, suite->ntot, suite->nrun, suite->npass,
-                 suite->nskip, suite->nfail, suite->nharderror);
-    if (s > n - i)
-        goto oom;
-    i += s;
+    if (proc >= 100)
+        ut_utoa(proc, &sproc[0]);
+    else if (proc >= 10)
+        ut_utoa(proc, &sproc[1]);
+    else
+        ut_utoa(proc, &sproc[2]);
 
-    if (!verbose && !suite->nfail && !suite->nharderror)
+#define P(str) \
+    do { \
+        s = strnlen(str, n - i + 1); \
+        if (s >= n - i) \
+            goto oom; \
+        strcpy(&buf[i], str); \
+        i += s; \
+    } while (0);
+
+    P("Suite: "); P(suite->name); P("\n");
+    P(sproc); P("%:");
+    P(" Tests: "); P(ntot);
+    P(" Run: "); P(nrun);
+    P(" Pass: ");P(npass);
+    P(" Skip: "); P(nskip);
+    P(" Fail: "); P(nfail);
+    P(" Hard errors: "); P(nharderror);
+    P("\n");
         return 0;
 
     for (p = suite->tcases; *p; p++) {
@@ -53,18 +106,12 @@ int ut_report(char *buf, size_t n, struct ut_suite *suite, bool verbose)
         if (!suite->independent && tcase->status != UT_PASS)
             dep_chain_broken = true;
 
-        s = snprintf(&buf[i], n - i, "%s: %s\n", tcase->name, status);
-        if (s > n - i)
-            goto oom;
-        i += s;
+        P(tcase->name); P(": "); P(status); P("\n");
 
         if (tcase->msg[0] == '\0')
             continue;
 
-        s = snprintf(&buf[i], n - i, "%s\n", tcase->msg);
-        if (s > n - i)
-            goto oom;
-        i += s;
+        P(tcase->msg); P("\n");
     }
 
     return 0;
