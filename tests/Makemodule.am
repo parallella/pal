@@ -47,7 +47,7 @@ LOG_COMPILER = tests/runtest
 
 CPPFLAGS_tests = -I$(top_srcdir)/tests $(AM_CPPFLAGS)
 if HOST_IS_EPIPHANY
-LDFLAGS_tests=$(EPIPHANY_FAST_LDFLAGS)
+LDFLAGS_tests=$(EPIPHANY_INTERNAL_LDFLAGS)
 NOTEST = tests/notest.epiphany.c
 else
 LDFLAGS_tests=$(AM_LDFLAGS)
