@@ -13,6 +13,9 @@ BUILT_SOURCES += tests/runtest$(BUILD_EXEEXT)
 noinst_LTLIBRARIES += tests/libutest.la
 
 tests_libutest_la_SOURCES = tests/utest.c tests/utest-report.c
+if HOST_IS_EPIPHANY
+tests_libutest_la_CFLAGS="-DUT_NO_PRINTF"
+endif
 
 noinst_HEADERS += tests/utest.h
 
