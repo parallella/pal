@@ -6,6 +6,10 @@
 #include "pal_image.h"
 #include "pal_fft.h"
 
+#ifdef PAL_SOURCE
+# include "common.h"
+#endif
+
 #ifdef __epiphany__
 /* Static library. Force a dependency so __pal_init/fini always will be
  * included in built binary. Not pretty but works. */
