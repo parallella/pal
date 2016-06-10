@@ -13,9 +13,9 @@
  * @return      None
  *
  */
-void p_mean_f32(const float *a, float *c, int n)
+void PSYM(p_mean)(const PTYPE *a, PTYPE *c, int n)
 {
-    float tmp = 0.0f;
+    PTYPE tmp = 0.0f;
     int i;
 
     for (i = 0; i < n; i++) {

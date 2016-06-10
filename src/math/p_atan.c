@@ -5,14 +5,14 @@
  * atan x = a1 * x + a3 * x^3 + ... + a9 * x^9 + e(x)
  * |e(x)| <= 10^-5
  */
-static inline float _p_atan(const float x)
+static inline PTYPE _p_atan(const PTYPE x)
 {
-    const float a1 =  0.9998660f;
-    const float a3 = -0.3302995f;
-    const float a5 =  0.1801410f;
-    const float a7 = -0.0851330f;
-    const float a9 =  0.0208351f;
-    float x2 = x * x;
+    const PTYPE a1 =  0.9998660f;
+    const PTYPE a3 = -0.3302995f;
+    const PTYPE a5 =  0.1801410f;
+    const PTYPE a7 = -0.0851330f;
+    const PTYPE a9 =  0.0208351f;
+    PTYPE x2 = x * x;
     return x * (a1 + x2 * (a3 + x2 * (a5 + x2 * (a7 + x2 * a9))));
 }
 
@@ -31,7 +31,7 @@ static inline float _p_atan(const float x)
  * @return      None
  *
  */
-void p_atan_f32(const float *a, float *c, int n)
+void PSYM(p_atan)(const PTYPE *a, PTYPE *c, int n)
 {
 
     int i;

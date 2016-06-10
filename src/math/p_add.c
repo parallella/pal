@@ -17,7 +17,7 @@
  *
  */
 
-void p_add_f32(const float *a, const float *b, float *c, int n)
+void PSYM(p_add)(const PTYPE *a, const PTYPE *b, PTYPE *c, int n)
 {
 #ifdef __epiphany__
     for (; n & 7; n--)

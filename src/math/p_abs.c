@@ -1,5 +1,11 @@
 #include <pal.h>
 
+#if (P_FLOAT_TYPE == P_FLOAT_SINGLE)
+# define ABS_MASK 0x7FFFFFFF
+#else
+# define ABS_MASK 0x7FFFFFFFFFFFFFFFULL
+#endif
+
 /**
  *
  * Compute the absolute value of the vector 'a'.
@@ -13,17 +19,18 @@
  * @return      None
  *
  */
-void p_abs_f32(const float *a, float *c, int n)
+
+void PSYM(p_abs)(const PTYPE *a, PTYPE *c, int n)
 {
     union {
-        float f;
-        uint32_t u;
+        PTYPE f;
+        PUTYPE u;
     } tmp;
     int i;
 
     for (i = 0; i < n; i++) {
         tmp.f = *(a + i);
-        tmp.u &= 0x7FFFFFFF;
+        tmp.u &= ABS_MASK;
         *(c + i) = tmp.f;
     }
 }

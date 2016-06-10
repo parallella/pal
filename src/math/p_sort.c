@@ -23,9 +23,6 @@
 		} \
 	}
 
-SIFTDOWN_FUNC(_sift_down_f32, float);
-SIFTDOWN_FUNC(_sift_down_u32, uint32_t);
-
 #define SORT_FUNC(name, type, siftfunc) \
 	static void name (const type *a, type *c, const int n) \
 	{ \
@@ -59,12 +56,15 @@ SIFTDOWN_FUNC(_sift_down_u32, uint32_t);
 		} \
 	}
 
-SORT_FUNC(_heapsort_f32, float, _sift_down_f32);
-SORT_FUNC(_heapsort_u32, uint32_t, _sift_down_u32);
+
+#ifdef P_FLOAT_TYPE
+
+SIFTDOWN_FUNC(PSYM(_sift_down), PTYPE);
+SORT_FUNC(PSYM(_heapsort), PTYPE, PSYM(_sift_down));
 
 /**
  *
- * Sorts an array of float values using heapsort
+ * Sorts an array of PTYPE values using heapsort
  *
  * @param a     Pointer to input vector
  * @param c     Pointer to result vector
@@ -73,10 +73,15 @@ SORT_FUNC(_heapsort_u32, uint32_t, _sift_down_u32);
  * @return      None
  *
  */
-void p_sort_f32(const float *a, float *c, int n)
+void PSYM(p_sort)(const PTYPE *a, PTYPE *c, int n)
 {
-	_heapsort_f32(a, c, n);
+	PSYM(_heapsort)(a, c, n);
 }
+
+#else
+
+SIFTDOWN_FUNC(_sift_down_u32, uint32_t);
+SORT_FUNC(_heapsort_u32, uint32_t, _sift_down_u32);
 
 /**
  *
@@ -93,3 +98,4 @@ void p_sort_u32(const uint32_t *a, uint32_t *c, int n)
 {
 	_heapsort_u32(a, c, n);
 }
+#endif

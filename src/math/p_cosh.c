@@ -5,9 +5,9 @@
 /*
  * cosh z = (exp z + exp(-z)) / 2
  */
-static inline float _p_cosh(const float z)
+static inline PTYPE _p_cosh(const PTYPE z)
 {
-    float exp_z = _p_exp(z);
+    PTYPE exp_z = _p_exp(z);
     return 0.5f * (exp_z + 1.f / exp_z);
 }
 
@@ -26,7 +26,7 @@ static inline float _p_cosh(const float z)
  *
  */
 
-void p_cosh_f32(const float *a, float *c, int n)
+void PSYM(p_cosh)(const PTYPE *a, PTYPE *c, int n)
 {
 
     int i;

@@ -16,7 +16,7 @@
  *
  */
 
-void p_max_f32(const float *a, float *c, int *index, int n)
+void PSYM(p_max)(const PTYPE *a, PTYPE *c, int *index, int n)
 {
     if (n==0) return; // only do work if there are elements
     int pos = 0;

@@ -15,13 +15,13 @@
  * @return      None
  *
  */
-void p_a_inv_f32(const float *a, float *c, int n, int iterations)
+void PSYM(p_a_inv)(const PTYPE *a, PTYPE *c, int n, int iterations)
 {
     int i, j;
-    float max = iterations * iterations * iterations;
-    float inv_max = 1.0/max; // only computed once, hence speedups
+    PTYPE max = iterations * iterations * iterations;
+    PTYPE inv_max = 1.0/max; // only computed once, hence speedups
     for (i = 0; i < n; i++) {
-        float ai = a[i];
+        PTYPE ai = a[i];
         int negate = ai < 0;
 
         if (negate) ai *= -1;

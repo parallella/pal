@@ -14,14 +14,14 @@
  *
  */
 
-void p_mode_f32(const float *a, float *c, int n)
+void PSYM(p_mode)(const PTYPE *a, PTYPE *c, int n)
 {
     unsigned int occurrence_count = 0;
     unsigned int max_occurrence_count = 0;
     unsigned int i = 1;
-    float mode_value = 0.0f;
-    float *sorted_a = (float*) malloc(sizeof(float) * n);
-    p_sort_f32(a, sorted_a, n);
+    PTYPE mode_value = 0.0f;
+    PTYPE *sorted_a = (PTYPE*) malloc(sizeof(PTYPE) * n);
+    PSYM(p_sort)(a, sorted_a, n);
 
     for (; i < n; ++i) {
         ++occurrence_count;

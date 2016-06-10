@@ -14,9 +14,9 @@
  *
  */
 
-void p_sum_f32(const float *a, float *c, int n)
+void PSYM(p_sum)(const PTYPE *a, PTYPE *c, int n)
 {
-    float tmp = 0.0f;
+    PTYPE tmp = 0.0f;
 
     for (; n > 0; n--) {
         tmp += *(a++);

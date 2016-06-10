@@ -1,5 +1,11 @@
 #include <pal.h>
 
+#if (P_PTYPE_TYPE == P_PTYPE_SINGLE)
+# define ISQRT_APPROX 0x5f375a86
+#else
+# define ISQRT_APPROX 0x5fe6eb50c7b537a9ULL
+#endif
+
 /**
  *
  * Calculates the inverse square root of the input vector 'a'.
@@ -18,25 +24,25 @@
  * @return      None
  *
  */
-void p_invsqrt_f32(const float *a, float *c, int n)
+void PSYM(p_invsqrt)(const PTYPE *a, PTYPE *c, int n)
 {
-    // This union allows us to type-pun between integers and floats
+    // This union allows us to type-pun between integers and PTYPEs
     // with fewer strict aliasing concerns than the pointer casts
     // used in the original source.
     union
     {
-        int32_t i;
-        float f;
+        PITYPE i;
+        PTYPE f;
     } u;
 
     int i;
     for (i = 0; i < n; i++) {
-        float x = a[i];
-        float x2 = x * 0.5f;
+        PTYPE x = a[i];
+        const PTYPE x2 = x * 0.5;
 
         // Use some bit hacks to get a decent first approximation
         u.f = x;
-        u.i = 0x5f375a86 - (u.i >> 1);
+        u.i = ISQRT_APPROX - (u.i >> 1);
         x = u.f;
 
         // Perform a couple steps of Newton's method to refine our guess
