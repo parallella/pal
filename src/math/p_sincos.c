@@ -18,9 +18,9 @@
  * @return      None
  *
  */
-void p_sincos_f32(const float *a, float *c, float *z,
+void PSYM(p_sincos)(const PTYPE *a, PTYPE *c, PTYPE *z,
                   int n)
 {
-    p_sin_f32(a, c, n);
-    p_cos_f32(a, z, n);
+    PSYM(p_sin)(a, c, n);
+    PSYM(p_cos)(a, z, n);
 }

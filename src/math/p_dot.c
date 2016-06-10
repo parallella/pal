@@ -16,9 +16,9 @@
  * @return      None
  *
  */
-void p_dot_f32(const float *a, const float *b, float *c, int n )
+void PSYM(p_dot)(const PTYPE *a, const PTYPE *b, PTYPE *c, int n )
 {
-    float tmp = 0.0f;
+    PTYPE tmp = 0.0f;
     int i;
 
     for (i = 0; i < n; i++) {

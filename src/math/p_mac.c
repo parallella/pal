@@ -16,7 +16,7 @@
  *
  */
 
-void p_mac_f32(const float *a, const float *b, float *c, int n)
+void PSYM(p_mac)(const PTYPE *a, const PTYPE *b, PTYPE *c, int n)
 {
 
     int i;

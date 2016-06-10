@@ -1,0 +1,26 @@
+# TODO:
+# Add blas and wrappers to SUBDIRS
+
+EXTRA_DIST      += src/blas src/wrappers
+lib_LTLIBRARIES += src/libpal.la
+
+src_libpal_la_SOURCES  = src/dummy.c
+src_libpal_la_LIBADD   =  \
+src/base/libpal-base.la   \
+src/dsp/libpal-dsp.la     \
+src/fft/libpal-fft.la     \
+src/image/libpal-image.la \
+src/math/libpal-math.la
+
+#TODO:
+#    blas/libpal-blas.la \
+#
+
+# Only public API functions should be visible
+src_libpal_la_LDFLAGS = -export-symbols-regex '^p_|^__pal_'
+
+include src/base/Makemodule.am
+include src/dsp/Makemodule.am
+include src/fft/Makemodule.am
+include src/image/Makemodule.am
+include src/math/Makemodule.am

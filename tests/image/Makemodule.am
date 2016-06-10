@@ -1,0 +1,87 @@
+EXTRA_DIST += tests/image/make_p_median3x3_data.py
+
+# Alphabetic order
+check_PROGRAMS +=                      \
+tests/image/check_p_box3x3_f32         \
+tests/image/check_p_conv2d_f32         \
+tests/image/check_p_gauss3x3_f32       \
+tests/image/check_p_harris3x3_f32      \
+tests/image/check_p_laplace3x3_f32     \
+tests/image/check_p_median3x3_f32      \
+tests/image/check_p_prewitt3x3_f32     \
+tests/image/check_p_rgb2grayscale_f32  \
+tests/image/check_p_sad16x16_f32       \
+tests/image/check_p_sad8x8_f32         \
+tests/image/check_p_scharr3x3_f32      \
+tests/image/check_p_sobel3x3_f32
+
+# Alphabetic order
+tests_image_check_p_box3x3_f32_SOURCES         = tests/image/check_p_box3x3_f32.c
+tests_image_check_p_conv2d_f32_SOURCES         = $(NOTEST)
+tests_image_check_p_gauss3x3_f32_SOURCES       = $(NOTEST)
+tests_image_check_p_harris3x3_f32_SOURCES      = $(NOTEST)
+tests_image_check_p_laplace3x3_f32_SOURCES     = $(NOTEST)
+tests_image_check_p_median3x3_f32_SOURCES      = tests/image/check_p_median3x3_f32.c
+tests_image_check_p_prewitt3x3_f32_SOURCES     = $(NOTEST)
+tests_image_check_p_rgb2grayscale_f32_SOURCES  = tests/image/check_p_rgb2greyscale_f32.c \
+						 tests/image/rgb2greyscale_test_data.h
+tests_image_check_p_sad16x16_f32_SOURCES       = $(NOTEST)
+tests_image_check_p_sad8x8_f32_SOURCES         = $(NOTEST)
+tests_image_check_p_scharr3x3_f32_SOURCES      = $(NOTEST)
+tests_image_check_p_sobel3x3_f32_SOURCES       = $(NOTEST)
+
+# Alphabetic order
+tests_image_check_p_box3x3_f32_CFLAGS          = -DFUNCTION=p_box3x3_f32
+tests_image_check_p_conv2d_f32_CFLAGS          = -DFUNCTION=p_conv2d_f32
+tests_image_check_p_gauss3x3_f32_CFLAGS        = -DFUNCTION=p_gauss3x3_f32
+tests_image_check_p_harris3x3_f32_CFLAGS       = -DFUNCTION=p_harris3x3_f32
+tests_image_check_p_laplace3x3_f32_CFLAGS      = -DFUNCTION=p_laplace3x3_f32
+tests_image_check_p_median3x3_f32_CFLAGS       = -DFUNCTION=p_median3x3_f32
+tests_image_check_p_prewitt3x3_f32_CFLAGS      = -DFUNCTION=p_prewitt3x3_f32
+tests_image_check_p_rgb2grayscale_f32_CFLAGS   = -DFUNCTION=p_rgb2grayscale_f32
+tests_image_check_p_sad16x16_f32_CFLAGS        = -DFUNCTION=p_sad16x16_f32
+tests_image_check_p_sad8x8_f32_CFLAGS          = -DFUNCTION=p_sad8x8_f32
+tests_image_check_p_scharr3x3_f32_CFLAGS       = -DFUNCTION=p_scharr3x3_f32
+tests_image_check_p_sobel3x3_f32_CFLAGS        = -DFUNCTION=p_sobel3x3_f32
+
+# Alphabetic order
+tests_image_check_p_box3x3_f32_CPPFLAGS        = $(CPPFLAGS_tests)
+tests_image_check_p_conv2d_f32_CPPFLAGS        = $(CPPFLAGS_tests)
+tests_image_check_p_gauss3x3_f32_CPPFLAGS      = $(CPPFLAGS_tests)
+tests_image_check_p_harris3x3_f32_CPPFLAGS     = $(CPPFLAGS_tests)
+tests_image_check_p_laplace3x3_f32_CPPFLAGS    = $(CPPFLAGS_tests)
+tests_image_check_p_median3x3_f32_CPPFLAGS     = $(CPPFLAGS_tests)
+tests_image_check_p_prewitt3x3_f32_CPPFLAGS    = $(CPPFLAGS_tests)
+tests_image_check_p_rgb2grayscale_f32_CPPFLAGS = $(CPPFLAGS_tests)
+tests_image_check_p_sad16x16_f32_CPPFLAGS      = $(CPPFLAGS_tests)
+tests_image_check_p_sad8x8_f32_CPPFLAGS        = $(CPPFLAGS_tests)
+tests_image_check_p_scharr3x3_f32_CPPFLAGS     = $(CPPFLAGS_tests)
+tests_image_check_p_sobel3x3_f32_CPPFLAGS      = $(CPPFLAGS_tests)
+
+# Alphabetic order
+tests_image_check_p_box3x3_f32_LDFLAGS         = $(LDFLAGS_tests)
+tests_image_check_p_conv2d_f32_LDFLAGS         = $(LDFLAGS_tests)
+tests_image_check_p_gauss3x3_f32_LDFLAGS       = $(LDFLAGS_tests)
+tests_image_check_p_harris3x3_f32_LDFLAGS      = $(LDFLAGS_tests)
+tests_image_check_p_laplace3x3_f32_LDFLAGS     = $(LDFLAGS_tests)
+tests_image_check_p_median3x3_f32_LDFLAGS      = $(LDFLAGS_tests)
+tests_image_check_p_prewitt3x3_f32_LDFLAGS     = $(LDFLAGS_tests)
+tests_image_check_p_rgb2grayscale_f32_LDFLAGS  = $(LDFLAGS_tests)
+tests_image_check_p_sad16x16_f32_LDFLAGS       = $(LDFLAGS_tests)
+tests_image_check_p_sad8x8_f32_LDFLAGS         = $(LDFLAGS_tests)
+tests_image_check_p_scharr3x3_f32_LDFLAGS      = $(LDFLAGS_tests)
+tests_image_check_p_sobel3x3_f32_LDFLAGS       = $(LDFLAGS_tests)
+
+# Alphabetic order
+tests_image_check_p_box3x3_f32_LDADD           = $(LDADD_tests)
+tests_image_check_p_conv2d_f32_LDADD           = $(LDADD_tests)
+tests_image_check_p_gauss3x3_f32_LDADD         = $(LDADD_tests)
+tests_image_check_p_harris3x3_f32_LDADD        = $(LDADD_tests)
+tests_image_check_p_laplace3x3_f32_LDADD       = $(LDADD_tests)
+tests_image_check_p_median3x3_f32_LDADD        = $(LDADD_tests)
+tests_image_check_p_prewitt3x3_f32_LDADD       = $(LDADD_tests)
+tests_image_check_p_rgb2grayscale_f32_LDADD    = $(LDADD_tests)
+tests_image_check_p_sad16x16_f32_LDADD         = $(LDADD_tests)
+tests_image_check_p_sad8x8_f32_LDADD           = $(LDADD_tests)
+tests_image_check_p_scharr3x3_f32_LDADD        = $(LDADD_tests)
+tests_image_check_p_sobel3x3_f32_LDADD         = $(LDADD_tests)

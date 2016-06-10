@@ -23,7 +23,7 @@
 #define GOLD_PATH XSTRING(gold/FUNCTION.gold.h)
 #include GOLD_PATH
 
-float *ai, *result;
+PTYPE *ai, *result;
 int *resultIndex;
 
 struct gold *gold = builtin_gold;
@@ -32,9 +32,9 @@ size_t gold_size = ARRAY_SIZE(builtin_gold);
 /* For detecting erroneous overwrites */
 #define OUTPUT_END_MARKER 60189537703610376.0f
 
-bool equals(float x, float y)
+bool equals(PTYPE x, PTYPE y)
 {
-    float err;
+    PTYPE err;
 
     if (fabs(x - y) <= EPSILON_MAX)
         return true;
@@ -53,11 +53,11 @@ int setup(struct ut_suite *suite)
 
     (void) suite;
 
-    ai = calloc(gold_size, sizeof(float));
+    ai = calloc(gold_size, sizeof(PTYPE));
 
     /* Allocate one extra element for res and add end marker so overwrites can
      * be detected */
-    result = calloc(2, sizeof(float));
+    result = calloc(2, sizeof(PTYPE));
     result[1] = OUTPUT_END_MARKER;
     resultIndex = calloc(1, sizeof(int));
 
@@ -108,7 +108,7 @@ int tc_against_ref_v(struct ut_suite *suite, struct ut_tcase *tcase)
     if (gold_size == 0)
         return 0;
 
-    float reference;
+    PTYPE reference;
     int indexOfReference;
     generate_ref(&reference, &indexOfReference, gold_size);
 

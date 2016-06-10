@@ -5,9 +5,9 @@
 /*
  * sinh z = (exp z - exp(-z)) / 2
  */
-static inline float _p_sinh(const float z)
+static inline PTYPE _p_sinh(const PTYPE z)
 {
-    float exp_z = _p_exp(z);
+    PTYPE exp_z = _p_exp(z);
     return 0.5f * (exp_z - 1.f / exp_z);
 }
 
@@ -25,7 +25,7 @@ static inline float _p_sinh(const float z)
  * @return      None
  *
  */
-void p_sinh_f32(const float *a, float *c, int n)
+void PSYM(p_sinh)(const PTYPE *a, PTYPE *c, int n)
 {
     int i;
     for (i = 0; i < n; i++) {

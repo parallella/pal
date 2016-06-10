@@ -97,102 +97,135 @@
 
 /*integer to float conversion*/
 void p_itof(const int *a, float *c, int n);
+void p_itod(const int *a, double *c, int n);
 
 /*float to integer conversion*/
 void p_ftoi(const float *a, int *c, int n);
+void p_dtoi(const double *a, int *c, int n);
 
 /*absolute value c = abs ( a ) */
 void p_abs_f32(const float *a, float *c, int n);
+void p_abs_f64(const double *a, double *c, int n);
 
 /*arc cosine: c = acos ( a ) */
 void p_acos_f32(const float *a, float *c, int n);
+void p_acos_f64(const double *a, double *c, int n);
 
 /*arc hyperbolic cosine, c = acosh ( a ) */
 void p_acosh_f32(const float *a, float *c, int n);
+void p_acosh_f64(const double *a, double *c, int n);
 
 /*arc sine: c = asin ( a ) */
 void p_asin_f32(const float *a, float *c, int n);
+void p_asin_f64(const double *a, double *c, int n);
 
 /*arc hyperbolic sine: c = asinh ( a ) */
 void p_asinh_f32(const float *a, float *c, int n);
+void p_asinh_f64(const double *a, double *c, int n);
 
 /*arc tanget: c = atan ( a ) */
 void p_atan_f32(const float *a, float *c, int n);
+void p_atan_f64(const double *a, double *c, int n);
 
 /*arc tangent of b/a: c = atan2 ( a , b) */
 void p_atan2_f32(const float *a, const float *b, float *c, int n);
+void p_atan2_f64(const double *a, const double *b, double *c, int n);
 
 /*arc hyperbolic tanget: c = atanh ( a ) */
 void p_atanh_f32(const float *a, float *c, int n);
+void p_atanh_f64(const double *a, double *c, int n);
 
 /*cubic root of a:  c = cbrt ( a) */
 void p_cbrt_f32(const float *a, float *c, int n);
+void p_cbrt_f64(const double *a, double *c, int n);
 
 /*cosine: c = cos ( a ) */
 void p_cos_f32(const float *a, float *c, int n);
+void p_cos_f64(const double *a, double *c, int n);
 
 /*hyperpolic cosine:  c = cosh ( a ) */
 void p_cosh_f32(const float *a, float *c, int n);
+void p_cosh_f64(const double *a, double *c, int n);
 
 /*division: c =  a ./ b */
 void p_div_f32(const float *a, const float *b, float *c, int n);
+void p_div_f64(const double *a, const double *b, double *c, int n);
 
 /*exponential: c = exp ( a ) */
 void p_exp_f32(const float *a, float *c, int n);
+void p_exp_f64(const double *a, double *c, int n);
 
 /*inverse: c = 1 / ( a ) */
 void p_inv_f32(const float *a, float *c, int n);
+void p_inv_f64(const double *a, double *c, int n);
 
 /*inverse cube root: c = 1 / cbrt ( a ) */
 void p_invcbrt_f32(const float *a, float *c, int n);
+void p_invcbrt_f64(const double *a, double *c, int n);
 
 /*inverse square root c = 1 / sqrt ( a ) */
 void p_invsqrt_f32(const float *a, float *c, int n);
+void p_invsqrt_f64(const double *a, double *c, int n);
 
 /*natural logarithm: c = ln ( a ) */
 void p_ln_f32(const float *a, float *c, int n);
+void p_ln_f64(const double *a, double *c, int n);
 
 /*denary logarithm: c = log10 ( a ) */
 void p_log10_f32(const float *a, float *c, int n);
+void p_log10_f64(const double *a, double *c, int n);
 
 /*element raised to a power: c = pow ( a , b ) */
 void p_pow_f32(const float *a, const float *b, float *c, int n);
+void p_pow_f64(const double *a, const double *b, double *c, int n);
 
 /*sine: c = sin ( a ) */
 void p_sin_f32(const float *a, float *c, int n);
+void p_sin_f64(const double *a, double *c, int n);
 
 /*computes sin and cos of a: c = sin ( a ),  z = cos ( a ) */
 void p_sincos_f32(const float *a, float *c, float *z, int n);
+void p_sincos_f64(const double *a, double *c, double *z, int n);
 
 /*hyperbolic Sine: c = sinh ( a ) */
 void p_sinh_f32(const float *a, float *c, int n);
+void p_sinh_f64(const double *a, double *c, int n);
 
 /*square root c = sqrt ( a ) */
 void p_sqrt_f32(const float *a, float *c, int n);
+void p_sqrt_f64(const double *a, double *c, int n);
 
 /*tangent: c = tan ( a ) */
 void p_tan_f32(const float *a, float *c, int n);
+void p_tan_f64(const double *a, double *c, int n);
 
 /*hyperbolic tangent, c = tanh ( a ) */
 void p_tanh_f32(const float *a, float *c, int n);
+void p_tanh_f64(const double *a, double *c, int n);
 
 /*dot product: c =  sum ( a[n-1:0] * b[n-1:0] ) */
 void p_dot_f32(const float *a, const float *b, float *c, int n);
+void p_dot_f64(const double *a, const double *b, double *c, int n);
 
 /*absolute difference: c = | a[n-1:0] - b[n-1:0] | */
 void p_absdiff_f32(const float *a, const float *b, float *c, int n);
+void p_absdiff_f64(const double *a, const double *b, double *c, int n);
 
 /*add vectors: c =  a[n-1:0] + b[n-1:0]  */
 void p_add_f32(const float *a, const float *b, float *c, int n);
+void p_add_f64(const double *a, const double *b, double *c, int n);
 
 /*subtract vectors: c =  a[n-1:0] - b[n-1:0]  */
 void p_sub_f32(const float *a, const float *b, float *c, int n);
+void p_sub_f64(const double *a, const double *b, double *c, int n);
 
 /*multiply vectors: c =  a[n-1:0] - b[n-1:0]  */
 void p_mul_f32(const float *a, const float *b, float *c, int n);
+void p_mul_f64(const double *a, const double *b, double *c, int n);
 
 /* Element wise multiply accumulate: c += a * b' */
 void p_mac_f32(const float *a, const float *b, float *c, int n);
+void p_mac_f64(const double *a, const double *b, double *c, int n);
 
 /*
  ****************************************************************
@@ -207,27 +240,35 @@ void p_mac_f32(const float *a, const float *b, float *c, int n);
 
 /*sum: c = sum ( a[n-1:0] ) */
 void p_sum_f32(const float *a, float *c, int n);
+void p_sum_f64(const double *a, double *c, int n);
 
 /*sum of squares: c =  sum( a[n-1:0]^2 ) */
 void p_sumsq_f32(const float *a, float *c, int n);
+void p_sumsq_f64(const double *a, double *c, int n);
 
 /*mean: c = sum ( a[n-1:0] ) / n  */
 void p_mean_f32(const float *a, float *c, int n);
+void p_mean_f64(const double *a, double *c, int n);
 
 /*middle value: c = median ( a[n-1:0] ) */
 void p_median_f32(const float *a, float *c, int n);
+void p_median_f64(const double *a, double *c, int n);
 
 /*most common number: c = mode ( a[n-1:0] ) */
 void p_mode_f32(const float *a, float *c, int n);
+void p_mode_f64(const double *a, double *c, int n);
 
 /*standard deviation: c = sqrt ( mean ( ( a[n-1:0] - mean ( a[n-1:0] ) ) ^ 2 ) ) */
 void p_stddev_f32(const float *a, float *c, int n);
+void p_stddev_f64(const double *a, double *c, int n);
 
 /*find max value and its index from input vector */
 void p_max_f32(const float *a, float *c, int *index, int n);
+void p_max_f64(const double *a, double *c, int *index, int n);
 
 /*find min value and its index from input vector */
 void p_min_f32(const float *a, float *c, int *index, int n);
+void p_min_f64(const double *a, double *c, int *index, int n);
 
 /*
  ****************************************************************
@@ -238,6 +279,7 @@ void p_min_f32(const float *a, float *c, int *index, int n);
 
 /*sort an array*/
 void p_sort_f32(const float *a, float *c, int n);
+void p_sort_f64(const double *a, double *c, int n);
 void p_sort_u32(const uint32_t *a, uint32_t *c, int n);
 
 /* seed pseudo-random number generator */

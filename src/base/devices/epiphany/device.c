@@ -22,7 +22,7 @@
 #define CHIP_ROWS       4
 #define CHIP_COLS       4
 #define CORE_MEM_REGION 0x00100000
-#define EPIPHANY_DEV "/dev/epiphany"
+#define EPIPHANY_DEV "/dev/epiphany/mesh0"
 
 struct core_map_table {
     off_t   base;
@@ -71,7 +71,7 @@ again:
 
     dev_data->eram = mmap((void *) ERAM_BASE, ERAM_SIZE,
                           PROT_READ | PROT_WRITE, MAP_SHARED | MAP_FIXED,
-                          dev_data->epiphany_fd, ERAM_PHY_BASE);
+                          dev_data->epiphany_fd, ERAM_BASE);
     if (dev_data->eram == MAP_FAILED)
         return -errno;
 
@@ -195,9 +195,12 @@ static p_dev_t dev_init(struct dev *dev, int flags)
 
     epiphany->ctrl = (struct epiphany_ctrl_mem *) CTRL_MEM_EADDR;
 
+#if 0
+    /* I don't think this is needed here, soft reset on load should be enough */
     err = epiphany_reset_system(epiphany);
     if (err)
         return p_ref_err(-err);
+#endif
 
     /* Clear control structure */
     memset(epiphany->ctrl, 0 , sizeof(*epiphany->ctrl));
@@ -289,7 +292,11 @@ static int dev_run(struct dev *dev, struct team *team, struct prog *prog,
     if (!epiphany->opened)
         return -EBADF;
 
-    epiphany_soft_reset(team, start, size);
+    err = epiphany_soft_reset(team, start, size);
+    if (err) {
+        /* WARN: soft reset failed */
+        return err;
+    }
 
     err = epiphany_load(team, prog, start, size, flags, argn, args, function);
     if (err)
@@ -338,6 +345,35 @@ static int dev_wait(struct dev *dev, struct team *team)
     return 0;
 }
 
+static void *dev_map_member(struct team *team, int member,
+                            unsigned long offset, unsigned long size)
+{
+    /* HACK */
+    unsigned coreid, row, col;
+    uintptr_t addr;
+
+    if (member < 0 || 15 < member)
+        return NULL;
+
+    if (offset >= (1 << 20) || (offset + size) > (1 << 20))
+
+    row = member / 4;
+    col = member % 4;
+
+    coreid = 0x808 + (row << 6 | col << 0);
+
+    addr = coreid << 20 | offset;
+
+    return (void *) addr;
+}
+
+static int dev_unmap(struct team *team, void *addr)
+{
+    /* HACK */
+
+    return 0;
+}
+
 static struct dev_ops epiphany_dev_ops = {
     .init = dev_init,
     .fini = dev_fini,
@@ -347,6 +383,8 @@ static struct dev_ops epiphany_dev_ops = {
     .wait = dev_wait,
     .early_init = dev_early_init,
     .late_fini = dev_late_fini,
+    .map_member = dev_map_member,
+    .unmap = dev_unmap,
 };
 
 struct epiphany_dev __pal_dev_epiphany = {

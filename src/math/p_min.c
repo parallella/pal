@@ -16,9 +16,9 @@
  * @return            None
  *
  */
-void p_min_f32(const float *a, float *c, int *index, int n)
+void PSYM(p_min)(const PTYPE *a, PTYPE *c, int *index, int n)
 {
-    float min;
+    PTYPE min;
     int i, pos;
 
     min = *a;

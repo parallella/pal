@@ -17,16 +17,16 @@
 
 #define SIN_ITERATIONS 5
 
-void p_sin_f32(const float *a, float *c, int n)
+void PSYM(p_sin)(const PTYPE *a, PTYPE *c, int n)
 {
     int i;    
     for (i = 0; i < n; i++) {
-      const float *pa = (a+i);
-      float *pc = (c+i);
-      float val = 1.0f;
+      const PTYPE *pa = (a+i);
+      PTYPE *pc = (c+i);
+      PTYPE val = 1.0f;
       int k;
-      float theta = *pa;
-      //float theta = M_NORMALIZE_RADIANS(*pa);
+      PTYPE theta = *pa;
+      //PTYPE theta = M_NORMALIZE_RADIANS(*pa);
 
       //for(k=SIN_ITERATIONS; k>=0; --k)
         //val = 1 - theta * ((theta / (2*k+2))/(2*k+3))*val;

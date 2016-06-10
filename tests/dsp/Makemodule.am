@@ -1,0 +1,66 @@
+# Alphabetic order
+check_PROGRAMS +=            \
+tests/dsp/check_p_acorr_f32  \
+tests/dsp/check_p_conv_f32   \
+tests/dsp/check_p_fir_f32    \
+tests/dsp/check_p_firdec_f32 \
+tests/dsp/check_p_firint_f32 \
+tests/dsp/check_p_firsym_f32 \
+tests/dsp/check_p_iir_f32    \
+tests/dsp/check_p_xcorr_f32
+
+# Alphabetic order
+tests_dsp_check_p_acorr_f32_SOURCES        = tests/dsp/check_p_acorr_f32.c tests/dsp/acorr_test_data.h
+tests_dsp_check_p_conv_f32_SOURCES         = $(NOTEST)
+tests_dsp_check_p_fir_f32_SOURCES          = tests/dsp/check_p_fir_f32.c tests/dsp/fir_test_data.h
+tests_dsp_check_p_firdec_f32_SOURCES       = $(NOTEST)
+tests_dsp_check_p_firint_f32_SOURCES       = $(NOTEST)
+tests_dsp_check_p_firsym_f32_SOURCES       = tests/dsp/check_p_firsym_f32.c tests/dsp/firsym_test_data.h
+tests_dsp_check_p_iir_f32_SOURCES          = $(NOTEST)
+tests_dsp_check_p_xcorr_f32_SOURCES        = \
+tests/dsp/check_p_xcorr_f32.c                \
+tests/dsp/xcorr_test_data_1.h                \
+tests/dsp/xcorr_test_data_2.h                \
+tests/dsp/xcorr_test_data_3.h
+
+# Alphabetic order
+tests_dsp_check_p_acorr_f32_CFLAGS         = -DFUNCTION=p_acorr_f32
+tests_dsp_check_p_conv_f32_CFLAGS          = -DFUNCTION=p_conv_f32
+tests_dsp_check_p_fir_f32_CFLAGS           = -DFUNCTION=p_fir_f32
+tests_dsp_check_p_firdec_f32_CFLAGS        = -DFUNCTION=p_firdec_f32
+tests_dsp_check_p_firint_f32_CFLAGS        = -DFUNCTION=p_firint_f32
+tests_dsp_check_p_firsym_f32_CFLAGS        = -DFUNCTION=p_firsym_f32
+tests_dsp_check_p_iir_f32_CFLAGS           = -DFUNCTION=p_iir_f32
+tests_dsp_check_p_xcorr_f32_CFLAGS         = -DFUNCTION=p_xcorr_f32
+
+# Alphabetic order
+tests_dsp_check_p_acorr_f32_CPPFLAGS       = $(CPPFLAGS_tests)
+tests_dsp_check_p_conv_f32_CPPFLAGS        = $(CPPFLAGS_tests)
+tests_dsp_check_p_fir_f32_CPPFLAGS         = $(CPPFLAGS_tests)
+tests_dsp_check_p_firdec_f32_CPPFLAGS      = $(CPPFLAGS_tests)
+tests_dsp_check_p_firint_f32_CPPFLAGS      = $(CPPFLAGS_tests)
+tests_dsp_check_p_firsym_f32_CPPFLAGS      = $(CPPFLAGS_tests)
+tests_dsp_check_p_iir_f32_CPPFLAGS         = $(CPPFLAGS_tests)
+tests_dsp_check_p_xcorr_f32_CPPFLAGS       = $(CPPFLAGS_tests)
+
+
+# Alphabetic order
+tests_dsp_check_p_acorr_f32_LDFLAGS        = $(LDFLAGS_tests)
+tests_dsp_check_p_conv_f32_LDFLAGS         = $(LDFLAGS_tests)
+tests_dsp_check_p_fir_f32_LDFLAGS          = $(LDFLAGS_tests)
+tests_dsp_check_p_firdec_f32_LDFLAGS       = $(LDFLAGS_tests)
+tests_dsp_check_p_firint_f32_LDFLAGS       = $(LDFLAGS_tests)
+tests_dsp_check_p_firsym_f32_LDFLAGS       = $(LDFLAGS_tests)
+tests_dsp_check_p_iir_f32_LDFLAGS          = $(LDFLAGS_tests)
+tests_dsp_check_p_xcorr_f32_LDFLAGS        = $(LDFLAGS_tests)
+
+
+# Alphabetic order
+tests_dsp_check_p_acorr_f32_LDADD          = $(LDADD_tests)
+tests_dsp_check_p_conv_f32_LDADD           = $(LDADD_tests)
+tests_dsp_check_p_fir_f32_LDADD            = $(LDADD_tests)
+tests_dsp_check_p_firdec_f32_LDADD         = $(LDADD_tests)
+tests_dsp_check_p_firint_f32_LDADD         = $(LDADD_tests)
+tests_dsp_check_p_firsym_f32_LDADD         = $(LDADD_tests)
+tests_dsp_check_p_iir_f32_LDADD            = $(LDADD_tests)
+tests_dsp_check_p_xcorr_f32_LDADD          = $(LDADD_tests)

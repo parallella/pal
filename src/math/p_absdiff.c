@@ -1,5 +1,11 @@
 #include <pal.h>
 
+#if (P_FLOAT_TYPE == P_FLOAT_SINGLE)
+# define ABS_MASK 0x7FFFFFFF
+#else
+# define ABS_MASK 0x7FFFFFFFFFFFFFFFULL
+#endif
+
 /**
  *
  * Compute an element wise absolute difference of two vectors 'a' and 'b'.
@@ -16,15 +22,15 @@
  *
  */
 
-void p_absdiff_f32(const float *a, const float *b, float *c, int n)
+void PSYM(p_absdiff)(const PTYPE *a, const PTYPE *b, PTYPE *c, int n)
 {
     union {
-        float f;
-        uint32_t u;
+        PTYPE f;
+        PUTYPE u;
     } diff;
     for (int i = 0; i < n; i++) {
         diff.f = a[i] - b[i];
-        diff.u &= 0x7FFFFFFF;
+        diff.u &= ABS_MASK;
         c[i] = diff.f;
     }
 }

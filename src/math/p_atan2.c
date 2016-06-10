@@ -19,7 +19,7 @@
  * @todo        Implement without using libm
  *
  */
-void p_atan2_f32(const float *a, const float *b, float *c, int n)
+void PSYM(p_atan2)(const PTYPE *a, const PTYPE *b, PTYPE *c, int n)
 {
 
     int i;

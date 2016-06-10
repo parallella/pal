@@ -92,27 +92,7 @@ AC_CHECK_FUNCS(clock_gettime, [], [
 AC_SUBST([BENCHMARK_LIBS])
 
 AC_CONFIG_FILES([Makefile
-                 include/Makefile
-                 src/Makefile
-                 src/base/Makefile
-                 src/base/devices/Makefile
-                 src/base/devices/epiphany/Makefile
-                 src/dsp/Makefile
-                 src/fft/Makefile
-                 src/image/Makefile
-                 src/math/Makefile
-                 benchmark/Makefile
-                 benchmark/bench-all.sh
-                 benchmark/image/Makefile
-                 benchmark/math/Makefile
-                 examples/Makefile
-                 examples/base/Makefile
-                 examples/image/Makefile
-                 tests/Makefile
-                 tests/dsp/Makefile
-                 tests/math/Makefile
-                 tests/image/Makefile
-                 doc/Makefile])
+                 benchmark/bench-all.sh])
 
 # Epiphany host support
 AM_CONDITIONAL([HOST_IS_EPIPHANY],
@@ -219,42 +199,46 @@ AS_IF([test "x$enable_device_epiphany" = "xyes"],
        AC_MSG_NOTICE([Epiphany toolchain found])
 
 
-       AC_MSG_NOTICE([checking for Epiphany libraries...])
-       lib_help_str="You need to pass in:
-./configure LDFLAGS\"-L/path/to/adapteva/esdk/tools/host.armv7l/lib\" ..."
-
-       AX_APPEND_LINK_FLAGS2([-le-hal -le-loader],
-                             [-L$EPIPHANY_HOME/tools/host.armv7l/lib \
-                              -L/opt/adapteva/esdk/tools/host.armv7l/lib])
-
-       AC_CHECK_LIB([e-hal], e_init, [],
-                    [AC_MSG_ERROR([$lib_help_str])])
-
-       AC_CHECK_LIB([e-loader], e_load_group, [],
-                    [AC_MSG_ERROR([$lib_help_str])])
-       AC_MSG_NOTICE([Epiphany libraries found])
-
-       AC_MSG_NOTICE([checking for Epiphany headers...])
-       inc_help_str="You need to pass in:
-./configure CPPFLAGS\"-I/path/to/adapteva/esdk/tools/host.armv7l/include\" ..."
-
-       AX_APPEND_COMPILE_FLAGS2(["" \
-                                 "-I$EPIPHANY_HOME/tools/host.armv7l/include" \
-                                 "-I/opt/adapteva/esdk/tools/host.armv7l/include"],
-                               [], [],
-                               [AC_LANG_SOURCE([[#include <e-hal.h>]],
-                                               [[#include <e-loader.h>]])])
-
-       AC_CHECK_HEADER([e-hal.h], [], [AC_MSG_ERROR([$inc_help_str])])
-       AC_CHECK_HEADER([e-loader.h], [], [AC_MSG_ERROR([$inc_help_str])])
-
-       AC_MSG_NOTICE([Epiphany headers found])
-
-       PKG_CHECK_MODULES([LIBELF], [libelf >= 0.8])
+#       AC_MSG_NOTICE([checking for Epiphany libraries...])
+#       lib_help_str="You need to pass in:
+#./configure LDFLAGS\"-L/path/to/adapteva/esdk/tools/host.armv7l/lib\" ..."
+#
+#       AX_APPEND_LINK_FLAGS2([-le-hal -le-loader],
+#                             [-L$EPIPHANY_HOME/tools/host.armv7l/lib \
+#                              -L/opt/adapteva/esdk/tools/host.armv7l/lib])
+#
+#       AC_CHECK_LIB([e-hal], e_init, [],
+#                    [AC_MSG_ERROR([$lib_help_str])])
+#
+#       AC_CHECK_LIB([e-loader], e_load_group, [],
+#                    [AC_MSG_ERROR([$lib_help_str])])
+#       AC_MSG_NOTICE([Epiphany libraries found])
+#
+#       AC_MSG_NOTICE([checking for Epiphany headers...])
+#       inc_help_str="You need to pass in:
+#./configure CPPFLAGS\"-I/path/to/adapteva/esdk/tools/host.armv7l/include\" ..."
+#
+#       AX_APPEND_COMPILE_FLAGS2(["" \
+#                                 "-I$EPIPHANY_HOME/tools/host.armv7l/include" \
+#                                 "-I/opt/adapteva/esdk/tools/host.armv7l/include"],
+#                               [], [],
+#                               [AC_LANG_SOURCE([[#include <e-hal.h>]],
+#                                               [[#include <e-loader.h>]])])
+#
+#       AC_CHECK_HEADER([e-hal.h], [], [AC_MSG_ERROR([$inc_help_str])])
+#       AC_CHECK_HEADER([e-loader.h], [], [AC_MSG_ERROR([$inc_help_str])])
+#
+#       AC_MSG_NOTICE([Epiphany headers found])
 
        AC_DEFINE([ENABLE_DEV_EPIPHANY], [1], [Epiphany device support])
 
        ])
+
+AC_ARG_ENABLE([benchmark], AS_HELP_STRING([--disable-benchmark], [Disable building benchmark binaries]))
+AM_CONDITIONAL([ENABLE_BENCHMARK], [test "x$enable_benchmark" != "xno"])
+
+AC_ARG_ENABLE([examples], AS_HELP_STRING([--disable-examples], [Disable building examples]))
+AM_CONDITIONAL([ENABLE_EXAMPLES], [test "x$enable_examples" != "xno"])
 
 AC_ARG_ENABLE([tests],
               AS_HELP_STRING([--disable-tests],
@@ -303,7 +287,7 @@ AS_IF([test "x$enable_assert" = "xyes"],
 
 # Easiest way to include header files globally
 AC_SUBST([AM_CPPFLAGS],
-  ['-I$(top_srcdir)/include -I$(top_builddir) $(assert_CPPFLAGS)'])
+  ['-I$(top_srcdir)/include -I$(top_builddir) $(assert_CPPFLAGS) -DPAL_SOURCE'])
 
 AC_SUBST([AM_LDFLAGS])
 

@@ -1,23 +1,23 @@
 #include <pal.h>
 
-static const float pi_4 = (float) M_PI / 4.f;
-static const float pi_2 = (float) M_PI / 2.f;
-static const float pi =   (float) M_PI;
+static const PTYPE pi_4 = (PTYPE) M_PI / 4.0;
+static const PTYPE pi_2 = (PTYPE) M_PI / 2.0;
+static const PTYPE pi =   (PTYPE) M_PI;
 
 /*
  * 0 <= x <= pi/4
  * tan x / x = 1 + a2 * x^2 + a4 * x^4 + ... + a12 * x^12 + e(x)
  * |e(x)| <= 2 * 10^-8
  */
-static inline float __p_tan_pi_4(const float x)
+static inline PTYPE __p_tan_pi_4(const PTYPE x)
 {
-    const float  a2 = 0.3333314036f;
-    const float  a4 = 0.1333923995f;
-    const float  a6 = 0.0533740603f;
-    const float  a8 = 0.0245650893f;
-    const float a10 = 0.0029005250f;
-    const float a12 = 0.0095168091f;
-    float x2, tanx_x;
+    const PTYPE  a2 = 0.3333314036;
+    const PTYPE  a4 = 0.1333923995;
+    const PTYPE  a6 = 0.0533740603;
+    const PTYPE  a8 = 0.0245650893;
+    const PTYPE a10 = 0.0029005250;
+    const PTYPE a12 = 0.0095168091;
+    PTYPE x2, tanx_x;
     x2 = x * x;
     tanx_x = 1.f + x2 * (a2 + x2 * (a4 + x2 * (a6 + x2 * (a8 + x2 * (a10 + x2 * a12)))));
     return tanx_x * x;
@@ -28,9 +28,9 @@ static inline float __p_tan_pi_4(const float x)
  * x = x' + pi/4
  * tan x = tan(x' + pi/4) = (tan x' + 1) / (1 - tan x')
  */
-static inline float __p_tan_pi_2(const float x)
+static inline PTYPE __p_tan_pi_2(const PTYPE x)
 {
-    float x_, tanx_;
+    PTYPE x_, tanx_;
     if (x <= pi_4)
         return __p_tan_pi_4(x);
     x_ = x - pi_4;
@@ -43,9 +43,9 @@ static inline float __p_tan_pi_2(const float x)
  * x = x' + pi/2
  * tan x = tan (x' + pi/2) = -1 / tan x'
  */
-static inline float __p_tan_pi(const float x)
+static inline PTYPE __p_tan_pi(const PTYPE x)
 {
-    float x_;
+    PTYPE x_;
     if (x <= pi_2)
         return __p_tan_pi_2(x);
     x_ = x - pi_2;
@@ -53,7 +53,7 @@ static inline float __p_tan_pi(const float x)
 }
 
 /* 0 <= x <= 2pi */
-static inline float _p_tan(const float x)
+static inline PTYPE _p_tan(const PTYPE x)
 {
     if (x <= pi)
         return __p_tan_pi(x);
@@ -76,7 +76,7 @@ static inline float _p_tan(const float x)
  * @return      None
  *
  */
-void p_tan_f32(const float *a, float *c, int n)
+void PSYM(p_tan)(const PTYPE *a, PTYPE *c, int n)
 {
     int i;
     for (i = 0; i < n; i++) {

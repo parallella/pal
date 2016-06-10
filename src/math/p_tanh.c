@@ -7,10 +7,10 @@
  *        = (exp z - exp -z) / (exp z + ezp -z)
  *        = (exp 2z - 1) / (exp 2z + 1)
  */
-static inline float _p_tanh(const float z)
+static inline PTYPE _p_tanh(const PTYPE z)
 {
-    float exp_2z = _p_exp(2.f * z);
-    return (exp_2z - 1.f) / (exp_2z + 1.f);
+    PTYPE exp_2z = _p_exp(2.f * z);
+    return (exp_2z - 1.0) / (exp_2z + 1.0);
 }
 
 /**
@@ -27,7 +27,7 @@ static inline float _p_tanh(const float z)
  * @return      None
  *
  */
-void p_tanh_f32(const float *a, float *c, int n)
+void PSYM(p_tanh)(const PTYPE *a, PTYPE *c, int n)
 {
     int i;
     for (i = 0; i < n; i++) {

@@ -1,0 +1,35 @@
+if HAVE_DOXYGEN
+
+# TODO: Generate man pages.
+
+#directory = $(top_srcdir)/docs/man/man3/
+
+#dist_man_MANS = $(directory)/man_page_1.3 $(directory)/man_page_2.3
+#$(directory)/man_page_1.3: doxyfile.stamp
+#    $(directory)/man_page_2.3: doxyfile.stamp
+
+CLEANFILES += doc/doxyfile.stamp
+
+CLEAN_LOCAL_TARGETS        += clean-local-doc
+INSTALL_HTML_LOCAL_TARGETS += install-html-local-doc
+UNINSTALL_LOCAL_TARGETS    += uninstall-local-doc
+INSTALL_DATA_LOCAL_TARGETS += install-data-local-doc
+
+doc/doxyfile.stamp:
+	cd doc && $(DOXYGEN) Doxyfile
+	echo Timestamp > $@
+
+install-html-local-doc: doc/doxyfile.stamp
+	cd doc && \
+	find html -type d -exec $(mkinstalldirs) $(DESTDIR)$(htmldir)/'{}' ';' && \
+	find html -type f -exec $(INSTALL_DATA) '{}' $(DESTDIR)$(htmldir)/'{}' ';'
+
+uninstall-local-doc:
+	rm -rf $(DESTDIR)$(htmldir)/html
+
+install-data-local-doc: install-html-local
+
+clean-local-doc:
+	rm -rf doc/html
+
+endif

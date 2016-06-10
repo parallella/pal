@@ -1,5 +1,11 @@
 #include <pal.h>
 
+#if (P_FLOAT_TYPE == P_FLOAT_SINGLE)
+# define ISQRT_APPROX 0x5f375a86
+#else
+# define ISQRT_APPROX 0x5fe6eb50c7b537a9ULL
+#endif
+
 /**
  *
  * Calculates the standard deviation of all of the elements vector 'a'.
@@ -14,9 +20,9 @@
  *
  */
 
-void p_stddev_f32(const float *a, float *c, int n)
+void PSYM(p_stddev)(const PTYPE *a, PTYPE *c, int n)
 {
-    float tmp = 0.0f, mean = 0.0f, meansq = 0.0f;
+    PTYPE tmp = 0.0f, mean = 0.0f, meansq = 0.0f;
     int i;
 
     for (i = 0; i < n; i++) {
@@ -30,21 +36,21 @@ void p_stddev_f32(const float *a, float *c, int n)
     }
     meansq = tmp / (n - 1);
 
-    float x;
+    PTYPE x;
     union {
-       float f;
-       int32_t i;
+       PTYPE f;
+       PITYPE i;
     } j;
-    float xhalf = 0.5f*meansq;
+    PTYPE xhalf = 0.5*meansq;
 
     j.f = meansq;
-    j.i = 0x5f375a86 - (j.i >> 1);
+    j.i = ISQRT_APPROX - (j.i >> 1);
     x = j.f;
 
     // Newton steps, repeating this increases accuracy
-    x = x*(1.5f - xhalf*x*x);
-    x = x*(1.5f - xhalf*x*x);
-    x = x*(1.5f - xhalf*x*x);
+    x = x*(1.5 - xhalf*x*x);
+    x = x*(1.5 - xhalf*x*x);
+    x = x*(1.5 - xhalf*x*x);
 
     // x contains the inverse sqrt
 

@@ -15,7 +15,7 @@
  * @return      None
  *
  */
-void p_exp_f32(const float *a, float *c, int n)
+void PSYM(p_exp)(const PTYPE *a, PTYPE *c, int n)
 {
 
     int i;

@@ -1,7 +1,7 @@
 #include <math.h>
 #include "simple.h"
 
-void generate_ref(float *out, size_t n)
+void generate_ref(PTYPE *out, size_t n)
 {
     size_t i;
 

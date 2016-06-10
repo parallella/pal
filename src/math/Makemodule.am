@@ -1,0 +1,83 @@
+EXTRA_DIST += src/math/msun
+
+noinst_LTLIBRARIES +=             \
+src/math/libpal-math-f32.la       \
+src/math/libpal-math-f64.la       \
+src/math/libpal-math.la
+
+math_FILES =                      \
+src/math/p_a_inv.c                \
+src/math/p_abs.c                  \
+src/math/p_absdiff.c              \
+src/math/p_acos.c                 \
+src/math/p_acosh.c                \
+src/math/p_add.c                  \
+src/math/p_asin.c                 \
+src/math/p_asin.h                 \
+src/math/p_asinh.c                \
+src/math/p_atan2.c                \
+src/math/p_atan.c                 \
+src/math/p_atanh.c                \
+src/math/p_cos.c                  \
+src/math/p_cosh.c                 \
+src/math/p_div.c                  \
+src/math/p_dot.c                  \
+src/math/p_exp.c                  \
+src/math/p_exp.h                  \
+src/math/p_inv.c                  \
+src/math/p_invsqrt.c              \
+src/math/p_log10.c                \
+src/math/p_mac.c                  \
+src/math/p_max.c                  \
+src/math/p_mean.c                 \
+src/math/p_median.c               \
+src/math/p_min.c                  \
+src/math/p_mode.c                 \
+src/math/p_mul.c                  \
+src/math/p_sin.c                  \
+src/math/p_sincos.c               \
+src/math/p_sinh.c                 \
+src/math/p_sort.c                 \
+src/math/p_sqrt.c                 \
+src/math/p_sqrt.h                 \
+src/math/p_stddev.c               \
+src/math/p_sub.c                  \
+src/math/p_sum.c                  \
+src/math/p_sumsq.c                \
+src/math/p_tan.c                  \
+src/math/p_tanh.c
+
+src_math_libpal_math_f32_la_SOURCES = \
+$(math_FILES)                         \
+src/math/p_cbrt_f32.c                 \
+src/math/p_invcbrt_f32.c              \
+src/math/p_ln_f32.c                   \
+src/math/p_pow_f32.c
+
+src_math_libpal_math_f64_la_SOURCES = \
+$(math_FILES)                         \
+src/math/p_ln_f64.c
+
+src_math_libpal_math_la_SOURCES = \
+src/math/p_itof.c                 \
+src/math/p_ftoi.c                 \
+src/math/p_itod.c                 \
+src/math/p_dtoi.c                 \
+src/math/p_popcount.c             \
+src/math/p_rand.c                 \
+src/math/p_sort.c                 \
+src/math/tinymt/tinymt32.c        \
+src/math/tinymt/tinymt32.h
+
+src_math_libpal_math_f32_la_CFLAGS = $(CFLAGS) -DP_FLOAT_TYPE=P_FLOAT_SINGLE
+src_math_libpal_math_f64_la_CFLAGS = $(CFLAGS) -DP_FLOAT_TYPE=P_FLOAT_DOUBLE
+
+src_math_libpal_math_la_LIBADD =  \
+src/math/libpal-math-f32.la       \
+src/math/libpal-math-f64.la
+
+
+# TODO: Remove dependency
+src_math_libpal_math_f32_la_LIBADD = -lm
+src_math_libpal_math_f64_la_LIBADD = -lm
+src_math_libpal_math_la_LIBADD += -lm

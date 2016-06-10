@@ -1,0 +1,61 @@
+EXTRA_DIST += tests/runtest.noimpl.c tests/runtest.simple.c
+
+if HOST_IS_EPIPHANY
+RUNTEST_SRC = tests/runtest.epiphany.c
+CFLAGS_FOR_BUILD  += $(EINCS)
+LDFLAGS_FOR_BUILD += $(ELIBS) -le-hal -le-loader
+else
+RUNTEST_SRC = tests/runtest.simple.c
+endif
+
+BUILT_SOURCES += tests/runtest$(BUILD_EXEEXT)
+
+noinst_LTLIBRARIES += tests/libutest.la
+
+tests_libutest_la_SOURCES = tests/utest.c tests/utest-report.c
+if HOST_IS_EPIPHANY
+tests_libutest_la_CFLAGS="-DUT_NO_PRINTF"
+endif
+
+noinst_HEADERS += tests/utest.h
+
+tests/runtest$(BUILD_EXEEXT): $(RUNTEST_SRC)
+	$(CC_FOR_BUILD) $(CFLAGS_FOR_BUILD) $< -o $@ $(LDFLAGS_FOR_BUILD)
+
+check-local-tests: tests/runtest$(BUILD_EXEEXT)
+
+clean-local-tests:
+	-rm -f tests/runtest$(BUILD_EXEEXT)
+
+CLEAN_LOCAL_TARGETS += clean-local-tests
+CHECK_LOCAL_TARGETS += check-local-tests
+
+
+
+TESTS = $(check_PROGRAMS)
+
+# Target that only compiles the tests and doesn't run them
+tests:
+	+$(MAKE) -C $(top_builddir) $(TESTS)
+
+PHONIES += tests
+
+# Ubuntu 14.04 has automake-1.11. Need automake-1.12 for nicer test features.
+# This will have to do for now.
+#TESTS_ENVIRONMENT = tests/runtest
+LOG_COMPILER = tests/runtest
+
+CPPFLAGS_tests = -I$(top_srcdir)/tests $(AM_CPPFLAGS)
+if HOST_IS_EPIPHANY
+LDFLAGS_tests=$(EPIPHANY_INTERNAL_LDFLAGS)
+NOTEST = tests/notest.epiphany.c
+else
+LDFLAGS_tests=$(AM_LDFLAGS)
+NOTEST = tests/notest.c
+endif
+LDADD_tests = -lm src/libpal.la tests/libutest.la
+SIMPLETEST = tests/simple.c tests/simple.h
+
+include tests/dsp/Makemodule.am
+include tests/image/Makemodule.am
+include tests/math/Makemodule.am

@@ -1,0 +1,56 @@
+EXTRA_DIST += src/base/epiphany
+
+if HOST_IS_EPIPHANY
+    MAYBE_EPIPHANY_LIBS = -le-lib
+endif
+
+noinst_LTLIBRARIES += src/base/libpal-base.la
+
+src_base_libpal_base_la_SOURCES = \
+src/base/p_append.c               \
+src/base/p_atomic_add.c           \
+src/base/p_atomic_and.c           \
+src/base/p_atomic_compswap.c      \
+src/base/p_atomic_or.c            \
+src/base/p_atomic_sub.c           \
+src/base/p_atomic_swap.c          \
+src/base/p_atomic_xor.c           \
+src/base/p_barrier.c              \
+src/base/p_close.c                \
+src/base/p_fence.c                \
+src/base/p_finalize.c             \
+src/base/p_free.c                 \
+src/base/p_gather.c               \
+src/base/p_getaddr.c              \
+src/base/p_getsymbol.c            \
+src/base/p_init.c                 \
+src/base/p_load.c                 \
+src/base/p_malloc.c               \
+src/base/p_map_member.c           \
+src/base/p_memcpy.c               \
+src/base/p_mutex_init.c           \
+src/base/p_mutex_lock.c           \
+src/base/p_mutex_trylock.c        \
+src/base/p_mutex_unlock.c         \
+src/base/p_open.c                 \
+src/base/p_query.c                \
+src/base/p_read.c                 \
+src/base/p_remove.c               \
+src/base/p_rmalloc.c              \
+src/base/p_run.c                  \
+src/base/p_unmap.c                \
+src/base/p_wait.c                 \
+src/base/p_write.c                \
+src/base/pal_base_private.h       \
+src/base/boilerplate.c            \
+src/base/p_get_err.c
+# Disable temporarily until API is determined
+#    p_scatter.c \
+#    p_broadcast.c \
+#
+
+src_base_libpal_base_la_LIBADD = \
+$(MAYBE_EPIPHANY_LIBS)           \
+src/base/devices/libdevices.la
+
+include src/base/devices/Makemodule.am

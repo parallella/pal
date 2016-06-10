@@ -16,7 +16,7 @@
  *
  */
 
-void p_mul_f32(const float *a, const float *b, float *c,
+void PSYM(p_mul)(const PTYPE *a, const PTYPE *b, PTYPE *c,
                int n)
 {
 

@@ -1,0 +1,43 @@
+examples_image_LDADD               = -lm src/libpal.la
+examples_image_filters_LDADD       = $(examples_image_LDADD)
+examples_image_filters2_host_LDADD = $(examples_image_LDADD)
+examples_image_harris_LDADD        = $(examples_image_LDADD)
+
+examples_image_filters_SOURCES =  \
+examples/image/filters.c          \
+examples/image/stb_image.h        \
+examples/image/stb_image_write.h
+examples_image_filters_CPPFLAGS = $(AM_CPPFLAGS) -DABS_TOP_SRCDIR=\"$(abs_top_srcdir)\"
+
+examples_image_harris_SOURCES = examples/image/harris.c
+
+examples_image_filters2_host_SOURCES = \
+examples/image/filters2-host.c         \
+examples/image/stb_image.h             \
+examples/image/stb_image_write.h
+
+examples_image_filters2_host_CPPFLAGS = $(AM_CPPFLAGS) -DABS_TOP_SRCDIR=\"$(abs_top_srcdir)\"
+
+noinst_PROGRAMS += examples/image/harris
+if !HOST_IS_EPIPHANY
+noinst_PROGRAMS += examples/image/filters
+endif
+
+if HOST_IS_EPIPHANY
+examples_image_harris_LDFLAGS = $(EPIPHANY_FAST_LDFLAGS)
+endif
+
+if ENABLE_DEV_EPIPHANY
+BUILT_SOURCES += examples/image/filters2-dev-epiphany.c
+CLEANFILES    += examples/image/filters2-dev-epiphany.c
+examples_image_filters2_dev_epiphany_SOURCES = examples/image/filters2-dev-epiphany.c
+examples_image_filters2_dev_epiphany_LDADD = $(EPIPHANY_LDADD)
+noinst_PROGRAMS +=                   \
+examples/image/filters2-host         \
+examples/image/filters2-dev-epiphany
+examples_image_filters2_host_CPPFLAGS += -DDEVICE=epiphany
+endif
+
+ALL_LOCAL_TARGETS += all-local-examples-image
+all-local-examples-image:
+	@$(MKDIR_P) examples/image/dataset

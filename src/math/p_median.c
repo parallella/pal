@@ -1,14 +1,14 @@
 #include <string.h>
 #include <pal.h>
 
-static void swap(float *lhs, float *rhs)
+static void swap(PTYPE *lhs, PTYPE *rhs)
 {
-    float tmp = *lhs;
+    PTYPE tmp = *lhs;
     *lhs = *rhs;
     *rhs = tmp;
 }
 
-static unsigned int median_partition(float *a,
+static unsigned int median_partition(PTYPE *a,
                                      unsigned int left,
                                      unsigned int right,
                                      unsigned int pivot_index)
@@ -16,7 +16,7 @@ static unsigned int median_partition(float *a,
     unsigned int store_index = left;
     unsigned int i = left;
 
-    float pivot = a[pivot_index];
+    PTYPE pivot = a[pivot_index];
     swap(&a[pivot_index], &a[right]);
 
     for (; i < right; ++i) {
@@ -43,14 +43,14 @@ static unsigned int median_partition(float *a,
  *
  */
 
-void p_median_f32(const float *a, float *c, int n)
+void PSYM(p_median)(const PTYPE *a, PTYPE *c, int n)
 {
     unsigned int left = 0;
     unsigned int median_index = (n - 1) >> 1;
-    float median_value = 0.0f;
-    float search_a[n];
+    PTYPE median_value = 0.0f;
+    PTYPE search_a[n];
 
-    memcpy(search_a, a, sizeof(float) * n);
+    memcpy(search_a, a, sizeof(PTYPE) * n);
 
     for (; median_index <= (n >> 1); ++median_index) {
         unsigned int right = n - 1;

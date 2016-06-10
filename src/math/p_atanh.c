@@ -17,7 +17,7 @@
  * @todo        Implement without using libm
  *
  */
-void p_atanh_f32(const float *a, float *c, int n)
+void PSYM(p_atanh)(const PTYPE *a, PTYPE *c, int n)
 {
 
     int i;

@@ -1,0 +1,2 @@
+include examples/base/Makemodule.am
+include examples/image/Makemodule.am

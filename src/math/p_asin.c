@@ -17,7 +17,7 @@
  * @return      None
  *
  */
-void p_asin_f32(const float *a, float *c, int n)
+void PSYM(p_asin)(const PTYPE *a, PTYPE *c, int n)
 {
 
     int i;
