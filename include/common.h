@@ -30,3 +30,22 @@
 /* Compiler reorder barrier */
 #define barrier() __asm__ __volatile__("":::"memory")
 
+#define P_FLOAT_SINGLE 0
+#define P_FLOAT_DOUBLE 1
+
+#ifdef P_FLOAT_TYPE
+# if (P_FLOAT_TYPE == P_FLOAT_SINGLE)
+#  define PTYPE float
+#  define PUTYPE uint32_t
+#  define PITYPE int32_t
+#  define PSYM(x) CONCAT2(x, _f32)
+# elif (P_FLOAT_TYPE == P_FLOAT_DOUBLE)
+#  define PTYPE double
+#  define PUTYPE uint64_t
+#  define PITYPE int64_t
+#  define PSYM(x) CONCAT2(x, _f64)
+# else
+#  error "Invalid float type"
+# endif
+#endif
+
