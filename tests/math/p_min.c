@@ -1,7 +1,7 @@
 #include <math.h>
 #include "check_scalar_and_index.h"
 
-void generate_ref(float *outValue, int* outIndex, size_t n)
+void generate_ref(PTYPE *outValue, int* outIndex, size_t n)
 {
     int i;
 

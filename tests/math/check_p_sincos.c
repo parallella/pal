@@ -15,19 +15,20 @@
 #include <common.h>
 
 #include "simple.h"
-#include "gold/p_sincos_f32.gold.h"
+#define GOLD_PATH XSTRING(gold/FUNCTION.gold.h)
+#include GOLD_PATH
 
-float *ai, *resCos, *resSin, *refCos, *refSin;
+PTYPE *ai, *resCos, *resSin, *refCos, *refSin;
 
 struct gold *gold = builtin_gold;
 size_t gold_size = ARRAY_SIZE(builtin_gold);
 
 /* For detecting erroneous overwrites */
-#define OUTPUT_END_MARKER 60189537703610376.0f
+#define OUTPUT_END_MARKER ((PTYPE)60189537703610376.0)
 
-bool compare(float x, float y)
+bool compare(PTYPE x, PTYPE y)
 {
-    float err;
+    PTYPE err;
 
     if (fabs(x - y) <= EPSILON_MAX)
         return true;
@@ -84,15 +85,15 @@ int setup(struct ut_suite *suite)
 
     (void) suite;
 
-    ai = simple_calloc(gold_size, sizeof(float));
-    refCos = simple_calloc(gold_size, sizeof(float));
-    refSin = simple_calloc(gold_size, sizeof(float));
+    ai = simple_calloc(gold_size, sizeof(PTYPE));
+    refCos = simple_calloc(gold_size, sizeof(PTYPE));
+    refSin = simple_calloc(gold_size, sizeof(PTYPE));
 
     /* Allocate one extra element for res and add end marker so overwrites can
      * be detected */
-    resCos = simple_calloc(gold_size + 1, sizeof(float));
+    resCos = simple_calloc(gold_size + 1, sizeof(PTYPE));
     resCos[gold_size] = OUTPUT_END_MARKER;
-    resSin = simple_calloc(gold_size + 1, sizeof(float));
+    resSin = simple_calloc(gold_size + 1, sizeof(PTYPE));
     resSin[gold_size] = OUTPUT_END_MARKER;
 
     for (i = 0; i < gold_size; i++) {
@@ -119,7 +120,7 @@ int tc_against_gold_e(struct ut_suite *suite, struct ut_tcase *tcase)
 {
     /* Run FUNCTION against gold input here so results are available
      * for all test cases. */
-    p_sincos_f32(ai, resSin, resCos, gold_size);
+    FUNCTION(ai, resSin, resCos, gold_size);
 
     return 0;
 }
