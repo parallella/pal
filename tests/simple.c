@@ -24,21 +24,27 @@
 #error IS_UNARY or IS_BINARY must be defined
 #endif
 
+#if (P_FLOAT_TYPE == P_FLOAT_SINGLE)
+# define PSCANFMT "%f"
+#else
+# define PSCANFMT "%lf"
+#endif
+
 struct gold *gold = builtin_gold;
 size_t gold_size = ARRAY_SIZE(builtin_gold);
 char *gold_file = NULL;
 
-float *ai, *bi, *res, *ref;
+PTYPE *ai, *bi, *res, *ref;
 
 bool generate_gold_flag = false;
 
 /* For detecting erroneous overwrites */
-#define OUTPUT_END_MARKER 60189537703610376.0f
+#define OUTPUT_END_MARKER ((PTYPE)60189537703610376.0)
 
 __attribute__((weak))
-bool compare(float x, float y)
+bool compare(PTYPE x, PTYPE y)
 {
-    float err;
+    PTYPE err;
 
     if (fabs(x - y) <= EPSILON_MAX)
         return true;
@@ -99,9 +105,9 @@ int setup(struct ut_suite *suite)
 
     (void) suite;
 
-    ai = simple_calloc(gold_size, sizeof(float));
-    bi = simple_calloc(gold_size, sizeof(float));
-    ref = simple_calloc(gold_size, sizeof(float));
+    ai = simple_calloc(gold_size, sizeof(PTYPE));
+    bi = simple_calloc(gold_size, sizeof(PTYPE));
+    ref = simple_calloc(gold_size, sizeof(PTYPE));
 
     if (!ai || !bi || !ref)
         return ENOMEM;
@@ -109,12 +115,12 @@ int setup(struct ut_suite *suite)
     /* Allocate one extra element for res and add end marker so overwrites can
      * be detected */
 #ifdef SCALAR_OUTPUT
-    res = simple_calloc(2, sizeof(float));
+    res = simple_calloc(2, sizeof(PTYPE));
     if (!res)
         return ENOMEM;
     res[1] = OUTPUT_END_MARKER;
 #else
-    res = simple_calloc(gold_size + 1, sizeof(float));
+    res = simple_calloc(gold_size + 1, sizeof(PTYPE));
     if (!res)
         return ENOMEM;
     res[gold_size] = OUTPUT_END_MARKER;
@@ -206,7 +212,7 @@ int tc_against_gold_v(struct ut_suite *suite, struct ut_tcase *tcase)
 
 /* Default to using gold data as reference function output */
 __attribute__((weak))
-void generate_ref(float *out, size_t n)
+void generate_ref(PTYPE *out, size_t n)
 {
     size_t i;
 
@@ -270,7 +276,7 @@ usage:
 #ifndef __epiphany__
 void read_gold_file_or_die(char *progname)
 {
-    float ai, bi, res, expect;
+    PTYPE ai, bi, res, expect;
     FILE *fp;
     int ret;
 
@@ -286,7 +292,8 @@ void read_gold_file_or_die(char *progname)
     while (true) {
 retry:
         errno = 0;
-        ret = fscanf(fp, "%f,%f,%f,%f\n", &ai, &bi, &res, &expect);
+        ret = fscanf(fp, PSCANFMT","PSCANFMT","PSCANFMT","PSCANFMT"\n",
+                     &ai, &bi, &res, &expect);
         if (ret == EOF) {
             if (errno == EINTR)
                 goto retry;
