@@ -287,7 +287,7 @@ AS_IF([test "x$enable_assert" = "xyes"],
 
 # Easiest way to include header files globally
 AC_SUBST([AM_CPPFLAGS],
-  ['-I$(top_srcdir)/include -I$(top_builddir) $(assert_CPPFLAGS)'])
+  ['-I$(top_srcdir)/include -I$(top_builddir) $(assert_CPPFLAGS) -DPAL_SOURCE'])
 
 AC_SUBST([AM_LDFLAGS])
 
