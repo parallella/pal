@@ -19,7 +19,7 @@
 
 void PSYM(p_add)(const PTYPE *a, const PTYPE *b, PTYPE *c, int n)
 {
-#ifdef __epiphany__
+#if defined(__epiphany__) && (P_FLOAT_TYPE == P_FLOAT_SINGLE)
     for (; n & 7; n--)
         *(c++) = *(a++) + *(b++);
 
