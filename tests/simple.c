@@ -30,11 +30,28 @@
 # define PSCANFMT "%lf"
 #endif
 
+#define BUILTIN_GOLD_SIZE ARRAY_SIZE(builtin_gold)
+
 struct gold *gold = builtin_gold;
 size_t gold_size = ARRAY_SIZE(builtin_gold);
 char *gold_file = NULL;
 
 PTYPE *ai, *bi, *res, *ref;
+
+#ifdef __epiphany__
+/* Compile time allocate buffers */
+PTYPE _ai[BUILTIN_GOLD_SIZE];
+PTYPE _bi[BUILTIN_GOLD_SIZE];
+PTYPE _ref[BUILTIN_GOLD_SIZE];
+
+/* Allocate one extra element for res and add end marker so overwrites can
+ * be detected */
+# ifdef SCALAR_OUTPUT
+PTYPE _res[2];
+# else
+PTYPE _res[BUILTIN_GOLD_SIZE + 1];
+# endif
+#endif
 
 bool generate_gold_flag = false;
 
@@ -57,74 +74,59 @@ bool compare(PTYPE x, PTYPE y)
     return err <= EPSILON_RELMAX;
 }
 
-
-#define SBRK_FAILED ((void *) -1)
-
 #ifdef __epiphany__
-void *simple_calloc(size_t nmemb, size_t size)
+static int allocate_buffers()
 {
-    void *p;
-    uint64_t *q;
-    size_t i;
+    /* Buffers are compile time allocated */
+    ai = _ai;
+    bi = _bi;
+    ref = _ref;
+    res = _res;
 
-    /* Find program break */
-    p = sbrk(0);
-    if (p == SBRK_FAILED)
-        return NULL;
-
-    /* Align by double-word */
-    p = sbrk((8 - ((uintptr_t) p & 7)) & 7);
-    if (p == SBRK_FAILED)
-        return NULL;
-
-    /* Calculate total size (assume no overflow) */
-    size *= nmemb;
-
-    /* Allocate in even double-words */
-    size = (size + 7) & ~7;
-
-    p = sbrk(size);
-    if (p == SBRK_FAILED)
-        return NULL;
-
-    /* Set to zero */
-    for (i = 0, q = p; i < size; i += 8, q++)
-        *q = 0;
-
-    return p;
+    return 0;
 }
-#define simple_free(p)
 #else
-#define simple_calloc calloc
-#define simple_free free
-#endif
-
-int setup(struct ut_suite *suite)
+static int allocate_buffers()
 {
-    size_t i;
-
-    (void) suite;
-
-    ai = simple_calloc(gold_size, sizeof(PTYPE));
-    bi = simple_calloc(gold_size, sizeof(PTYPE));
-    ref = simple_calloc(gold_size, sizeof(PTYPE));
+    ai = calloc(gold_size, sizeof(PTYPE));
+    bi = calloc(gold_size, sizeof(PTYPE));
+    ref = calloc(gold_size, sizeof(PTYPE));
 
     if (!ai || !bi || !ref)
         return ENOMEM;
 
     /* Allocate one extra element for res and add end marker so overwrites can
      * be detected */
-#ifdef SCALAR_OUTPUT
-    res = simple_calloc(2, sizeof(PTYPE));
+# ifdef SCALAR_OUTPUT
+    res = calloc(2, sizeof(PTYPE));
     if (!res)
         return ENOMEM;
+# else
+    res = calloc(gold_size + 1, sizeof(PTYPE));
+    if (!res)
+        return ENOMEM;
+# endif
+
+    return 0;
+}
+#endif
+
+int setup(struct ut_suite *suite)
+{
+    size_t i, err;
+
+    (void) suite;
+
+    err = allocate_buffers();
+    if (err)
+        return err;
+
+#ifdef SCALAR_OUTPUT
     res[1] = OUTPUT_END_MARKER;
 #else
-    res = simple_calloc(gold_size + 1, sizeof(PTYPE));
-    if (!res)
-        return ENOMEM;
     res[gold_size] = OUTPUT_END_MARKER;
 #endif
+
     for (i = 0; i < gold_size; i++) {
         ai[i] = gold[i].ai;
         bi[i] = gold[i].bi;
@@ -133,18 +135,29 @@ int setup(struct ut_suite *suite)
     return 0;
 }
 
+#ifdef __epiphany__
+static void free_buffers()
+{
+}
+#else
+static void free_buffers()
+{
+    free(ai);
+    free(bi);
+    free(res);
+    free(ref);
+
+    /* Need to free if we're not using built-in gold data */
+    if (gold_file)
+        free(gold);
+}
+#endif
+
 int teardown(struct ut_suite *suite)
 {
     (void) suite;
 
-    simple_free(ai);
-    simple_free(bi);
-    simple_free(res);
-    simple_free(ref);
-
-    /* Need to free if we're not using built-in gold data */
-    if (gold_file)
-        simple_free(gold);
+    free_buffers();
 
     return 0;
 }
@@ -330,7 +343,7 @@ retry:
 
 fail:
     if (gold)
-        simple_free(gold);
+        free(gold);
     exit(EXIT_FAILURE);
 }
 #endif
