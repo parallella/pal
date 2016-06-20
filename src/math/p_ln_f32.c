@@ -38,6 +38,6 @@ void p_ln_f32(const float *a, float *c, int n)
         // The log2 of the complete value is then the sum
         // of the previous quantities (the 1's cancel), and
         // we find the natural log by scaling by log2(e).
-        *(c + i) = (e + r) * M_LN2;
+        *(c + i) = (e + r) * PCONST(M_LN2);
     }
 }
