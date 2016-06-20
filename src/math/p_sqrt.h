@@ -8,23 +8,30 @@
  * 1: http://en.wikipedia.org/wiki/Fast_inverse_square_root
  * 2: http://www.lomont.org/Math/Papers/2003/InvSqrt.pdf
  */
-static inline float _p_sqrt(const float z)
+
+#if (P_FLOAT_TYPE == P_FLOAT_SINGLE)
+# define ISQRT_APPROX 0x5f375a86
+#else
+# define ISQRT_APPROX 0x5fe6eb50c7b537a9ULL
+#endif
+
+static inline PTYPE _p_sqrt(const PTYPE z)
 {
-    float x;
+    PTYPE x;
     union {
-        float f;
-        int32_t i;
+        PTYPE f;
+        PUTYPE i;
     } j;
-    float xhalf = 0.5f*z;
+    PTYPE xhalf = PCONST(0.5) * z;
 
     j.f = z;
-    j.i = 0x5f375a86 - (j.i >> 1);
+    j.i = ISQRT_APPROX - (j.i >> 1);
     x = j.f;
 
     // Newton steps, repeating this increases accuracy
-    x = x*(1.5f - xhalf*x*x);
-    x = x*(1.5f - xhalf*x*x);
-    x = x*(1.5f - xhalf*x*x);
+    x = x*(PCONST(1.5) - xhalf*x*x);
+    x = x*(PCONST(1.5) - xhalf*x*x);
+    x = x*(PCONST(1.5) - xhalf*x*x);
 
     // x contains the inverse sqrt
 
