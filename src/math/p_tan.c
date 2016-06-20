@@ -1,8 +1,8 @@
 #include <pal.h>
 
-static const PTYPE pi_4 = (PTYPE) M_PI / 4.0;
-static const PTYPE pi_2 = (PTYPE) M_PI / 2.0;
-static const PTYPE pi =   (PTYPE) M_PI;
+static const PTYPE pi_4 = PCONST(M_PI) / PCONST(4.0);
+static const PTYPE pi_2 = PCONST(M_PI) / PCONST(2.0);
+static const PTYPE pi =   PCONST(M_PI);
 
 /*
  * 0 <= x <= pi/4
@@ -11,15 +11,15 @@ static const PTYPE pi =   (PTYPE) M_PI;
  */
 static inline PTYPE __p_tan_pi_4(const PTYPE x)
 {
-    const PTYPE  a2 = 0.3333314036;
-    const PTYPE  a4 = 0.1333923995;
-    const PTYPE  a6 = 0.0533740603;
-    const PTYPE  a8 = 0.0245650893;
-    const PTYPE a10 = 0.0029005250;
-    const PTYPE a12 = 0.0095168091;
+    const PTYPE  a2 = PCONST(0.3333314036);
+    const PTYPE  a4 = PCONST(0.1333923995);
+    const PTYPE  a6 = PCONST(0.0533740603);
+    const PTYPE  a8 = PCONST(0.0245650893);
+    const PTYPE a10 = PCONST(0.0029005250);
+    const PTYPE a12 = PCONST(0.0095168091);
     PTYPE x2, tanx_x;
     x2 = x * x;
-    tanx_x = 1.f + x2 * (a2 + x2 * (a4 + x2 * (a6 + x2 * (a8 + x2 * (a10 + x2 * a12)))));
+    tanx_x = PCONST(1.0) + x2 * (a2 + x2 * (a4 + x2 * (a6 + x2 * (a8 + x2 * (a10 + x2 * a12)))));
     return tanx_x * x;
 }
 
@@ -35,7 +35,7 @@ static inline PTYPE __p_tan_pi_2(const PTYPE x)
         return __p_tan_pi_4(x);
     x_ = x - pi_4;
     tanx_ = __p_tan_pi_4(x_);
-    return (tanx_ + 1.f) / (1.f - tanx_);
+    return (tanx_ + PCONST(1.0)) / (PCONST(1.0) - tanx_);
 }
 
 /*
@@ -49,7 +49,7 @@ static inline PTYPE __p_tan_pi(const PTYPE x)
     if (x <= pi_2)
         return __p_tan_pi_2(x);
     x_ = x - pi_2;
-    return -1.f / __p_tan_pi_2(x_);
+    return PCONST(-1.0) / __p_tan_pi_2(x_);
 }
 
 /* 0 <= x <= 2pi */
