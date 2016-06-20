@@ -1,5 +1,7 @@
-#include "pal_base.h"
+#include <pal.h>
 #include <stdio.h>
+#include <string.h>
+
 #define N 16
 int main(int argc, char *argv[])
 {
@@ -8,8 +10,9 @@ int main(int argc, char *argv[])
     const char *file = "./hello_task.elf";
     const char *func = "main";
     int status, i, all, nargs = 1;
-    const void *args[nargs];
+    p_arg_t args[nargs];
     char argbuf[20];
+
 
     // References as opaque structures
     p_dev_t dev0;
@@ -26,7 +29,9 @@ int main(int argc, char *argv[])
     // Running program
     for (i = 0; i < all; i++) {
         sprintf(argbuf, "%d", i); // string args needed to run main asis
-        args[0] = argbuf;
+        args[0].ptr = argbuf;
+        args[0].size = strnlen(argbuf, 10);
+        args[0].is_primitive = false;
         status = p_run(prog0, func, team0, i, 1, nargs, args, 0);
     }
     p_wait(team0);    // not needed
