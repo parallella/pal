@@ -115,7 +115,8 @@ $(tests_math_GOLD_SRCS): %.gold.h: %.dat
 	@rm -f $@
 	@echo "$< --> $@"
 	@echo "struct gold builtin_gold[] = {" >> $@
-	@sed -e 's/,/f, /g;s/^/    { /g;s/$$/f },/g;s/0\.00*f/0.0f/g;$$s/,$$//g' $< >> $@
+	@sed -e 's/,/, /g;s/^/    { /g;s/$$/ },/g;s/0\.00*f/0.0/g;$$s/,$$//g' $< >> $@
+	@sed -i 's/\([+-]*[0-9]*\.[0-9]*\)/PCONST(\1)/g' $@
 	@echo "};" >> $@
 
 CLEAN_LOCAL_TARGETS += clean-local-tests-math
