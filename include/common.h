@@ -39,11 +39,13 @@
 #  define PUTYPE uint32_t
 #  define PITYPE int32_t
 #  define PSYM(x) CONCAT2(x, _f32)
+#  define PCONST(x) CONCAT2(x, f)
 # elif (P_FLOAT_TYPE == P_FLOAT_DOUBLE)
 #  define PTYPE double
 #  define PUTYPE uint64_t
 #  define PITYPE int64_t
 #  define PSYM(x) CONCAT2(x, _f64)
+#  define PCONST(x) x
 # else
 #  error "Invalid float type"
 # endif
