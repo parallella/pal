@@ -48,9 +48,11 @@ LOG_COMPILER = tests/runtest
 CPPFLAGS_tests = -I$(top_srcdir)/tests $(AM_CPPFLAGS)
 if HOST_IS_EPIPHANY
 LDFLAGS_tests=$(EPIPHANY_INTERNAL_LDFLAGS)
+LDFLAGS_tests_large=$(EPIPHANY_FAST_LDFLAGS)
 NOTEST = tests/notest.epiphany.c
 else
 LDFLAGS_tests=$(AM_LDFLAGS)
+LDFLAGS_tests_large=$(AM_LDFLAGS)
 NOTEST = tests/notest.c
 endif
 LDADD_tests = -lm src/libpal.la tests/libutest.la
