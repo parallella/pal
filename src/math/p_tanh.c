@@ -9,8 +9,8 @@
  */
 static inline PTYPE _p_tanh(const PTYPE z)
 {
-    PTYPE exp_2z = _p_exp(2.f * z);
-    return (exp_2z - 1.0) / (exp_2z + 1.0);
+    PTYPE exp_2z = _p_exp(PCONST(2.0) * z);
+    return (exp_2z - PCONST(1.0)) / (exp_2z + PCONST(1.0));
 }
 
 /**
