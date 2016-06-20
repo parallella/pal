@@ -1,6 +1,6 @@
 #include <pal.h>
 
-#if (P_PTYPE_TYPE == P_PTYPE_SINGLE)
+#if (P_FLOAT_TYPE == P_FLOAT_SINGLE)
 # define ISQRT_APPROX 0x5f375a86
 #else
 # define ISQRT_APPROX 0x5fe6eb50c7b537a9ULL
@@ -31,14 +31,14 @@ void PSYM(p_invsqrt)(const PTYPE *a, PTYPE *c, int n)
     // used in the original source.
     union
     {
-        PITYPE i;
+        PUTYPE i;
         PTYPE f;
     } u;
 
     int i;
     for (i = 0; i < n; i++) {
         PTYPE x = a[i];
-        const PTYPE x2 = x * 0.5;
+        const PTYPE x2 = x * PCONST(0.5);
 
         // Use some bit hacks to get a decent first approximation
         u.f = x;
@@ -46,10 +46,9 @@ void PSYM(p_invsqrt)(const PTYPE *a, PTYPE *c, int n)
         x = u.f;
 
         // Perform a couple steps of Newton's method to refine our guess
-        x = x * (1.5f - (x2 * x * x));
-        x = x * (1.5f - (x2 * x * x));
-        x = x * (1.5f - (x2 * x * x));
-
+        x = x * (PCONST(1.5) - (x2 * x * x));
+        x = x * (PCONST(1.5) - (x2 * x * x));
+        x = x * (PCONST(1.5) - (x2 * x * x));
         c[i] = x;
     }
 }
