@@ -58,7 +58,7 @@ void p_ln_f64(const double *a, double *c, int n)
         } u = { *(a + i) };
 
         // Calculate the exponent (which is the floor of the logarithm) minus one
-        int e = ((u.i >> 52) & 0x7ff) - 0x800;
+        int e = ((u.i >> 52) & 0x7ff) - 0x400;
 
         // Mask off the exponent, leaving just the mantissa
         u.i = (u.i & 0xfffffffffffffULL) + 0x3ff0000000000000ULL;
@@ -70,11 +70,11 @@ void p_ln_f64(const double *a, double *c, int n)
             ((0.1582487026083649643648 * u.f
                 - 1.0518750217176431040285) * u.f
                     + 3.0478841468943745615315) * u.f
-                        - 1.5824870260836496436488;
+                        - 1.1536207104929913242752;
 
         // The log2 of the complete value is then the sum
         // of the previous quantities (the 1's cancel), and
         // we find the natural log by scaling by log2(e).
-        *(c + i) = (e + r) * M_LN2;
+        *(c + i) = (e + r) * PCONST(M_LN2);
     }
 }
