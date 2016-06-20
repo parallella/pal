@@ -17,8 +17,8 @@
 #if (P_FLOAT_TYPE == P_FLOAT_SINGLE)
 # define INV_APPROX 0x7EEEEBB3
 #else
- /* TODO: What is the optimal first approx. for double precision? */
-# define INV_APPROX 0x7EEEEEEEEEEEEEEEULL
+ /* https://www.pvk.ca/Blog/LowLevel/software-reciprocal.html */
+# define INV_APPROX 0x7FDE623822FC16E6ULL
 #endif
 
 void PSYM(p_inv)(const PTYPE *a, PTYPE *c, int n)
@@ -36,9 +36,9 @@ void PSYM(p_inv)(const PTYPE *a, PTYPE *c, int n)
         u.x = INV_APPROX - u.x;
 
         /* Refine */
-        u.f = u.f * (2.0 - u.f * cur);
-        u.f = u.f * (2.0 - u.f * cur);
-        u.f = u.f * (2.0 - u.f * cur);
+        u.f = u.f * (PCONST(2.0) - u.f * cur);
+        u.f = u.f * (PCONST(2.0) - u.f * cur);
+        u.f = u.f * (PCONST(2.0) - u.f * cur);
         *(c + i) = u.f;
     }
 }
