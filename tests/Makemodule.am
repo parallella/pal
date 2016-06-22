@@ -51,7 +51,10 @@ LOG_COMPILER = tests/runtest
 
 CPPFLAGS_tests = -I$(top_srcdir)/tests $(AM_CPPFLAGS)
 if HOST_IS_EPIPHANY
-LDFLAGS_tests=$(EPIPHANY_INTERNAL_LDFLAGS)
+LDFLAGS_tests  = $(EPIPHANY_INTERNAL_LDFLAGS)
+# Some tests use malloc() and need more than the 2K heap internal.ldf provides
+LDFLAGS_tests += -Wl,--defsym=__heap_start=0x8f080000
+LDFLAGS_tests += -Wl,--defsym=__heap_end=0x8f100000
 LDFLAGS_tests_large=$(EPIPHANY_FAST_LDFLAGS)
 NOTEST = tests/notest.epiphany.c
 else
