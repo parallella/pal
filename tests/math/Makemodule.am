@@ -105,7 +105,7 @@ tests/math/gold/p_sumsq_f64.gold.h \
 tests/math/gold/p_tan_f64.gold.h \
 tests/math/gold/p_tanh_f64.gold.h
 
-BUILT_SOURCES += $(tests_math_GOLD_SRCS) tests/math/rangen$(BUILD_EXEEXT)
+tests_BUILT_SRCS += $(tests_math_GOLD_SRCS) tests/math/rangen$(BUILD_EXEEXT)
 
 SUFFIXES += .dat .gold.h
 

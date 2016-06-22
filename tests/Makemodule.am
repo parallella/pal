@@ -8,7 +8,11 @@ else
 RUNTEST_SRC = tests/runtest.simple.c
 endif
 
-BUILT_SOURCES += tests/runtest$(BUILD_EXEEXT)
+# N.B: Built sources in tests/ should be appended to tests_BUILT_SRCS.
+tests_BUILT_SRCS =
+tests_BUILT_SRCS += tests/runtest$(BUILD_EXEEXT)
+
+BUILT_SOURCES += $(tests_BUILT_SRCS)
 
 noinst_LTLIBRARIES += tests/libutest.la
 
@@ -35,7 +39,7 @@ CHECK_LOCAL_TARGETS += check-local-tests
 TESTS = $(check_PROGRAMS)
 
 # Target that only compiles the tests and doesn't run them
-tests:
+tests: $(tests_BUILT_SRCS)
 	+$(MAKE) -C $(top_builddir) $(TESTS)
 
 PHONIES += tests
