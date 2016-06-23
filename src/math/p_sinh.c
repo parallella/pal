@@ -8,7 +8,7 @@
 static inline PTYPE _p_sinh(const PTYPE z)
 {
     PTYPE exp_z = _p_exp(z);
-    return 0.5f * (exp_z - 1.f / exp_z);
+    return PCONST(0.5) * (exp_z - PCONST(1.0) / exp_z);
 }
 
 /**

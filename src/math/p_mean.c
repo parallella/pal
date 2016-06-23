@@ -15,7 +15,7 @@
  */
 void PSYM(p_mean)(const PTYPE *a, PTYPE *c, int n)
 {
-    PTYPE tmp = 0.0f;
+    PTYPE tmp = PCONST(0.0);
     int i;
 
     for (i = 0; i < n; i++) {

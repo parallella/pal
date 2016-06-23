@@ -19,7 +19,7 @@ void PSYM(p_mode)(const PTYPE *a, PTYPE *c, int n)
     unsigned int occurrence_count = 0;
     unsigned int max_occurrence_count = 0;
     unsigned int i = 1;
-    PTYPE mode_value = 0.0f;
+    PTYPE mode_value = PCONST(0.0);
     PTYPE *sorted_a = (PTYPE*) malloc(sizeof(PTYPE) * n);
     PSYM(p_sort)(a, sorted_a, n);
 

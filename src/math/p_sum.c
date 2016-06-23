@@ -16,7 +16,7 @@
 
 void PSYM(p_sum)(const PTYPE *a, PTYPE *c, int n)
 {
-    PTYPE tmp = 0.0f;
+    PTYPE tmp = PCONST(0.0);
 
     for (; n > 0; n--) {
         tmp += *(a++);

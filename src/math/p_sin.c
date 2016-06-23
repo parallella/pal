@@ -23,20 +23,21 @@ void PSYM(p_sin)(const PTYPE *a, PTYPE *c, int n)
     for (i = 0; i < n; i++) {
       const PTYPE *pa = (a+i);
       PTYPE *pc = (c+i);
-      PTYPE val = 1.0f;
+      PTYPE val = PCONST(1.0);
       int k;
       PTYPE theta = *pa;
+      PTYPE theta2 = *pa * *pa;
       //PTYPE theta = M_NORMALIZE_RADIANS(*pa);
 
       //for(k=SIN_ITERATIONS; k>=0; --k)
         //val = 1 - theta * ((theta / (2*k+2))/(2*k+3))*val;
 
-      val = 1.0f - theta * theta * 0.083333333f * 0.076923077f * val;
-      val = 1.0f - theta * theta * 0.1f * 0.090909091f * val;
-      val = 1.0f - theta * theta * 0.125f * 0.111111111f * val;
-      val = 1.0f - theta * theta * 0.166666667f * 0.142857143f * val;
-      val = 1.0f - theta * theta * 0.25f * 0.2f * val;
-      val = 1.0f - theta * theta * 0.5f * 0.333333333f * val;
+      val = PCONST(1.0) - theta2 * PCONST(0.083333333) * PCONST(0.076923077)* val;
+      val = PCONST(1.0) - theta2 * PCONST(0.1) * PCONST(0.090909091) * val;
+      val = PCONST(1.0) - theta2 * PCONST(0.125) * PCONST(0.111111111) * val;
+      val = PCONST(1.0) - theta2 * PCONST(0.166666667) * PCONST(0.142857143) * val;
+      val = PCONST(1.0) - theta2 * PCONST(0.25) * PCONST(0.2) * val;
+      val = PCONST(1.0) - theta2 * PCONST(0.5) * PCONST(0.333333333) * val;
 
       *pc = theta * val;
     }

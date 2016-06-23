@@ -27,17 +27,18 @@ void PSYM(p_cos)(const PTYPE *a, PTYPE *c, int n)
         PTYPE val = 1;
         int k;
         PTYPE theta = *pa;
+	PTYPE theta2 = *pa * *pa;
         //PTYPE theta = M_NORMALIZE_RADIANS(*pa);
 
         //for(k=COS_ITERATIONS-1; k>=0; --k)
           //val = 1 - theta*theta/(2*k+2)/(2*k+1)*val;
 
-        val = 1.0f - theta*theta*0.083333333f*0.090909090f*val;
-        val = 1.0f - theta*theta*0.10000000f*0.11111111f*val;
-        val = 1.0f - theta*theta*0.12500000f*0.14285714f*val;
-        val = 1.0f - theta*theta*0.16666667f*0.20000000f*val;
-        val = 1.0f - theta*theta*0.25000000f*0.33333333f*val;
-        val = 1.0f - theta*theta*0.50000000f*1.00000000f*val;
+        val = PCONST(1.0) - theta2 * PCONST(0.083333333) * PCONST(0.090909090) * val;
+        val = PCONST(1.0) - theta2 * PCONST(0.10000000) * PCONST(0.11111111) * val;
+        val = PCONST(1.0) - theta2 * PCONST(0.12500000) * PCONST(0.14285714) * val;
+        val = PCONST(1.0) - theta2 * PCONST(0.16666667) * PCONST(0.20000000) * val;
+        val = PCONST(1.0) - theta2 * PCONST(0.25000000) * PCONST(0.33333333) * val;
+        val = PCONST(1.0) - theta2 * PCONST(0.50000000) * PCONST(1.00000000) * val;
 
         *pc = val;
 

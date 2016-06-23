@@ -22,7 +22,7 @@
 
 void PSYM(p_stddev)(const PTYPE *a, PTYPE *c, int n)
 {
-    PTYPE tmp = 0.0f, mean = 0.0f, meansq = 0.0f;
+    PTYPE tmp = PCONST(0.0), mean = PCONST(0.0), meansq = PCONST(0.0);
     int i;
 
     for (i = 0; i < n; i++) {
@@ -30,7 +30,7 @@ void PSYM(p_stddev)(const PTYPE *a, PTYPE *c, int n)
     }
     mean = tmp / n;
 
-    tmp = 0.0f;
+    tmp = PCONST(0.0);
     for (i = 0; i < n; i++) {
         tmp += (*(a + i) - mean) * (*(a + i) - mean);
     }
@@ -48,9 +48,9 @@ void PSYM(p_stddev)(const PTYPE *a, PTYPE *c, int n)
     x = j.f;
 
     // Newton steps, repeating this increases accuracy
-    x = x*(1.5 - xhalf*x*x);
-    x = x*(1.5 - xhalf*x*x);
-    x = x*(1.5 - xhalf*x*x);
+    x = x * (PCONST(1.5) - xhalf * x * x);
+    x = x * (PCONST(1.5) - xhalf * x * x);
+    x = x * (PCONST(1.5) - xhalf * x * x);
 
     // x contains the inverse sqrt
 

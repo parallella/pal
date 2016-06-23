@@ -8,7 +8,7 @@ static const PTYPE ln2 = PCONST(M_LN2);
  * e^-x = 1 + a1 * x + a2 * x^2 + ... + a4 * x^4 + e(x)
  * |e(x)| <= 3 * 10^-5
  */
-static inline PTYPE __p_exp_ln2(const float x)
+static inline PTYPE __p_exp_ln2(const PTYPE x)
 {
     const PTYPE a1 = PCONST(-0.9998684);
     const PTYPE a2 = PCONST(0.4982926);

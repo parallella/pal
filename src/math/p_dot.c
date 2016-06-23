@@ -18,7 +18,7 @@
  */
 void PSYM(p_dot)(const PTYPE *a, const PTYPE *b, PTYPE *c, int n )
 {
-    PTYPE tmp = 0.0f;
+    PTYPE tmp = PCONST(0.0);
     int i;
 
     for (i = 0; i < n; i++) {

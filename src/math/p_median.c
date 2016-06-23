@@ -47,7 +47,7 @@ void PSYM(p_median)(const PTYPE *a, PTYPE *c, int n)
 {
     unsigned int left = 0;
     unsigned int median_index = (n - 1) >> 1;
-    PTYPE median_value = 0.0f;
+    PTYPE median_value = PCONST(0.0);
     PTYPE search_a[n];
 
     memcpy(search_a, a, sizeof(PTYPE) * n);

@@ -7,11 +7,11 @@
  */
 static inline PTYPE _p_atan(const PTYPE x)
 {
-    const PTYPE a1 =  0.9998660f;
-    const PTYPE a3 = -0.3302995f;
-    const PTYPE a5 =  0.1801410f;
-    const PTYPE a7 = -0.0851330f;
-    const PTYPE a9 =  0.0208351f;
+    const PTYPE a1 = PCONST(0.9998660);
+    const PTYPE a3 = PCONST(-0.3302995);
+    const PTYPE a5 = PCONST(0.1801410);
+    const PTYPE a7 = PCONST(-0.0851330);
+    const PTYPE a9 = PCONST(0.0208351);
     PTYPE x2 = x * x;
     return x * (a1 + x2 * (a3 + x2 * (a5 + x2 * (a7 + x2 * a9))));
 }
