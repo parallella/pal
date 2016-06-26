@@ -94,15 +94,13 @@ int tc_against_gold_e(struct ut_suite *suite, struct ut_tcase *tcase)
 
 int tc_against_gold_v(struct ut_suite *suite, struct ut_tcase *tcase)
 {
-    size_t i;
-
-    ut_assert_msg(equals(result[0], gold[0].gold),
+    ut_assert_msg(equals(result1[0], gold[0].gold1),
                   "%s: result 1: %f != %f",
-                  XSTRING(FUNCTION), result[0], gold[0].gold);
+                  XSTRING(FUNCTION), result1[0], gold[0].gold1);
 
-    ut_assert_msg(equals(result1[0], gold[1].gold),
+    ut_assert_msg(equals(result2[0], gold[0].gold2),
                   "%s: result 2: %f != %f",
-                  XSTRING(FUNCTION), result1[0], gold[1].gold);
+                  XSTRING(FUNCTION), result2[0], gold[0].gold2);
 
     ut_assert_msg(result1[1] == OUTPUT_END_MARKER,
                   "Output end marker was overwritten");
@@ -117,7 +115,6 @@ int tc_against_gold_v(struct ut_suite *suite, struct ut_tcase *tcase)
 
 int tc_against_ref_v(struct ut_suite *suite, struct ut_tcase *tcase)
 {
-    int i;
     if (gold_size == 0)
         return 0;
 
@@ -126,11 +123,11 @@ int tc_against_ref_v(struct ut_suite *suite, struct ut_tcase *tcase)
     generate_ref(&reference1, &reference2,
                  &indexOfReference1, &indexOfReference2, gold_size);
 
-    ut_assert_msg(equals(reference1, gold[0].gold),
+    ut_assert_msg(equals(reference1, gold[0].gold1),
                   "%s: result 1: %f != %f",
                   XSTRING(FUNCTION), result1[0], reference1);
 
-    ut_assert_msg(equals(reference2, gold[1].gold),
+    ut_assert_msg(equals(reference2, gold[0].gold2),
                   "%s: result 2: %f != %f",
                   XSTRING(FUNCTION), result2[0], reference2);
 

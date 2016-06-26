@@ -1,5 +1,5 @@
 #include <math.h>
-#include "check_scalar_and_index.h"
+#include "check_p_minmax.h"
 
 void generate_ref(PTYPE *outValue1, PTYPE *outValue2, int *outIndex1, int *outIndex2, size_t n)
 {

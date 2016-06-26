@@ -88,11 +88,9 @@ int tc_against_gold_e(struct ut_suite *suite, struct ut_tcase *tcase)
 
 int tc_against_gold_v(struct ut_suite *suite, struct ut_tcase *tcase)
 {
-    size_t i;
-
     ut_assert_msg(equals(result[0], gold[0].gold),
-                  "p_max: max: %f != %f",
-                  result[0], gold[0].gold);
+                  "%s: result: %f != %f",
+                  XSTRING(FUNCTION), result[0], gold[0].gold);
 
     ut_assert_msg(result[1] == OUTPUT_END_MARKER,
                   "Output end marker was overwritten");
@@ -104,7 +102,6 @@ int tc_against_gold_v(struct ut_suite *suite, struct ut_tcase *tcase)
 
 int tc_against_ref_v(struct ut_suite *suite, struct ut_tcase *tcase)
 {
-    int i;
     if (gold_size == 0)
         return 0;
 

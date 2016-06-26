@@ -42,6 +42,12 @@ void bench_p_min_f32(const struct p_bench_specification *spec)
     p_min_f32(spec->mem.i1.p_float, spec->mem.i2.p_float, spec->mem.o1.p_int,
               spec->current_size);
 }
+void bench_p_minmax_f32(const struct p_bench_specification *spec)
+{
+    p_minmax_f32(spec->mem.i1.p_float, spec->mem.i2.p_float,
+                 spec->mem.i3.p_float, spec->mem.o1.p_int, spec->mem.o2.p_int,
+                 spec->current_size);
+}
 declare_unary(p_mode_f32)
 declare_binary(p_mul_f32)
 void bench_p_popcount_u32(const struct p_bench_specification *spec)
@@ -104,6 +110,7 @@ const struct p_bench_item benchmark_items[] = {
     item(p_mean_f32),
     item(p_median_f32),
     item(p_min_f32),
+    item(p_minmax_f32),
     item(p_mode_f32),
     item(p_mul_f32),
     item(p_popcount_u32),
