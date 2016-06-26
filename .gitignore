@@ -82,6 +82,7 @@ Makefile.in
 /tests/*.log
 /tests/*.sum
 /tests/*/check_p_*
+!/tests/*/check_p_*.h
 !/tests/*/check_p_*.c
 /tests/*/*.log
 
