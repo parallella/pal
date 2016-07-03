@@ -22,3 +22,6 @@ struct epiphany_dev {
 };
 
 extern struct epiphany_dev __pal_dev_epiphany;
+#ifdef ENABLE_DEV_EPIPHANY_SIM
+struct dev_ops __pal_dev_epiphany_sim_ops;
+#endif

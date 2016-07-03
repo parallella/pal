@@ -131,12 +131,26 @@ AS_IF([test "x$host_cpu" = "xepiphany"],
 AC_SUBST([EPIPHANY_INTERNAL_LDFLAGS])
 AC_SUBST([EPIPHANY_FAST_LDFLAGS])
 
+# Epiphany simulator support
+AC_ARG_ENABLE([device_epiphany_sim],
+              AS_HELP_STRING([--enable-device-epiphany-sim],
+                             [Enable Epiphany device simulator]))
+AM_CONDITIONAL([ENABLE_DEV_EPIPHANY_SIM],
+               [test "x$enable_device_epiphany_sim" = "xyes"])
+
+AS_IF([test "x$enable_device_epiphany_sim" = "xyes"],
+      enable_device_epiphany="yes"
+      AC_DEFINE([ENABLE_DEV_EPIPHANY_SIM],
+                [1],
+                [Epiphany device simulator support]))
+
 # Epiphany device support
 AC_ARG_ENABLE([device_epiphany],
               AS_HELP_STRING([--enable-device-epiphany],
                              [Enable Epiphany device]))
 AM_CONDITIONAL([ENABLE_DEV_EPIPHANY],
                [test "x$enable_device_epiphany" = "xyes"])
+
 
 # Same as AX_APPEND_LINK_FLAGS but stop at first good flag
 #[LIBS], 

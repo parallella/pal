@@ -89,6 +89,39 @@ static void late_device_fini()
     }
 }
 
+#ifdef ENABLE_DEV_EPIPHANY_SIM
+static void detect_epiphany_simulator()
+{
+    char *p;
+    bool simulator;
+
+    p = getenv("PAL_EPIPHANY_TARGET");
+
+    if (p && strncmp(p, "device", sizeof("device")) == 0)
+        return;
+
+    if (p && strncmp(p, "sim", sizeof("sim")) == 0)
+        goto setup_simulator;
+
+    /* E-HAL backwards compatibility */
+    p = getenv("EHAL_TARGET");
+    if (p && strncmp(p, "esim", sizeof("esim")) == 0)
+        goto setup_simulator;
+
+    if (p && strncmp(p, "sim", sizeof("sim")) == 0)
+        goto setup_simulator;
+
+    return;
+
+setup_simulator:
+    /* Patch device structure with simulator ops */
+    __pal_dev_epiphany.dev.dev_ops = &__pal_dev_epiphany_sim_ops;
+}
+#else
+static void detect_epiphany_simulator()
+{
+}
+#endif
 
 __attribute__((constructor))
 void __pal_init()
@@ -107,6 +140,7 @@ void __pal_init()
 
     ctrl->status[rank] = STATUS_RUNNING;
 #else
+    detect_epiphany_simulator();
     __pal_global.rank = 0;
     early_device_init();
 #endif
