@@ -151,6 +151,9 @@ AC_ARG_ENABLE([device_epiphany],
 AM_CONDITIONAL([ENABLE_DEV_EPIPHANY],
                [test "x$enable_device_epiphany" = "xyes"])
 
+AS_IF([test "x$enable_device_epiphany" = "xyes"],
+      [PAL_CONFIG_DEVICE([epiphany], [epiphany-elf])])
+
 
 # Same as AX_APPEND_LINK_FLAGS but stop at first good flag
 #[LIBS], 
@@ -178,41 +181,7 @@ for flag in $1; do
 done
 ])dnl AX_APPEND_COMPILE_FLAGS2
 
-# Ensure Epiphany toolchain, libraries, and headers are present.
-# Dependency on Epiphany libs/headers will go away later, this will do for now.
-AS_IF([test "x$enable_device_epiphany" = "xyes"],
-      [AC_MSG_NOTICE([checking for Epiphany toolchain...])
-       AC_CHECK_PROG(have_epiphany_ar,      epiphany-elf-ar,      yes)
-       AC_CHECK_PROG(have_epiphany_cc,      epiphany-elf-gcc,     yes)
-       AC_CHECK_PROG(have_epiphany_cxx,     epiphany-elf-g++,     yes)
-       AC_CHECK_PROG(have_epiphany_ld,      epiphany-elf-ld,      yes)
-       AC_CHECK_PROG(have_epiphany_nm,      epiphany-elf-nm,      yes)
-       AC_CHECK_PROG(have_epiphany_objdump, epiphany-elf-objdump, yes)
-       AC_CHECK_PROG(have_epiphany_ranlib,  epiphany-elf-ranlib,  yes)
-       AC_CHECK_PROG(have_epiphany_strip,   epiphany-elf-strip,   yes)
-
-       AS_IF([test "x$have_epiphany_ar"      = "xyes" -a \
-                   "x$have_epiphany_cc"      = "xyes" -a \
-                   "x$have_epiphany_cxx"     = "xyes" -a \
-                   "x$have_epiphany_ld"      = "xyes" -a \
-                   "x$have_epiphany_nm"      = "xyes" -a \
-                   "x$have_epiphany_objdump" = "xyes" -a \
-                   "x$have_epiphany_ranlib"  = "xyes" -a \
-                   "x$have_epiphany_strip"   = "xyes"],
-             AC_SUBST([EPIPHANY_AR],      [epiphany-elf-ar])
-             AC_SUBST([EPIPHANY_CC],      [epiphany-elf-gcc])
-             AC_SUBST([EPIPHANY_CPP],     ["epiphany-elf-gcc -E"])
-             AC_SUBST([EPIPHANY_CXX],     [epiphany-elf-g++])
-             AC_SUBST([EPIPHANY_CXXCPP],  ["epiphany-elf-g++ -E"])
-             AC_SUBST([EPIPHANY_LD],      [epiphany-elf-ld])
-             AC_SUBST([EPIPHANY_NM],      ["epiphany-elf-nm -B"])
-             AC_SUBST([EPIPHANY_OBJDUMP], [epiphany-elf-objdump])
-             AC_SUBST([EPIPHANY_RANLIB],  [epiphany-elf-ranlib])
-             AC_SUBST([EPIPHANY_STRIP],   [epiphany-elf-strip]),
-             [AC_MSG_ERROR([Epiphany toolchain not found])])
-       AC_MSG_NOTICE([Epiphany toolchain found])
-
-
+#AS_IF([test "x$enable_device_epiphany" = "xyes"],
 #       AC_MSG_NOTICE([checking for Epiphany libraries...])
 #       lib_help_str="You need to pass in:
 #./configure LDFLAGS\"-L/path/to/adapteva/esdk/tools/host.armv7l/lib\" ..."
@@ -243,13 +212,8 @@ AS_IF([test "x$enable_device_epiphany" = "xyes"],
 #       AC_CHECK_HEADER([e-loader.h], [], [AC_MSG_ERROR([$inc_help_str])])
 #
 #       AC_MSG_NOTICE([Epiphany headers found])
+#       )
 
-       AC_DEFINE([ENABLE_DEV_EPIPHANY], [1], [Epiphany device support])
-
-       ])
-
-AS_IF([test "x$enable_device_epiphany" = "xyes"],
-      [PAL_CONFIG_DEVICE([devices/epiphany], [epiphany-elf])])
 
 AC_ARG_ENABLE([benchmark], AS_HELP_STRING([--disable-benchmark], [Disable building benchmark binaries]))
 AM_CONDITIONAL([ENABLE_BENCHMARK], [test "x$enable_benchmark" != "xno"])
