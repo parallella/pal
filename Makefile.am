@@ -53,6 +53,9 @@ $(foreach flag,$(DEVICE_OVERRIDE_FLAGS),$(eval $(call DEVICE_RULES_,$(1),$(2),$(
 	cp $$^ $$@
 endef
 $(eval $(call DEVICE_RULES,epiphany,EPIPHANY))
+EPIPHANY_CPPFLAGS:=$(CPPFLAGS)
+EPIPHANY_AM_CPPFLAGS:=$(AM_CPPFLAGS)
+EPIPHANY_LDADD = devices/epiphany/src/libpal.la
 
 
 # TODO: Move to configure.ac / become independent
@@ -64,11 +67,16 @@ CFLAGS_FOR_BUILD  += $(EINCS)
 LDFLAGS_FOR_BUILD += $(ELIBS) -le-hal -le-loader
 endif
 
+if ENABLE_DEV_EPIPHANY
+SUBDIRS += devices/epiphany
+endif
 
 # Top level targets
 
 EXTRA_DIST += config include bootstrap CHANGELOG.md CODING-STYLE.md \
               CONTRIBUTING.md LICENSE QUESTIONS.md README.md scripts
+
+EXTRA_DIST += devices/epiphany/placeholder.txt
 
 # Reports
 PHONIES += reports report-code-size report-stack-usage

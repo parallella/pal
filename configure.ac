@@ -248,6 +248,9 @@ AS_IF([test "x$enable_device_epiphany" = "xyes"],
 
        ])
 
+AS_IF([test "x$enable_device_epiphany" = "xyes"],
+      [PAL_CONFIG_DEVICE([devices/epiphany], [epiphany-elf])])
+
 AC_ARG_ENABLE([benchmark], AS_HELP_STRING([--disable-benchmark], [Disable building benchmark binaries]))
 AM_CONDITIONAL([ENABLE_BENCHMARK], [test "x$enable_benchmark" != "xno"])
 
