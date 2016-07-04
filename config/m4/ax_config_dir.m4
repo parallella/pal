@@ -1,3 +1,5 @@
+dnl Modified for PAL, Second argument is srcdir path
+
 dnl Add Audacity license here?
 
 dnl Function to configure a sub-library now, because we need to know the result
@@ -68,7 +70,7 @@ AC_DEFUN([AX_CONFIG_DIR], [
   AS_MKDIR_P(["$1"])
   dnl and also set the variables. As this isn't autoconf, the following may be
   dnl risky:
-  _AC_SRCDIRS(["$1"])
+  _AC_SRCDIRS(["$2"])
   cd "$1"
 
   # Check for guested configure; otherwise get Cygnus style configure.
