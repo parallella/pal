@@ -4,6 +4,8 @@ src_base_devices_epiphany_libdevice_la_SOURCES = \
 src/base/devices/epiphany/device.c               \
 src/base/devices/epiphany/loader.c               \
 src/base/devices/epiphany/loader.h               \
+src/base/devices/epiphany/generic.c              \
+src/base/devices/epiphany/generic.h              \
 src/base/devices/epiphany/epiphany-abi.h
 src_base_devices_epiphany_libdevice_la_CFLAGS = $(CFLAGS) $(LIBELF_CFLAGS)
 src_base_devices_epiphany_libdevice_la_LIBADD = $(LIBELF_LIBS)

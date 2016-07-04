@@ -13,6 +13,7 @@
 #include <common.h>
 #include "../../pal_base_private.h"
 #include "loader.h"
+#include "generic.h"
 
 /* TODO: Obtain from device-tree or ioctl() call */
 #define ERAM_SIZE       (32*1024*1024)
@@ -31,11 +32,6 @@ struct core_map_table {
     { 0x00000, 0x08000 }, /* SRAM */
     { 0xf0000, 0x01000 }, /* MMR  */
 };
-
-static inline struct epiphany_dev *to_epiphany_dev(struct dev *dev)
-{
-    return container_of(dev, struct epiphany_dev, dev);
-}
 
 /* Returns 0 on success */
 static int mmap_eram(struct dev *dev)
@@ -161,9 +157,7 @@ static int dev_early_init(struct dev *dev)
     if (ret)
         return ret;
 
-    dev_data->initialized = true;
-
-    return 0;
+    return epiphany_dev_early_init(dev);
 }
 
 static void dev_late_fini(struct dev *dev)
@@ -177,46 +171,7 @@ static void dev_late_fini(struct dev *dev)
     /* TODO: unmap chip here */
     close(dev_data->epiphany_fd);
 
-    dev_data->initialized = false;
-}
-
-static p_dev_t dev_init(struct dev *dev, int flags)
-{
-    int err;
-    struct epiphany_dev *epiphany = to_epiphany_dev(dev);
-
-    if (!epiphany->initialized)
-        return p_ref_err(ENODEV);
-
-    /* Be idempotent if already initialized. It might be a better idea to
-     * return EBUSY instead */
-    if (epiphany->opened)
-        return dev;
-
-    epiphany->ctrl = (struct epiphany_ctrl_mem *) CTRL_MEM_EADDR;
-
-#if 0
-    /* I don't think this is needed here, soft reset on load should be enough */
-    err = epiphany_reset_system(epiphany);
-    if (err)
-        return p_ref_err(-err);
-#endif
-
-    /* Clear control structure */
-    memset(epiphany->ctrl, 0 , sizeof(*epiphany->ctrl));
-
-    epiphany->opened = true;
-
-    return dev;
-}
-
-static void dev_fini(struct dev *dev)
-{
-    struct epiphany_dev *data = to_epiphany_dev(dev);
-
-    if (data->opened) {
-        data->opened = false;
-    }
+    epiphany_dev_late_fini(dev);
 }
 
 static int dev_query(struct dev *dev, int property)
@@ -256,95 +211,6 @@ static int dev_query(struct dev *dev, int property)
     return -EINVAL;
 }
 
-static struct team *dev_open(struct dev *dev, struct team *team, int start,
-        int count)
-{
-    struct epiphany_dev *data = to_epiphany_dev(dev);
-
-    /* Only support opening entire chip for now */
-    if (start != 0 || count != 16)
-        return p_ref_err(EINVAL);
-
-    /* Open was done in init */
-    if (!data->opened)
-        return p_ref_err(EBADF);
-
-    team->dev = dev;
-
-    return team;
-}
-
-static int dev_run(struct dev *dev, struct team *team, struct prog *prog,
-                   const char *function, int start, int size, int argn,
-                   const p_arg_t *args, int flags)
-{
-    int err;
-    int i;
-    struct epiphany_dev *epiphany = to_epiphany_dev(dev);
-
-    if (start < 0 || size <= 0)
-        return -EINVAL;
-
-    /* Assume we have entire chip for now */
-    if (16 < start + size)
-        return -EINVAL;
-
-    if (!epiphany->opened)
-        return -EBADF;
-
-    err = epiphany_soft_reset(team, start, size);
-    if (err) {
-        /* WARN: soft reset failed */
-        return err;
-    }
-
-    err = epiphany_load(team, prog, start, size, flags, argn, args, function);
-    if (err)
-        return err;
-
-    /* Mark as scheduled */
-    for (i = start; i < start + size; i++)
-        epiphany->ctrl->status[i] = STATUS_SCHEDULED;
-
-    epiphany_start(team, start, size, flags);
-
-    return 0;
-}
-
-static int dev_wait(struct dev *dev, struct team *team)
-{
-    unsigned i;
-    bool need_wait = true;
-    struct epiphany_dev *data = to_epiphany_dev(dev);
-
-    while (true) {
-        need_wait = false;
-        for (i = 0; i < 16; i++) {
-            switch (data->ctrl->status[i]) {
-            case STATUS_SCHEDULED:
-                /* TODO: Time out if same proc is in scheduled state too long.
-                 * If program does not start immediately something has gone
-                 * wrong.
-                 */
-            case STATUS_RUNNING:
-                need_wait = true;
-                break;
-            case STATUS_NONE:
-            case STATUS_DONE:
-            default:
-                continue;
-            }
-        }
-        if (!need_wait)
-            break;
-
-        /* Don't burn CPU. Need HW/Kernel support for blocking wait */
-        usleep(1000);
-    }
-
-    return 0;
-}
-
 static void *dev_map_member(struct team *team, int member,
                             unsigned long offset, unsigned long size)
 {
@@ -375,12 +241,14 @@ static int dev_unmap(struct team *team, void *addr)
 }
 
 static struct dev_ops epiphany_dev_ops = {
-    .init = dev_init,
-    .fini = dev_fini,
+    /* Generic */
+    .init = epiphany_dev_init,
+    .fini = epiphany_dev_fini,
+    .open = epiphany_dev_open,
+    .run = epiphany_dev_run,
+    .wait = epiphany_dev_wait,
+    /* Specific for device */
     .query = dev_query,
-    .open = dev_open,
-    .run = dev_run,
-    .wait = dev_wait,
     .early_init = dev_early_init,
     .late_fini = dev_late_fini,
     .map_member = dev_map_member,
