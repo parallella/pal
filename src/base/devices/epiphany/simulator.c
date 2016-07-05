@@ -15,8 +15,22 @@
 #include "loader.h"
 #include "generic.h"
 
+static uint32_t reg_read(struct epiphany_dev *, uintptr_t, uintptr_t);
+static void reg_write(struct epiphany_dev *, uintptr_t, uintptr_t, uint32_t);
+static void mem_read(struct epiphany_dev *, void *, uintptr_t, size_t);
+static void mem_write(struct epiphany_dev *, uintptr_t, const void *, size_t);
+
 static int dev_early_init(struct dev *dev)
 {
+    struct epiphany_dev *epiphany = to_epiphany_dev(dev);
+    struct epiphany_loader_ops ops = {
+        .reg_read = reg_read,
+        .reg_write = reg_write,
+        .mem_read = mem_read,
+        .mem_write = mem_write,
+    };
+    epiphany->loader_ops = ops;
+
     return epiphany_dev_early_init(dev);
 }
 
@@ -42,6 +56,27 @@ static int dev_unmap(struct team *team, void *addr)
 {
     return 0;
 }
+
+static uint32_t reg_read(struct epiphany_dev *epiphany, uintptr_t base,
+                         uintptr_t offset)
+{
+    return 0xdeadbeef;
+}
+
+static void reg_write(struct epiphany_dev *epiphany, uintptr_t base,
+                      uintptr_t offset, uint32_t val)
+{
+}
+
+static void mem_read(struct epiphany_dev *dev, void *dst, uintptr_t src,
+                     size_t n)
+{
+}
+static void mem_write(struct epiphany_dev *dev, uintptr_t dst, const void *src,
+                      size_t n)
+{
+}
+
 
 struct dev_ops __pal_dev_epiphany_sim_ops = {
     /* Epiphany generic */
