@@ -80,6 +80,19 @@
 
 #define COREID(_addr) ((_addr) >> 20)
 
+/* Convenience macros. Remember to name
+ * int foo(struct epiphany_dev *epiphany, ...)
+ */
+#define reg_read(base, offset) \
+    epiphany->loader_ops.reg_read(epiphany, (base), (offset))
+#define reg_write(base, offset, val) \
+    epiphany->loader_ops.reg_write(epiphany, (base), (offset), (val))
+
+#define mem_read(dst, src, n) \
+    epiphany->loader_ops.mem_read(epiphany, (dst), (src), (n))
+#define mem_write(dst, src, n) \
+    epiphany->loader_ops.mem_write(epiphany, (dst), (src), (n))
+
 struct symbol_info {
     const char *name;
     bool found;
@@ -133,7 +146,7 @@ static int process_elf(const void *file, struct epiphany_dev *epiphany,
 {
     Elf32_Ehdr    *ehdr;
     Elf32_Phdr    *phdr;
-    void          *dst;
+    uintptr_t     dst;
     const uint8_t *src = (uint8_t *) file;
 
     ehdr = (Elf32_Ehdr *) &src[0];
@@ -148,29 +161,15 @@ static int process_elf(const void *file, struct epiphany_dev *epiphany,
     for (unsigned i = 0; i < ehdr->e_phnum; i++) {
         // TODO: should this be p_paddr instead of p_vaddr?
         uint32_t addr = phdr[i].p_vaddr;
-        dst = is_local(addr) ?
-            (void *) ((coreid << 20) | addr) : (void *) addr;
+        dst = is_local(addr) ? (coreid << 20) | addr : addr;
 
-        memcpy(dst, &src[phdr[i].p_offset], phdr[i].p_filesz);
+        mem_write(dst, &src[phdr[i].p_offset], phdr[i].p_filesz);
         /* This is where we would have cleared .bss (p_memsz - p_filesz), but
          * since we assume SRAM is already cleared there's no need for that.
          */
     }
 
     return 0;
-}
-
-static inline uint32_t reg_read(volatile void *base, uintptr_t offset)
-{
-    volatile uint32_t *reg = (uint32_t *) ((uintptr_t) base + offset);
-    return *reg;
-}
-
-static inline uint32_t reg_write(volatile void *base, uintptr_t offset,
-                                 uint32_t val)
-{
-    volatile uint32_t *reg = (uint32_t *) ((uintptr_t) base + offset);
-    *reg = val;
 }
 
 int ecore_soft_reset_dma(struct epiphany_dev *epiphany, unsigned coreid)
@@ -180,7 +179,7 @@ int ecore_soft_reset_dma(struct epiphany_dev *epiphany, unsigned coreid)
     int i;
     /* HACK: Depends on that we do an explicit mmap of Epiphany addresses space
      * in device.c:mmap_chip_mem() */
-    volatile void *core = (void *) (coreid << 20);
+    uintptr_t core = coreid << 20;
 
     /* pause DMA */
     config = reg_read(core, MMR_CONFIG) | 0x01000000;
@@ -236,10 +235,13 @@ int ecore_reset_regs(struct epiphany_dev *epiphany, unsigned coreid,
     unsigned i;
     /* HACK: Depends on that we do an explicit mmap of Epiphany addresses space
      * in device.c:mmap_chip_mem() */
-    volatile void *core = (void *) (coreid << 20);
+    uintptr_t core = coreid << 20;
+
+    const uint32_t gpr = { 0 };
 
     /* General purpose registers */
-    memset((void *) ((uintptr_t) core + MMR_R0), 0, 64 * 4);
+    for (i = 0; i < 64; i++)
+        reg_write(core, i, MMR_R0 + (i << 2));
 
     if (reset_dma)
         if (ecore_soft_reset_dma(epiphany, coreid))
@@ -271,19 +273,18 @@ void ecore_clear_sram(struct epiphany_dev *epiphany, unsigned coreid)
     const unsigned ivt_size = 9 * 4;
     const uint32_t insn = 0xffe017e2; /* entry: trap #5; b.s entry; */
     unsigned i;
-    /* HACK: Depends on that we do an explicit mmap of Epiphany addresses space
-     * in device.c:mmap_chip_mem() */
     union {
         void     *v;
         uint32_t *u32;
         uint8_t  *u8;
-    } core = { .v = (void *) (coreid << 20) };
+    } core = { .v = (void *) (((uintptr_t) coreid) << 20) };
+    uint8_t zeroes[32768] = { 0 };
 
     /* Set IVT entries to a safe instruction */
     for (i = 0; i < ivt_size / 4; i++)
-        core.u32[i] = insn;
+        mem_write((uintptr_t) core.u32[i], &insn, sizeof(insn));
 
-    memset(&core.u8[ivt_size], 0, 32768 - ivt_size);
+    mem_write((uintptr_t) &core.u8[ivt_size], zeroes, 32768 - ivt_size);
 }
 
 
@@ -326,9 +327,7 @@ static int ecore_soft_reset(struct epiphany_dev *epiphany, unsigned coreid)
     int i;
     uint32_t status;
     bool fail;
-    /* HACK: Depends on that we do an explicit mmap of Epiphany addresses space
-     * in device.c:mmap_chip_mem() */
-    volatile void *core = (void *) (coreid << 20);
+    uintptr_t core = coreid << 20;
 
     /* (TODO: Wait for dma to complete??? istead of cancelling transfers ???) */
 
@@ -376,7 +375,7 @@ static int ecore_soft_reset(struct epiphany_dev *epiphany, unsigned coreid)
 
     reg_write(core, MMR_PC, 0x2c); /* clear_ipend */
 
-    memcpy((void *) core, soft_reset_payload, sizeof(soft_reset_payload));
+    mem_write(core, soft_reset_payload, sizeof(soft_reset_payload));
 
     /* Set active bit */
     reg_write(core, MMR_FSTATUS, 1);
@@ -499,11 +498,12 @@ static inline bool is_passed_by_value(const p_arg_t *arg)
 static void setup_function_args(struct epiphany_dev *epiphany, unsigned coreid,
                                 int argn, const p_arg_t *args,
                                 uint32_t function_addr,
-                                uint32_t *loader_args_ptr)
+                                uintptr_t loader_args_ptr_addr)
 {
     unsigned rel_row = (coreid - 0x808) >> 6;
     unsigned rel_col = (coreid - 0x808) & 0x3f;
     unsigned rel_coreid = (rel_row << 2) + rel_col;
+    /* TODO: uint32_t, translate simulator addr -> epiphany */
     struct loader_args *loader_args = &epiphany->ctrl->loader_args[rel_coreid];
     uint32_t *regs = &loader_args->r0;
     unsigned arg = 0;
@@ -511,7 +511,7 @@ static void setup_function_args(struct epiphany_dev *epiphany, unsigned coreid,
     uint8_t *argstackp = (uint8_t *) epiphany->ctrl;
 
     /* Set cores's args ptr */
-    *loader_args_ptr = (uint32_t) loader_args;
+    mem_write(loader_args_ptr_addr, &loader_args, sizeof(loader_args));
 
     memset(loader_args, 0 , sizeof(*loader_args));
 
@@ -610,12 +610,13 @@ static int set_core_config(struct epiphany_dev *epiphany, unsigned coreid,
                            const void *file, size_t file_size, int argn,
                            const p_arg_t *args, const char *function)
 {
-    uint8_t *corep = (uint8_t *) (coreid << 20);
+    uint8_t *corep = (uint8_t *) (uintptr_t) (coreid << 20);
     uint8_t *nullp = (uint8_t *) 0;
-    e_group_config_t *e_group_config;
-    e_emem_config_t  *e_emem_config;
-    uint32_t *loader_flags, *loader_args_ptr;
-    uint32_t function_addr;
+    uint32_t loader_flags, function_addr;
+    e_group_config_t e_group_config;
+    e_emem_config_t  e_emem_config;
+    uintptr_t e_group_config_addr, e_emem_config_addr;
+    uintptr_t loader_flags_addr, loader_args_ptr_addr;
     char *function_plt;
 
     {
@@ -644,18 +645,18 @@ static int set_core_config(struct epiphany_dev *epiphany, unsigned coreid,
             return -EINVAL;
     }
 
-    e_group_config = is_local(tbl[0].sym.st_value) ?
-        (e_group_config_t *) &corep[tbl[0].sym.st_value] :
-        (e_group_config_t *) &nullp[tbl[0].sym.st_value];
-    e_emem_config = is_local(tbl[1].sym.st_value) ?
-        (e_emem_config_t *) &corep[tbl[1].sym.st_value] :
-        (e_emem_config_t *) &nullp[tbl[1].sym.st_value];
-    loader_args_ptr = is_local(tbl[2].sym.st_value) ?
-        (uint32_t *) &corep[tbl[2].sym.st_value] :
-        (uint32_t *) &nullp[tbl[2].sym.st_value];
-    loader_flags = is_local(tbl[3].sym.st_value) ?
-        (uint32_t *) &corep[tbl[3].sym.st_value] :
-        (uint32_t *) &nullp[tbl[3].sym.st_value];
+    e_group_config_addr = is_local(tbl[0].sym.st_value) ?
+        (uintptr_t) &corep[tbl[0].sym.st_value] :
+        (uintptr_t) &nullp[tbl[0].sym.st_value];
+    e_emem_config_addr = is_local(tbl[1].sym.st_value) ?
+        (uintptr_t) &corep[tbl[1].sym.st_value] :
+        (uintptr_t) &nullp[tbl[1].sym.st_value];
+    loader_args_ptr_addr = is_local(tbl[2].sym.st_value) ?
+        (uintptr_t) &corep[tbl[2].sym.st_value] :
+        (uintptr_t) &nullp[tbl[2].sym.st_value];
+    loader_flags_addr = is_local(tbl[3].sym.st_value) ?
+        (uintptr_t) &corep[tbl[3].sym.st_value] :
+        (uintptr_t) &nullp[tbl[3].sym.st_value];
 
     /* Prefer PLT entry */
     /* No need to adjust function address if it's local */
@@ -666,25 +667,29 @@ static int set_core_config(struct epiphany_dev *epiphany, unsigned coreid,
 
     /* No trivial way to emulate workgroups??? Pretend each core is its own
      * separate group for now. */
-    e_group_config->objtype    = E_EPI_GROUP;
-    e_group_config->chiptype   = E_E16G301; /* TODO: Or E_64G501 */
-    e_group_config->group_id   = coreid;
-    e_group_config->group_row  = coreid >> 6;
-    e_group_config->group_col  = coreid & 0x3f;
-    e_group_config->group_rows = 1;
-    e_group_config->group_cols = 1;
-    e_group_config->core_row   = 0;
-    e_group_config->core_col   = 0;
-    e_group_config->alignment_padding = 0xdeadbeef;
+    e_group_config.objtype    = E_EPI_GROUP;
+    e_group_config.chiptype   = E_E16G301; /* TODO: Or E_64G501 */
+    e_group_config.group_id   = coreid;
+    e_group_config.group_row  = coreid >> 6;
+    e_group_config.group_col  = coreid & 0x3f;
+    e_group_config.group_rows = 1;
+    e_group_config.group_cols = 1;
+    e_group_config.core_row   = 0;
+    e_group_config.core_col   = 0;
+    e_group_config.alignment_padding = 0xdeadbeef;
 
-    e_emem_config->objtype = E_EXT_MEM;
-    e_emem_config->base    = 0x8e000000;
+    mem_write(e_group_config_addr, &e_group_config, sizeof(e_group_config));
+
+    e_emem_config.objtype = E_EXT_MEM;
+    e_emem_config.base    = 0x8e000000;
+    mem_write(e_emem_config_addr, &e_emem_config, sizeof(e_emem_config));
 
     setup_function_args(epiphany, coreid, argn, args, function_addr,
-                        loader_args_ptr);
+                        loader_args_ptr_addr);
 
     // Instruct crt0 .bss is cleared and that we've provided custom args.
-    *loader_flags = LOADER_BSS_CLEARED_FLAG | LOADER_CUSTOM_ARGS_FLAG;
+    loader_flags = LOADER_BSS_CLEARED_FLAG | LOADER_CUSTOM_ARGS_FLAG;
+    mem_write(loader_flags_addr, &loader_flags, sizeof(loader_flags));
 
     return 0;
 }
@@ -749,9 +754,9 @@ void epiphany_start(struct team *team, int start, int size, int flags)
         unsigned row = 32 + i / 4;
         unsigned col =  8 + i % 4;
         unsigned coreid = (row << 6) | col;
-        volatile uint32_t *corep = (uint32_t *) (coreid << 20);
+        uintptr_t core_base = coreid << 20;
 
-        reg_write(corep, MMR_ILATST, 1);
+        reg_write(core_base, MMR_ILATST, 1);
     }
 }
 
