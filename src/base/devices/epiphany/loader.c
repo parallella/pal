@@ -74,68 +74,7 @@
 #define MMR_LINKTXCFG    0xf0304
 #define MMR_LINKRXCFG    0xf0308
 
-// Epiphany system registers
-typedef enum {
-    E_SYS_RESET     = 0x0040,
-    E_SYS_CFGTX     = 0x0044,
-    E_SYS_CFGRX     = 0x0048,
-    E_SYS_CFGCLK    = 0x004c,
-    E_SYS_COREID    = 0x0050,
-    E_SYS_VERSION   = 0x0054,
-    E_SYS_GPIOIN    = 0x0058,
-    E_SYS_GPIOOUT   = 0x005c
-} e_sys_reg_id_t;
 
-typedef union {
-    unsigned int reg;
-    struct {
-        unsigned int enable:1;
-        unsigned int mmu:1;
-        unsigned int mode:2;      // 0=Normal, 1=GPIO
-        unsigned int ctrlmode:4;
-        unsigned int clkmode:4;   // 0=Full speed, 1=1/2 speed
-        unsigned int resvd:20;
-    };
-} e_syscfg_tx_t;
-
-typedef union {
-    unsigned int reg;
-    struct {
-        unsigned int enable:1;
-        unsigned int mmu:1;
-        unsigned int path:2;    // 0=Normal, 1=GPIO, 2=Loopback
-        unsigned int monitor:1;
-        unsigned int resvd:27;
-    };
-} e_syscfg_rx_t;
-
-typedef union {
-    unsigned int reg;
-    struct {
-        unsigned int divider:4;  // 0=off, 1=F/64 ... 7=F/1
-        unsigned int pll:4;      // TBD
-        unsigned int resvd:24;
-    };
-} e_syscfg_clk_t;
-
-typedef union {
-    unsigned int reg;
-    struct {
-        unsigned int col:6;
-        unsigned int row:6;
-        unsigned int resvd:20;
-    };
-} e_syscfg_coreid_t;
-
-typedef union {
-    unsigned int reg;
-    struct {
-        unsigned int revision:8;
-        unsigned int type:8;
-        unsigned int platform:8;
-        unsigned int generation:8;
-    };
-} e_syscfg_version_t;
 
 #define EM_ADAPTEVA_EPIPHANY   0x1223  /* Adapteva's Epiphany architecture.  */
 
