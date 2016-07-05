@@ -4,11 +4,23 @@
 #include "../../pal_base_private.h"
 #include "ctrl.h"
 
+
 struct epiphany_args_header {
     uint32_t nargs;
     uint32_t __pad1;
     uint32_t size[P_RUN_MAX_ARGS];
 } __attribute__((packed));
+
+struct epiphany_dev;
+
+/* Ops used by loader */
+struct epiphany_loader_ops {
+    uint32_t (*reg_read)(struct epiphany_dev *, uintptr_t, uintptr_t);
+    void (*reg_write)(struct epiphany_dev *, uintptr_t, uintptr_t, uint32_t);
+
+    void (*mem_read)(struct epiphany_dev *, void *, uintptr_t, size_t);
+    void (*mem_write)(struct epiphany_dev *, uintptr_t, const void *, size_t);
+};
 
 struct epiphany_dev {
     struct dev dev;     /* Generic device */
@@ -19,6 +31,7 @@ struct epiphany_dev {
     int epiphany_fd;    /* File descriptor for epiphany device */
     void *eram;
     void *chip;
+    struct epiphany_loader_ops loader_ops;
 };
 
 extern struct epiphany_dev __pal_dev_epiphany;
