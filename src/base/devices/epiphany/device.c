@@ -240,6 +240,31 @@ static int dev_unmap(struct team *team, void *addr)
     return 0;
 }
 
+static uint32_t reg_read(struct epiphany_dev *epiphany,
+                         uintptr_t base, uintptr_t offset)
+{
+    volatile uint32_t *reg = (uint32_t *) ((uintptr_t) base + offset);
+    return *reg;
+}
+
+static void reg_write(struct epiphany_dev *epiphany, uintptr_t base,
+                      uintptr_t offset, uint32_t val)
+{
+    volatile uint32_t *reg = (uint32_t *) ((uintptr_t) base + offset);
+    *reg = val;
+}
+
+static void mem_read(struct epiphany_dev *dev, void *dst, uintptr_t src,
+                     size_t n)
+{
+    memcpy((void *) dst, (void *) src, n);
+}
+static void mem_write(struct epiphany_dev *dev, uintptr_t dst, const void *src,
+                      size_t n)
+{
+    memcpy((void *) dst, (void *) src, n);
+}
+
 static struct dev_ops epiphany_dev_ops = {
     /* Generic */
     .init = epiphany_dev_init,
@@ -258,5 +283,11 @@ static struct dev_ops epiphany_dev_ops = {
 struct epiphany_dev __pal_dev_epiphany = {
     .dev = {
         .dev_ops = &epiphany_dev_ops,
+    },
+    .loader_ops = {
+        reg_read,
+        reg_write,
+        mem_read,
+        mem_write,
     },
 };
