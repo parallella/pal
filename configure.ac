@@ -135,14 +135,16 @@ AC_SUBST([EPIPHANY_FAST_LDFLAGS])
 AC_ARG_ENABLE([device_epiphany_sim],
               AS_HELP_STRING([--enable-device-epiphany-sim],
                              [Enable Epiphany device simulator]))
-AM_CONDITIONAL([ENABLE_DEV_EPIPHANY_SIM],
-               [test "x$enable_device_epiphany_sim" = "xyes"])
-
+AS_IF([test "x$enable_device_epiphany_sim" = "xyes"],
+      AC_CHECK_HEADERS([esim.h], break;, enable_device_epiphany_sim=no)
+      AC_CHECK_LIB(esim, es_init, break;, enable_device_epiphany_sim=no))
 AS_IF([test "x$enable_device_epiphany_sim" = "xyes"],
       enable_device_epiphany="yes"
       AC_DEFINE([ENABLE_DEV_EPIPHANY_SIM],
                 [1],
                 [Epiphany device simulator support]))
+AM_CONDITIONAL([ENABLE_DEV_EPIPHANY_SIM],
+               [test "x$enable_device_epiphany_sim" = "xyes"])
 
 # Epiphany device support
 AC_ARG_ENABLE([device_epiphany],

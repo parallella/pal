@@ -1,4 +1,5 @@
 # src/base/devices/epiphany
+
 noinst_LTLIBRARIES  += src/base/devices/epiphany/libdevice.la
 src_base_devices_epiphany_libdevice_la_SOURCES = \
 src/base/devices/epiphany/device.c               \
@@ -13,4 +14,5 @@ src_base_devices_epiphany_libdevice_la_LIBADD = $(LIBELF_LIBS)
 if ENABLE_DEV_EPIPHANY_SIM
 src_base_devices_epiphany_libdevice_la_SOURCES += \
 src/base/devices/epiphany/simulator.c
+src_base_devices_epiphany_libdevice_la_LIBADD += -lesim
 endif
