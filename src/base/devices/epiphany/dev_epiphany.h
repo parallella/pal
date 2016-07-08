@@ -4,6 +4,7 @@
 #include "../../pal_base_private.h"
 #include "ctrl.h"
 
+typedef struct es_state_ es_state;
 
 struct epiphany_args_header {
     uint32_t nargs;
@@ -32,9 +33,11 @@ struct epiphany_dev {
     void *eram;
     void *chip;
     struct epiphany_loader_ops loader_ops;
+
+    es_state *esim; /* ESIM handle */
 };
 
 extern struct epiphany_dev __pal_dev_epiphany;
 #ifdef ENABLE_DEV_EPIPHANY_SIM
-struct dev_ops __pal_dev_epiphany_sim_ops;
+extern struct dev_ops __pal_dev_epiphany_sim_ops;
 #endif

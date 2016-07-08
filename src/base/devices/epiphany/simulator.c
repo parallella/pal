@@ -6,6 +6,8 @@
 #include <fcntl.h>
 #include <stdbool.h>
 
+#include <esim.h>
+
 #include "config.h"
 #include "dev_epiphany.h"
 #include "ctrl.h"
@@ -31,12 +33,53 @@ static int dev_early_init(struct dev *dev)
     };
     epiphany->loader_ops = ops;
 
+    if (es_client_connect(&epiphany->esim, NULL))
+        return -EIO;
+
     return epiphany_dev_early_init(dev);
 }
 
 static void dev_late_fini(struct dev *dev)
 {
+    struct epiphany_dev *epiphany = to_epiphany_dev(dev);
+
+    es_client_disconnect(epiphany->esim, true);
+
     epiphany_dev_late_fini(dev);
+}
+
+static p_dev_t dev_init(struct dev *dev, int flags)
+{
+    int err;
+    struct epiphany_dev *epiphany = to_epiphany_dev(dev);
+
+    if (!epiphany->initialized)
+        return p_ref_err(ENODEV);
+
+    /* Be idempotent if already initialized. It might be a better idea to
+     * return EBUSY instead */
+    if (epiphany->opened)
+        return dev;
+
+    epiphany->eram = (void *) es_client_get_raw_pointer(epiphany->esim,
+                                                        0x8e000000,
+                                                        32*1024*1024);
+    epiphany->ctrl = (struct epiphany_ctrl_mem *)
+                     ((uint8_t *) epiphany->eram + CTRL_MEM_OFFSET);
+
+#if 0
+    /* I don't think this is needed here, soft reset on load should be enough */
+    err = epiphany_reset_system(epiphany);
+    if (err)
+        return p_ref_err(-err);
+#endif
+
+    /* Clear control structure */
+    memset(epiphany->ctrl, 0 , sizeof(*epiphany->ctrl));
+
+    epiphany->opened = true;
+
+    return dev;
 }
 
 static int dev_query(struct dev *dev, int property)
@@ -60,32 +103,39 @@ static int dev_unmap(struct team *team, void *addr)
 static uint32_t reg_read(struct epiphany_dev *epiphany, uintptr_t base,
                          uintptr_t offset)
 {
-    return 0xdeadbeef;
+    uint32_t val;
+
+    es_mem_load(epiphany->esim, base + offset, sizeof(val), (uint8_t *) &val);
+
+    return val;
 }
 
 static void reg_write(struct epiphany_dev *epiphany, uintptr_t base,
                       uintptr_t offset, uint32_t val)
 {
+    es_mem_store(epiphany->esim, base + offset, sizeof(val), (uint8_t *) &val);
 }
 
-static void mem_read(struct epiphany_dev *dev, void *dst, uintptr_t src,
+static void mem_read(struct epiphany_dev *epiphany, void *dst, uintptr_t src,
                      size_t n)
 {
-}
-static void mem_write(struct epiphany_dev *dev, uintptr_t dst, const void *src,
-                      size_t n)
-{
+    es_mem_load(epiphany->esim, src, n, (uint8_t *) dst);
 }
 
+static void mem_write(struct epiphany_dev *epiphany, uintptr_t dst,
+                      const void *src, size_t n)
+{
+    es_mem_store(epiphany->esim, dst, n, (uint8_t *) src);
+}
 
 struct dev_ops __pal_dev_epiphany_sim_ops = {
     /* Epiphany generic */
-    .init = epiphany_dev_init,
     .fini = epiphany_dev_fini,
     .open = epiphany_dev_open,
     .run = epiphany_dev_run,
     .wait = epiphany_dev_wait,
     /* Specific for simulator */
+    .init = dev_init,
     .query = dev_query,
     .early_init = dev_early_init,
     .late_fini = dev_late_fini,
