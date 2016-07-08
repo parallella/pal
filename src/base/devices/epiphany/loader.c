@@ -282,7 +282,7 @@ void ecore_clear_sram(struct epiphany_dev *epiphany, unsigned coreid)
 
     /* Set IVT entries to a safe instruction */
     for (i = 0; i < ivt_size / 4; i++)
-        mem_write((uintptr_t) core.u32[i], &insn, sizeof(insn));
+        mem_write((uintptr_t) &core.u32[i], &insn, sizeof(insn));
 
     mem_write((uintptr_t) &core.u8[ivt_size], zeroes, 32768 - ivt_size);
 }
