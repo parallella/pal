@@ -71,7 +71,7 @@ int main(int argc, char *argv[])
     p_team_t team = p_open(dev, 0, 16); // create a team
 
     // "Allocate" output buffer. TODO: We need an API call for this
-    float *out = (float *) 0x8f900000;
+    float *out = (float *) p_map(dev, 0x8f900000, size * sizeof(float));
     memset(out, 0, size * sizeof(float));
 
     // Construct program arguments
