@@ -113,6 +113,9 @@ p_team_t p_remove(p_team_t team, int start, int count);
 void *p_map_member(p_team_t team, int member, unsigned long off,
                    unsigned long size);
 
+/* Map device address space into host address space */
+void *p_map(p_dev_t dev, unsigned long address, unsigned long size);
+
 /*Unmap memory region*/
 int p_unmap(p_team_t team, void *addr);
 
