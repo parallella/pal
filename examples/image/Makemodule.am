@@ -32,6 +32,7 @@ BUILT_SOURCES += examples/image/filters2-dev-epiphany.c
 CLEANFILES    += examples/image/filters2-dev-epiphany.c
 examples_image_filters2_dev_epiphany_SOURCES = examples/image/filters2-dev-epiphany.c
 examples_image_filters2_dev_epiphany_LDADD = $(EPIPHANY_LDADD)
+examples_image_filters2_dev_epiphany_LDFLAGS = $(EPIPHANY_INTERNAL_LDFLAGS)
 noinst_PROGRAMS +=                   \
 examples/image/filters2-host         \
 examples/image/filters2-dev-epiphany
