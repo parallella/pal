@@ -83,7 +83,7 @@ AS_CASE([$host_arg],
 done
 
 # Disable everything but lib
-ac_configure_args="--disable-tests --disable-benchmark --disable-examples --disable-doc $ac_configure_args"
+ac_configure_args="--enable-tests --disable-benchmark --disable-examples --disable-doc $ac_configure_args"
 
 # Insert target as host
 ac_configure_args="--host=$2 $ac_configure_args"
