@@ -58,7 +58,7 @@ struct p_atom_u32
  ***********************************************************************
  */
 
-struct dev_op;
+struct dev_ops;
 struct dev;
 struct rank_range;
 struct team;
