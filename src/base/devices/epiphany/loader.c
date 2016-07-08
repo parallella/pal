@@ -127,6 +127,22 @@ static inline bool is_valid_addr(uint32_t addr, uint32_t coreid)
         || is_in_eram(addr);
 }
 
+/* TODO: Only supports addresses in eram */
+static bool translate(struct epiphany_dev *epiphany, void *addr,
+                      unsigned coreid, uint32_t *eaddr)
+{
+    uintptr_t uaddr = (uintptr_t) addr;
+    uintptr_t ueram = (uintptr_t) epiphany->eram;
+    uintptr_t ueeram = (uintptr_t) epiphany->eram + 32 * 1024 * 1024;
+    if (uaddr < ueram || ueeram <= uaddr)
+        return false;
+
+    *eaddr = 0x8e000000 + ((uint32_t) uaddr - ueram);
+
+    return true;
+}
+
+
 static inline bool is_epiphany_exec_elf(Elf32_Ehdr *ehdr)
 {
     return ehdr
@@ -503,17 +519,24 @@ static void setup_function_args(struct epiphany_dev *epiphany, unsigned coreid,
     unsigned rel_row = (coreid - 0x808) >> 6;
     unsigned rel_col = (coreid - 0x808) & 0x3f;
     unsigned rel_coreid = (rel_row << 2) + rel_col;
-    /* TODO: uint32_t, translate simulator addr -> epiphany */
+    uint32_t eaddr;
     struct loader_args *loader_args = &epiphany->ctrl->loader_args[rel_coreid];
+    /* epiphany address */
+    uintptr_t loader_args_addr =
+        CTRL_MEM_EADDR +
+        (uintptr_t) &epiphany->ctrl->loader_args[rel_coreid] -
+        (uintptr_t) epiphany->ctrl;
     uint32_t *regs = &loader_args->r0;
     unsigned arg = 0;
     /* TODO: Obviously this doesn't work with more than one core */
     uint8_t *argstackp = (uint8_t *) epiphany->ctrl;
 
     /* Set cores's args ptr */
-    mem_write(loader_args_ptr_addr, &loader_args, sizeof(loader_args));
+    mem_write(loader_args_ptr_addr,
+              &loader_args_addr,
+              sizeof(loader_args_addr));
 
-    memset(loader_args, 0 , sizeof(*loader_args));
+    memset(loader_args, 0, sizeof(*loader_args));
 
     loader_args->function_ptr = function_addr;
 
@@ -539,16 +562,17 @@ static void setup_function_args(struct epiphany_dev *epiphany, unsigned coreid,
             /* Argument is passed by reference */
 
             /* No need to copy arg if it's already accessible by core */
-            if (is_valid_addr((uint32_t) args[arg].ptr, coreid) &&
+            if (translate(epiphany, args[arg].ptr, coreid, &eaddr) &&
                 /* On the off chance the host ptr is in the first 1M */
-                !is_local((uint32_t) args[arg].ptr)) {
+                !is_local((uint32_t) (uintptr_t) args[arg].ptr)) {
 
-                regs[reg] = (uint32_t) args[arg].ptr;
+                regs[reg] = eaddr;
 
             } else {
                 argstackp -= (args[arg].size + 7) & (~7);
                 memcpy(argstackp, args[arg].ptr, args[arg].size);
-                regs[reg] = (uint32_t) argstackp;
+                translate(epiphany, argstackp, coreid, &eaddr);
+                regs[reg] = eaddr;
             }
             reg++;
             arg++;
@@ -568,15 +592,16 @@ static void setup_function_args(struct epiphany_dev *epiphany, unsigned coreid,
             continue;
 
         /* No need to copy arg if it's already accessible by core */
-        if (is_valid_addr((uint32_t) args[i].ptr, coreid) &&
+        if (translate(epiphany, args[i].ptr, coreid, &eaddr) &&
             /* On the off chance the host ptr is in the first 1M */
-            !is_local((uint32_t) args[i].ptr)) {
+            !is_local((uint32_t) (uintptr_t) args[i].ptr)) {
 
-            ptrslot[i] = (uint32_t) args[i].ptr;
+            ptrslot[i] = (uint32_t) eaddr;
         } else {
             argstackp -= (args[i].size + 7) & (~7);
             memcpy(argstackp, args[i].ptr, args[i].size);
-            ptrslot[i] = (uint32_t) argstackp;
+            translate(epiphany, argstackp, coreid, &eaddr);
+            ptrslot[i] = eaddr;
         }
     }
 
@@ -584,7 +609,8 @@ static void setup_function_args(struct epiphany_dev *epiphany, unsigned coreid,
      * 8 bytes / entry. */
     argstackp -= (argn - arg) * 8;
 
-    loader_args->stack_spill_ptr = (uint32_t) argstackp;
+    translate(epiphany, argstackp, coreid, &eaddr);
+    loader_args->stack_spill_ptr = eaddr;
 
     for (; arg < argn; arg++) {
         if (is_passed_by_value(&args[arg])) {
