@@ -367,7 +367,7 @@ DECLARE_UT_SUITE(PRINT_GOLD_SUITE, setup, teardown, false, print_gold, NULL);
 struct status {
     uint32_t done;
     uint32_t _pad1;
-    uint32_t returncode;
+    int32_t  returncode;
     uint32_t _pad2;
 } __attribute__((packed));
 

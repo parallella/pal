@@ -1,4 +1,3 @@
-#include <stdlib.h>
 #include <stdio.h>
 #include <string.h>
 #include <stdint.h>
@@ -11,7 +10,7 @@
 struct status {
     uint32_t done;
     uint32_t _pad1;
-    uint32_t returncode;
+    int32_t  returncode;
     uint32_t _pad2;
 } __attribute__((packed));
 
