@@ -100,6 +100,23 @@ static int dev_unmap(struct team *team, void *addr)
     return 0;
 }
 
+static void *dev_map(struct dev *dev, unsigned long addr, unsigned long size)
+{
+    /* HACK */
+
+    struct epiphany_dev *epiphany = to_epiphany_dev(dev);
+
+    if (addr < 0x8e000000 || 32*1024*1024 < addr - 0x8e000000 + size)
+        return NULL;
+
+    {
+        uintptr_t offset = addr - 0x8e000000;
+        uint8_t *ptr = epiphany->eram;
+        return &ptr[offset];
+    }
+}
+
+
 static uint32_t reg_read(struct epiphany_dev *epiphany, uintptr_t base,
                          uintptr_t offset)
 {
@@ -140,5 +157,6 @@ struct dev_ops __pal_dev_epiphany_sim_ops = {
     .early_init = dev_early_init,
     .late_fini = dev_late_fini,
     .map_member = dev_map_member,
+    .map = dev_map,
     .unmap = dev_unmap,
 };
