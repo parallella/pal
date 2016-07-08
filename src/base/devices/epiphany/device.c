@@ -233,6 +233,12 @@ static void *dev_map_member(struct team *team, int member,
     return (void *) addr;
 }
 
+static void *dev_map(struct dev *dev, unsigned long addr, unsigned long size)
+{
+    /* HACK */
+    return (void *) addr;
+}
+
 static int dev_unmap(struct team *team, void *addr)
 {
     /* HACK */
@@ -277,6 +283,7 @@ static struct dev_ops epiphany_dev_ops = {
     .early_init = dev_early_init,
     .late_fini = dev_late_fini,
     .map_member = dev_map_member,
+    .map = dev_map,
     .unmap = dev_unmap,
 };
 
