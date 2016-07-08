@@ -69,6 +69,7 @@ endif
 
 if ENABLE_DEV_EPIPHANY
 SUBDIRS += devices/epiphany
+-include devices/epiphany/Makemodule.host.am
 endif
 
 # Top level targets

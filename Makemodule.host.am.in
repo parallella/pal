@@ -1,0 +1,6 @@
+# This file will end up in devices/x/Makemodule.host.am
+# Variables are filled in by configure for the device
+# The source file is shared between devices so variables must be prefixed
+
+EPIPHANY_INTERNAL_LDFLAGS = @EPIPHANY_INTERNAL_LDFLAGS@
+EPIPHANY_FAST_LDFLAGS = @EPIPHANY_FAST_LDFLAGS@

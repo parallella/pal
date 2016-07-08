@@ -92,7 +92,8 @@ AC_CHECK_FUNCS(clock_gettime, [], [
 AC_SUBST([BENCHMARK_LIBS])
 
 AC_CONFIG_FILES([Makefile
-                 benchmark/bench-all.sh])
+                 benchmark/bench-all.sh
+                 Makemodule.host.am])
 
 # Epiphany host support
 AM_CONDITIONAL([HOST_IS_EPIPHANY],
