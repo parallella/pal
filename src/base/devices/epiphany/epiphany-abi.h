@@ -53,6 +53,13 @@ struct loader_args {
     uint32_t stack_spill_ptr_hi32; // upper 32 bits
 } __attribute__((packed));
 
+struct loader_cfg {
+	uint32_t flags;
+	uint32_t __pad1;
+	uint32_t args_ptr;
+	uint32_t __pad2;
+} __attribute__((packed));
+
 // Loader flags for crt0
 #define LOADER_BSS_CLEARED_FLAG 1
 #define LOADER_CUSTOM_ARGS_FLAG 2

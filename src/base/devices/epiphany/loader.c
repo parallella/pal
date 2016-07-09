@@ -95,8 +95,21 @@
 
 struct symbol_info {
     const char *name;
-    bool found;
+    bool present;
     Elf32_Sym sym;
+};
+
+struct section_info {
+    const char *name;
+    bool present;
+    Elf32_Addr	sh_addr; /* Section virtual addr at execution */
+};
+
+enum loader_sections {
+    SEC_WORKGROUP_CFG,
+    SEC_EXT_MEM_CFG,
+    SEC_LOADER_CFG,
+    SEC_NUM,
 };
 
 static inline bool is_local(uint32_t addr)
@@ -495,13 +508,46 @@ static void lookup_symbols(const void *file, size_t file_size,
                 if (strcmp(sym_name, tbl[i].name) != 0)
                     continue;
 
-                if (tbl[i].found
+                if (tbl[i].present
                     && ELF32_ST_BIND(tbl[i].sym.st_info) == STB_GLOBAL)
                     continue;
 
-                tbl[i].found = true;
+                tbl[i].present = true;
                 memcpy(&tbl[i].sym, sym, sizeof(*sym));
             }
+        }
+    }
+}
+
+static void lookup_sections(const void *file, struct section_info *tbl,
+        size_t tbl_size)
+{
+    int i;
+    size_t j;
+    Elf32_Ehdr *ehdr;
+    Elf32_Phdr *phdr;
+    Elf32_Shdr *shdr, *sh_strtab;
+    const char *strtab;
+    uint8_t *src = (uint8_t *) file;
+
+    ehdr = (Elf32_Ehdr *) &src[0];
+    phdr = (Elf32_Phdr *) &src[ehdr->e_phoff];
+    shdr = (Elf32_Shdr *) &src[ehdr->e_shoff];
+    int shnum = ehdr->e_shnum;
+
+    sh_strtab = &shdr[ehdr->e_shstrndx];
+    strtab = (char *) &src[sh_strtab->sh_offset];
+
+    for (i = 0; i < shnum; i++) {
+        for (j = 0; j < tbl_size; j++) {
+            if (tbl[j].present)
+                continue;
+
+            if (strcmp(&strtab[shdr[i].sh_name], tbl[j].name) != 0)
+                continue;
+
+            tbl[j].present = true;
+            tbl[j].sh_addr = shdr[i].sh_addr;
         }
     }
 }
@@ -641,7 +687,8 @@ static int set_core_config(struct epiphany_dev *epiphany, unsigned coreid,
     uint32_t loader_flags, function_addr;
     e_group_config_t e_group_config;
     e_emem_config_t  e_emem_config;
-    uintptr_t e_group_config_addr, e_emem_config_addr;
+    struct loader_cfg loader_cfg;
+    uintptr_t e_group_config_addr, e_emem_config_addr, loader_cfg_addr;
     uintptr_t loader_flags_addr, loader_args_ptr_addr;
     char *function_plt;
 
@@ -651,64 +698,76 @@ static int set_core_config(struct epiphany_dev *epiphany, unsigned coreid,
         memcpy(&function_plt[function_len], "@PLT", sizeof("@PLT"));
     }
 
-    struct symbol_info tbl[] = {
-        { .name = "e_group_config"    },
-        { .name = "e_emem_config"     },
-        { .name = "__loader_args_ptr" },
-        { .name = "__loader_flags"    },
-        { .name = function            },
-        { .name = function_plt        },
+    struct section_info sections[] = {
+        { .name = "workgroup_cfg" },
+        { .name = "ext_mem_cfg"   },
+        { .name = "loader_cfg"    },
     };
-    lookup_symbols(file, file_size, tbl, ARRAY_SIZE(tbl));
+    lookup_sections(file, sections, ARRAY_SIZE(sections));
 
-    /* Check everything except PLT entry (only exists when compiled w/ -fpic) */
-    for (unsigned i; i < ARRAY_SIZE(tbl) - 1; i++) {
-        if (!tbl[i].found)
+    struct symbol_info symbols[] = {
+        { .name = function     },
+        { .name = function_plt },
+    };
+    lookup_symbols(file, file_size, symbols, ARRAY_SIZE(symbols));
+
+    for (unsigned i; i < ARRAY_SIZE(sections); i++) {
+        if (!sections[i].present)
             return -ENOENT;
 
         /* ???: Should perhaps only allow local addresses */
-        if (!is_valid_addr(tbl[i].sym.st_value, coreid))
+        if (!is_valid_addr(sections[i].sh_addr, coreid))
             return -EINVAL;
     }
 
-    e_group_config_addr = is_local(tbl[0].sym.st_value) ?
-        (uintptr_t) &corep[tbl[0].sym.st_value] :
-        (uintptr_t) &nullp[tbl[0].sym.st_value];
-    e_emem_config_addr = is_local(tbl[1].sym.st_value) ?
-        (uintptr_t) &corep[tbl[1].sym.st_value] :
-        (uintptr_t) &nullp[tbl[1].sym.st_value];
-    loader_args_ptr_addr = is_local(tbl[2].sym.st_value) ?
-        (uintptr_t) &corep[tbl[2].sym.st_value] :
-        (uintptr_t) &nullp[tbl[2].sym.st_value];
-    loader_flags_addr = is_local(tbl[3].sym.st_value) ?
-        (uintptr_t) &corep[tbl[3].sym.st_value] :
-        (uintptr_t) &nullp[tbl[3].sym.st_value];
+    e_group_config_addr = is_local(sections[SEC_WORKGROUP_CFG].sh_addr) ?
+        (uintptr_t) &corep[sections[SEC_WORKGROUP_CFG].sh_addr] :
+        (uintptr_t) &nullp[sections[SEC_WORKGROUP_CFG].sh_addr];
+    e_emem_config_addr = is_local(sections[SEC_EXT_MEM_CFG].sh_addr) ?
+        (uintptr_t) &corep[sections[SEC_EXT_MEM_CFG].sh_addr] :
+        (uintptr_t) &nullp[sections[SEC_EXT_MEM_CFG].sh_addr];
+    loader_cfg_addr = is_local(sections[SEC_LOADER_CFG].sh_addr) ?
+        (uintptr_t) &corep[sections[SEC_LOADER_CFG].sh_addr] :
+        (uintptr_t) &nullp[sections[SEC_LOADER_CFG].sh_addr];
 
+    loader_flags_addr = loader_cfg_addr + offsetof(struct loader_cfg, flags);
+    loader_args_ptr_addr =
+        loader_cfg_addr + offsetof(struct loader_cfg, args_ptr);
+
+    /* Check everything except PLT entry (only exists when compiled w/ -fpic) */
     /* Prefer PLT entry */
     /* No need to adjust function address if it's local */
-    if (tbl[5].found && is_valid_addr(tbl[5].sym.st_value, coreid))
-        function_addr = tbl[5].sym.st_value;
+    if (!symbols[0].present && !symbols[1].present)
+        return -ENOENT;
+
+    if (symbols[1].present && is_valid_addr(symbols[1].sym.st_value, coreid))
+        function_addr = symbols[1].sym.st_value;
+    else if (is_valid_addr(symbols[0].sym.st_value, coreid))
+        function_addr = symbols[0].sym.st_value;
     else
-        function_addr = tbl[4].sym.st_value;
+        return -EINVAL;
 
-    /* No trivial way to emulate workgroups??? Pretend each core is its own
-     * separate group for now. */
-    e_group_config.objtype    = E_EPI_GROUP;
-    e_group_config.chiptype   = E_E16G301; /* TODO: Or E_64G501 */
-    e_group_config.group_id   = coreid;
-    e_group_config.group_row  = coreid >> 6;
-    e_group_config.group_col  = coreid & 0x3f;
-    e_group_config.group_rows = 1;
-    e_group_config.group_cols = 1;
-    e_group_config.core_row   = 0;
-    e_group_config.core_col   = 0;
-    e_group_config.alignment_padding = 0xdeadbeef;
+    if (sections[SEC_WORKGROUP_CFG].present) {
+        /* No trivial way to emulate workgroups??? Pretend each core is its own
+         * separate group for now. */
+        e_group_config.objtype    = E_EPI_GROUP;
+        e_group_config.chiptype   = E_E16G301; /* TODO: Or E_64G501 */
+        e_group_config.group_id   = coreid;
+        e_group_config.group_row  = coreid >> 6;
+        e_group_config.group_col  = coreid & 0x3f;
+        e_group_config.group_rows = 1;
+        e_group_config.group_cols = 1;
+        e_group_config.core_row   = 0;
+        e_group_config.core_col   = 0;
+        e_group_config.alignment_padding = 0xdeadbeef;
+        mem_write(e_group_config_addr, &e_group_config, sizeof(e_group_config));
+    }
 
-    mem_write(e_group_config_addr, &e_group_config, sizeof(e_group_config));
-
-    e_emem_config.objtype = E_EXT_MEM;
-    e_emem_config.base    = 0x8e000000;
-    mem_write(e_emem_config_addr, &e_emem_config, sizeof(e_emem_config));
+    if (sections[SEC_EXT_MEM_CFG].present) {
+        e_emem_config.objtype = E_EXT_MEM;
+        e_emem_config.base    = 0x8e000000;
+        mem_write(e_emem_config_addr, &e_emem_config, sizeof(e_emem_config));
+    }
 
     setup_function_args(epiphany, coreid, argn, args, function_addr,
                         loader_args_ptr_addr);
