@@ -1,4 +1,6 @@
 #include <stdint.h>
+/* HACK: To force a dependency on the __pal_fini destructor */
+#include <pal.h>
 
 #define SKIP 77
 struct status {
