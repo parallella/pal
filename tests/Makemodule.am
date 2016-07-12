@@ -27,20 +27,17 @@ noinst_HEADERS += tests/utest.h
 tests/runtest$(BUILD_EXEEXT): $(RUNTEST_SRC)
 	$(CC_FOR_BUILD) $(CFLAGS_FOR_BUILD) $< -o $@ $(LDFLAGS_FOR_BUILD)
 
-check-local-tests: tests/runtest$(BUILD_EXEEXT)
-
 clean-local-tests:
 	-rm -f tests/runtest$(BUILD_EXEEXT)
 
 CLEAN_LOCAL_TARGETS += clean-local-tests
-CHECK_LOCAL_TARGETS += check-local-tests
-
+CHECK_TARGETS += tests/runtest$(BUILD_EXEEXT)
 
 
 TESTS = $(check_PROGRAMS)
 
 # Target that only compiles the tests and doesn't run them
-tests: $(tests_BUILT_SRCS)
+tests:  tests/runtest$(BUILD_EXEEXT) $(tests_BUILT_SRCS)
 	+$(MAKE) -C $(top_builddir) $(TESTS)
 
 PHONIES += tests

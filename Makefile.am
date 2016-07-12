@@ -20,13 +20,13 @@ INSTALL_HTML_LOCAL_TARGETS        =
 UNINSTALL_LOCAL_TARGETS           =
 INSTALL_DATA_LOCAL_TARGETS        =
 ALL_LOCAL_TARGETS                 =
-CHECK_LOCAL_TARGETS               =
+CHECK_TARGETS                     =
 clean-local:        $(CLEAN_LOCAL_TARGETS)
 install-html-local: $(INSTALL_HTML_LOCAL_TARGETS)
 uninstall-local:    $(UNINSTALL_LOCAL_TARGETS)
 install-data-local: $(INSTALL_DATA_LOCAL_TARGETS)
 all-local:          $(ALL_LOCAL_TARGETS)
-check-local:        $(CHECK_LOCAL_TARGETS)
+check:              $(CHECK_TARGETS)
 
 # All hooks / local targets are phonies?
 PHONIES =                           \
