@@ -41,8 +41,8 @@ void p_firsym_f32(const float *x, const float *h, float *r, int nx, int nh)
     }
 
     /* Delay line is twice the necessary size to avoid moving data around. */
-    /* [TODO] Use p_malloc (not implemented yet) */
-    dl = malloc(2*ndl*sizeof(float));
+    /* [TODO] Use p_malloc? (not implemented yet) */
+    dl = alloca(2*ndl*sizeof(float));
 
     /* Reset delay line */
     for (wrp = 0; wrp < 2*ndl; wrp++) {
@@ -122,6 +122,4 @@ void p_firsym_f32(const float *x, const float *h, float *r, int nx, int nh)
         /* Update output array */
         r[rdp] = fir[0];
     }
-
-    free(dl);
 }
