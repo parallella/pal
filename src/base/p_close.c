@@ -15,13 +15,13 @@
 
 int p_close(p_team_t team)
 {
-    printf("Running p_close (%p)\n", team);
+    struct team *pteam = (struct team *) team;
 
     if (p_ref_is_err(team))
             return -EINVAL;
 
-
-    // NO-OP for now
+    if (pteam->dev->dev_ops->close)
+	    return pteam->dev->dev_ops->close(pteam->dev, pteam);
 
     return 0;
 }
