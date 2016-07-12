@@ -7,7 +7,7 @@
 #include <stdint.h>
 #include <inttypes.h>
 
-#include <e-hal.h>
+#include <pal.h>
 
 static const uint8_t empty[128] = { 0 };
 
@@ -24,84 +24,44 @@ struct result {
     uint64_t size;
 };
 
-int main(int argc, char **argv, char **envp)
+void usage(char **argv)
 {
-    e_platform_t platform;
-    e_epiphany_t dev;
-    e_mem_t   result_handle;
-    e_mem_t   status_handle;
-    struct status status;
+    fprintf(stderr, "Usage: %s PROGRAM\n", argv[0]);
+    exit(1);
+}
+
+int main(int argc, char **argv)
+{
+    int returncode, err, i;
+    struct status *status;
     struct result *results;
-    uint32_t i;
+    p_dev_t dev;
+    p_prog_t prog;
+    p_team_t team;
 
-    if (argc != 2) {
-        fprintf(stderr, "Usage: %s PROGRAM\n", argv[0]);
-        return 1;
-    }
+    if (argc != 2)
+        usage(argv);
 
-    e_init(NULL);
-    e_reset_system();
-    e_get_platform_info(&platform);
+    dev = p_init(P_DEV_EPIPHANY, 0);
+    prog = p_load(dev, argv[1], 0);
+    team = p_open(dev, 0, 16); // TODO: Must be 16 for Epiphany
 
-    if (e_open(&dev, 0, 0, platform.rows, platform.cols)) {
-        fprintf(stderr, "ERROR: Cannot open device\n");
-        exit(EXIT_FAILURE);
-    }
-    if (e_alloc(&status_handle, 0x01200000, 4096)) {
-        fprintf(stderr, "ERROR: Failed allocating buffer\n");
-        exit(EXIT_FAILURE);
-    }
-    if (0 >= e_write(&status_handle, 0, 0, 0, empty, sizeof(empty))) {
-        fprintf(stderr, "ERROR: Writing to ERAM failed\n");
-        exit(EXIT_FAILURE);
-    }
-    if (e_alloc(&result_handle, 0x01300000, 1024 * 1024)) {
-        fprintf(stderr, "ERROR: Failed allocating buffer\n");
-        exit(EXIT_FAILURE);
-    }
-    if (0 >= e_write(&result_handle, 0, 0, 0, empty, sizeof(empty))) {
-        fprintf(stderr, "ERROR: Writing to ERAM failed\n");
-        exit(EXIT_FAILURE);
-    }
-    if (e_load_group(argv[1], &dev, 0, 0, 1, 1, true)) {
-        fprintf(stderr, "ERROR: Cannot load binary\n");
-        exit(EXIT_FAILURE);
-    }
+    status = p_map(dev, 0x8f200000, sizeof(*status));
+    results = p_map(dev, 0x8f300000, 1024 * 1024);
 
-    while (true) {
-        if (0 >= e_read(&status_handle, 0, 0, 0x00000000, &status,
-            sizeof(status))) {
-            exit(EXIT_FAILURE);
-        }
+    memset(status, 0, sizeof(*status));
+    memset(results, 0, 1024 * 1024);
 
-        if (status.done)
-            break;
-
-        usleep(10000);
-    }
-
-    results = calloc(1024 * 1024, 1);
-    if (!results) {
-        fprintf(stderr, "ERROR: No memory\n");
-        exit(EXIT_FAILURE);
-    }
-
-    if (0 >= e_read(&result_handle, 0, 0, 0, results,
-                sizeof(results[0]) * status.nbench)) {
-        fprintf(stderr, "ERROR: Failed reading result\n");
-        exit(EXIT_FAILURE);
-    }
-
-    e_close(&dev);
-    e_finalize();
+    err = p_run(prog, "main", team, 0, 1, 0, NULL, 0);
 
     printf(";name, size, duration (ns)\n");
-    for (i = 0; i < status.nbench; i++)
+    for (i = 0; i < status->nbench; i++)
         printf("%s, %" PRIu64 ", %" PRIu64 "\n",
                results[i].name, results[i].size, results[i].ns);
 
 
-    free(results);
+    p_close(team);
+    p_finalize(dev);
 
     return 0;
 }
