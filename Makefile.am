@@ -3,6 +3,7 @@ AUTOMAKE_OPTIONS = foreign
 
 EXTRA_DIST                        =
 SUBDIRS                           =
+DIST_SUBDIRS                      =
 CLEANFILES                        =
 BUILT_SOURCES                     =
 lib_LTLIBRARIES                   =
