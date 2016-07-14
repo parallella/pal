@@ -70,7 +70,10 @@ AC_DEFUN([AX_CONFIG_DIR], [
   AS_MKDIR_P(["$1"])
   dnl and also set the variables. As this isn't autoconf, the following may be
   dnl risky:
-  _AC_SRCDIRS(["$2"])
+  _AC_SRCDIRS(["$1"])
+  dnl Append relative path
+  ac_srcdir=$ac_srcdir/$2
+
   cd "$1"
 
   # Check for guested configure; otherwise get Cygnus style configure.
@@ -98,7 +101,7 @@ AC_DEFUN([AX_CONFIG_DIR], [
     AC_MSG_NOTICE([running $SHELL $ax_sub_configure $ax_sub_configure_args --cache-file=$ax_sub_cache_file --srcdir=$ac_srcdir])
     # The eval makes quoting arguments work.
     eval "\$SHELL \"\$ax_sub_configure\" $ax_sub_configure_args \
-	   --cache-file=\"\$ax_sub_cache_file\" --srcdir=\"\$ax_srcdir\""
+	   --cache-file=\"\$ax_sub_cache_file\" --srcdir=\"\$ac_srcdir\""
   fi
 
   cd "$ax_popdir"

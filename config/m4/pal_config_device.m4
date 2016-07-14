@@ -98,7 +98,7 @@ exec_prefix=$prefix
 ac_configure_args="$ac_configure_args --prefix=${target_prefix}"
 
 # Custom command that configures subdir NOW, so we can restore variables after.
-AX_CONFIG_DIR(devices/$1, $srcdir)
+AX_CONFIG_DIR(devices/$1, [../..])
 
 # Restore variables
 prefix=$pal_save_prefix
