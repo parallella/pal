@@ -83,38 +83,40 @@ struct team *epiphany_dev_open(struct team *team)
 }
 
 int epiphany_dev_run(struct dev *dev, struct team *team, struct prog *prog,
-                     const char *function, int start, int size, int argn,
+                     const char *function, int start, int count, int argn,
                      const p_arg_t *args, int flags)
 {
     int err;
     int i;
     struct epiphany_dev *epiphany = to_epiphany_dev(dev);
 
-    if (start < 0 || size <= 0)
+    if (start < 0 || count <= 0)
         return -EINVAL;
 
-    /* Assume we have entire chip for now */
-    if (16 < start + size)
+    if (team->count < start + count)
         return -EINVAL;
 
     if (!epiphany->opened)
         return -EBADF;
 
-    err = epiphany_soft_reset(team, start, size);
+    err = epiphany_soft_reset(team, team->start + start, count);
     if (err) {
         /* WARN: soft reset failed */
         return err;
     }
 
-    err = epiphany_load(team, prog, start, size, flags, argn, args, function);
+    err = epiphany_load(team, prog, start, count, flags, argn, args, function);
     if (err)
         return err;
 
     /* Mark as scheduled */
-    for (i = start; i < start + size; i++)
+    for (i = team->start + start; i < team->start + start + count; i++)
         epiphany->ctrl->status[i] = STATUS_SCHEDULED;
 
-    epiphany_start(team, start, size, flags);
+    /* Ideally a *system* (not host CPU-only) memory barrier here */
+    __sync_synchronize();
+
+    epiphany_start(team, team->start + start, count, flags);
 
     return 0;
 }
