@@ -157,7 +157,7 @@ FUNCTION     | NOTES
 [p_wait()](src/base/p_wait.c)            | wait for team to finish
 [p_fence()](src/base/p_fence.c)          | memory fence
 [p_finalize()](src/base/p_finalize.c)    | cleans up run time
-[p_get_err()](src/base/p_get_err.c)      | get error code (if any).
+[p_error()](src/include/pal_base.h)      | get error code (if any).
 
 ##MEMORY ALLOCATION  
 These functions are used for creating memory objects.

@@ -41,8 +41,7 @@ src/base/p_unmap.c                \
 src/base/p_wait.c                 \
 src/base/p_write.c                \
 src/base/pal_base_private.h       \
-src/base/boilerplate.c            \
-src/base/p_get_err.c
+src/base/boilerplate.c
 # Disable temporarily until API is determined
 #    p_scatter.c \
 #    p_broadcast.c \

@@ -280,4 +280,13 @@ int p_getsymbol(p_prog_t prog, char *name, p_symbol_t symbol);
  * Error handling
  ***********************************************************************
  */
-int p_get_err(p_ref_t ref);
+
+#define P_MAX_ERROR 4095
+
+static inline int p_error(p_ref_t ref)
+{
+    if ((uintptr_t) ref >= (uintptr_t) - P_MAX_ERROR)
+        return (int) ((intptr_t) ref);
+
+    return 0;
+}
