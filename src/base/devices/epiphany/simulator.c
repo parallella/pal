@@ -33,9 +33,6 @@ static int dev_early_init(struct dev *dev)
     };
     epiphany->loader_ops = ops;
 
-    if (es_client_connect(&epiphany->esim, NULL))
-        return -EIO;
-
     return epiphany_dev_early_init(dev);
 }
 
@@ -60,6 +57,9 @@ static p_dev_t dev_init(struct dev *dev, int flags)
      * return EBUSY instead */
     if (epiphany->opened)
         return dev;
+
+    if (es_client_connect(&epiphany->esim, NULL))
+        return p_ref_err(EIO);
 
     epiphany->eram = (void *) es_client_get_raw_pointer(epiphany->esim,
                                                         0x8e000000,
