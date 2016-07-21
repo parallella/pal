@@ -678,10 +678,12 @@ static void setup_function_args(struct epiphany_dev *epiphany, unsigned coreid,
 }
 
 /* Data needed by device (e-lib and crt0) */
-static int set_core_config(struct epiphany_dev *epiphany, unsigned coreid,
+static int set_core_config(struct team *team, unsigned coreid, unsigned rank,
                            const void *file, size_t file_size, int argn,
                            const p_arg_t *args, const char *function)
 {
+    struct epiphany_dev *epiphany = to_epiphany_dev(team->dev);
+
     uint8_t *corep = (uint8_t *) (uintptr_t) (coreid << 20);
     uint8_t *nullp = (uint8_t *) 0;
     uint32_t loader_flags, function_addr;
@@ -748,17 +750,23 @@ static int set_core_config(struct epiphany_dev *epiphany, unsigned coreid,
         return -EINVAL;
 
     if (sections[SEC_WORKGROUP_CFG].present) {
+        unsigned glob_row0 = 32 + team->start / 4;
+        unsigned glob_col0 = 8 + team->start % 4;
+        unsigned col0 = team->start % 4;
+        unsigned cole = (team->start + team->count - 1) % 4;
+        unsigned cols = 1 + cole - col0;
+        unsigned rows = team->count / cols;
         /* No trivial way to emulate workgroups??? Pretend each core is its own
          * separate group for now. */
         e_group_config.objtype    = E_EPI_GROUP;
         e_group_config.chiptype   = E_E16G301; /* TODO: Or E_64G501 */
-        e_group_config.group_id   = coreid;
-        e_group_config.group_row  = coreid >> 6;
-        e_group_config.group_col  = coreid & 0x3f;
-        e_group_config.group_rows = 1;
-        e_group_config.group_cols = 1;
-        e_group_config.core_row   = 0;
-        e_group_config.core_col   = 0;
+        e_group_config.group_id   = glob_row0 * 64 + glob_col0;
+        e_group_config.group_row  = glob_row0;
+        e_group_config.group_col  = glob_col0;
+        e_group_config.group_rows = rows;
+        e_group_config.group_cols = cols;
+        e_group_config.core_row   = rank / 4;
+        e_group_config.core_col   = rank % 4;
         e_group_config.alignment_padding = 0xdeadbeef;
         mem_write(e_group_config_addr, &e_group_config, sizeof(e_group_config));
     }
@@ -813,13 +821,13 @@ int epiphany_load(struct team *team, struct prog *prog,
     }
 
     for (unsigned i = (unsigned) start; i < (unsigned) (start + size); i++) {
-        unsigned row = 32 + i / 4;
-        unsigned col =  8 + i % 4;
+        unsigned row = 32 + (team->start + i) / 4;
+        unsigned col =  8 + (team->start + i) % 4;
         unsigned coreid = (row << 6) | col;
         rc = process_elf(file, epiphany, coreid);
         if (rc)
             goto out;
-        rc = set_core_config(epiphany, coreid, file, st.st_size, argn, args,
+        rc = set_core_config(team, coreid, i, file, st.st_size, argn, args,
                              function);
         if (rc)
             goto out;
