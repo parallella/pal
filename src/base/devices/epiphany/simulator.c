@@ -100,20 +100,21 @@ static int dev_unmap(struct team *team, p_mem_t *mem)
     return 0;
 }
 
-static void *dev_map(struct dev *dev, unsigned long addr, unsigned long size)
+static p_mem_t dev_map(struct dev *dev, unsigned long addr, unsigned long size)
 {
+    struct epiphany_dev *epiphany = to_epiphany_dev(dev);
+    p_mem_t mem;
+
     /* HACK */
 
-    struct epiphany_dev *epiphany = to_epiphany_dev(dev);
+    // if (addr < 0x8e000000 || 32*1024*1024 < addr - 0x8e000000 + size)
+    //     return p_mem_err(EINVAL);
 
-    if (addr < 0x8e000000 || 32*1024*1024 < addr - 0x8e000000 + size)
-        return NULL;
+    mem.ref = (void *) addr;
+    mem.size = size;
+    mem.dev = dev;
 
-    {
-        uintptr_t offset = addr - 0x8e000000;
-        uint8_t *ptr = epiphany->eram;
-        return &ptr[offset];
-    }
+    return mem;
 }
 
 static void *dev_map_raw(struct dev *dev, unsigned long addr, unsigned long size)
