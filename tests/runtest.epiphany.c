@@ -23,8 +23,9 @@ void usage(char **argv)
 int main(int argc, char **argv)
 {
     int returncode, err;
-    char *results;
-    struct status *status;
+    p_mem_t status_mem, results_mem;
+    char results[1024] = { '\0' };
+    struct status status = { .returncode = HARD_ERROR };
     p_dev_t dev;
     p_prog_t prog;
     p_team_t team;
@@ -36,14 +37,20 @@ int main(int argc, char **argv)
     prog = p_load(dev, argv[1], 0);
     team = p_open(dev, 0, 16); // TODO: Must be 16 for Epiphany
 
-    status = p_map(dev, 0x8f200000, sizeof(*status));
-    results = p_map(dev, 0x8f300000, 1024);
+    status_mem = p_map(dev, 0x8f200000, sizeof(status));
+    results_mem = p_map(dev, 0x8f300000, sizeof(results));
 
-    memset(status, 0, sizeof(*status));
-    memset(results, 0, 1024);
+    /* Clear */
+    p_write(&status_mem, &status, 0, sizeof(status), 0);
+    p_write(&results_mem, results, 0, sizeof(results), 0);
 
     err = p_run(prog, "main", team, 0, 1, 0, NULL, 0);
-    returncode = err ? HARD_ERROR : status->returncode;
+
+    /* Read back */
+    p_read(&status_mem, &status, 0, sizeof(status), 0);
+    p_read(&results_mem, results, 0, sizeof(results), 0);
+
+    returncode = err ? HARD_ERROR : status.returncode;
 
     printf("%s\n", results);
 
