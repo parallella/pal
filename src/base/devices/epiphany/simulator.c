@@ -95,7 +95,7 @@ static void *dev_map_member(struct team *team, int member,
     return NULL;
 }
 
-static int dev_unmap(struct team *team, void *addr)
+static int dev_unmap(struct team *team, p_mem_t *mem)
 {
     return 0;
 }
