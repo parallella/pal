@@ -116,6 +116,12 @@ static void *dev_map(struct dev *dev, unsigned long addr, unsigned long size)
     }
 }
 
+static void *dev_map_raw(struct dev *dev, unsigned long addr, unsigned long size)
+{
+    struct epiphany_dev *epiphany = to_epiphany_dev(dev);
+
+    return (void *) es_client_get_raw_pointer(epiphany->esim, addr, size);
+}
 
 static uint32_t reg_read(struct epiphany_dev *epiphany, uintptr_t base,
                          uintptr_t offset)
@@ -159,4 +165,5 @@ struct dev_ops __pal_dev_epiphany_sim_ops = {
     .map_member = dev_map_member,
     .map = dev_map,
     .unmap = dev_unmap,
+    ._map_raw = dev_map_raw,
 };
