@@ -28,7 +28,13 @@
 ssize_t p_write(p_mem_t *mem, const void *src, off_t offset, size_t nb,
                 int flags)
 {
-    printf("Running p_write(%p,%p,%d,%d)\n", mem, src, (int)nb, flags);
-    // memcpy(mem->memptr,src,nb);
-    return -ENOSYS;
+    struct mem_ops *mem_ops = mem->ops;
+
+    if (p_mem_error(mem))
+        return p_mem_error(mem);
+
+    if (!mem_ops || !mem_ops->write)
+        return -ENOSYS;
+
+    return mem_ops->write(mem, src, offset, nb, flags);
 }

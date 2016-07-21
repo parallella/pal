@@ -133,6 +133,11 @@ struct pal_global {
     uint32_t rank;
 };
 
+struct mem_ops {
+    ssize_t (*write) (p_mem_t *, const void *, off_t, size_t, int);
+    ssize_t (*read) (p_mem_t *, void *, off_t, size_t, int);
+};
+
 extern struct pal_global __pal_global;
 
 
