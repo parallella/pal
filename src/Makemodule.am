@@ -17,7 +17,7 @@ src/math/libpal-math.la
 #
 
 # Only public API functions should be visible
-src_libpal_la_LDFLAGS = -export-symbols-regex '^p_|^__pal_'
+src_libpal_la_LDFLAGS = -export-symbols-regex '^p_|^__pal_|^_p_map_raw$$'
 
 include src/base/Makemodule.am
 include src/dsp/Makemodule.am

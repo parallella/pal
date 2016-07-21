@@ -83,6 +83,8 @@ struct dev_ops {
     /* Optional */
     int (*early_init) (struct dev *);
     void (*late_fini) (struct dev *);
+
+    void * (*_map_raw) (struct dev *, unsigned long, unsigned long);
 };
 
 struct dev {
