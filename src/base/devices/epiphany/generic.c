@@ -150,6 +150,12 @@ int epiphany_dev_wait(struct dev *dev, struct team *team)
         if (!need_wait)
             break;
 
+        /* Manual check to be compatible with non-pal device programs */
+        if (!(++j % 100)) {
+            if (epiphany_is_team_done(team))
+                break;
+        }
+
         /* Don't burn CPU. Need HW/Kernel support for blocking wait */
         usleep(1000);
     }

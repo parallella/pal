@@ -860,3 +860,45 @@ int epiphany_reset_system(struct epiphany_dev *epiphany)
 
     return 0;
 }
+
+/* Return true if all CPU's in team have exited */
+bool epiphany_is_team_done (struct team *team)
+{
+    struct epiphany_dev *epiphany = to_epiphany_dev(team->dev);
+
+    for (unsigned i = team->start; i < team->start + team->count; i++) {
+        unsigned row = 32 + i / 4;
+        unsigned col =  8 + i % 4;
+        uint32_t core = ((row << 6) | col) << 20;
+        uint32_t debugstatus, pc;
+        uint16_t insn;
+
+        debugstatus = reg_read(core, MMR_DEBUGSTATUS);
+
+        if (!(debugstatus & 1))
+            return false;
+
+
+        pc = reg_read(core, MMR_PC);
+
+        if (pc >= 2)
+            pc -= 2;
+
+        if (pc < 0x100000)
+            pc |= core;
+
+        mem_read(&insn, pc, sizeof(insn));
+        switch (insn) {
+#define TRAP3 0x0fe2
+#define TRAP4 0x13e2
+#define TRAP5 0x17e2
+        case TRAP3:
+        case TRAP4:
+        case TRAP5:
+            continue;
+        default:
+            return false;
+        }
+    }
+    return true;
+}
