@@ -125,13 +125,13 @@ int epiphany_dev_run(struct dev *dev, struct team *team, struct prog *prog,
 
 int epiphany_dev_wait(struct dev *dev, struct team *team)
 {
-    unsigned i;
+    unsigned i, j = 0;
     bool need_wait = true;
     struct epiphany_dev *data = to_epiphany_dev(dev);
 
     while (true) {
         need_wait = false;
-        for (i = 0; i < 16; i++) {
+        for (i = team->start; i < team->start + team->count; i++) {
             switch (data->ctrl->status[i]) {
             case STATUS_SCHEDULED:
                 /* TODO: Time out if same proc is in scheduled state too long.
