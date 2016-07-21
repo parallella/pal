@@ -132,13 +132,16 @@ void __pal_init()
     const uint32_t coreid = e_get_coreid();
     const uint32_t row = e_group_config.core_row;
     const uint32_t col = e_group_config.core_col;
+    const uint32_t glob_rank =
+        (e_group_config.group_row + row - 32) * 4
+        + e_group_config.group_col + col - 8;
     const uint32_t rank = row * e_group_config.group_cols + col;
     struct epiphany_ctrl_mem *ctrl =
         (struct epiphany_ctrl_mem *) CTRL_MEM_EADDR;
 
     __pal_global.rank = rank;
 
-    ctrl->status[rank] = STATUS_RUNNING;
+    ctrl->status[glob_rank] = STATUS_RUNNING;
 #else
     detect_epiphany_simulator();
     __pal_global.rank = 0;
@@ -155,9 +158,12 @@ void __pal_fini()
     const uint32_t row = e_group_config.core_row;
     const uint32_t col = e_group_config.core_col;
     const uint32_t rank = row * e_group_config.group_cols + col;
+    const uint32_t glob_rank =
+        (e_group_config.group_row + row - 32) * 4
+        + e_group_config.group_col + col - 8;
     struct epiphany_ctrl_mem *ctrl =
         (struct epiphany_ctrl_mem *) CTRL_MEM_EADDR;
-    ctrl->status[rank] = STATUS_DONE;
+    ctrl->status[glob_rank] = STATUS_DONE;
 #else
     struct team *team, *next_team;
     struct prog *prog, *next_prog;
