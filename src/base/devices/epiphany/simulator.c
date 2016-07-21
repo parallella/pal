@@ -100,6 +100,41 @@ static int dev_unmap(struct team *team, p_mem_t *mem)
     return 0;
 }
 
+static ssize_t sim_mem_write(p_mem_t *mem, const void *src, off_t offset,
+                             size_t nb, int flags)
+{
+    struct epiphany_dev *epiphany = to_epiphany_dev(mem->dev);
+    uintptr_t addr = (uintptr_t) mem->ref;
+
+    // if (addr < 0x8e000000 || 32*1024*1024 < addr - 0x8e000000 + nb)
+    //     return -EINVAL;
+
+    if (es_mem_store(epiphany->esim, addr + offset, nb, src))
+        return -EIO;
+
+    return nb;
+}
+
+static ssize_t sim_mem_read(p_mem_t *mem, void *dst, off_t offset,
+                            size_t nb, int flags)
+{
+    struct epiphany_dev *epiphany = to_epiphany_dev(mem->dev);
+    uintptr_t addr = (uintptr_t) mem->ref;
+
+    // if (addr < 0x8e000000 || 32*1024*1024 < addr - 0x8e000000 + nb)
+    //     return -EINVAL;
+
+    if (es_mem_load(epiphany->esim, addr + offset, nb, dst))
+        return -EINVAL;
+
+    return nb;
+}
+
+static struct mem_ops sim_mem_ops = {
+    .read = sim_mem_read,
+    .write = sim_mem_write,
+};
+
 static p_mem_t dev_map(struct dev *dev, unsigned long addr, unsigned long size)
 {
     struct epiphany_dev *epiphany = to_epiphany_dev(dev);
@@ -112,6 +147,7 @@ static p_mem_t dev_map(struct dev *dev, unsigned long addr, unsigned long size)
 
     mem.ref = (void *) addr;
     mem.size = size;
+    mem.ops = &sim_mem_ops;
     mem.dev = dev;
 
     return mem;
