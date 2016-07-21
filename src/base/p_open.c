@@ -30,6 +30,10 @@ p_team_t p_open(p_dev_t dev, int start, int count)
     if (!team)
         return p_ref_err(ENOMEM);
 
+    /* TODO: Rank ranges instead of start / count */
+    team->start = start;
+    team->count = count;
+
     team->dev = dev;
 
     ret = pdev->dev_ops->open(team);
@@ -39,7 +43,6 @@ p_team_t p_open(p_dev_t dev, int start, int count)
     }
     team = ret;
 
-    /* TODO: Rank ranges */
 
     /* TODO: Need something generic to iterate over lists */
     if (!__pal_global.teams_head) {

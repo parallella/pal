@@ -89,16 +89,23 @@ struct dev {
     struct dev_ops *dev_ops;
 };
 
+#if 0
 struct rank_range {
     int first;
     int n;
 };
+#endif
 
 struct team {
     struct team *next;
     struct dev *dev; // Support only one device per team (at leat for now)
+#if 1
+    int start;
+    int count;
+#else
     struct rank_range *ranges;
     size_t ranges_size;
+#endif
 };
 
 struct prog {
