@@ -9,7 +9,6 @@ CLEANFILES += benchmark/runbench
 if HOST_IS_EPIPHANY
 RUNBENCH_SRC      = benchmark/runbench.epiphany.c
 CFLAGS_FOR_BUILD  += -DPAL_SOURCE -I$(top_srcdir)/include
-LDFLAGS_FOR_BUILD += -L$(host_top_builddir)/src/.libs -Wl,-rpath=$(host_top_builddir)/src/.libs -lpal
 else
 RUNBENCH_SRC      = benchmark/runbench.default.c
 BENCHMARK_LIBS    += -lm

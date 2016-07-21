@@ -1,6 +1,8 @@
 ACLOCAL_AMFLAGS = -I config/m4
 AUTOMAKE_OPTIONS = foreign
 
+host_abs_top_builddir = $(abs_top_builddir)/../..
+
 EXTRA_DIST                        =
 SUBDIRS                           =
 DIST_SUBDIRS                      =
@@ -64,8 +66,9 @@ if HOST_IS_EPIPHANY
 ESDK              = /opt/adapteva/esdk
 EINCS             = -I$(ESDK)/tools/host/include
 ELIBS             = -L$(ESDK)/tools/host/lib
-CFLAGS_FOR_BUILD  += $(EINCS)
-LDFLAGS_FOR_BUILD +=
+CFLAGS_FOR_BUILD  += -DPAL_SOURCE -I$(top_srcdir)/include $(EINCS)
+LDFLAGS_FOR_BUILD += -L$(host_abs_top_builddir)/src/.libs \
+                     -Wl,-rpath=$(host_abs_top_builddir)/src/.libs -lpal
 endif
 
 if ENABLE_DEV_EPIPHANY
