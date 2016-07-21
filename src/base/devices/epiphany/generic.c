@@ -68,20 +68,16 @@ void epiphany_dev_fini(struct dev *dev)
     }
 }
 
-struct team *epiphany_dev_open(struct dev *dev, struct team *team, int start,
-                               int count)
+struct team *epiphany_dev_open(struct team *team)
 {
-    struct epiphany_dev *data = to_epiphany_dev(dev);
+    struct epiphany_dev *epiphany = to_epiphany_dev(team->dev);
 
-    /* Only support opening entire chip for now */
-    if (start != 0 || count != 16)
+    if (team->start < 0 || team->count < 0 || 16 < team->start + team->count)
         return p_ref_err(EINVAL);
 
     /* Open was done in init */
-    if (!data->opened)
+    if (!epiphany->opened)
         return p_ref_err(EBADF);
-
-    team->dev = dev;
 
     return team;
 }

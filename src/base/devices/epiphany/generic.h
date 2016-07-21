@@ -20,8 +20,7 @@ p_dev_t epiphany_dev_init(struct dev *dev, int flags);
 
 void epiphany_dev_fini(struct dev *dev);
 
-struct team *epiphany_dev_open(struct dev *dev, struct team *team, int start,
-                               int count);
+struct team *epiphany_dev_open(struct team *team);
 
 int epiphany_dev_run(struct dev *dev, struct team *team, struct prog *prog,
                      const char *function, int start, int size, int argn,
