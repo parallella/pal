@@ -30,7 +30,9 @@ p_team_t p_open(p_dev_t dev, int start, int count)
     if (!team)
         return p_ref_err(ENOMEM);
 
-    ret = pdev->dev_ops->open(pdev, team, start, count);
+    team->dev = dev;
+
+    ret = pdev->dev_ops->open(team);
     if (p_ref_is_err(ret)) {
         free(team);
         return (p_team_t) ret;
