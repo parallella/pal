@@ -65,7 +65,7 @@ ESDK              = /opt/adapteva/esdk
 EINCS             = -I$(ESDK)/tools/host/include
 ELIBS             = -L$(ESDK)/tools/host/lib
 CFLAGS_FOR_BUILD  += $(EINCS)
-LDFLAGS_FOR_BUILD += $(ELIBS) -le-hal -le-loader
+LDFLAGS_FOR_BUILD +=
 endif
 
 if ENABLE_DEV_EPIPHANY
