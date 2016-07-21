@@ -71,8 +71,10 @@ int main(int argc, char *argv[])
     p_team_t team = p_open(dev, 0, 16); // create a team
 
     // "Allocate" output buffer. TODO: We need an API call for this
-    float *out = (float *) p_map(dev, 0x8f900000, size * sizeof(float));
-    memset(out, 0, size * sizeof(float));
+    p_mem_t out = p_map(dev, 0x8f900000, size * sizeof(float));
+    void *empty = alloca(size * sizeof(float));
+    memset(empty, 0, size * sizeof(float));
+    p_write(&out, empty, 0, size * sizeof(float), 0);
 
     // Construct program arguments
     // TODO: We can hide the is_primitive bool param with a macro
@@ -81,7 +83,7 @@ int main(int argc, char *argv[])
     // ((!is_primitive) == pass_by_reference)
     p_arg_t args[] = {
         { data, (size * sizeof(float)), false },
-        { out, sizeof(out), false },
+        { out.ref, sizeof(out), false },
         { &h, sizeof(h), true },
         { &w, sizeof(w), true },
     };
@@ -90,7 +92,8 @@ int main(int argc, char *argv[])
     err = p_run(prog, "gauss3x3", team, 0, 1, ARRAY_SIZE(args), args, 0);
 
     // Read back result. TODO: Use PAL API.
-    memcpy(data, (void *) out, size * sizeof(float));
+    p_read(&out, data, 0, size * sizeof(float), 0);
+    //memcpy(data, (void *) out, size * sizeof(float));
 
     // TODO: Perform on device
     float_to_ubyte(data_ub, (float *) data, size);
