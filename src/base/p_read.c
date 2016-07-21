@@ -27,7 +27,7 @@
  * @return      Returns number of bytes read. Negative value indicates error.
  *
  */
-ssize_t p_read(p_mem_t mem, void *dst, off_t offset, size_t nb, int flags)
+ssize_t p_read(p_mem_t *mem, void *dst, off_t offset, size_t nb, int flags)
 {
     printf("Running p_read(%p,%d,%d,%p)\n", mem, (int)nb, flags, dst);
     // memcpy(dst, mem->memptr,nb);

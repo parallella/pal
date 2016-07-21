@@ -16,15 +16,18 @@
  * @return          Non-zero on error.
  *
  */
-int p_unmap(p_team_t team, void *addr)
+int p_unmap(p_team_t team, p_mem_t *mem)
 {
     struct team *pteam = (struct team *) team;
 
     if (p_ref_is_err(team))
-        return -EINVAL;
+        return p_error(team);
+
+    if (p_mem_error(mem))
+        return p_mem_error(mem);
 
     if (!pteam->dev || !pteam->dev->dev_ops || !pteam->dev->dev_ops->map_member)
         return -ENODEV;
 
-    return pteam->dev->dev_ops->unmap(pteam, addr);
+    return pteam->dev->dev_ops->unmap(pteam, mem);
 }

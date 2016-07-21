@@ -77,8 +77,8 @@ struct dev_ops {
                 int, int, int, const p_arg_t *, int);
     int (*wait) (struct dev *, struct team *);
     void * (*map_member) (struct team *, int, unsigned long, unsigned long);
-    void * (*map) (struct dev *, unsigned long, unsigned long);
-    int (*unmap) (struct team *, void *addr);
+    p_mem_t (*map) (struct dev *, unsigned long, unsigned long);
+    int (*unmap) (struct team *, p_mem_t *);
 
     /* Optional */
     int (*early_init) (struct dev *);
@@ -156,6 +156,14 @@ static inline p_ref_t p_ref_err(const int err)
 {
     return (p_ref_t) ((intptr_t) -err);
 }
+
+static inline p_mem_t p_mem_err(const int err)
+{
+    p_mem_t mem = { 0 };
+    mem.ref = p_ref_err(err);
+    return mem;
+}
+
 
 static inline bool p_ref_is_err(const p_ref_t ref)
 {

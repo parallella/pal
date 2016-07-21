@@ -71,10 +71,18 @@ typedef p_ref_t p_team_t;
 typedef p_ref_t p_prog_t;
 typedef p_ref_t p_symbol_t;
 typedef p_ref_t p_event_t;
-typedef p_ref_t p_mem_t;
 typedef p_ref_t p_memptr_t;
 
 typedef int p_mutex_t;
+
+typedef struct {
+    p_ref_t ref;
+    size_t size;
+    p_team_t team;
+    int rank;
+    p_dev_t dev;
+    void *ops;
+} p_mem_t;
 
 /*
  ***********************************************************************
@@ -114,10 +122,10 @@ void *p_map_member(p_team_t team, int member, unsigned long off,
                    unsigned long size);
 
 /* Map device address space into host address space */
-void *p_map(p_dev_t dev, unsigned long address, unsigned long size);
+p_mem_t p_map(p_dev_t dev, unsigned long address, unsigned long size);
 
 /*Unmap memory region*/
-int p_unmap(p_team_t team, void *addr);
+int p_unmap(p_team_t team, p_mem_t *mem);
 
 /*Close a team of processors*/
 int p_close(p_team_t team);
@@ -142,13 +150,13 @@ p_mem_t p_malloc(p_team_t team, size_t size);
 p_mem_t p_rmalloc(p_team_t team, int pid, size_t size);
 
 /*Free allocated memory */
-int p_free(p_mem_t mem);
+int p_free(p_mem_t *mem);
 
 /*Memory fence*/
 void p_fence(void);
 
 /*Flushes the read and write paths to a specific memory object*/
-int p_flush(p_mem_t mem);
+int p_flush(p_mem_t *mem);
 
 /*Query a property of a device*/
 /*need it for mem, team, prog as well?*/
@@ -161,21 +169,21 @@ int p_query(p_dev_t dev, int property);
  */
 
 /*Writes to a global memory address from a local address*/
-ssize_t p_write(p_mem_t mem, const void *src, size_t nb, int flags);
+ssize_t p_write(p_mem_t *mem, const void *src, off_t offset, size_t nb, int flags);
 
 /*Reads from a global memory address */
-ssize_t p_read(p_mem_t mem, void *dst, off_t offset, size_t nb, int flags);
+ssize_t p_read(p_mem_t *mem, void *dst, off_t offset, size_t nb, int flags);
 
 /*Broadcasts an array based to a list of destination pointers*/
-ssize_t p_broadcast(p_mem_t *mlist[], int mcount, void *src, size_t nb,
+ssize_t p_broadcast(p_mem_t **mlist[], int mcount, void *src, size_t nb,
                     int flags);
 
 /*Scatters data from a local array to a list of remote memory objects*/
-ssize_t p_scatter(p_mem_t *mlist[], int mcount, void *suf, size_t scount,
+ssize_t p_scatter(p_mem_t **mlist[], int mcount, void *suf, size_t scount,
                   int disp[], int flags);
 
 /*Scatters data from a local array to a list of remote memory objects*/
-ssize_t p_gather(p_mem_t *mlist[], int mcount, void *dbuf, size_t dcount,
+ssize_t p_gather(p_mem_t **mlist[], int mcount, void *dbuf, size_t dcount,
                  int disp[], int flags);
 
 /*Specialized low level shared memory memcpy interface (non-blocking)*/
@@ -289,4 +297,9 @@ static inline int p_error(p_ref_t ref)
         return (int) ((intptr_t) ref);
 
     return 0;
+}
+
+static inline int p_mem_error(p_mem_t *mem)
+{
+    return p_error(mem->ref);
 }

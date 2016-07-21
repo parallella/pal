@@ -14,8 +14,8 @@
  *
  */
 
-int p_free(p_mem_t mem)
+int p_free(p_mem_t *mem)
 {
     printf("Running p_free(%p)\n", mem);
-    return (0);
+    return ENOSYS;
 }

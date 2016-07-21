@@ -48,5 +48,5 @@ p_mem_t p_malloc(p_team_t team, size_t size)
         return (1);
     }
 #endif
-    return p_ref_err(ENOSYS);
+    return p_mem_err(ENOSYS);
 }

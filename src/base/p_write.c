@@ -25,7 +25,8 @@
 #include <string.h>
 #include "pal_base.h"
 #include "pal_base_private.h"
-ssize_t p_write(p_mem_t mem, const void *src, size_t nb, int flags)
+ssize_t p_write(p_mem_t *mem, const void *src, off_t offset, size_t nb,
+                int flags)
 {
     printf("Running p_write(%p,%p,%d,%d)\n", mem, src, (int)nb, flags);
     // memcpy(mem->memptr,src,nb);

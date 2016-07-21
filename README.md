@@ -158,6 +158,7 @@ FUNCTION     | NOTES
 [p_fence()](src/base/p_fence.c)          | memory fence
 [p_finalize()](src/base/p_finalize.c)    | cleans up run time
 [p_error()](src/include/pal_base.h)      | get error code (if any).
+[p_mem_error()](src/include/pal_base.h)  | get error code for a memory object (if any).
 
 ##MEMORY ALLOCATION  
 These functions are used for creating memory objects.

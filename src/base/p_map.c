@@ -18,13 +18,15 @@
  * @return          Raw pointer or NULL on error or not supported.
  *
  */
-void *p_map(p_dev_t dev, unsigned long addr, unsigned long size)
+p_mem_t p_map(p_dev_t dev, unsigned long addr, unsigned long size)
 {
     struct dev *pdev= (struct dev *) dev;
 
-    if (!pdev || p_ref_is_err(dev) || !pdev->dev_ops ||
-	!pdev->dev_ops->map)
-        return NULL;
+    if (p_ref_is_err(dev))
+	return p_mem_err(p_error(dev));
+
+    if (!pdev || !pdev->dev_ops || !pdev->dev_ops->map)
+        return p_mem_err(ENOSYS);
 
     return pdev->dev_ops->map(pdev, addr, size);
 }
