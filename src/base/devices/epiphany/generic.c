@@ -125,13 +125,13 @@ struct team *epiphany_dev_open(struct team *team)
     return team;
 }
 
-int epiphany_dev_run(struct dev *dev, struct team *team, struct prog *prog,
-                     const char *function, int start, int count, int argn,
-                     const p_arg_t *args, int flags)
+int epiphany_dev_load(struct team *team, int start, int count,
+                      struct prog *prog, const char *function, int argn,
+                      const p_arg_t *args)
 {
     int err;
     int i;
-    struct epiphany_dev *epiphany = to_epiphany_dev(dev);
+    struct epiphany_dev *epiphany = to_epiphany_dev(team->dev);
 
     if (start < 0 || count <= 0)
         return -EINVAL;
@@ -148,7 +148,7 @@ int epiphany_dev_run(struct dev *dev, struct team *team, struct prog *prog,
         return err;
     }
 
-    err = epiphany_load(team, prog, start, count, flags, argn, args, function);
+    err = epiphany_load(team, start, count, prog, function, argn, args);
     if (err)
         return err;
 
@@ -159,7 +159,15 @@ int epiphany_dev_run(struct dev *dev, struct team *team, struct prog *prog,
     /* Ideally a *system* (not host CPU-only) memory barrier here */
     __sync_synchronize();
 
-    epiphany_start(team, team->start + start, count, flags);
+    return 0;
+}
+
+int epiphany_dev_start(struct team *team, int start, int count)
+{
+    /* Ideally a *system* (not host CPU-only) memory barrier here */
+    __sync_synchronize();
+
+    epiphany_start(team, team->start + start, count);
 
     return 0;
 }

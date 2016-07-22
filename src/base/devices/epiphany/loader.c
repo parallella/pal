@@ -789,9 +789,9 @@ static int set_core_config(struct team *team, unsigned coreid, unsigned rank,
     return 0;
 }
 
-int epiphany_load(struct team *team, struct prog *prog,
-                  int start, int size, int flags, int argn,
-                  const p_arg_t *args, const char *function)
+int epiphany_load(struct team *team, int start, int count,
+                  struct prog *prog, const char *function,
+                  int argn, const p_arg_t *args)
 
 {
     int rc;
@@ -822,7 +822,7 @@ int epiphany_load(struct team *team, struct prog *prog,
         goto out;
     }
 
-    for (unsigned i = (unsigned) start; i < (unsigned) (start + size); i++) {
+    for (unsigned i = (unsigned) start; i < (unsigned) (start + count); i++) {
         unsigned row = epiphany->row_base + (team->start + i) / epiphany->cols;
         unsigned col = epiphany->col_base + (team->start + i) % epiphany->cols;
         unsigned coreid = (row << 6) | col;
@@ -841,11 +841,11 @@ out:
     return rc;
 }
 
-void epiphany_start(struct team *team, int start, int size, int flags)
+void epiphany_start(struct team *team, int start, int count)
 {
     struct epiphany_dev *epiphany = to_epiphany_dev(team->dev);
 
-    for (unsigned i = (unsigned) start; i < (unsigned) (start + size); i++) {
+    for (unsigned i = (unsigned) start; i < (unsigned) (start + count); i++) {
         unsigned row = epiphany->row_base + i / epiphany->cols;
         unsigned col = epiphany->col_base + i % epiphany->cols;
         unsigned coreid = (row << 6) | col;

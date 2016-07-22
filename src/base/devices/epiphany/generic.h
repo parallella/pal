@@ -24,8 +24,10 @@ int epiphany_dev_query(struct dev *dev, int property);
 
 struct team *epiphany_dev_open(struct team *team);
 
-int epiphany_dev_run(struct dev *dev, struct team *team, struct prog *prog,
-                     const char *function, int start, int count, int argn,
-                     const p_arg_t *args, int flags);
+int epiphany_dev_load(struct team *team, int start, int count,
+                      struct prog *prog, const char *function,
+                      int argn, const p_arg_t *args);
+
+int epiphany_dev_start(struct team *team, int start, int count);
 
 int epiphany_dev_wait(struct dev *dev, struct team *team);

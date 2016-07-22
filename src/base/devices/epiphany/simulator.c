@@ -199,7 +199,8 @@ struct dev_ops __pal_dev_epiphany_sim_ops = {
     /* Epiphany generic */
     .fini = dev_fini,
     .open = epiphany_dev_open,
-    .run = epiphany_dev_run,
+    .load = epiphany_dev_load,
+    .start = epiphany_dev_start,
     .wait = epiphany_dev_wait,
     /* Specific for simulator */
     .init = dev_init,

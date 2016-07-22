@@ -2,10 +2,10 @@
 struct team;
 struct prog;
 
-extern int epiphany_load(struct team *team, struct prog *prog,
-                         int start, int size, int flags, int argn,
-                         const p_arg_t *args, const char *function);
-extern void epiphany_start(struct team *team, int start, int size, int flags);
-extern int epiphany_soft_reset(struct team *team, int start, int size);
+extern int epiphany_load(struct team *team, int start, int count,
+                         struct prog *prog, const char *function,
+                         int argn, const p_arg_t *args);
+extern void epiphany_start(struct team *team, int start, int count);
+extern int epiphany_soft_reset(struct team *team, int start, int count);
 int epiphany_reset_system(struct epiphany_dev *epiphany);
 extern bool epiphany_is_team_done (struct team *team);
