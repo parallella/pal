@@ -103,6 +103,8 @@ typedef struct p_arg_t {
 } p_arg_t;
 
 #define P_RUN_NONBLOCK 0x800 /* == O_NONBLOCK */
+#define P_RUN_PREPARE   (1 << 0)
+#define P_RUN_PREPARED  (1 << 1)
 
 
 /*Initialize device run time*/

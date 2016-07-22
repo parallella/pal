@@ -73,8 +73,9 @@ struct dev_ops {
     int (*query) (struct dev *, int);
     struct team *(*open) (struct team *);
     int (*close) (struct dev *, struct team *);
-    int (*run) (struct dev *, struct team *, struct prog *, const char *,
-                int, int, int, const p_arg_t *, int);
+    int (*load) (struct team *, int, int, struct prog *, const char *, int,
+                 const p_arg_t *);
+    int (*start) (struct team *, int, int);
     int (*wait) (struct dev *, struct team *);
     void * (*map_member) (struct team *, int, unsigned long, unsigned long);
     p_mem_t (*map) (struct dev *, unsigned long, unsigned long);

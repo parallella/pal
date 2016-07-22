@@ -36,27 +36,32 @@
 int p_run(p_prog_t prog, const char *function, p_team_t team,
           int start, int count, int nargs, const p_arg_t *args, int flags)
 {
-    int err;
+    int err = 0;
     struct team *pteam = (struct team *) team;
     struct prog *pprog = (struct prog *) prog;
-    struct dev *pdev;
+    struct dev_ops *ops = pteam->dev->dev_ops;
 
     if (p_ref_is_err(prog) || p_ref_is_err(team))
         return -EINVAL;
 
-    pdev = pteam->dev;
+    if (!(flags & P_RUN_PREPARED)) {
+        if (nargs > P_RUN_MAX_ARGS)
+            return -E2BIG;
 
-    if (nargs > P_RUN_MAX_ARGS)
-        return -E2BIG;
+        err = ops->load(pteam, start, count, pprog, function, nargs, args);
+        if (err)
+            return err;
+    }
 
-    err = pdev->dev_ops->run(pdev, pteam, pprog, function, start, count, nargs,
-                             args, flags);
+    if (flags & P_RUN_PREPARE)
+        return 0;
 
+    err = ops->start(pteam, start, count);
     if (err)
         return err;
 
     if (!(flags & P_RUN_NONBLOCK))
-        return p_wait((p_team_t) team); // Inconsistent with flags to this function
+        err = p_wait(pteam);
 
-    return 0;
+    return err;
 }
