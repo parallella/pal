@@ -45,14 +45,17 @@
 #define P_PROP_ROWS 3
 #define P_PROP_COLS 4
 #define P_PROP_PLANES 5
-#define P_PROP_CHIPROWS 6
-#define P_PROP_CHIPCOLS 7
-#define P_PROP_SIMD 8     // 1 if device supports SIMD
-#define P_PROP_MEMSIZE 9  // Memory size per node
-#define P_PROP_MEMBASE 10
-#define P_PROP_VERSION 11
-#define P_PROP_MEMARCH 12
-#define P_PROP_WHOAMI 13
+#define P_PROP_ROWBASE 6
+#define P_PROP_COLBASE 7
+#define P_PROP_PLANEBASE 8
+#define P_PROP_CHIPROWS 9
+#define P_PROP_CHIPCOLS 10
+#define P_PROP_SIMD 11    // 1 if device supports SIMD
+#define P_PROP_MEMSIZE 12 // Memory size per node
+#define P_PROP_MEMBASE 13
+#define P_PROP_VERSION 14
+#define P_PROP_MEMARCH 15
+#define P_PROP_WHOAMI 16
 
 /*
  ***********************************************************************
