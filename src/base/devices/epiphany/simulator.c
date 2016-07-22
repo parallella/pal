@@ -47,8 +47,9 @@ static void dev_late_fini(struct dev *dev)
 
 static p_dev_t dev_init(struct dev *dev, int flags)
 {
-    int err;
     struct epiphany_dev *epiphany = to_epiphany_dev(dev);
+    int err;
+    es_cluster_cfg esim_cfg;
 
     if (!epiphany->initialized)
         return p_ref_err(ENODEV);
@@ -60,6 +61,16 @@ static p_dev_t dev_init(struct dev *dev, int flags)
 
     if (es_client_connect(&epiphany->esim, NULL))
         return p_ref_err(EIO);
+
+    es_get_cluster_cfg(epiphany->esim, &esim_cfg);
+
+    epiphany->rows = esim_cfg.rows;
+    epiphany->cols = esim_cfg.cols;
+    epiphany->row_base = esim_cfg.row_base;
+    epiphany->col_base = esim_cfg.col_base;
+    epiphany->sram_size = esim_cfg.core_phys_mem;
+    epiphany->eram_base = esim_cfg.ext_ram_base;
+    epiphany->eram_size = esim_cfg.ext_ram_size;
 
     epiphany->eram = (void *) es_client_get_raw_pointer(epiphany->esim,
                                                         0x8e000000,
@@ -196,7 +207,7 @@ struct dev_ops __pal_dev_epiphany_sim_ops = {
     .wait = epiphany_dev_wait,
     /* Specific for simulator */
     .init = dev_init,
-    .query = dev_query,
+    .query = epiphany_dev_query,
     .early_init = dev_early_init,
     .late_fini = dev_late_fini,
     .map_member = dev_map_member,
