@@ -36,15 +36,6 @@ static int dev_early_init(struct dev *dev)
     return epiphany_dev_early_init(dev);
 }
 
-static void dev_late_fini(struct dev *dev)
-{
-    struct epiphany_dev *epiphany = to_epiphany_dev(dev);
-
-    es_client_disconnect(epiphany->esim, true);
-
-    epiphany_dev_late_fini(dev);
-}
-
 static p_dev_t dev_init(struct dev *dev, int flags)
 {
     struct epiphany_dev *epiphany = to_epiphany_dev(dev);
@@ -93,10 +84,15 @@ static p_dev_t dev_init(struct dev *dev, int flags)
     return dev;
 }
 
-static int dev_query(struct dev *dev, int property)
+static void dev_fini(struct dev *dev)
 {
-    return -ENOSYS;
+    struct epiphany_dev *epiphany = to_epiphany_dev(dev);
+
+    es_client_disconnect(epiphany->esim, true);
+
+    epiphany_dev_fini(dev);
 }
+
 
 static void *dev_map_member(struct team *team, int member,
                             unsigned long offset, unsigned long size)
@@ -201,7 +197,7 @@ static void mem_write(struct epiphany_dev *epiphany, uintptr_t dst,
 
 struct dev_ops __pal_dev_epiphany_sim_ops = {
     /* Epiphany generic */
-    .fini = epiphany_dev_fini,
+    .fini = dev_fini,
     .open = epiphany_dev_open,
     .run = epiphany_dev_run,
     .wait = epiphany_dev_wait,
@@ -209,7 +205,7 @@ struct dev_ops __pal_dev_epiphany_sim_ops = {
     .init = dev_init,
     .query = epiphany_dev_query,
     .early_init = dev_early_init,
-    .late_fini = dev_late_fini,
+    .late_fini = epiphany_dev_late_fini,
     .map_member = dev_map_member,
     .map = dev_map,
     .unmap = dev_unmap,
