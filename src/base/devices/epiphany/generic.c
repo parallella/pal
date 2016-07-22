@@ -68,6 +68,49 @@ void epiphany_dev_fini(struct dev *dev)
     }
 }
 
+int epiphany_dev_query(struct dev *dev, int property)
+{
+    struct epiphany_dev *epiphany = to_epiphany_dev(dev);
+
+    switch (property) {
+    case P_PROP_TYPE:
+        return P_DEV_EPIPHANY;
+    case P_PROP_NODES:
+        return epiphany->rows * epiphany->cols;
+    case P_PROP_TOPOLOGY:
+        return 2;
+    case P_PROP_ROWS:
+        return epiphany->rows;
+    case P_PROP_COLS:
+        return epiphany->cols;
+    case P_PROP_ROWBASE:
+        return epiphany->row_base;
+    case P_PROP_COLBASE:
+        return epiphany->col_base;
+    case P_PROP_PLANES:
+        return 1;
+    case P_PROP_PLANEBASE:
+        return 0;
+    case P_PROP_CHIPROWS:
+        return epiphany->rows;
+    case P_PROP_CHIPCOLS:
+        return epiphany->cols;
+    case P_PROP_SIMD:
+        return 1;
+    case P_PROP_MEMSIZE:
+        return epiphany->sram_size;
+    case P_PROP_MEMBASE:
+        return (epiphany->row_base << 6 | epiphany->col_base) << 20;
+    case P_PROP_VERSION:
+        return 0xdeadbeef;
+    case P_PROP_MEMARCH:
+    case P_PROP_WHOAMI:
+        return -ENOSYS;
+    }
+    return -EINVAL;
+}
+
+
 struct team *epiphany_dev_open(struct team *team)
 {
     struct epiphany_dev *epiphany = to_epiphany_dev(team->dev);

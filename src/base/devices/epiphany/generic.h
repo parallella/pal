@@ -20,6 +20,8 @@ p_dev_t epiphany_dev_init(struct dev *dev, int flags);
 
 void epiphany_dev_fini(struct dev *dev);
 
+int epiphany_dev_query(struct dev *dev, int property);
+
 struct team *epiphany_dev_open(struct team *team);
 
 int epiphany_dev_run(struct dev *dev, struct team *team, struct prog *prog,
