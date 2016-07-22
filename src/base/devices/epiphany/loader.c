@@ -117,27 +117,29 @@ static inline bool is_local(uint32_t addr)
     return COREID(addr) == 0;
 }
 
-static bool is_on_chip(uint32_t addr)
+static bool is_on_chip(struct epiphany_dev *epiphany, uint32_t addr)
 {
     uint32_t row, col;
     row = (COREID(addr) >> 6) & 0x3f;
     col = (COREID(addr)     ) & 0x3f;
 
     return is_local(addr)
-        || ((0x20 <= row && row < 0x24) && (0x08 <= col && row < 0x0c));
+        || ((epiphany->row_base <= row && row < epiphany->row_base + epiphany->rows)
+                && (epiphany->col_base <= col && row < epiphany->col_base + epiphany->cols));
 }
 
-static inline bool is_in_eram(uint32_t addr)
+static inline bool is_in_eram(struct epiphany_dev *epiphany, uint32_t addr)
 {
-    return (0x8e000000 <= addr && addr < 0x90000000);
+    return (epiphany->eram_base <= addr && addr - epiphany->eram_base < epiphany->eram_size);
 }
 
-static inline bool is_valid_addr(uint32_t addr, uint32_t coreid)
+static inline bool is_valid_addr(struct epiphany_dev *epiphany, uint32_t addr,
+                                 uint32_t coreid)
 {
     /* Only allow loading to current core */
     return is_local(addr)
-        || (is_on_chip(addr) && COREID(addr) == coreid)
-        || is_in_eram(addr);
+        || (is_on_chip(epiphany, addr) && COREID(addr) == coreid)
+        || is_in_eram(epiphany, addr);
 }
 
 /* TODO: Only supports addresses in eram */
@@ -146,11 +148,11 @@ static bool translate(struct epiphany_dev *epiphany, void *addr,
 {
     uintptr_t uaddr = (uintptr_t) addr;
     uintptr_t ueram = (uintptr_t) epiphany->eram;
-    uintptr_t ueeram = (uintptr_t) epiphany->eram + 32 * 1024 * 1024;
+    uintptr_t ueeram = (uintptr_t) epiphany->eram_base + epiphany->eram_size;
     if (uaddr < ueram || ueeram <= uaddr)
         return false;
 
-    *eaddr = 0x8e000000 + ((uint32_t) uaddr - ueram);
+    *eaddr = epiphany->eram_base + ((uint32_t) uaddr - ueram);
 
     return true;
 }
@@ -183,7 +185,7 @@ static int process_elf(const void *file, struct epiphany_dev *epiphany,
 
     for (unsigned i = 0; i < ehdr->e_phnum; i++) {
         // TODO: should this be p_paddr instead of p_vaddr?
-        if (!is_valid_addr(phdr[i].p_vaddr, coreid))
+        if (!is_valid_addr(epiphany, phdr[i].p_vaddr, coreid))
             return -EINVAL;
     }
 
@@ -445,8 +447,8 @@ int epiphany_soft_reset(struct team *team, int start, int size)
     int ret;
     struct epiphany_dev *epiphany = to_epiphany_dev(team->dev);
     for (unsigned i = (unsigned) start; i < (unsigned) (start + size); i++) {
-        unsigned row = 32 + i / 4;
-        unsigned col =  8 + i % 4;
+        unsigned row = epiphany->row_base + i / epiphany->cols;
+        unsigned col = epiphany->col_base + i % epiphany->cols;
         unsigned coreid = (row << 6) | col;
         ret = ecore_soft_reset(epiphany, coreid);
         if (ret)
@@ -718,7 +720,7 @@ static int set_core_config(struct team *team, unsigned coreid, unsigned rank,
             return -ENOENT;
 
         /* ???: Should perhaps only allow local addresses */
-        if (!is_valid_addr(sections[i].sh_addr, coreid))
+        if (!is_valid_addr(epiphany, sections[i].sh_addr, coreid))
             return -EINVAL;
     }
 
@@ -742,18 +744,18 @@ static int set_core_config(struct team *team, unsigned coreid, unsigned rank,
     if (!symbols[0].present && !symbols[1].present)
         return -ENOENT;
 
-    if (symbols[1].present && is_valid_addr(symbols[1].sym.st_value, coreid))
+    if (symbols[1].present && is_valid_addr(epiphany, symbols[1].sym.st_value, coreid))
         function_addr = symbols[1].sym.st_value;
-    else if (is_valid_addr(symbols[0].sym.st_value, coreid))
+    else if (is_valid_addr(epiphany, symbols[0].sym.st_value, coreid))
         function_addr = symbols[0].sym.st_value;
     else
         return -EINVAL;
 
     if (sections[SEC_WORKGROUP_CFG].present) {
-        unsigned glob_row0 = 32 + team->start / 4;
-        unsigned glob_col0 = 8 + team->start % 4;
-        unsigned col0 = team->start % 4;
-        unsigned cole = (team->start + team->count - 1) % 4;
+        unsigned glob_row0 = epiphany->row_base + team->start / epiphany->cols;
+        unsigned glob_col0 = epiphany->col_base + team->start % epiphany->cols;
+        unsigned col0 = team->start % epiphany->cols;
+        unsigned cole = (team->start + team->count - 1) % epiphany->cols;
         unsigned cols = 1 + cole - col0;
         unsigned rows = team->count / cols;
         /* No trivial way to emulate workgroups??? Pretend each core is its own
@@ -765,15 +767,15 @@ static int set_core_config(struct team *team, unsigned coreid, unsigned rank,
         e_group_config.group_col  = glob_col0;
         e_group_config.group_rows = rows;
         e_group_config.group_cols = cols;
-        e_group_config.core_row   = rank / 4;
-        e_group_config.core_col   = rank % 4;
+        e_group_config.core_row   = rank / epiphany->cols;
+        e_group_config.core_col   = rank % epiphany->cols;
         e_group_config.alignment_padding = 0xdeadbeef;
         mem_write(e_group_config_addr, &e_group_config, sizeof(e_group_config));
     }
 
     if (sections[SEC_EXT_MEM_CFG].present) {
         e_emem_config.objtype = E_EXT_MEM;
-        e_emem_config.base    = 0x8e000000;
+        e_emem_config.base    = epiphany->eram_base;
         mem_write(e_emem_config_addr, &e_emem_config, sizeof(e_emem_config));
     }
 
@@ -821,8 +823,8 @@ int epiphany_load(struct team *team, struct prog *prog,
     }
 
     for (unsigned i = (unsigned) start; i < (unsigned) (start + size); i++) {
-        unsigned row = 32 + (team->start + i) / 4;
-        unsigned col =  8 + (team->start + i) % 4;
+        unsigned row = epiphany->row_base + (team->start + i) / epiphany->cols;
+        unsigned col = epiphany->col_base + (team->start + i) % epiphany->cols;
         unsigned coreid = (row << 6) | col;
         rc = process_elf(file, epiphany, coreid);
         if (rc)
@@ -844,8 +846,8 @@ void epiphany_start(struct team *team, int start, int size, int flags)
     struct epiphany_dev *epiphany = to_epiphany_dev(team->dev);
 
     for (unsigned i = (unsigned) start; i < (unsigned) (start + size); i++) {
-        unsigned row = 32 + i / 4;
-        unsigned col =  8 + i % 4;
+        unsigned row = epiphany->row_base + i / epiphany->cols;
+        unsigned col = epiphany->col_base + i % epiphany->cols;
         unsigned coreid = (row << 6) | col;
         uintptr_t core_base = coreid << 20;
 
@@ -867,8 +869,8 @@ bool epiphany_is_team_done (struct team *team)
     struct epiphany_dev *epiphany = to_epiphany_dev(team->dev);
 
     for (unsigned i = team->start; i < team->start + team->count; i++) {
-        unsigned row = 32 + i / 4;
-        unsigned col =  8 + i % 4;
+        unsigned row = epiphany->row_base + i / epiphany->cols;
+        unsigned col = epiphany->col_base + i % epiphany->cols;
         uint32_t core = ((row << 6) | col) << 20;
         uint32_t debugstatus, pc;
         uint16_t insn;
