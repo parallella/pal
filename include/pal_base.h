@@ -4,6 +4,7 @@
 #include <stdint.h>
 #include <unistd.h>
 #include <stdbool.h>
+#include <signal.h>
 
 /*
  ***********************************************************************
@@ -141,6 +142,9 @@ p_prog_t p_load(p_dev_t dev, const char *file, int flags);
 /* Run a program on N processors */
 int p_run(p_prog_t prog, const char *function, p_team_t team,
           int start, int count, int nargs, const p_arg_t *args, int flags);
+
+/* Send signal to team */
+int p_kill(p_team_t team, int start, int count, int signal);
 
 /*Execution barrier*/
 int p_barrier(p_team_t team);

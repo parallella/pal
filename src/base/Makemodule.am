@@ -22,6 +22,7 @@ src/base/p_gather.c               \
 src/base/p_getaddr.c              \
 src/base/p_getsymbol.c            \
 src/base/p_init.c                 \
+src/base/p_kill.c                 \
 src/base/p_load.c                 \
 src/base/p_malloc.c               \
 src/base/p_map.c                  \

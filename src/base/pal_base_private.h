@@ -77,6 +77,7 @@ struct dev_ops {
                  const p_arg_t *);
     int (*start) (struct team *, int, int);
     int (*wait) (struct dev *, struct team *);
+    int (*kill) (struct team *, int, int, int);
     void * (*map_member) (struct team *, int, unsigned long, unsigned long);
     p_mem_t (*map) (struct dev *, unsigned long, unsigned long);
     int (*unmap) (struct team *, p_mem_t *);
