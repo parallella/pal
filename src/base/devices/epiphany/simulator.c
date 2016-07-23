@@ -202,6 +202,7 @@ struct dev_ops __pal_dev_epiphany_sim_ops = {
     .load = epiphany_dev_load,
     .start = epiphany_dev_start,
     .wait = epiphany_dev_wait,
+    .kill = epiphany_dev_kill,
     /* Specific for simulator */
     .init = dev_init,
     .query = epiphany_dev_query,

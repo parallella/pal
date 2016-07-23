@@ -211,3 +211,24 @@ int epiphany_dev_wait(struct dev *dev, struct team *team)
 
     return 0;
 }
+
+int epiphany_dev_kill(struct team *team, int start, int count, int signal)
+{
+    struct epiphany_dev *epiphany = to_epiphany_dev(team->dev);
+
+    if (start < 0 || count <= 0)
+        return -EINVAL;
+
+    if (team->count < start + count)
+        return -EINVAL;
+
+    if (!epiphany->opened)
+        return -EBADF;
+
+    switch (signal) {
+        case SIGKILL:
+            return epiphany_soft_reset(team, team->start + start, count);
+        default:
+            return -ENOSYS;
+    }
+}

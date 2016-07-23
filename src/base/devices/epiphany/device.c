@@ -279,6 +279,7 @@ static struct dev_ops epiphany_dev_ops = {
     .load = epiphany_dev_load,
     .start = epiphany_dev_start,
     .wait = epiphany_dev_wait,
+    .kill = epiphany_dev_kill,
     /* Specific for device */
     .query = dev_query,
     .early_init = dev_early_init,

@@ -31,3 +31,5 @@ int epiphany_dev_load(struct team *team, int start, int count,
 int epiphany_dev_start(struct team *team, int start, int count);
 
 int epiphany_dev_wait(struct dev *dev, struct team *team);
+
+int epiphany_dev_kill(struct team *team, int start, int count, int signal);
