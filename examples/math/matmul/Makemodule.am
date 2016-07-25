@@ -1,0 +1,30 @@
+examples_math_matmul_LDADD               = -lm src/libpal.la
+examples_math_matmul_matmul_host_LDADD = $(examples_math_matmul_LDADD)
+
+examples_math_matmul_matmul_host_SOURCES = \
+examples/math/matmul/matmul-host.c         \
+examples/math/matmul/matlib.c
+
+examples_math_matmul_matmul_host_CPPFLAGS = $(AM_CPPFLAGS) -D__HOST__
+
+if ENABLE_DEV_EPIPHANY
+examples_math_matmul_matmul_dev_epiphany_SOURCES = \
+examples/math/matmul/matmul-dev-epiphany.c         \
+examples/math/matmul/common-buffers.h              \
+examples/math/matmul/matlib.h                      \
+examples/math/matmul/matmul.h                      \
+examples/math/matmul/static-buffers.h              \
+examples/math/matmul/matlib.c                      \
+examples/math/matmul/static-buffers.c              \
+examples/math/matmul/matmul-internal.ldf
+
+examples_math_matmul_matmul_dev_epiphany_LDADD = $(EPIPHANY_LDADD)
+examples_math_matmul_matmul_dev_epiphany_LDFLAGS = \
+-Wl,-T $(top_srcdir)/examples/math/matmul/matmul-internal.ldf
+examples_math_matmul_matmul_dev_epiphany_CFLAGS = -O2 -falign-loops=8 -falign-functions=8 -fmessage-length=0 -ffast-math -ftree-vectorize -std=c99 -ffp-contract=fast -mlong-calls -mfp-mode=round-nearest
+noinst_PROGRAMS +=                       \
+examples/math/matmul/matmul-host         \
+examples/math/matmul/matmul-dev-epiphany
+examples_math_matmul_matmul_host_CPPFLAGS += -DDEVICE=epiphany -D__HOST__
+examples_math_matmul_matmul_host_CFLAGS = -D__HOST__
+endif
