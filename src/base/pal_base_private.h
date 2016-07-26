@@ -123,6 +123,7 @@ struct prog {
 
 struct pal_global {
     struct dev  *devs[P_DEV_LAST+1];
+    struct team default_team;
     struct team *teams_head;
     struct team *teams_tail;
     struct prog *progs_head;
@@ -192,6 +193,11 @@ static inline int p_ref_get_err(const p_ref_t ref)
         return (int) ((intptr_t) ref);
     else
         return 0;
+}
+
+static inline struct team *_p_unwrap_team(const p_team_t team)
+{
+    return team == _P_DEFAULT_TEAM ? &__pal_global.default_team : team;
 }
 
 /*

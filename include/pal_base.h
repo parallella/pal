@@ -90,6 +90,18 @@ typedef struct {
 
 /*
  ***********************************************************************
+ * STATIC INITIALIZERS
+ ***********************************************************************
+ */
+
+/*#define _P_MAX_MAGIC 4095*/
+/*#define _P_MIN_MAGIC 2048*/
+
+#define __P_DEFAULT_TEAM 2048
+#define _P_DEFAULT_TEAM ((p_team_t *) ((intptr_t) -__P_DEFAULT_TEAM))
+
+/*
+ ***********************************************************************
  * PROGRAM FLOW
  ***********************************************************************
  */
@@ -298,7 +310,7 @@ int p_getsymbol(p_prog_t prog, char *name, p_symbol_t symbol);
  ***********************************************************************
  */
 
-#define P_MAX_ERROR 4095
+#define P_MAX_ERROR 2047
 
 static inline int p_error(p_ref_t ref)
 {
