@@ -48,20 +48,8 @@ int main(int argc, char *argv[])
 	// Initialize data structures - mainly target pointers
 	init();
 
-	// Init the host-accelerator sync signals
-	if (me.corenum == 0)
-		Mailbox.pCore->ready = 1;
-
 	// Initialize the barriers
 	e_barrier_init(barriers, tgt_bars);
-
-	if (me.corenum == 0) {
-		// Wait for matmul() call from host. When a '2'
-		// is detected in the mailbox, the loop is
-		// terminated and a call to the actual matmul()
-		// function is initiated.
-		while (!Mailbox.pCore->go) {};
-	}
 
 	// Sync with all other cores
 	e_barrier(barriers, tgt_bars);
@@ -73,11 +61,6 @@ int main(int argc, char *argv[])
 
 	// Sync with all other cores
 	e_barrier(barriers, tgt_bars);
-
-	if (me.corenum == 0) {
-		// Signal End-Of-Calculation to the host.
-		Mailbox.pCore->done = 1;
-	}
 
 	return status;
 }

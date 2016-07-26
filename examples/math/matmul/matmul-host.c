@@ -124,14 +124,6 @@ int main(int argc, char *argv[])
 	memset(&Mailbox, 0, sizeof(Mailbox));
 	p_write(&shared_mem, &Mailbox, 0, sizeof(Mailbox), 0);
 
-	if(verbose){
-	  printf("Loading program on Epiphany chip...\n");
-	}
-    if (p_run(prog, "main", team, 0, 16, 0, NULL, P_RUN_NONBLOCK)) {
-		fprintf(stderr, "Error loading Epiphany program.\n");
-		exit(1);
-	}
-
 	// Generate operand matrices based on a provided seed
 	matrix_init((int)seed);
 
@@ -170,8 +162,14 @@ int main(int argc, char *argv[])
 	if(verbose){
 	  printf( "GO Epiphany! ...   ");
 	}
-	matmul_go(&shared_mem);
+	if(verbose){
+	  printf("Loading program on Epiphany chip...\n");
+	}
 
+    if (p_run(prog, "main", team, 0, 16, 0, NULL, 0)) {
+		fprintf(stderr, "Error loading Epiphany program.\n");
+		exit(1);
+	}
 
 	// Read result matrix and timing
 	addr = offsetof(shared_buf_t, C[0]);
@@ -265,38 +263,6 @@ int main(int argc, char *argv[])
 	p_finalize(dev);
 
 	return retval;
-}
-
-
-// Call (invoke) the matmul() function
-int matmul_go(p_mem_t *shared_mem)
-{
-	// Wait until cores finished previous calculation
-	if (ar.verbose > 0) printf( "Waiting for Epiphany to be ready...\n");
-
-	while (!Mailbox.core.ready) {
-		p_read(shared_mem, &Mailbox.core.ready,
-			   offsetof(shared_buf_t, core.ready),
-			   sizeof(Mailbox.core.ready), 0);
-	}
-
-	// Signal cores to start crunching
-	if (ar.verbose > 0) printf( "Sending the go ...\n");
-
-	Mailbox.core.go = 1;
-	p_write(shared_mem, &Mailbox.core.go, offsetof(shared_buf_t, core.go),
-			sizeof(Mailbox.core.go), 0);
-
-	// Wait until cores finished calculation
-	if (ar.verbose > 0) printf( "Waiting for Epiphany to be done...\n");
-
-	while (!Mailbox.core.done) {
-		p_read(shared_mem, &Mailbox.core.done,
-			   offsetof(shared_buf_t, core.done),
-			   sizeof(Mailbox.core.done), 0);
-	}
-
-	return 0;
 }
 
 
