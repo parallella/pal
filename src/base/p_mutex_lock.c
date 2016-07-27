@@ -3,10 +3,9 @@
 #include "pal_base.h"
 #include "pal_base_private.h"
 
-int p_mutex_lock(p_mutex_t * m)
+int p_mutex_lock(p_mutex_t *mutex)
 {
-	while (!__sync_bool_compare_and_swap(m, 0, 1))
-		p_cpu_relax();
+    struct team *pteam = _p_unwrap_team(mutex->team);
 
-	return 0;
+    return pteam->dev->dev_ops->mutex_lock(pteam, mutex);
 }

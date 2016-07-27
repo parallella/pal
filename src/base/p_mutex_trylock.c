@@ -3,7 +3,9 @@
 #include "pal_base.h"
 #include "pal_base_private.h"
 
-int p_mutex_trylock(p_mutex_t * m)
+int p_mutex_trylock(p_mutex_t *mutex)
 {
-	return !__sync_bool_compare_and_swap(m, 0, 1);
+    struct team *pteam = _p_unwrap_team(mutex->team);
+
+    return pteam->dev->dev_ops->mutex_trylock(pteam, mutex);
 }

@@ -82,6 +82,10 @@ struct dev_ops {
     p_mem_t (*map) (struct dev *, unsigned long, unsigned long);
     int (*unmap) (struct team *, p_mem_t *);
 
+    int (*mutex_lock) (struct team *, p_mutex_t *);
+    int (*mutex_trylock) (struct team *, p_mutex_t *);
+    int (*mutex_unlock) (struct team *, p_mutex_t *);
+
     /* Optional */
     int (*early_init) (struct dev *);
     void (*late_fini) (struct dev *);

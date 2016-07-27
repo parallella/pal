@@ -77,8 +77,6 @@ typedef p_ref_t p_symbol_t;
 typedef p_ref_t p_event_t;
 typedef p_ref_t p_memptr_t;
 
-typedef int p_mutex_t;
-
 typedef struct {
     p_ref_t ref;
     size_t size;
@@ -87,6 +85,12 @@ typedef struct {
     p_dev_t dev;
     void *ops;
 } p_mem_t;
+
+typedef struct {
+    p_team_t team;
+    int mutex;
+} p_mutex_t;
+
 
 /*
  ***********************************************************************
@@ -99,6 +103,9 @@ typedef struct {
 
 #define __P_DEFAULT_TEAM 2048
 #define _P_DEFAULT_TEAM ((p_team_t *) ((intptr_t) -__P_DEFAULT_TEAM))
+
+#define P_MUTEX_INITIALIZER { _P_DEFAULT_TEAM, 0 }
+
 
 /*
  ***********************************************************************
@@ -217,16 +224,16 @@ ssize_t p_memcpy(void *dst, const void *src, size_t nb, int flags);
  */
 
 /*mutex (posix and gcc builtin) inspired), same arguments*/
-int p_mutex_init(p_mutex_t *mp);
+int p_mutex_init(p_mutex_t *mutex, p_team_t team);
 
 /*Lock a mutex (try until fail)*/
-int p_mutex_lock(p_mutex_t *mp);
+int p_mutex_lock(p_mutex_t *mutex);
 
 /*Try locking a mutex once*/
-int p_mutex_trylock(p_mutex_t *mp);
+int p_mutex_trylock(p_mutex_t *mutex);
 
 /*Unlock a mutex*/
-int p_mutex_unlock(p_mutex_t *mp);
+int p_mutex_unlock(p_mutex_t *mutex);
 
 /*atomic fetch and add*/
 uint8_t p_atomic_add_u8(uint8_t *atom, uint8_t n);
