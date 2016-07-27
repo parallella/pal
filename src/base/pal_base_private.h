@@ -86,6 +86,8 @@ struct dev_ops {
     int (*mutex_trylock) (struct team *, p_mutex_t *);
     int (*mutex_unlock) (struct team *, p_mutex_t *);
 
+    int (*barrier) (struct team *);
+
     /* Optional */
     int (*early_init) (struct dev *);
     void (*late_fini) (struct dev *);
