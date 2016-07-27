@@ -71,7 +71,7 @@ LDFLAGS_FOR_BUILD += -L$(host_abs_top_builddir)/src/.libs \
                      -Wl,-rpath=$(host_abs_top_builddir)/src/.libs -lpal
 endif
 
-if ENABLE_DEV_EPIPHANY
+if BUILD_DEV_EPIPHANY
 SUBDIRS += devices/epiphany
 -include devices/epiphany/Makemodule.host.am
 endif

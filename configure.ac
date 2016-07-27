@@ -160,10 +160,20 @@ AM_CONDITIONAL([ENABLE_DEV_EPIPHANY_SIM],
 AC_ARG_ENABLE([device_epiphany],
               AS_HELP_STRING([--enable-device-epiphany],
                              [Enable Epiphany device]))
+AS_IF([test "x$enable_device_epiphany" != "xno" -a "x$host_cpu" = "xepiphany"],
+      [enable_device_epiphany=yes])
 AM_CONDITIONAL([ENABLE_DEV_EPIPHANY],
                [test "x$enable_device_epiphany" = "xyes"])
-
 AS_IF([test "x$enable_device_epiphany" = "xyes"],
+      AC_DEFINE([ENABLE_DEV_EPIPHANY],
+                [1],
+                [Epiphany device support]))
+
+AS_IF([test "x$enable_device_epiphany" = "xyes" -a "x$host_cpu" != "xepiphany"],
+      [build_device_epiphany=yes])
+AM_CONDITIONAL([BUILD_DEV_EPIPHANY],
+               [test "x$build_device_epiphany" = "xyes"])
+AS_IF([test "x$build_device_epiphany" = "xyes"],
       [PAL_CONFIG_DEVICE([epiphany], [epiphany-elf])])
 
 
