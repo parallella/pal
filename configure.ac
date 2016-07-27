@@ -98,6 +98,15 @@ AC_CONFIG_FILES([Makefile
 # Epiphany host support
 AM_CONDITIONAL([HOST_IS_EPIPHANY],
                [test "x$host_cpu" = "xepiphany"])
+AS_IF([test "x$host_cpu" = "xepiphany"],
+      AC_DEFINE([HOST_IS_EPIPHANY], [1], [Host is Epiphany]))
+
+# ... assume POSIX compatible otherwise
+AM_CONDITIONAL([HOST_IS_POSIX],
+               [test "x$host_cpu" != "xepiphany"])
+AS_IF([test "x$host_cpu" != "xepiphany"],
+      AC_DEFINE([HOST_IS_POSIX], [1], [Host is POSIX]))
+
 
 AS_IF([test "x$host_cpu" = "xepiphany"],
       [

@@ -7,7 +7,7 @@
 #include "pal_base_private.h"
 #include "devices/devices.h"
 #if __epiphany__
-#include "devices/epiphany/ctrl.h"
+#include "devices/posix/epiphany/ctrl.h"
 #include <e-lib.h>
 #endif
 

@@ -4,7 +4,7 @@
 #include "config.h"
 #include "dev_epiphany.h"
 #include "ctrl.h"
-#include "../../pal_base_private.h"
+#include "../../../pal_base_private.h"
 #include "loader.h"
 
 static inline struct epiphany_dev *to_epiphany_dev(struct dev *dev)

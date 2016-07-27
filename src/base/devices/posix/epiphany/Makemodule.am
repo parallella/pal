@@ -1,0 +1,18 @@
+# src/base/devices/epiphany
+
+noinst_LTLIBRARIES  += src/base/devices/posix/epiphany/libdevice.la
+src_base_devices_posix_epiphany_libdevice_la_SOURCES = \
+src/base/devices/posix/epiphany/device.c               \
+src/base/devices/posix/epiphany/loader.c               \
+src/base/devices/posix/epiphany/loader.h               \
+src/base/devices/posix/epiphany/generic.c              \
+src/base/devices/posix/epiphany/generic.h              \
+src/base/devices/posix/epiphany/epiphany-abi.h
+src_base_devices_posix_epiphany_libdevice_la_CFLAGS = $(CFLAGS) $(LIBELF_CFLAGS)
+src_base_devices_posix_epiphany_libdevice_la_LIBADD = $(LIBELF_LIBS)
+
+if ENABLE_DEV_EPIPHANY_SIM
+src_base_devices_posix_epiphany_libdevice_la_SOURCES += \
+src/base/devices/posix/epiphany/simulator.c
+src_base_devices_posix_epiphany_libdevice_la_LIBADD += -lesim
+endif

@@ -11,7 +11,7 @@
 #include "ctrl.h"
 #include "pal_base.h"
 #include <common.h>
-#include "../../pal_base_private.h"
+#include "../../../pal_base_private.h"
 #include "loader.h"
 #include "generic.h"
 

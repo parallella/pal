@@ -22,7 +22,7 @@
 
 #include <pal.h>
 #include <common.h>
-#include "../../pal_base_private.h"
+#include "../../../pal_base_private.h"
 #include "dev_epiphany.h"
 #include "epiphany-abi.h"
 #include "epiphany-kernel-abi.h"

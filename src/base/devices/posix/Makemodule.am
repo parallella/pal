@@ -1,0 +1,6 @@
+if ENABLE_DEV_EPIPHANY
+src_base_devices_libdevices_la_LIBADD += src/base/devices/posix/epiphany/libdevice.la
+include src/base/devices/posix/epiphany/Makemodule.am
+endif
+
+

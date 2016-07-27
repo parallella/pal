@@ -1,12 +1,14 @@
 # src/base/devices
-noinst_LTLIBRARIES += src/base/devices/libdevices.la
-
 src_base_devices_libdevices_la_SOURCES = src/base/devices/devices.h
 src_base_devices_libdevices_la_LIBADD  =
 
-if ENABLE_DEV_EPIPHANY
-src_base_devices_libdevices_la_LIBADD += src/base/devices/epiphany/libdevice.la
-include src/base/devices/epiphany/Makemodule.am
+noinst_LTLIBRARIES += src/base/devices/libdevices.la
+
+if HOST_IS_POSIX
+include src/base/devices/posix/Makemodule.am
 endif
 
+if HOST_IS_EPIPHANY
+include src/base/devices/epiphany/Makemodule.am
+endif
 
