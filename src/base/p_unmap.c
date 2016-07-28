@@ -18,10 +18,10 @@
  */
 int p_unmap(p_team_t team, p_mem_t *mem)
 {
-    struct team *pteam = (struct team *) team;
+    struct team *pteam = p_to_team(team);
 
-    if (p_ref_is_err(team))
-        return p_error(team);
+    if (p_error(pteam))
+        return p_error(pteam);
 
     if (p_mem_error(mem))
         return p_mem_error(mem);

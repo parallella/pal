@@ -15,10 +15,10 @@
 
 int p_close(p_team_t team)
 {
-    struct team *pteam = (struct team *) team;
+    struct team *pteam = p_to_team(team);
 
-    if (p_ref_is_err(team))
-            return -EINVAL;
+    if (p_error(pteam))
+            p_error(pteam);
 
     if (pteam->dev->dev_ops->close)
 	    return pteam->dev->dev_ops->close(pteam->dev, pteam);

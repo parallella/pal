@@ -16,7 +16,10 @@
 
 int p_barrier(p_team_t team)
 {
-    struct team *pteam = _p_unwrap_team(team);
+    struct team *pteam = p_to_team(team);
+
+    if (p_error(pteam))
+        return p_error(pteam);
 
     return pteam->dev->dev_ops->barrier(pteam);
 }

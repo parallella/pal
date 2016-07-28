@@ -27,7 +27,10 @@
 
 int p_kill(p_team_t team, int start, int count, int signal)
 {
-    struct team *pteam = (struct team *) team;
+    struct team *pteam = p_to_team(team);
+
+    if (p_error(pteam))
+        return p_error(pteam);
 
     return pteam->dev->dev_ops->kill(pteam, start, count, signal);
 }

@@ -22,9 +22,9 @@
 void *p_map_member(p_team_t team, int member, unsigned long off,
                    unsigned long size)
 {
-    struct team *pteam = (struct team *) team;
+    struct team *pteam = p_to_team(team);
 
-    if (p_ref_is_err(team))
+    if (p_error(pteam))
         return NULL;
 
     if (!pteam->dev || !pteam->dev->dev_ops || !pteam->dev->dev_ops->map_member)
