@@ -116,6 +116,7 @@ struct team {
     struct rank_range *ranges;
     size_t ranges_size;
 #endif
+    int rank;
 };
 
 struct prog {

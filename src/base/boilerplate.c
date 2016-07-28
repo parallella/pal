@@ -140,6 +140,10 @@ void __pal_init()
         (struct epiphany_ctrl_mem *) CTRL_MEM_EADDR;
 
     __pal_global.rank = rank;
+    __pal_global.default_team.rank = rank;
+    __pal_global.default_team.count = e_group_config.group_rows * e_group_config.group_cols;
+    __pal_global.default_team.start = glob_rank - rank;
+    __pal_global.default_team.dev = &__pal_dev_epiphany.dev;
 
     ctrl->status[glob_rank] = STATUS_RUNNING;
 #else
