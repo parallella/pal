@@ -27,6 +27,7 @@
 //
 // Aug-2013, YS.
 
+#include <pal.h>
 
 #include "matlib.h"
 #include "matmul.h"
@@ -38,6 +39,7 @@ void bigmatmul();
 void init();
 void data_copy(e_dma_desc_t *dma_desc, void *dst, void *src);
 
+p_mutex_t pmutex = P_MUTEX_INITIALIZER;
 
 int main(int argc, char *argv[])
 {
@@ -118,9 +120,6 @@ void init()
 	dma_desc[2] = dma_desc[0];
 	dma_desc[2].outer_stride = ((((_Smtx - _Score) * sizeof(float)) + 0x0008) << 16) | 0x0008;
 
-	// Clear the inter-core DMA sync signals
-	e_mutex_init(0, 0, &mutex, MUTEXATTR_NULL);
-
 	return;
 }
 
@@ -150,7 +149,7 @@ void bigmatmul()
 				// in granularity of cores
 
 				// Wait for the DMA token
-				e_mutex_lock(0, 0, &mutex);
+				p_mutex_lock(&pmutex);
 
 				// get A block from external DRAM
 				ic = me.row * _Score;
@@ -173,7 +172,7 @@ void bigmatmul()
 				data_copy(&dma_desc[0], dst, src);
 
 				// Pass the DMA token to next core
-				e_mutex_unlock(0, 0, &mutex);
+				p_mutex_unlock(&pmutex);
 
 				// Multiply submatrices (inner product of row x column)
 				for (kc=0; kc<_Nside; kc++)
@@ -214,13 +213,13 @@ void bigmatmul()
 			dst = &(Mailbox.pC[(im+ic)*_Smtx + (jm+jc)]);
 
 			// Wait for the DMA token
-			e_mutex_lock(0, 0, &mutex);
+			p_mutex_lock(&pmutex);
 
 			// Write data
 			data_copy(&dma_desc[2], dst, src);
 
 			// Pass the DMA token to the next core
-			e_mutex_unlock(0, 0, &mutex);
+			p_mutex_unlock(&pmutex);
 		}
 	}
 
