@@ -232,6 +232,34 @@ static inline struct team *_p_unwrap_team(const p_team_t team)
 /* Many OSes support it, but some require odd macros to get the declaration */
 int pthread_yield(void);
 #define p_cpu_relax() pthread_yield ()
+#elif defined(__epiphany__)
+#define p_cpu_relax() __asm__ volatile("nop`nop`nop`nop\n" : : : "memory");
+#endif
+
+#if defined(__epiphany__)
+#define _p_testset(m, v) \
+    ({\
+        const int32_t zero = 0; \
+        int32_t tmp = v; \
+        __asm__ volatile("testset %0, [%1, %2]" : "+r" (tmp) : "r" (m), "r" (zero) : "memory"); \
+        tmp; \
+    })
 #else
-#define p_cpu_relax() ((int) 0)
+#define _p_testset(m, v) __sync_bool_compare_and_swap((m), 0, (v))
+#endif
+
+#if defined(__epiphany__)
+#define _p_lock_release(m) \
+    ({\
+        const int32_t zero = 0; \
+        __asm__ volatile("str %0, [%1]" : : "r" (zero), "r" (m) : "memory"); \
+    })
+#else
+#define _p_lock_release(m) __sync_lock_release((m))
+#endif
+
+#if defined(__epiphany__)
+#define _p_fence() __asm__ volatile("" : : : "memory")
+#else
+#define _p_fence() __sync_synchronize()
 #endif
