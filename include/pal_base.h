@@ -101,10 +101,10 @@ typedef struct {
 /*#define _P_MAX_MAGIC 4095*/
 /*#define _P_MIN_MAGIC 2048*/
 
-#define __P_DEFAULT_TEAM 2048
-#define _P_DEFAULT_TEAM ((p_team_t *) ((intptr_t) -__P_DEFAULT_TEAM))
+#define _P_TEAM_DEFAULT 2048
+#define P_TEAM_DEFAULT ((p_team_t *) ((intptr_t) -_P_TEAM_DEFAULT))
 
-#define P_MUTEX_INITIALIZER { _P_DEFAULT_TEAM, 0 }
+#define P_MUTEX_INITIALIZER { P_TEAM_DEFAULT, 0 }
 
 
 /*

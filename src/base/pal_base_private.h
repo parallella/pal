@@ -206,9 +206,9 @@ static inline int p_ref_get_err(const p_ref_t ref)
         return 0;
 }
 
-static inline struct team *_p_unwrap_team(const p_team_t team)
+static inline struct team *p_to_team(const p_team_t team)
 {
-    return team == _P_DEFAULT_TEAM ? &__pal_global.default_team : team;
+    return team == P_TEAM_DEFAULT ? &__pal_global.default_team : team;
 }
 
 /*
