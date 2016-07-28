@@ -117,6 +117,10 @@ struct team {
     size_t ranges_size;
 #endif
     int rank;
+
+    /* barrier flags */
+    volatile int barrier0;
+    int barrier1;
 };
 
 struct prog {
