@@ -27,9 +27,6 @@
         (type *)( (char *)__mptr - offsetof(type,member) );\
     })
 
-/* Compiler reorder barrier */
-#define barrier() __asm__ __volatile__("":::"memory")
-
 #define P_FLOAT_SINGLE 0
 #define P_FLOAT_DOUBLE 1
 
