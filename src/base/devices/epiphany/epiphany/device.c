@@ -1,4 +1,7 @@
 #include "dev_epiphany.h"
+#include <e-lib.h>
+
+extern const e_group_config_t e_group_config;
 
 static int dev_query(struct dev *dev, int property)
 {
@@ -91,6 +94,40 @@ static int dev_kill(struct team *team, int start, int count, int signal)
     return -ENOSYS;
 }
 
+static void *dev_addr(struct team *team, int rank, uintptr_t offset)
+{
+    unsigned row = e_group_config.group_row + rank / e_group_config.group_cols;
+    unsigned col = e_group_config.group_col + rank % e_group_config.group_cols;
+    unsigned coreid = (row << 6) | col;
+    uintptr_t addr = (coreid << 20) | offset;
+    return (void *) addr;
+}
+
+static int dev_mutex_lock (struct team *team, p_mutex_t *mutex)
+{
+    int *global_mutex = dev_addr(team, 0, (uintptr_t) &mutex->mutex);
+    while (_p_testset(global_mutex, 1))
+        p_cpu_relax();
+
+    return 0;
+}
+
+static int dev_mutex_trylock(struct team *team, p_mutex_t *mutex)
+{
+    int *global_mutex = dev_addr(team, 0, (uintptr_t) &mutex->mutex);
+
+    return _p_testset(global_mutex, 1) ? -EBUSY : 0;
+}
+
+static int dev_mutex_unlock(struct team *team, p_mutex_t *mutex)
+{
+    int *global_mutex = dev_addr(team, 0, (uintptr_t) &mutex->mutex);
+
+    _p_lock_release(global_mutex);
+
+    return 0;
+}
+
 static struct dev_ops epiphany_dev_ops = {
     /* Generic */
     .init = dev_init,
@@ -105,6 +142,10 @@ static struct dev_ops epiphany_dev_ops = {
     .map_member = dev_map_member,
     .map = dev_map,
     .unmap = dev_unmap,
+
+    .mutex_lock = dev_mutex_lock,
+    .mutex_unlock = dev_mutex_unlock,
+    .mutex_trylock = dev_mutex_trylock,
 };
 
 struct epiphany_dev __pal_dev_epiphany = {
