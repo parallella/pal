@@ -50,11 +50,8 @@ int main(int argc, char *argv[])
 	// Initialize data structures - mainly target pointers
 	init();
 
-	// Initialize the barriers
-	e_barrier_init(barriers, tgt_bars);
-
 	// Sync with all other cores
-	e_barrier(barriers, tgt_bars);
+	p_barrier(P_TEAM_DEFAULT);
 
 	// Calculate. During this time, the host polls the
 	// shared mailbox, waiting for a '3' that
@@ -62,7 +59,7 @@ int main(int argc, char *argv[])
 	bigmatmul();
 
 	// Sync with all other cores
-	e_barrier(barriers, tgt_bars);
+	p_barrier(P_TEAM_DEFAULT);
 
 	return status;
 }
@@ -201,7 +198,7 @@ void bigmatmul()
 					me.pingpong = 1 - me.pingpong;
 
 					// Sync with all other cores
-					e_barrier(barriers, tgt_bars);
+					p_barrier(P_TEAM_DEFAULT);
 				}
 			}
 
