@@ -331,3 +331,11 @@ static inline int p_mem_error(p_mem_t *mem)
 {
     return p_error(mem->ref);
 }
+
+/*
+ ***********************************************************************
+ * Coordinates and ranks
+ ***********************************************************************
+ */
+
+int p_team_rank(p_team_t team);
