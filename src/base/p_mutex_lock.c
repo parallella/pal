@@ -5,8 +5,12 @@
 
 int p_mutex_lock(p_mutex_t *mutex)
 {
-    struct team *pteam = p_to_team(mutex->team);
+    struct team *pteam;
 
+    if (p_error(mutex))
+        return p_error(mutex);
+
+    pteam = p_to_team(mutex->team);
     if (p_error(pteam))
         return p_error(pteam);
 

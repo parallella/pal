@@ -5,10 +5,14 @@
 
 int p_mutex_unlock(p_mutex_t *mutex)
 {
-    struct team *pteam = p_to_team(mutex->team);
+    struct team *pteam;
 
-    if (p_error(pmutex))
-        return p_error(pmutex);
+    if (p_error(mutex))
+        return p_error(mutex);
+
+    pteam = p_to_team(mutex->team);
+    if (p_error(pteam))
+        return p_error(pteam);
 
     return pteam->dev->dev_ops->mutex_unlock(pteam, mutex);
 }
