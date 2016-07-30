@@ -97,30 +97,24 @@ struct dev_ops {
 
 struct dev {
     struct dev_ops *dev_ops;
+    int topology;
+    p_coords_t start;
+    p_coords_t size;
 };
-
-#if 0
-struct rank_range {
-    int first;
-    int n;
-};
-#endif
 
 struct team {
     struct team *next;
     struct dev *dev; // Support only one device per team (at leat for now)
-#if 1
-    int start;
-    int count;
-#else
-    struct rank_range *ranges;
-    size_t ranges_size;
-#endif
-    int rank;
 
     /* barrier flags */
     volatile int barrier0;
     int barrier1;
+
+    /* topology */
+    int topology;
+    p_coords_t start;
+    p_coords_t size;
+    p_coords_t rank; /* My rank */
 };
 
 struct prog {

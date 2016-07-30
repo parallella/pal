@@ -76,31 +76,31 @@ int epiphany_dev_query(struct dev *dev, int property)
     case P_PROP_TYPE:
         return P_DEV_EPIPHANY;
     case P_PROP_NODES:
-        return epiphany->rows * epiphany->cols;
+        return epiphany->dev.size.row * epiphany->dev.size.col;
     case P_PROP_TOPOLOGY:
         return 2;
     case P_PROP_ROWS:
-        return epiphany->rows;
+        return epiphany->dev.size.row;
     case P_PROP_COLS:
-        return epiphany->cols;
+        return epiphany->dev.size.col;
     case P_PROP_ROWBASE:
-        return epiphany->row_base;
+        return epiphany->dev.start.row;
     case P_PROP_COLBASE:
-        return epiphany->col_base;
+        return epiphany->dev.start.col;
     case P_PROP_PLANES:
         return 1;
     case P_PROP_PLANEBASE:
         return 0;
     case P_PROP_CHIPROWS:
-        return epiphany->rows;
+        return epiphany->dev.size.row;
     case P_PROP_CHIPCOLS:
-        return epiphany->cols;
+        return epiphany->dev.size.col;
     case P_PROP_SIMD:
         return 1;
     case P_PROP_MEMSIZE:
         return epiphany->sram_size;
     case P_PROP_MEMBASE:
-        return (epiphany->row_base << 6 | epiphany->col_base) << 20;
+        return (epiphany->dev.start.row << 6 | epiphany->dev.start.col) << 20;
     case P_PROP_VERSION:
         return 0xdeadbeef;
     case P_PROP_MEMARCH:
@@ -115,7 +115,7 @@ struct team *epiphany_dev_open(struct team *team)
 {
     struct epiphany_dev *epiphany = to_epiphany_dev(team->dev);
 
-    if (team->start < 0 || team->count < 0 || 16 < team->start + team->count)
+    if (team->start.id < 0 || team->size.id < 0 || 16 < team->start.id + team->size.id)
         return p_ref_err(EINVAL);
 
     /* Open was done in init */
@@ -136,13 +136,13 @@ int epiphany_dev_load(struct team *team, int start, int count,
     if (start < 0 || count <= 0)
         return -EINVAL;
 
-    if (team->count < start + count)
+    if (team->size.id < start + count)
         return -EINVAL;
 
     if (!epiphany->opened)
         return -EBADF;
 
-    err = epiphany_soft_reset(team, team->start + start, count);
+    err = epiphany_soft_reset(team, team->start.id + start, count);
     if (err) {
         /* WARN: soft reset failed */
         return err;
@@ -153,7 +153,7 @@ int epiphany_dev_load(struct team *team, int start, int count,
         return err;
 
     /* Mark as scheduled */
-    for (i = team->start + start; i < team->start + start + count; i++)
+    for (i = team->start.id + start; i < team->start.id + start + count; i++)
         epiphany->ctrl->status[i] = STATUS_SCHEDULED;
 
     /* Ideally a *system* (not host CPU-only) memory barrier here */
@@ -167,7 +167,7 @@ int epiphany_dev_start(struct team *team, int start, int count)
     /* Ideally a *system* (not host CPU-only) memory barrier here */
     __sync_synchronize();
 
-    epiphany_start(team, team->start + start, count);
+    epiphany_start(team, team->start.id + start, count);
 
     return 0;
 }
@@ -180,7 +180,7 @@ int epiphany_dev_wait(struct dev *dev, struct team *team)
 
     while (true) {
         need_wait = false;
-        for (i = team->start; i < team->start + team->count; i++) {
+        for (i = team->start.id; i < team->start.id + team->size.id; i++) {
             switch (data->ctrl->status[i]) {
             case STATUS_SCHEDULED:
                 /* TODO: Time out if same proc is in scheduled state too long.
@@ -219,7 +219,7 @@ int epiphany_dev_kill(struct team *team, int start, int count, int signal)
     if (start < 0 || count <= 0)
         return -EINVAL;
 
-    if (team->count < start + count)
+    if (team->size.id < start + count)
         return -EINVAL;
 
     if (!epiphany->opened)
@@ -227,7 +227,7 @@ int epiphany_dev_kill(struct team *team, int start, int count, int signal)
 
     switch (signal) {
         case SIGKILL:
-            return epiphany_soft_reset(team, team->start + start, count);
+            return epiphany_soft_reset(team, team->start.id + start, count);
         default:
             return -ENOSYS;
     }

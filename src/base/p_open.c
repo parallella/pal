@@ -30,11 +30,11 @@ p_team_t p_open(p_dev_t dev, int start, int count)
     if (!team)
         return p_ref_err(ENOMEM);
 
-    /* TODO: Rank ranges instead of start / count */
-    team->start = start;
-    team->count = count;
-
     team->dev = dev;
+    team->topology = P_TOPOLOGY_FLAT;
+    team->start.id = start;
+    team->size.id = count;
+    team->rank.id = -1;
 
     ret = pdev->dev_ops->open(team);
     if (p_ref_is_err(ret)) {

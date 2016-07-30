@@ -292,6 +292,9 @@ static struct dev_ops epiphany_dev_ops = {
 struct epiphany_dev __pal_dev_epiphany = {
     .dev = {
         .dev_ops = &epiphany_dev_ops,
+        .topology = P_TOPOLOGY_2D,
+        .start = { .row = 32, .col = 8 },
+        .size = { .row = 4, .col = 4 },
     },
     .loader_ops = {
         reg_read,

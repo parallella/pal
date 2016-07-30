@@ -36,10 +36,6 @@ struct epiphany_dev {
 
     es_state *esim; /* ESIM handle */
 
-    unsigned rows;
-    unsigned cols;
-    unsigned row_base;
-    unsigned col_base;
     unsigned sram_size;
     unsigned eram_base;
     unsigned eram_size;

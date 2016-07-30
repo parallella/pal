@@ -124,8 +124,10 @@ static bool is_on_chip(struct epiphany_dev *epiphany, uint32_t addr)
     col = (COREID(addr)     ) & 0x3f;
 
     return is_local(addr)
-        || ((epiphany->row_base <= row && row < epiphany->row_base + epiphany->rows)
-                && (epiphany->col_base <= col && row < epiphany->col_base + epiphany->cols));
+        || ((epiphany->dev.start.row <= row
+             && row < epiphany->dev.start.row + epiphany->dev.size.row)
+        &&  (epiphany->dev.start.col <= col
+             && row < epiphany->dev.start.col + epiphany->dev.size.col));
 }
 
 static inline bool is_in_eram(struct epiphany_dev *epiphany, uint32_t addr)
@@ -447,8 +449,8 @@ int epiphany_soft_reset(struct team *team, int start, int size)
     int ret;
     struct epiphany_dev *epiphany = to_epiphany_dev(team->dev);
     for (unsigned i = (unsigned) start; i < (unsigned) (start + size); i++) {
-        unsigned row = epiphany->row_base + i / epiphany->cols;
-        unsigned col = epiphany->col_base + i % epiphany->cols;
+        unsigned row = epiphany->dev.start.row + i / epiphany->dev.size.col;
+        unsigned col = epiphany->dev.start.col + i % epiphany->dev.size.col;
         unsigned coreid = (row << 6) | col;
         ret = ecore_soft_reset(epiphany, coreid);
         if (ret)
@@ -752,12 +754,12 @@ static int set_core_config(struct team *team, unsigned coreid, unsigned rank,
         return -EINVAL;
 
     if (sections[SEC_WORKGROUP_CFG].present) {
-        unsigned glob_row0 = epiphany->row_base + team->start / epiphany->cols;
-        unsigned glob_col0 = epiphany->col_base + team->start % epiphany->cols;
-        unsigned col0 = team->start % epiphany->cols;
-        unsigned cole = (team->start + team->count - 1) % epiphany->cols;
+        unsigned glob_row0 = epiphany->dev.start.row + team->start.id / epiphany->dev.size.col;
+        unsigned glob_col0 = epiphany->dev.start.col + team->start.id % epiphany->dev.size.col;
+        unsigned col0 = team->start.id % epiphany->dev.size.col;
+        unsigned cole = (team->start.id + team->size.id - 1) % epiphany->dev.size.col;
         unsigned cols = 1 + cole - col0;
-        unsigned rows = team->count / cols;
+        unsigned rows = team->size.id / cols;
         /* No trivial way to emulate workgroups??? Pretend each core is its own
          * separate group for now. */
         e_group_config.objtype    = E_EPI_GROUP;
@@ -767,8 +769,8 @@ static int set_core_config(struct team *team, unsigned coreid, unsigned rank,
         e_group_config.group_col  = glob_col0;
         e_group_config.group_rows = rows;
         e_group_config.group_cols = cols;
-        e_group_config.core_row   = rank / epiphany->cols;
-        e_group_config.core_col   = rank % epiphany->cols;
+        e_group_config.core_row   = rank / epiphany->dev.size.col;
+        e_group_config.core_col   = rank % epiphany->dev.size.col;
         e_group_config.alignment_padding = 0xdeadbeef;
         mem_write(e_group_config_addr, &e_group_config, sizeof(e_group_config));
     }
@@ -823,8 +825,8 @@ int epiphany_load(struct team *team, int start, int count,
     }
 
     for (unsigned i = (unsigned) start; i < (unsigned) (start + count); i++) {
-        unsigned row = epiphany->row_base + (team->start + i) / epiphany->cols;
-        unsigned col = epiphany->col_base + (team->start + i) % epiphany->cols;
+        unsigned row = epiphany->dev.start.row + (team->start.id + i) / epiphany->dev.size.col;
+        unsigned col = epiphany->dev.start.col + (team->start.id + i) % epiphany->dev.size.col;
         unsigned coreid = (row << 6) | col;
         rc = process_elf(file, epiphany, coreid);
         if (rc)
@@ -846,8 +848,8 @@ void epiphany_start(struct team *team, int start, int count)
     struct epiphany_dev *epiphany = to_epiphany_dev(team->dev);
 
     for (unsigned i = (unsigned) start; i < (unsigned) (start + count); i++) {
-        unsigned row = epiphany->row_base + i / epiphany->cols;
-        unsigned col = epiphany->col_base + i % epiphany->cols;
+        unsigned row = epiphany->dev.start.row + i / epiphany->dev.size.col;
+        unsigned col = epiphany->dev.start.col + i % epiphany->dev.size.col;
         unsigned coreid = (row << 6) | col;
         uintptr_t core_base = coreid << 20;
 
@@ -868,9 +870,9 @@ bool epiphany_is_team_done (struct team *team)
 {
     struct epiphany_dev *epiphany = to_epiphany_dev(team->dev);
 
-    for (unsigned i = team->start; i < team->start + team->count; i++) {
-        unsigned row = epiphany->row_base + i / epiphany->cols;
-        unsigned col = epiphany->col_base + i % epiphany->cols;
+    for (unsigned i = team->start.id; i < team->start.id + team->size.id; i++) {
+        unsigned row = epiphany->dev.start.row + i / epiphany->dev.size.col;
+        unsigned col = epiphany->dev.start.col + i % epiphany->dev.size.col;
         uint32_t core = ((row << 6) | col) << 20;
         uint32_t debugstatus, pc;
         uint16_t insn;

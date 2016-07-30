@@ -55,10 +55,12 @@ static p_dev_t dev_init(struct dev *dev, int flags)
 
     es_get_cluster_cfg(epiphany->esim, &esim_cfg);
 
-    epiphany->rows = esim_cfg.rows;
-    epiphany->cols = esim_cfg.cols;
-    epiphany->row_base = esim_cfg.row_base;
-    epiphany->col_base = esim_cfg.col_base;
+    dev->topology = P_TOPOLOGY_2D;
+    dev->start.row = esim_cfg.row_base;
+    dev->start.col = esim_cfg.col_base;
+    dev->size.row = esim_cfg.rows;
+    dev->size.col = esim_cfg.cols;
+
     epiphany->sram_size = esim_cfg.core_phys_mem;
     epiphany->eram_base = esim_cfg.ext_ram_base;
     epiphany->eram_size = esim_cfg.ext_ram_size;

@@ -338,4 +338,31 @@ static inline int p_mem_error(p_mem_t *mem)
  ***********************************************************************
  */
 
+/* Flags */
+#define P_COORDS_ABSOLUTE   0
+#define P_COORDS_RELATIVE   1
+#define P_COORDS_WRAP_ROW   2
+#define P_COORDS_WRAP_COL   4
+#define P_COORDS_WRAP_PLANE 8
+
+typedef union {
+    int id;
+    struct {
+        int col;
+        int row;
+        int plane;
+    };
+} p_coords_t;
+
+typedef enum {
+    P_TOPOLOGY_FLAT,
+    P_TOPOLOGY_2D,
+    P_TOPOLOGY_3D,
+    /* ... */
+} p_topology_t;
+
+
 int p_team_rank(p_team_t team);
+int p_coords_to_rank(p_team_t team, const p_coords_t *coords, int flags);
+int p_rel_coords_to_rank(p_team_t team, int rank, const p_coords_t *coords,
+                         int flags);

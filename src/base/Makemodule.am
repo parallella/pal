@@ -15,6 +15,7 @@ src/base/p_atomic_swap.c          \
 src/base/p_atomic_xor.c           \
 src/base/p_barrier.c              \
 src/base/p_close.c                \
+src/base/p_coords_to_rank.c       \
 src/base/p_fence.c                \
 src/base/p_finalize.c             \
 src/base/p_free.c                 \
@@ -36,6 +37,7 @@ src/base/p_mutex_unlock.c         \
 src/base/p_open.c                 \
 src/base/p_query.c                \
 src/base/p_read.c                 \
+src/base/p_rel_coords_to_rank.c   \
 src/base/p_remove.c               \
 src/base/p_rmalloc.c              \
 src/base/p_run.c                  \

@@ -131,7 +131,7 @@ static int dev_mutex_unlock(struct team *team, p_mutex_t *mutex)
 static int leader_barrier(struct team *team)
 {
     int i;
-    int next = (team->rank + 1) % team->count;
+    int next = (team->rank.id + 1) % team->size.id;
     int *next_barrier0 = dev_addr(team, next, (uintptr_t) &team->barrier0);
 
     team->barrier1++;
@@ -144,7 +144,7 @@ static int leader_barrier(struct team *team)
     team->barrier1++;
     team->barrier0++;
 
-    for (i = 1; i < team->count; i++) {
+    for (i = 1; i < team->size.id; i++) {
         int *bar0 = dev_addr(team, i, (uintptr_t) &team->barrier0);
         *bar0 = team->barrier1;
     }
@@ -156,13 +156,13 @@ static int leader_barrier(struct team *team)
 
 static int dev_barrier(struct team *team)
 {
-    if (team->count < 2)
+    if (team->size.id < 2)
         return 0;
 
-    if (team->rank == 0)
+    if (team->rank.id == 0)
         return leader_barrier(team);
 
-    int next = (team->rank + 1) % team->count;
+    int next = (team->rank.id + 1) % team->size.id;
     int *next_barrier0 = dev_addr(team, next, (uintptr_t) &team->barrier0);
 
     while (team->barrier0 == team->barrier1)

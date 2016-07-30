@@ -18,5 +18,15 @@ int p_team_rank(p_team_t team)
     if (p_error(pteam))
         return p_error(pteam);
 
-    return pteam->rank;
+    switch (pteam->topology) {
+        case P_TOPOLOGY_FLAT:
+        return pteam->rank.id;
+        case P_TOPOLOGY_2D:
+        case P_TOPOLOGY_3D:
+            /* TODO: Support more than flat topology */
+            return -ENOSYS;
+        default:
+            return -EINVAL;
+    }
+    return -EINVAL;
 }
