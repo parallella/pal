@@ -366,3 +366,4 @@ int p_team_rank(p_team_t team);
 int p_coords_to_rank(p_team_t team, const p_coords_t *coords, int flags);
 int p_rel_coords_to_rank(p_team_t team, int rank, const p_coords_t *coords,
                          int flags);
+int p_rank_to_coords(p_team_t team, int rank, p_coords_t *coords, int flags);

@@ -37,6 +37,7 @@ src/base/p_mutex_unlock.c         \
 src/base/p_open.c                 \
 src/base/p_query.c                \
 src/base/p_read.c                 \
+src/base/p_rank_to_coords.c       \
 src/base/p_rel_coords_to_rank.c   \
 src/base/p_remove.c               \
 src/base/p_rmalloc.c              \
