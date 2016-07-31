@@ -136,6 +136,11 @@ int p_finalize(p_dev_t dev);
 /*Open a team of processors*/
 p_team_t p_open(p_dev_t dev, int start, int count);
 
+/*Open a team of processors with specific topology*/
+typedef union p_coords p_coords_t;
+p_team_t p_open4(p_dev_t dev, int topology, p_coords_t *start,
+                 p_coords_t *size);
+
 /*Add team members*/
 p_team_t p_append(p_team_t team, int start, int count);
 
@@ -345,7 +350,7 @@ static inline int p_mem_error(p_mem_t *mem)
 #define P_COORDS_WRAP_COL   4
 #define P_COORDS_WRAP_PLANE 8
 
-typedef union {
+typedef union p_coords {
     int id;
     struct {
         int col;

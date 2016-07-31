@@ -1,8 +1,64 @@
-#include <pal.h>
+#include <string.h>
 
-#include <stdio.h>
-#include "pal_base.h"
+#include <pal.h>
 #include "pal_base_private.h"
+
+p_team_t p_open4(p_dev_t dev, int topology, p_coords_t *start,
+                 p_coords_t *size)
+{
+    struct dev *pdev = (struct dev *) dev;
+    struct team *team, *ret;
+    int err;
+
+    if (p_ref_is_err(dev))
+        return p_ref_err(EINVAL);
+
+    team = malloc(sizeof(*team));
+    if (!team)
+        return p_ref_err(ENOMEM);
+
+    team->dev = dev;
+    team->topology = topology;
+    memcpy(&team->start, start, sizeof(*start));
+    memcpy(&team->size, size, sizeof(*size));
+    switch (topology) {
+    case P_TOPOLOGY_FLAT:
+        team->rank.id = -1;
+        break;
+    case P_TOPOLOGY_3D:
+        team->rank.plane = -1;
+        /* Fall through */
+    case P_TOPOLOGY_2D:
+        team->rank.row = -1;
+        team->rank.col = -1;
+        break;
+    default:
+        err = EINVAL;
+        goto error;
+    }
+
+    ret = pdev->dev_ops->open(team);
+    if (p_error(ret)) {
+        err = p_error(ret);
+        goto error;
+    }
+
+    team = ret;
+
+    /* TODO: Need something generic to iterate over lists */
+    if (!__pal_global.teams_head) {
+        __pal_global.teams_head = __pal_global.teams_tail = team;
+    } else {
+        __pal_global.teams_tail->next = team;
+        __pal_global.teams_tail = team;
+    }
+
+    return (p_team_t) team;
+
+error:
+    free(team);
+    return p_ref_err(err);
+}
 
 /**
  *
@@ -20,37 +76,8 @@
  */
 p_team_t p_open(p_dev_t dev, int start, int count)
 {
-    struct dev *pdev = (struct dev *) dev;
-    struct team *team, *ret;
+    p_coords_t start_coords = { .id = start };
+    p_coords_t size_coords = { .id = count };
 
-    if (p_ref_is_err(dev))
-        return p_ref_err(EINVAL);
-
-    team = malloc(sizeof(*team));
-    if (!team)
-        return p_ref_err(ENOMEM);
-
-    team->dev = dev;
-    team->topology = P_TOPOLOGY_FLAT;
-    team->start.id = start;
-    team->size.id = count;
-    team->rank.id = -1;
-
-    ret = pdev->dev_ops->open(team);
-    if (p_ref_is_err(ret)) {
-        free(team);
-        return (p_team_t) ret;
-    }
-    team = ret;
-
-
-    /* TODO: Need something generic to iterate over lists */
-    if (!__pal_global.teams_head) {
-        __pal_global.teams_head = __pal_global.teams_tail = team;
-    } else {
-        __pal_global.teams_tail->next = team;
-        __pal_global.teams_tail = team;
-    }
-
-    return (p_team_t) team;
+    return p_open4(dev, P_TOPOLOGY_FLAT, &start_coords, &size_coords);
 }
