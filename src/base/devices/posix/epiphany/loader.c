@@ -611,8 +611,17 @@ static void setup_function_args(struct epiphany_dev *epiphany, unsigned coreid,
         } else {
             /* Argument is passed by reference */
 
-            /* No need to copy arg if it's already accessible by core */
-            if (translate(epiphany, args[arg].ptr, coreid, &eaddr) &&
+            if (is_in_eram(epiphany, (uint32_t) (uintptr_t) args[arg].ptr)) {
+                /* HACK: Support passing p_mem_t objects
+                 * p_mem_t foo = p_map(dev, ...);
+                 * ...
+                 * { foo.ptr, sizeof(uint32_t), false }, ...
+                 * Internals of PAL structs should never be part of the API
+                 * but for now this is the only way to do it */
+                regs[reg] = (uint32_t) (uintptr_t) args[arg].ptr;
+            } else if (translate(epiphany, args[arg].ptr, coreid, &eaddr) &&
+                /* No need to copy arg if it's already accessible by core */
+
                 /* On the off chance the host ptr is in the first 1M */
                 !is_local((uint32_t) (uintptr_t) args[arg].ptr)) {
 
