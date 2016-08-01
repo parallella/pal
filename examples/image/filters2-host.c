@@ -83,7 +83,7 @@ int main(int argc, char *argv[])
     // ((!is_primitive) == pass_by_reference)
     p_arg_t args[] = {
         { data, (size * sizeof(float)), false },
-        { out.ref, sizeof(out), false },
+        /* HACK */ { out.ref, sizeof(uint32_t), false },
         { &h, sizeof(h), true },
         { &w, sizeof(w), true },
     };
