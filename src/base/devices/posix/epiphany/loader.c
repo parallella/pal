@@ -150,7 +150,7 @@ static bool translate(struct epiphany_dev *epiphany, void *addr,
 {
     uintptr_t uaddr = (uintptr_t) addr;
     uintptr_t ueram = (uintptr_t) epiphany->eram;
-    uintptr_t ueeram = (uintptr_t) epiphany->eram_base + epiphany->eram_size;
+    uintptr_t ueeram = (uintptr_t) epiphany->eram + epiphany->eram_size;
     if (uaddr < ueram || ueeram <= uaddr)
         return false;
 
