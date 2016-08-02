@@ -43,6 +43,7 @@ src/base/p_remove.c               \
 src/base/p_rmalloc.c              \
 src/base/p_run.c                  \
 src/base/p_team_rank.c            \
+src/base/p_team_size.c            \
 src/base/p_unmap.c                \
 src/base/p_wait.c                 \
 src/base/p_write.c                \
