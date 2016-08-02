@@ -26,6 +26,7 @@
 #include "dev_epiphany.h"
 #include "epiphany-abi.h"
 #include "epiphany-kernel-abi.h"
+#include "generic.h"
 
 #define MMR_R0           0xf0000
 #define MMR_CONFIG       0xf0400
@@ -439,19 +440,32 @@ static int ecore_soft_reset(struct epiphany_dev *epiphany, unsigned coreid)
     return 0;
 }
 
-static inline struct epiphany_dev *to_epiphany_dev(struct dev *dev)
+static int epiphany_rank_to_coreid(struct team *team, int rank,
+                                   unsigned *coreid)
 {
-    return container_of(dev, struct epiphany_dev, dev);
+    p_coords_t team_coords, dev_coords;
+
+    if (p_rank_to_coords(team, rank, &team_coords, 0))
+        return -EINVAL;
+
+    if (epiphany_team_coords_to_dev_coords(team, &team_coords, &dev_coords))
+        return -EINVAL;
+
+    *coreid = (dev_coords.row << 6) | dev_coords.col;
+
+    return 0;
 }
 
 int epiphany_soft_reset(struct team *team, int start, int size)
 {
-    int ret;
+    int i, ret;
+    unsigned coreid;
     struct epiphany_dev *epiphany = to_epiphany_dev(team->dev);
-    for (unsigned i = (unsigned) start; i < (unsigned) (start + size); i++) {
-        unsigned row = epiphany->dev.start.row + i / epiphany->dev.size.col;
-        unsigned col = epiphany->dev.start.col + i % epiphany->dev.size.col;
-        unsigned coreid = (row << 6) | col;
+
+    for (i = start; i < start + size; i++) {
+        ret = epiphany_rank_to_coreid(team, i, &coreid);
+        if (ret)
+            return ret;
         ret = ecore_soft_reset(epiphany, coreid);
         if (ret)
             return ret;
@@ -566,9 +580,9 @@ static void setup_function_args(struct epiphany_dev *epiphany, unsigned coreid,
                                 uint32_t function_addr,
                                 uintptr_t loader_args_ptr_addr)
 {
-    unsigned rel_row = (coreid - 0x808) >> 6;
-    unsigned rel_col = (coreid - 0x808) & 0x3f;
-    unsigned rel_coreid = (rel_row << 2) + rel_col;
+    unsigned rel_row = ((coreid >> 6) & 0x3f) - epiphany->dev.start.row;
+    unsigned rel_col = ((coreid >> 0) & 0x3f) - epiphany->dev.start.col;;
+    unsigned rel_coreid = (rel_row * epiphany->dev.size.col) + rel_col;
     uint32_t eaddr;
     struct loader_args *loader_args = &epiphany->ctrl->loader_args[rel_coreid];
     /* epiphany address */
@@ -763,24 +777,35 @@ static int set_core_config(struct team *team, unsigned coreid, unsigned rank,
         return -EINVAL;
 
     if (sections[SEC_WORKGROUP_CFG].present) {
-        unsigned glob_row0 = epiphany->dev.start.row + team->start.id / epiphany->dev.size.col;
-        unsigned glob_col0 = epiphany->dev.start.col + team->start.id % epiphany->dev.size.col;
-        unsigned col0 = team->start.id % epiphany->dev.size.col;
-        unsigned cole = (team->start.id + team->size.id - 1) % epiphany->dev.size.col;
-        unsigned cols = 1 + cole - col0;
-        unsigned rows = team->size.id / cols;
-        /* No trivial way to emulate workgroups??? Pretend each core is its own
-         * separate group for now. */
+        p_coords_t me_team_coords, me_dev_coords;
+        p_coords_t group_team_coords, group_dev_coords;
+        p_coords_t last_team_coords;
+
+        /* Group's coords */
+        p_rank_to_coords(team, 0, &group_team_coords, 0);
+        epiphany_team_coords_to_dev_coords(team, &group_team_coords,
+                                           &group_dev_coords);
+
+        /* This core's coords */
+        p_rank_to_coords(team, rank, &me_team_coords, 0);
+        epiphany_team_coords_to_dev_coords(team, &me_team_coords,
+                                           &me_dev_coords);
+
+        /* Last core's coords (to determine size) */
+        epiphany_last_coords(team, &last_team_coords);
+
         e_group_config.objtype    = E_EPI_GROUP;
         e_group_config.chiptype   = E_E16G301; /* TODO: Or E_64G501 */
-        e_group_config.group_id   = glob_row0 * 64 + glob_col0;
-        e_group_config.group_row  = glob_row0;
-        e_group_config.group_col  = glob_col0;
-        e_group_config.group_rows = rows;
-        e_group_config.group_cols = cols;
-        e_group_config.core_row   = rank / epiphany->dev.size.col;
-        e_group_config.core_col   = rank % epiphany->dev.size.col;
+        e_group_config.group_id   = 64 * group_dev_coords.row +
+                                    group_dev_coords.col;
+        e_group_config.group_row  = group_dev_coords.row;
+        e_group_config.group_col  = group_dev_coords.col;
+        e_group_config.group_rows = last_team_coords.row + 1;
+        e_group_config.group_cols = last_team_coords.col + 1;
+        e_group_config.core_row   = me_dev_coords.row - group_dev_coords.row;
+        e_group_config.core_col   = me_dev_coords.col - group_dev_coords.col;
         e_group_config.alignment_padding = 0xdeadbeef;
+
         mem_write(e_group_config_addr, &e_group_config, sizeof(e_group_config));
     }
 
@@ -833,10 +858,11 @@ int epiphany_load(struct team *team, int start, int count,
         goto out;
     }
 
-    for (unsigned i = (unsigned) start; i < (unsigned) (start + count); i++) {
-        unsigned row = epiphany->dev.start.row + (team->start.id + i) / epiphany->dev.size.col;
-        unsigned col = epiphany->dev.start.col + (team->start.id + i) % epiphany->dev.size.col;
-        unsigned coreid = (row << 6) | col;
+    for (int i = start; i < start + count; i++) {
+        unsigned coreid;
+
+        epiphany_rank_to_coreid(team, i, &coreid);
+
         rc = process_elf(file, epiphany, coreid);
         if (rc)
             goto out;
@@ -856,11 +882,12 @@ void epiphany_start(struct team *team, int start, int count)
 {
     struct epiphany_dev *epiphany = to_epiphany_dev(team->dev);
 
-    for (unsigned i = (unsigned) start; i < (unsigned) (start + count); i++) {
-        unsigned row = epiphany->dev.start.row + i / epiphany->dev.size.col;
-        unsigned col = epiphany->dev.start.col + i % epiphany->dev.size.col;
-        unsigned coreid = (row << 6) | col;
-        uintptr_t core_base = coreid << 20;
+    for (int i = start; i < start + count; i++) {
+        unsigned coreid;
+        uintptr_t core_base;
+
+        epiphany_rank_to_coreid(team, i, &coreid);
+        core_base = coreid << 20;
 
         reg_write(core_base, MMR_ILATST, 1);
     }
@@ -878,19 +905,27 @@ int epiphany_reset_system(struct epiphany_dev *epiphany)
 bool epiphany_is_team_done (struct team *team)
 {
     struct epiphany_dev *epiphany = to_epiphany_dev(team->dev);
+    p_coords_t last_coords;
+    int last_rank;
 
-    for (unsigned i = team->start.id; i < team->start.id + team->size.id; i++) {
-        unsigned row = epiphany->dev.start.row + i / epiphany->dev.size.col;
-        unsigned col = epiphany->dev.start.col + i % epiphany->dev.size.col;
-        uint32_t core = ((row << 6) | col) << 20;
+    if (epiphany_last_coords(team, &last_coords))
+        return false;
+
+    last_rank = p_coords_to_rank(team, &last_coords, 0);
+
+    for (int i = 0; i <= last_rank; i++) {
+        unsigned coreid;
+        uint32_t core;
         uint32_t debugstatus, pc;
         uint16_t insn;
+
+        epiphany_rank_to_coreid(team, i, &coreid);
+        core = coreid << 20;
 
         debugstatus = reg_read(core, MMR_DEBUGSTATUS);
 
         if (!(debugstatus & 1))
             return false;
-
 
         pc = reg_read(core, MMR_PC);
 

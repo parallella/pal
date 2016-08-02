@@ -110,19 +110,86 @@ int epiphany_dev_query(struct dev *dev, int property)
     return -EINVAL;
 }
 
+int epiphany_team_coords_to_dev_coords(struct team *team,
+                                       const p_coords_t *team_coords,
+                                       p_coords_t *dev_coords)
+{
+    p_coords_t scratch_dev_coords;
+
+    /* Allow NULL ptr argument */
+    if (!dev_coords)
+        dev_coords = &scratch_dev_coords;
+
+    switch (team->topology) {
+    case P_TOPOLOGY_FLAT:
+        dev_coords->row =
+            team->dev->start.row + team_coords->id / team->dev->size.col;
+        dev_coords->col =
+            team->dev->start.col + team_coords->id % team->dev->size.col;
+        break;
+    case P_TOPOLOGY_2D:
+        dev_coords->row = team->dev->start.row + team_coords->row;
+        dev_coords->col = team->dev->start.col + team_coords->col;
+    default:
+        return -EINVAL;
+    }
+
+    if (   team->dev->start.row + team->dev->size.row < dev_coords->row
+        || team->dev->start.col + team->dev->size.col < dev_coords->col)
+        return -EINVAL;
+
+    return 0;
+}
+
+int epiphany_last_coords(struct team *team, p_coords_t *last_coords)
+{
+    switch (team->topology) {
+    case P_TOPOLOGY_FLAT:
+        last_coords->id = team->start.id + team->size.id - 1;
+        break;
+    case P_TOPOLOGY_2D:
+        last_coords->row = team->start.row + team->size.row - 1;
+        last_coords->col = team->start.col + team->size.col - 1;
+    default:
+        return -EINVAL;
+    }
+
+    return 0;
+}
 
 struct team *epiphany_dev_open(struct team *team)
 {
     struct epiphany_dev *epiphany = to_epiphany_dev(team->dev);
-
-    if (team->start.id < 0 || team->size.id < 0 || 16 < team->start.id + team->size.id)
-        return p_ref_err(EINVAL);
+    p_coords_t last_coords;
 
     /* Open was done in init */
     if (!epiphany->opened)
         return p_ref_err(EBADF);
 
+    if (epiphany_team_coords_to_dev_coords(team, &team->start, NULL))
+        return p_ref_err(EINVAL);
+
+    if (epiphany_last_coords(team, &last_coords))
+        return p_ref_err(EINVAL);
+
+    if (epiphany_team_coords_to_dev_coords(team, &last_coords, NULL))
+        return p_ref_err(EINVAL);
+
     return team;
+}
+
+static unsigned ctrl_offset(struct team *team, int rank)
+{
+    unsigned offset;
+    p_coords_t team_coords, dev_coords;
+
+    p_rank_to_coords(team, rank, &team_coords, 0);
+    epiphany_team_coords_to_dev_coords(team, &team_coords, &dev_coords);
+
+    offset = (dev_coords.row - team->dev->start.row) * team->dev->size.col +
+             (dev_coords.col - team->dev->start.col);
+
+    return offset;
 }
 
 int epiphany_dev_load(struct team *team, int start, int count,
@@ -131,18 +198,28 @@ int epiphany_dev_load(struct team *team, int start, int count,
 {
     int err;
     int i;
+    p_coords_t start_coords, last_coords;
     struct epiphany_dev *epiphany = to_epiphany_dev(team->dev);
-
-    if (start < 0 || count <= 0)
-        return -EINVAL;
-
-    if (team->size.id < start + count)
-        return -EINVAL;
 
     if (!epiphany->opened)
         return -EBADF;
 
-    err = epiphany_soft_reset(team, team->start.id + start, count);
+    if (start < 0 || count <= 0)
+        return -EINVAL;
+
+    if (p_rank_to_coords(team, start, &start_coords, 0))
+        return -EINVAL;
+
+    if (p_rank_to_coords(team, start + count - 1, &last_coords, 0))
+        return -EINVAL;
+
+    if (epiphany_team_coords_to_dev_coords(team, &start_coords, NULL))
+        return -EINVAL;
+
+    if (epiphany_team_coords_to_dev_coords(team, &last_coords, NULL))
+        return -EINVAL;
+
+    err = epiphany_soft_reset(team, start, count);
     if (err) {
         /* WARN: soft reset failed */
         return err;
@@ -153,8 +230,10 @@ int epiphany_dev_load(struct team *team, int start, int count,
         return err;
 
     /* Mark as scheduled */
-    for (i = team->start.id + start; i < team->start.id + start + count; i++)
-        epiphany->ctrl->status[i] = STATUS_SCHEDULED;
+    for (i = start; i < start + count; i++) {
+        unsigned offset = ctrl_offset(team, i);
+        epiphany->ctrl->status[offset] = STATUS_SCHEDULED;
+    }
 
     /* Ideally a *system* (not host CPU-only) memory barrier here */
     __sync_synchronize();
@@ -175,13 +254,22 @@ int epiphany_dev_start(struct team *team, int start, int count)
 int epiphany_dev_wait(struct dev *dev, struct team *team)
 {
     unsigned i, j = 0;
+    int last_rank;
+    p_coords_t last_coords;
     bool need_wait = true;
     struct epiphany_dev *data = to_epiphany_dev(dev);
 
+    if (epiphany_last_coords(team, &last_coords))
+        return -EINVAL;
+
+    last_rank = p_coords_to_rank(team, &last_coords, 0);
+
     while (true) {
         need_wait = false;
-        for (i = team->start.id; i < team->start.id + team->size.id; i++) {
-            switch (data->ctrl->status[i]) {
+        for (i = 0; i <= last_rank; i++) {
+            unsigned offset = ctrl_offset(team, i);
+
+            switch (data->ctrl->status[offset]) {
             case STATUS_SCHEDULED:
                 /* TODO: Time out if same proc is in scheduled state too long.
                  * If program does not start immediately something has gone
@@ -216,18 +304,18 @@ int epiphany_dev_kill(struct team *team, int start, int count, int signal)
 {
     struct epiphany_dev *epiphany = to_epiphany_dev(team->dev);
 
+    if (!epiphany->opened)
+        return -EBADF;
+
     if (start < 0 || count <= 0)
         return -EINVAL;
 
     if (team->size.id < start + count)
         return -EINVAL;
 
-    if (!epiphany->opened)
-        return -EBADF;
-
     switch (signal) {
         case SIGKILL:
-            return epiphany_soft_reset(team, team->start.id + start, count);
+            return epiphany_soft_reset(team, start, count);
         default:
             return -ENOSYS;
     }

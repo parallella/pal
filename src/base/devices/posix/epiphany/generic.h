@@ -33,3 +33,9 @@ int epiphany_dev_start(struct team *team, int start, int count);
 int epiphany_dev_wait(struct dev *dev, struct team *team);
 
 int epiphany_dev_kill(struct team *team, int start, int count, int signal);
+
+int epiphany_team_coords_to_dev_coords(struct team *team,
+                                       const p_coords_t *team_coords,
+                                       p_coords_t *dev_coords);
+
+int epiphany_last_coords(struct team *team, p_coords_t *last_coords);
