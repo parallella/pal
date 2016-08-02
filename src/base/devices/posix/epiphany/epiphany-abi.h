@@ -1,10 +1,9 @@
 #pragma once
 #include <stdint.h>
 
-/* Structs needed by e-lib */
+#include <pal.h>
 
-#ifndef __epiphany__
-/* These are already defined by e-lib.h */
+/* Structs needed by e-lib */
 typedef enum {
     E_NULL         = 0,
     E_EPI_PLATFORM = 1,
@@ -38,8 +37,8 @@ typedef struct {
     uint32_t objtype;           // 0x50
     uint32_t base;              // 0x54
 } __attribute__((packed)) e_emem_config_t;
-#endif
 
+/* Loader arguments */
 struct loader_args {
     uint32_t r0;
     uint32_t r1;
@@ -54,21 +53,23 @@ struct loader_args {
 } __attribute__((packed));
 
 struct loader_cfg {
-	uint32_t flags;
-	uint32_t __pad1;
-	uint32_t args_ptr;
-	uint32_t __pad2;
+    uint32_t flags;
+    uint32_t __pad1;
+    uint32_t args_ptr;
+    uint32_t __pad2;
 } __attribute__((packed));
 
 // Loader flags for crt0
 #define LOADER_BSS_CLEARED_FLAG 1
 #define LOADER_CUSTOM_ARGS_FLAG 2
 
-#if 0
-/* Already defined by e-hal.h */
-#ifdef __epiphany__
-extern const e_group_config_t e_group_config;
-extern const e_emem_config_t  e_emem_config;
-#endif
-#endif
-
+// For __pal_epiphany_coords (see boilerplate.c / loader.c:set_core_config())
+struct pal_epiphany_coords {
+    p_coords_t default_dev_start;
+    p_coords_t default_dev_size;
+    int default_team_topology;
+    p_coords_t default_team_start;
+    p_coords_t default_team_size;
+    p_coords_t default_team_rank;
+    int device_rank; /* My device rank */
+} __attribute__((packed));

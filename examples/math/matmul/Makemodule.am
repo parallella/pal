@@ -18,7 +18,7 @@ examples/math/matmul/matlib.c                      \
 examples/math/matmul/static-buffers.c              \
 examples/math/matmul/matmul-internal.ldf
 
-examples_math_matmul_matmul_dev_epiphany_LDADD = $(EPIPHANY_LDADD)
+examples_math_matmul_matmul_dev_epiphany_LDADD = $(EPIPHANY_LDADD) -le-lib
 examples_math_matmul_matmul_dev_epiphany_LDFLAGS = \
 -Wl,-T $(top_srcdir)/examples/math/matmul/matmul-internal.ldf
 examples_math_matmul_matmul_dev_epiphany_CFLAGS = -O2 -falign-loops=8 -falign-functions=8 -fmessage-length=0 -ffast-math -ftree-vectorize -std=c99 -ffp-contract=fast -mlong-calls -mfp-mode=round-nearest

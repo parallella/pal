@@ -1,7 +1,3 @@
-if HOST_IS_EPIPHANY
-    MAYBE_EPIPHANY_LIBS = -le-lib
-endif
-
 noinst_LTLIBRARIES += src/base/libpal-base.la
 
 src_base_libpal_base_la_SOURCES = \

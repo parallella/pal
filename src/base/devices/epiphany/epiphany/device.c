@@ -1,7 +1,4 @@
 #include "dev_epiphany.h"
-#include <e-lib.h>
-
-extern const e_group_config_t e_group_config;
 
 static int dev_query(struct dev *dev, int property)
 {
@@ -94,12 +91,51 @@ static int dev_kill(struct team *team, int start, int count, int signal)
     return -ENOSYS;
 }
 
+static int epiphany_team_coords_to_dev_coords(struct team *team,
+                                              const p_coords_t *team_coords,
+                                              p_coords_t *dev_coords)
+{
+    p_coords_t scratch_dev_coords;
+
+    /* Allow NULL ptr argument */
+    if (!dev_coords)
+        dev_coords = &scratch_dev_coords;
+
+    switch (team->topology) {
+    case P_TOPOLOGY_FLAT:
+        dev_coords->row =
+            team->dev->start.row + team_coords->id / team->dev->size.col;
+        dev_coords->col =
+            team->dev->start.col + team_coords->id % team->dev->size.col;
+        break;
+    case P_TOPOLOGY_2D:
+        dev_coords->row = team->dev->start.row + team_coords->row;
+        dev_coords->col = team->dev->start.col + team_coords->col;
+    default:
+        return -EINVAL;
+    }
+
+    if (   team->dev->start.row + team->dev->size.row < dev_coords->row
+        || team->dev->start.col + team->dev->size.col < dev_coords->col)
+        return -EINVAL;
+
+    return 0;
+}
+
 static void *dev_addr(struct team *team, int rank, uintptr_t offset)
 {
-    unsigned row = e_group_config.group_row + rank / e_group_config.group_cols;
-    unsigned col = e_group_config.group_col + rank % e_group_config.group_cols;
-    unsigned coreid = (row << 6) | col;
-    uintptr_t addr = (coreid << 20) | offset;
+    p_coords_t team_coords, dev_coords;
+    uintptr_t addr, coreid;
+
+    if (p_rank_to_coords(team, rank, &team_coords, 0))
+        return NULL;
+
+    if (epiphany_team_coords_to_dev_coords(team, &team_coords, &dev_coords))
+        return NULL;
+
+    coreid = (dev_coords.row << 6) | dev_coords.col;
+    addr = (coreid << 20) | offset;
+
     return (void *) addr;
 }
 
@@ -130,9 +166,13 @@ static int dev_mutex_unlock(struct team *team, p_mutex_t *mutex)
 
 static int leader_barrier(struct team *team)
 {
-    int i;
-    int next = (team->rank.id + 1) % team->size.id;
-    int *next_barrier0 = dev_addr(team, next, (uintptr_t) &team->barrier0);
+    int i, team_size, my_rank;
+    int *next_barrier0;
+    p_coords_t last_coords;
+
+    team_size = p_team_size(team);
+
+    next_barrier0 = dev_addr(team, 1, (uintptr_t) &team->barrier0);
 
     team->barrier1++;
 
@@ -144,7 +184,7 @@ static int leader_barrier(struct team *team)
     team->barrier1++;
     team->barrier0++;
 
-    for (i = 1; i < team->size.id; i++) {
+    for (i = 1; i < team_size; i++) {
         int *bar0 = dev_addr(team, i, (uintptr_t) &team->barrier0);
         *bar0 = team->barrier1;
     }
@@ -156,14 +196,20 @@ static int leader_barrier(struct team *team)
 
 static int dev_barrier(struct team *team)
 {
-    if (team->size.id < 2)
+    int i, next_rank, my_rank, team_size;
+    int *next_barrier0;
+
+    team_size = p_team_size(team);
+    my_rank = p_team_rank(team);
+
+    if (team_size < 2)
         return 0;
 
-    if (team->rank.id == 0)
+    if (my_rank == 0)
         return leader_barrier(team);
 
-    int next = (team->rank.id + 1) % team->size.id;
-    int *next_barrier0 = dev_addr(team, next, (uintptr_t) &team->barrier0);
+    next_rank = (my_rank + 1) % (team_size);
+    next_barrier0 = dev_addr(team, next_rank, (uintptr_t) &team->barrier0);
 
     while (team->barrier0 == team->barrier1)
         p_cpu_relax();
@@ -206,5 +252,8 @@ static struct dev_ops epiphany_dev_ops = {
 struct epiphany_dev __pal_dev_epiphany = {
     .dev = {
         .dev_ops = &epiphany_dev_ops,
+        .topology = P_TOPOLOGY_2D,
+        .start = { .row = 32, .col = 8 },
+        .size = { .row = 4, .col = 4 },
     },
 };

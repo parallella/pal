@@ -717,8 +717,6 @@ static int set_core_config(struct team *team, unsigned coreid, unsigned rank,
     e_group_config_t e_group_config;
     e_emem_config_t  e_emem_config;
     struct loader_cfg loader_cfg;
-    uintptr_t e_group_config_addr, e_emem_config_addr, loader_cfg_addr;
-    uintptr_t loader_flags_addr, loader_args_ptr_addr;
     char *function_plt;
 
     {
@@ -737,31 +735,27 @@ static int set_core_config(struct team *team, unsigned coreid, unsigned rank,
     struct symbol_info symbols[] = {
         { .name = function     },
         { .name = function_plt },
+        { .name = "__pal_epiphany_coords" },
     };
     lookup_symbols(file, file_size, symbols, ARRAY_SIZE(symbols));
 
     for (unsigned i; i < ARRAY_SIZE(sections); i++) {
         if (!sections[i].present)
-            return -ENOENT;
+            continue;
 
         /* ???: Should perhaps only allow local addresses */
         if (!is_valid_addr(epiphany, sections[i].sh_addr, coreid))
             return -EINVAL;
     }
 
-    e_group_config_addr = is_local(sections[SEC_WORKGROUP_CFG].sh_addr) ?
-        (uintptr_t) &corep[sections[SEC_WORKGROUP_CFG].sh_addr] :
-        (uintptr_t) &nullp[sections[SEC_WORKGROUP_CFG].sh_addr];
-    e_emem_config_addr = is_local(sections[SEC_EXT_MEM_CFG].sh_addr) ?
-        (uintptr_t) &corep[sections[SEC_EXT_MEM_CFG].sh_addr] :
-        (uintptr_t) &nullp[sections[SEC_EXT_MEM_CFG].sh_addr];
-    loader_cfg_addr = is_local(sections[SEC_LOADER_CFG].sh_addr) ?
-        (uintptr_t) &corep[sections[SEC_LOADER_CFG].sh_addr] :
-        (uintptr_t) &nullp[sections[SEC_LOADER_CFG].sh_addr];
+    for (unsigned i; i < ARRAY_SIZE(symbols); i++) {
+        if (!symbols[i].present)
+            continue;
 
-    loader_flags_addr = loader_cfg_addr + offsetof(struct loader_cfg, flags);
-    loader_args_ptr_addr =
-        loader_cfg_addr + offsetof(struct loader_cfg, args_ptr);
+        /* ???: Should perhaps only allow local addresses */
+        if (!is_valid_addr(epiphany, symbols[i].sym.st_value, coreid))
+            return -EINVAL;
+    }
 
     /* Check everything except PLT entry (only exists when compiled w/ -fpic) */
     /* Prefer PLT entry */
@@ -777,9 +771,14 @@ static int set_core_config(struct team *team, unsigned coreid, unsigned rank,
         return -EINVAL;
 
     if (sections[SEC_WORKGROUP_CFG].present) {
+        uintptr_t e_group_config_addr;
         p_coords_t me_team_coords, me_dev_coords;
         p_coords_t group_team_coords, group_dev_coords;
         p_coords_t last_team_coords;
+
+        e_group_config_addr = is_local(sections[SEC_WORKGROUP_CFG].sh_addr) ?
+            (uintptr_t) &corep[sections[SEC_WORKGROUP_CFG].sh_addr] :
+            (uintptr_t) &nullp[sections[SEC_WORKGROUP_CFG].sh_addr];
 
         /* Group's coords */
         p_rank_to_coords(team, 0, &group_team_coords, 0);
@@ -810,17 +809,72 @@ static int set_core_config(struct team *team, unsigned coreid, unsigned rank,
     }
 
     if (sections[SEC_EXT_MEM_CFG].present) {
+        uintptr_t e_emem_config_addr;
+
+        e_emem_config_addr = is_local(sections[SEC_EXT_MEM_CFG].sh_addr) ?
+            (uintptr_t) &corep[sections[SEC_EXT_MEM_CFG].sh_addr] :
+            (uintptr_t) &nullp[sections[SEC_EXT_MEM_CFG].sh_addr];
+
         e_emem_config.objtype = E_EXT_MEM;
         e_emem_config.base    = epiphany->eram_base;
+
         mem_write(e_emem_config_addr, &e_emem_config, sizeof(e_emem_config));
     }
 
-    setup_function_args(epiphany, coreid, argn, args, function_addr,
-                        loader_args_ptr_addr);
+    if (sections[SEC_LOADER_CFG].present) {
+        uintptr_t loader_cfg_addr, loader_flags_addr, loader_args_ptr_addr;
 
-    // Instruct crt0 .bss is cleared and that we've provided custom args.
-    loader_flags = LOADER_BSS_CLEARED_FLAG | LOADER_CUSTOM_ARGS_FLAG;
-    mem_write(loader_flags_addr, &loader_flags, sizeof(loader_flags));
+        loader_cfg_addr = is_local(sections[SEC_LOADER_CFG].sh_addr) ?
+            (uintptr_t) &corep[sections[SEC_LOADER_CFG].sh_addr] :
+            (uintptr_t) &nullp[sections[SEC_LOADER_CFG].sh_addr];
+
+        loader_flags_addr =
+            loader_cfg_addr +offsetof(struct loader_cfg, flags);
+        loader_args_ptr_addr =
+            loader_cfg_addr + offsetof(struct loader_cfg, args_ptr);
+
+        setup_function_args(epiphany, coreid, argn, args, function_addr,
+                            loader_args_ptr_addr);
+
+        // Instruct crt0 .bss is cleared and that we've provided custom args.
+        loader_flags = LOADER_BSS_CLEARED_FLAG | LOADER_CUSTOM_ARGS_FLAG;
+        mem_write(loader_flags_addr, &loader_flags, sizeof(loader_flags));
+    }
+
+    if (symbols[2].present) { /* __pal_epiphany_coords */
+        uintptr_t pal_epiphany_coords_addr;
+        p_coords_t this_team_coords, this_dev_coords;
+        int this_dev_row, this_dev_col, this_dev_rank;
+
+        pal_epiphany_coords_addr = is_local(symbols[2].sym.st_value) ?
+            (uintptr_t) &corep[symbols[2].sym.st_value] :
+            (uintptr_t) &nullp[symbols[2].sym.st_value];
+
+        /* This core's coords */
+        p_rank_to_coords(team, rank, &this_team_coords, 0);
+        epiphany_team_coords_to_dev_coords(team, &this_team_coords,
+                                           &this_dev_coords);
+
+        /* Relative to epiphany->dev.start */
+        this_dev_row = this_dev_coords.row - epiphany->dev.start.row;
+        this_dev_col = this_dev_coords.col - epiphany->dev.start.col;
+        this_dev_rank = this_dev_row * epiphany->dev.size.col + this_dev_col;
+
+        struct pal_epiphany_coords epiphany_coords = {
+            .default_dev_start = { .row = epiphany->dev.start.row,
+                                   .col = epiphany->dev.start.col },
+            .default_dev_size =  { .row = epiphany->dev.size.row,
+                                   .col = epiphany->dev.size.col },
+            .default_team_topology = team->topology,
+            .default_team_start    = team->start,
+            .default_team_size     = team->size,
+            .default_team_rank     = this_team_coords,
+            .device_rank           = this_dev_rank,
+        };
+
+        mem_write(pal_epiphany_coords_addr, &epiphany_coords,
+                  sizeof(epiphany_coords));
+    }
 
     return 0;
 }
