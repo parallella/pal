@@ -358,8 +358,8 @@ typedef union p_coords {
         int col;
         int row;
         int plane;
-    } __attribute__((packed));
-} __attribute__((packed)) p_coords_t;
+    } __attribute__((packed)) __attribute__((aligned(4)));
+} __attribute__((packed)) __attribute__((aligned(4))) p_coords_t;
 
 typedef enum {
     P_TOPOLOGY_FLAT,

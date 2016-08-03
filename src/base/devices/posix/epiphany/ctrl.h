@@ -17,7 +17,8 @@
 struct epiphany_ctrl_mem {
     uint32_t status[16]; // status field for team
     struct loader_args loader_args[16];
-} __attribute__((packed)); // since this is referenced cross-architecture we
+} __attribute__((packed)) __attribute__((aligned(4)));
+                           // since this is referenced cross-architecture we
                            // need to pack struct explicitly to avoid surprises
 
 
