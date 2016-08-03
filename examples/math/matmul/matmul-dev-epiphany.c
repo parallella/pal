@@ -67,12 +67,19 @@ int main(int argc, char *argv[])
 
 void init()
 {
-	// Init core enumerations
-	me.row     = e_group_config.core_row;
-	me.col     = e_group_config.core_col;
-	e_neighbor_id(E_PREV_CORE, E_ROW_WRAP,   &me.rowh, &me.colh);
-	e_neighbor_id(E_PREV_CORE, E_COL_WRAP,   &me.rowv, &me.colv);
-	e_neighbor_id(E_NEXT_CORE, E_GROUP_WRAP, &me.rown, &me.coln);
+	p_coords_t tmp_coords;
+
+	me.rank = p_team_rank(P_TEAM_DEFAULT);
+	p_rank_to_coords(P_TEAM_DEFAULT, me.rank, &me.coords, 0);
+
+	tmp_coords.row = -1;
+	tmp_coords.col = 0;
+	me.north_rank = p_rel_coords_to_rank(P_TEAM_DEFAULT, me.rank, &tmp_coords,
+										 P_COORDS_WRAP);
+	tmp_coords.row = 0;
+	tmp_coords.col = -1;
+	me.west_rank = p_rel_coords_to_rank(P_TEAM_DEFAULT, me.rank, &tmp_coords,
+										P_COORDS_WRAP);
 
 	// Initialize the mailbox shared buffer pointers
 	Mailbox.pBase = (void *) e_emem_config.base;
@@ -90,16 +97,20 @@ void init()
 	me.bank_B[_PONG] = (void *) &(BB[_PONG][0][0]);
 	me.bank_C        = (void *) &(CC       [0][0]);
 
+
 	// Initialize the pointer addresses of the arrays in the horizontal and vertical target
-	// cores, where the submatrices data will be swapped, and the inter-core sync signals.
-	me.tgt_A[_PING] = e_get_global_address(me.rowh, me.colh, me.bank_A[_PONG]);
-	me.tgt_A[_PONG] = e_get_global_address(me.rowh, me.colh, me.bank_A[_PING]);
-	
-	me.tgt_B[_PING] = e_get_global_address(me.rowv, me.colv, me.bank_B[_PONG]);
-	me.tgt_B[_PONG] = e_get_global_address(me.rowv, me.colv, me.bank_B[_PING]);
+	// TODO: What's the size here (last arg) ?
+	me.tgt_A[_PING] = p_map_member(P_TEAM_DEFAULT, me.west_rank,
+								   (unsigned long) me.bank_A[_PONG], 0x4000);
+	me.tgt_A[_PONG] = p_map_member(P_TEAM_DEFAULT, me.west_rank,
+								   (unsigned long) me.bank_A[_PING], 0x4000);
+
+	me.tgt_B[_PING] = p_map_member(P_TEAM_DEFAULT, me.north_rank,
+								   (unsigned long) me.bank_B[_PONG], 0x4000);
+	me.tgt_B[_PONG] = p_map_member(P_TEAM_DEFAULT, me.north_rank,
+								   (unsigned long) me.bank_B[_PING], 0x4000);
 
 	me.pingpong = _PING;
-
 
 	// Wait for the DMA engine to be idle
 	e_dma_wait(E_DMA_0);
@@ -147,8 +158,8 @@ void bigmatmul()
 				p_mutex_lock(&pmutex);
 
 				// get A block from external DRAM
-				ic = me.row * _Score;
-				jc = ((me.col + me.row) % _Nside) * _Score;
+				ic = me.coords.row * _Score;
+				jc = ((me.coords.col + me.coords.row) % _Nside) * _Score;
 
 				src = &(Mailbox.pA[(im+ic)*_Smtx + (km+jc)]);
 				dst = me.bank_A[me.pingpong];
@@ -157,8 +168,8 @@ void bigmatmul()
 				data_copy(&dma_desc[0], dst, src);
 
 				// get B block from DRAM
-				jc = me.col * _Score;
-				ic = ((me.row + me.col) % _Nside) * _Score;
+				jc = me.coords.col * _Score;
+				ic = ((me.coords.row + me.coords.col) % _Nside) * _Score;
 
 				src = &(Mailbox.pB[(km+ic)*_Smtx + (jm+jc)]);
 				dst = me.bank_B[me.pingpong];
@@ -201,8 +212,8 @@ void bigmatmul()
 			}
 
 			// Write the core's result to DRAM
-			ic = me.row * _Score;
-			jc = me.col * _Score;
+			ic = me.coords.row * _Score;
+			jc = me.coords.col * _Score;
 
 			src = me.bank_C;
 			dst = &(Mailbox.pC[(im+ic)*_Smtx + (jm+jc)]);
@@ -237,4 +248,3 @@ void data_copy(e_dma_desc_t *dma_desc, void *dst, void *src)
 
 	return;
 }
-

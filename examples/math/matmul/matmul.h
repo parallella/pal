@@ -24,6 +24,7 @@
 #define __MATMUL_H__
 
 #include <stdint.h>
+#include <pal.h>
 
 #define _Nchips 4                  // # of chips in operand matrix side
 #define _Nside  4                  // # of cores in chip side
@@ -43,14 +44,10 @@
 
 
 typedef struct {
-	uint32_t row;
-	uint32_t col;
-	uint32_t rowh;
-	uint32_t colh;
-	uint32_t rowv;
-	uint32_t colv;
-	uint32_t rown;
-	uint32_t coln;
+	p_coords_t coords;
+	int rank;
+	int west_rank;
+	int north_rank;
 
 	void  *bank_A[2]; // A Ping Pong Bank local space pointers
 	void  *bank_B[2]; // B Ping Pong Bank local space pointers
