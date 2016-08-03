@@ -344,11 +344,13 @@ static inline int p_mem_error(p_mem_t *mem)
  */
 
 /* Flags */
-#define P_COORDS_ABSOLUTE   0
-#define P_COORDS_RELATIVE   1
-#define P_COORDS_WRAP_ROW   2
-#define P_COORDS_WRAP_COL   4
-#define P_COORDS_WRAP_PLANE 8
+#define P_COORDS_ABSOLUTE   0x00
+#define P_COORDS_RELATIVE   0x01
+#define P_COORDS_WRAP_ID    0x02
+#define P_COORDS_WRAP_ROW   0x04
+#define P_COORDS_WRAP_COL   0x08
+#define P_COORDS_WRAP_PLANE 0x10
+#define P_COORDS_WRAP       0x1e
 
 typedef union p_coords {
     int id;
