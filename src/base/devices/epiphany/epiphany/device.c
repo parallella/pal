@@ -1,37 +1,42 @@
 #include "dev_epiphany.h"
 
+static inline struct epiphany_dev *to_epiphany_dev(struct dev *dev)
+{
+    return container_of(dev, struct epiphany_dev, dev);
+}
+
+
 static int epiphany_team_coords_to_dev_coords(struct team *team,
                                               const p_coords_t *team_coords,
                                               p_coords_t *dev_coords);
 
 static int dev_query(struct dev *dev, int property)
 {
-    if (!dev)
-        return -EINVAL;
+    struct epiphany_dev *epiphany = to_epiphany_dev(dev);
 
     switch (property) {
     case P_PROP_TYPE:
         return P_DEV_EPIPHANY;
     case P_PROP_NODES:
-        return 16;
+        return epiphany->dev.size.row * epiphany->dev.size.col;
     case P_PROP_TOPOLOGY:
-        return 2;
+        return P_TOPOLOGY_2D;
     case P_PROP_ROWS:
-        return 4;
+        return epiphany->dev.size.row;
     case P_PROP_COLS:
-        return 4;
+        return epiphany->dev.size.col;
     case P_PROP_PLANES:
-        return 4;
+        return 1;
     case P_PROP_CHIPROWS:
-        return 4;
+        return epiphany->dev.size.row;
     case P_PROP_CHIPCOLS:
-        return 4;
+        return epiphany->dev.size.col;
     case P_PROP_SIMD:
         return 1;
     case P_PROP_MEMSIZE:
-        return 32768;
+        return epiphany->eram_size;
     case P_PROP_MEMBASE:
-        return 0x80800000;
+        return epiphany->eram_base;
     case P_PROP_VERSION:
         return 0xdeadbeef;
     case P_PROP_MEMARCH:
