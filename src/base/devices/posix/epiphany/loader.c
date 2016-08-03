@@ -719,6 +719,9 @@ static int set_core_config(struct team *team, unsigned coreid, unsigned rank,
     struct loader_cfg loader_cfg;
     char *function_plt;
 
+    if (!function)
+        function = "main";
+
     {
         size_t function_len = strlen(function);
         function_plt = alloca(function_len + sizeof("@PLT"));
@@ -774,7 +777,7 @@ static int set_core_config(struct team *team, unsigned coreid, unsigned rank,
         uintptr_t e_group_config_addr;
         p_coords_t me_team_coords, me_dev_coords;
         p_coords_t group_team_coords, group_dev_coords;
-        p_coords_t last_team_coords;
+        p_coords_t last_team_coords, last_dev_coords;
 
         e_group_config_addr = is_local(sections[SEC_WORKGROUP_CFG].sh_addr) ?
             (uintptr_t) &corep[sections[SEC_WORKGROUP_CFG].sh_addr] :
@@ -792,6 +795,8 @@ static int set_core_config(struct team *team, unsigned coreid, unsigned rank,
 
         /* Last core's coords (to determine size) */
         epiphany_last_coords(team, &last_team_coords);
+        epiphany_team_coords_to_dev_coords(team, &last_team_coords,
+                                           &last_dev_coords);
 
         e_group_config.objtype    = E_EPI_GROUP;
         e_group_config.chiptype   = E_E16G301; /* TODO: Or E_64G501 */
@@ -799,8 +804,10 @@ static int set_core_config(struct team *team, unsigned coreid, unsigned rank,
                                     group_dev_coords.col;
         e_group_config.group_row  = group_dev_coords.row;
         e_group_config.group_col  = group_dev_coords.col;
-        e_group_config.group_rows = last_team_coords.row + 1;
-        e_group_config.group_cols = last_team_coords.col + 1;
+        e_group_config.group_rows = last_dev_coords.row -
+                                    epiphany->dev.start.row + 1;
+        e_group_config.group_cols = last_dev_coords.col -
+                                    epiphany->dev.start.col + 1;
         e_group_config.core_row   = me_dev_coords.row - group_dev_coords.row;
         e_group_config.core_col   = me_dev_coords.col - group_dev_coords.col;
         e_group_config.alignment_padding = 0xdeadbeef;
