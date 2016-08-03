@@ -68,10 +68,8 @@ int main(int argc, char *argv[])
 void init()
 {
 	// Init core enumerations
-	me.coreID  = e_get_coreid();
 	me.row     = e_group_config.core_row;
 	me.col     = e_group_config.core_col;
-	me.corenum = me.row * e_group_config.group_cols + me.col;
 	e_neighbor_id(E_PREV_CORE, E_ROW_WRAP,   &me.rowh, &me.colh);
 	e_neighbor_id(E_PREV_CORE, E_COL_WRAP,   &me.rowv, &me.colv);
 	e_neighbor_id(E_NEXT_CORE, E_GROUP_WRAP, &me.rown, &me.coln);

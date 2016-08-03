@@ -43,8 +43,6 @@
 
 
 typedef struct {
-	uint32_t coreID;
-	uint32_t corenum;
 	uint32_t row;
 	uint32_t col;
 	uint32_t rowh;
