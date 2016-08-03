@@ -130,12 +130,13 @@ int epiphany_team_coords_to_dev_coords(struct team *team,
     case P_TOPOLOGY_2D:
         dev_coords->row = team->dev->start.row + team_coords->row;
         dev_coords->col = team->dev->start.col + team_coords->col;
+        break;
     default:
         return -EINVAL;
     }
 
-    if (   team->dev->start.row + team->dev->size.row < dev_coords->row
-        || team->dev->start.col + team->dev->size.col < dev_coords->col)
+    if (   team->dev->start.row + team->dev->size.row <= dev_coords->row
+        || team->dev->start.col + team->dev->size.col <= dev_coords->col)
         return -EINVAL;
 
     return 0;
@@ -150,6 +151,7 @@ int epiphany_last_coords(struct team *team, p_coords_t *last_coords)
     case P_TOPOLOGY_2D:
         last_coords->row = team->start.row + team->size.row - 1;
         last_coords->col = team->start.col + team->size.col - 1;
+        break;
     default:
         return -EINVAL;
     }
