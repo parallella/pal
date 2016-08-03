@@ -19,4 +19,7 @@
 #include "pal_base.h"
 #include "pal_base_private.h"
 
-p_team_t p_remove(p_team_t team, int start, int size) { return (0); }
+p_team_t p_remove(p_team_t team, int start, int size)
+{
+    return p_ref_err(ENOSYS);
+}
