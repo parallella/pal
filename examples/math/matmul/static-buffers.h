@@ -22,17 +22,12 @@
 #ifndef __STATIC_BUFFERS_H__
 #define __STATIC_BUFFERS_H__
 
-#include <e-lib.h>
 #include "matmul.h"
 
 extern volatile float AA[2][_Score][_Score];    // local A submatrix
 extern volatile float BB[2][_Score][_Score];    // local B submatrix
 extern volatile float CC   [_Score][_Score];    // local C submatrix
 
-extern volatile e_mutex_t    mutex;             // groupe lock mutex
-extern volatile e_barrier_t  barriers[_Ncores]; // barriers array
-extern          e_barrier_t *tgt_bars[_Ncores]; // barriers array
-extern          e_dma_desc_t dma_desc[3];       // descriptor structure for DMA
 extern          core_t me;                      // core data structure
 extern volatile shared_buf_ptr_t Mailbox;       // Mailbox pointers;
 

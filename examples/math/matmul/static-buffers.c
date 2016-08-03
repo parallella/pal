@@ -27,13 +27,9 @@
 // at an explicit address - 0x7000. To do that, a custom linker file (LDF) was defined,
 // based on a standard LDF, in which a special data section was added with the required
 // address to assign to the "me" object.
-volatile float  AA[2][_Score][_Score] SECTION(".data_bank1");  // local A submatrix
-volatile float  BB[2][_Score][_Score] SECTION(".data_bank2");  // local B submatrix
-volatile float  CC   [_Score][_Score] SECTION(".data_bank3");  // local C submatrix
+volatile float  AA[2][_Score][_Score] __attribute__((section(".data_bank1")));  // local A submatrix
+volatile float  BB[2][_Score][_Score] __attribute__((section(".data_bank2")));  // local B submatrix
+volatile float  CC   [_Score][_Score] __attribute__((section(".data_bank3")));  // local C submatrix
 
-volatile e_mutex_t    mutex             SECTION("section_core"); // groupe lock mutex
-volatile e_barrier_t  barriers[_Ncores] SECTION("section_core"); // barriers array
-         e_barrier_t *tgt_bars[_Ncores] SECTION("section_core"); // barriers array
-         e_dma_desc_t dma_desc[3]       SECTION("section_core") ALIGN(8); // TCB structure for DMA
-         core_t me                      SECTION("section_core"); // core data structure
-volatile shared_buf_ptr_t Mailbox       SECTION("section_core"); // Mailbox pointers;
+core_t me                      __attribute__((section("section_core"))); // core data structure
+volatile shared_buf_ptr_t Mailbox       __attribute__((section("section_core"))); // Mailbox pointers;

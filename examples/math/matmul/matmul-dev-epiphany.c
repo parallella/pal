@@ -28,6 +28,7 @@
 // Aug-2013, YS.
 
 #include <pal.h>
+#include <string.h>
 
 #include "matlib.h"
 #include "matmul.h"
@@ -37,7 +38,13 @@
 
 void bigmatmul();
 void init();
-void data_copy(e_dma_desc_t *dma_desc, void *dst, void *src);
+void data_copy_2d(void *dst,
+				  const void *src,
+				  unsigned inner_count,
+				  unsigned outer_count,
+				  unsigned inner_stride,
+				  unsigned dst_outer_stride,
+				  unsigned src_outer_stride);
 
 p_mutex_t pmutex = P_MUTEX_INITIALIZER;
 
@@ -64,10 +71,16 @@ int main(int argc, char *argv[])
 	return status;
 }
 
-
 void init()
 {
+	int32_t eram_base;
 	p_coords_t tmp_coords;
+	p_dev_t dev;
+
+	// TODO: Shouldn't need this when started as accelerator/device/slave,
+	// but we need dev for the p_query call.
+	dev = p_init(P_DEV_EPIPHANY, 0);
+	eram_base = p_query(dev, P_PROP_MEMBASE);
 
 	me.rank = p_team_rank(P_TEAM_DEFAULT);
 	p_rank_to_coords(P_TEAM_DEFAULT, me.rank, &me.coords, 0);
@@ -82,7 +95,7 @@ void init()
 										P_COORDS_WRAP);
 
 	// Initialize the mailbox shared buffer pointers
-	Mailbox.pBase = (void *) e_emem_config.base;
+	Mailbox.pBase = (void *) eram_base;
 	Mailbox.pA    = Mailbox.pBase + offsetof(shared_buf_t, A[0]);
 	Mailbox.pB    = Mailbox.pBase + offsetof(shared_buf_t, B[0]);
 	Mailbox.pC    = Mailbox.pBase + offsetof(shared_buf_t, C[0]);
@@ -112,23 +125,8 @@ void init()
 
 	me.pingpong = _PING;
 
-	// Wait for the DMA engine to be idle
-	e_dma_wait(E_DMA_0);
-	// Tehen, prepare the DMA descriptors
-	dma_desc[0].config       = E_DMA_MSGMODE | E_DMA_DWORD | E_DMA_MASTER | E_DMA_ENABLE;
-	dma_desc[0].inner_stride = (0x0008 << 16) | 0x0008;
-	dma_desc[0].count        = (_Score << 16) | (_Score >> 1);
-	dma_desc[0].outer_stride = (0x0008 << 16) | (((_Smtx - _Score) * sizeof(float)) + 0x0008);
-
-	// Duplicate descriptor twice and make necessary corrections for outer strides
-	dma_desc[1] = dma_desc[0];
-	dma_desc[1].outer_stride = (0x0008 << 16) | 0x0008;
-	dma_desc[2] = dma_desc[0];
-	dma_desc[2].outer_stride = ((((_Smtx - _Score) * sizeof(float)) + 0x0008) << 16) | 0x0008;
-
 	return;
 }
-
 
 void bigmatmul()
 {
@@ -165,7 +163,7 @@ void bigmatmul()
 				dst = me.bank_A[me.pingpong];
 
 				// Read the data
-				data_copy(&dma_desc[0], dst, src);
+				data_copy_2d(dst, src, (_Score >> 1), _Score, 8, 8, ((_Smtx - _Score) * sizeof(float) + 8));
 
 				// get B block from DRAM
 				jc = me.coords.col * _Score;
@@ -175,7 +173,7 @@ void bigmatmul()
 				dst = me.bank_B[me.pingpong];
 
 				// Read the data
-				data_copy(&dma_desc[0], dst, src);
+				data_copy_2d(dst, src, (_Score >> 1), _Score, 8, 8, ((_Smtx - _Score) * sizeof(float) + 8));
 
 				// Pass the DMA token to next core
 				p_mutex_unlock(&pmutex);
@@ -195,14 +193,14 @@ void bigmatmul()
 					// Swap A banks horizontally
 					src = me.bank_A[me.pingpong];
 					dst = me.tgt_A[me.pingpong];
-					if (kc < (_Nside - 1)) 
-						data_copy(&dma_desc[1], dst, src);
+					if (kc < (_Nside - 1))
+						data_copy_2d(dst, src, (_Score >> 1), _Score, 8, 8, 8);
 
 					// Swap B banks vertically
 					src = me.bank_B[me.pingpong];
 					dst = me.tgt_B[me.pingpong];
 					if (kc < (_Nside - 1))
-						data_copy(&dma_desc[1], dst, src);
+						data_copy_2d(dst, src, (_Score >> 1), _Score, 8, 8, 8);
 
 					me.pingpong = 1 - me.pingpong;
 
@@ -222,7 +220,7 @@ void bigmatmul()
 			p_mutex_lock(&pmutex);
 
 			// Write data
-			data_copy(&dma_desc[2], dst, src);
+			data_copy_2d(dst, src, (_Score >> 1), _Score, 8, ((_Smtx - _Score) * sizeof(float) + 8), 8);
 
 			// Pass the DMA token to the next core
 			p_mutex_unlock(&pmutex);
@@ -232,19 +230,29 @@ void bigmatmul()
 	return;
 }
 
-
-// Use DMA to copy data blocks from src to dst
-void data_copy(e_dma_desc_t *dma_desc, void *dst, void *src)
+void data_copy_2d(void *dst,
+				  const void *src,
+				  unsigned inner_count,
+				  unsigned outer_count,
+				  unsigned inner_stride,
+				  unsigned dst_outer_stride,
+				  unsigned src_outer_stride)
 {
-	// Make sure DMA is inactive before modifying the descriptor
-	e_dma_wait(E_DMA_0);
-	dma_desc->src_addr = src;
-	dma_desc->dst_addr = dst;
+	uintptr_t src_addr, dst_addr;
 
-	e_dma_start(dma_desc, E_DMA_0);
+	src_addr    = (uintptr_t) src;
+	dst_addr    = (uintptr_t) dst;
 
-	// All DMA transfers are blocking, so wait for process to finish
-	e_dma_wait(E_DMA_0);
+	while (outer_count--) {
+		memcpy((void *) dst_addr, (void *) src_addr,
+			   inner_stride * inner_count);
+
+		dst_addr += inner_stride * (inner_count - 1);
+		src_addr += inner_stride * (inner_count - 1);
+
+		dst_addr += dst_outer_stride;
+		src_addr += src_outer_stride;
+	}
 
 	return;
 }
