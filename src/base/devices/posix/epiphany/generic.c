@@ -78,7 +78,7 @@ int epiphany_dev_query(struct dev *dev, int property)
     case P_PROP_NODES:
         return epiphany->dev.size.row * epiphany->dev.size.col;
     case P_PROP_TOPOLOGY:
-        return 2;
+        return P_TOPOLOGY_2D;
     case P_PROP_ROWS:
         return epiphany->dev.size.row;
     case P_PROP_COLS:
@@ -98,9 +98,9 @@ int epiphany_dev_query(struct dev *dev, int property)
     case P_PROP_SIMD:
         return 1;
     case P_PROP_MEMSIZE:
-        return epiphany->sram_size;
+        return epiphany->eram_size;
     case P_PROP_MEMBASE:
-        return (epiphany->dev.start.row << 6 | epiphany->dev.start.col) << 20;
+        return epiphany->eram_base;
     case P_PROP_VERSION:
         return 0xdeadbeef;
     case P_PROP_MEMARCH:
