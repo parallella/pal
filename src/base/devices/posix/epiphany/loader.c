@@ -877,6 +877,8 @@ static int set_core_config(struct team *team, unsigned coreid, unsigned rank,
             .default_team_size     = team->size,
             .default_team_rank     = this_team_coords,
             .device_rank           = this_dev_rank,
+            .eram_base             = epiphany->eram_base,
+            .eram_size             = epiphany->eram_size,
         };
 
         mem_write(pal_epiphany_coords_addr, &epiphany_coords,

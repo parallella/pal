@@ -72,4 +72,6 @@ struct pal_epiphany_coords {
     p_coords_t default_team_size;
     p_coords_t default_team_rank;
     int device_rank; /* My device rank */
+    uint32_t eram_base;
+    uint32_t eram_size;
 } __attribute__((packed)) __attribute__((aligned(4)));

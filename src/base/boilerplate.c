@@ -79,6 +79,8 @@ struct pal_epiphany_coords __pal_epiphany_coords = {
     .default_team_size = { .row = 1, .col = 1 },
     .default_team_rank = { 0 },
     .device_rank = 0,
+    .eram_base = 0x8e000000,
+    .eram_size = 0x02000000,
 };
 #endif
 
@@ -145,6 +147,8 @@ void __pal_init()
 
     __pal_dev_epiphany.dev.start = __pal_epiphany_coords.default_dev_start;
     __pal_dev_epiphany.dev.size = __pal_epiphany_coords.default_dev_size;
+    __pal_dev_epiphany.eram_base = __pal_epiphany_coords.eram_base;
+    __pal_dev_epiphany.eram_size = __pal_epiphany_coords.eram_size;
     __pal_global.default_team.start = __pal_epiphany_coords.default_team_start;
     __pal_global.default_team.size = __pal_epiphany_coords.default_team_size;
     __pal_global.default_team.rank = __pal_epiphany_coords.default_team_rank;
