@@ -92,6 +92,8 @@ int main(int argc, char *argv[])
 	p_dev_t dev;
 	p_prog_t prog;
 	p_team_t team;
+	p_coords_t start = { .row = 0, .col = 0 };
+	p_coords_t size = { .row = 4, .col = 4 };
 
 	unsigned int msize;
 	float        seed;
@@ -116,7 +118,7 @@ int main(int argc, char *argv[])
 
 	dev = p_init(P_DEV_EPIPHANY, 0);
     prog = p_load(dev, ar.elfFile, 0);
-    team = p_open(dev, 0, 16);
+    team = p_open4(dev, P_TOPOLOGY_2D, &start, &size);
 
     shared_mem = p_map(dev, 0x8e000000, msize);
 
