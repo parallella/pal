@@ -1,5 +1,9 @@
 #include "dev_epiphany.h"
 
+static int epiphany_team_coords_to_dev_coords(struct team *team,
+                                              const p_coords_t *team_coords,
+                                              p_coords_t *dev_coords);
+
 static int dev_query(struct dev *dev, int property)
 {
     if (!dev)
@@ -37,12 +41,23 @@ static int dev_query(struct dev *dev, int property)
     return -EINVAL;
 }
 
-static void *dev_map_member(struct team *team, int member,
+static void *dev_map_member(struct team *team, int rank,
                             unsigned long offset, unsigned long size)
 {
-    /* Implement me */
+    uintptr_t coreid, addr;
 
-    return NULL;
+    p_coords_t team_coords, dev_coords;
+
+    if (p_rank_to_coords(team, rank, &team_coords, 0))
+        return NULL;
+
+    if (epiphany_team_coords_to_dev_coords(team, &team_coords, &dev_coords))
+        return NULL;
+
+    coreid = (dev_coords.row << 6) | dev_coords.col;
+    addr = (coreid << 20) | offset;
+
+    return (void *) addr;
 }
 
 static p_mem_t dev_map(struct dev *dev, unsigned long addr, unsigned long size)
