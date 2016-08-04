@@ -88,12 +88,14 @@ struct timespec timer[6];
 int main(int argc, char *argv[])
 {
 	p_mem_t shared_mem, results_mem;
+	uint32_t eram_base;
 	char results[1024] = { '\0' };
+	int device_cols, device_rows, nside;
 	p_dev_t dev;
 	p_prog_t prog;
 	p_team_t team;
+	p_coords_t size;
 	p_coords_t start = { .row = 0, .col = 0 };
-	p_coords_t size = { .row = 4, .col = 4 };
 
 	unsigned int msize;
 	float        seed;
@@ -117,10 +119,38 @@ int main(int argc, char *argv[])
 	}
 
 	dev = p_init(P_DEV_EPIPHANY, 0);
-    prog = p_load(dev, ar.elfFile, 0);
-    team = p_open4(dev, P_TOPOLOGY_2D, &start, &size);
+	if (p_error(dev)) {
+		fprintf(stderr, "Error initializing PAL\n");
+		return p_error(dev);
+	}
 
-    shared_mem = p_map(dev, 0x8e000000, msize);
+	device_cols = p_query(dev, P_PROP_COLS);
+	device_rows = p_query(dev, P_PROP_ROWS);
+
+	// Use min size
+	nside = device_cols > device_rows ? device_cols : device_rows;
+
+	if (nside < 4) {
+		fprintf(stderr, "Error: Too small device, need at least 4x4\n");
+		return 1;
+	}
+
+	// Either 1024, 256, 64, or 16 cores (side must be power of two),
+	nside = nside >= 32 ? 32 : nside >= 16 ? 16 : nside >= 8 ? 8 : 4;
+
+	size.row = nside;
+	size.col = nside;
+	team = p_open4(dev, P_TOPOLOGY_2D, &start, &size);
+	printf("Using team of size %d\n", p_team_size(team));
+	if (p_error(team)) {
+		fprintf(stderr, "Error opening team\n");
+		return p_error(team);
+	}
+
+	prog = p_load(dev, ar.elfFile, 0);
+
+	eram_base = (unsigned) p_query(dev, P_PROP_MEMBASE);
+	shared_mem = p_map(dev, eram_base, msize);
 
 	// Clear mailbox contents
 	memset(&Mailbox, 0, sizeof(Mailbox));
@@ -168,7 +198,8 @@ int main(int argc, char *argv[])
 	  printf("Loading program on Epiphany chip...\n");
 	}
 
-    if (p_run(prog, "main", team, 0, 16, 0, NULL, 0)) {
+	p_arg_t args[] = { &nside, sizeof(nside), true };
+	if (p_run(prog, "matmul", team, 0, p_team_size(team), 1, args, 0)) {
 		fprintf(stderr, "Error loading Epiphany program.\n");
 		exit(1);
 	}

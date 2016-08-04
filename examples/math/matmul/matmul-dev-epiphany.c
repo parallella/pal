@@ -36,8 +36,9 @@
 #include "static-buffers.h"
 #include "common-buffers.h"
 
+int matmul(unsigned nside);
+void init(unsigned nside);
 void bigmatmul();
-void init();
 void data_copy_2d(void *dst,
 				  const void *src,
 				  unsigned inner_count,
@@ -48,14 +49,20 @@ void data_copy_2d(void *dst,
 
 p_mutex_t pmutex = P_MUTEX_INITIALIZER;
 
+
 int main(int argc, char *argv[])
+{
+	return matmul(4);
+}
+
+int matmul(unsigned nside)
 {
 	int status;
 
 	status = 0;
 
 	// Initialize data structures - mainly target pointers
-	init();
+	init(nside);
 
 	// Sync with all other cores
 	p_barrier(P_TEAM_DEFAULT);
@@ -71,7 +78,7 @@ int main(int argc, char *argv[])
 	return status;
 }
 
-void init()
+void init(unsigned nside)
 {
 	int32_t eram_base;
 	p_coords_t tmp_coords;
@@ -81,6 +88,9 @@ void init()
 	// but we need dev for the p_query call.
 	dev = p_init(P_DEV_EPIPHANY, 0);
 	eram_base = p_query(dev, P_PROP_MEMBASE);
+
+	me.nside = nside;
+	me.schip = _Score * me.nside;
 
 	me.rank = p_team_rank(P_TEAM_DEFAULT);
 	p_rank_to_coords(P_TEAM_DEFAULT, me.rank, &me.coords, 0);
@@ -137,15 +147,15 @@ void bigmatmul()
 	// Chip loop through operand matrix:
 	// Smtx is the size of operand matrices (Smtx x Smtx)
 	// Schip is size of a chip matrix (Schip x Schip)
-	for (im=0; im<_Smtx; im+=_Schip)
+	for (im=0; im<_Smtx; im+=me.schip)
 	{
-		for (jm=0; jm<_Smtx; jm+=_Schip)
+		for (jm=0; jm<_Smtx; jm+=me.schip)
 		{
 			// First clear the local result submatrix. The product result will be
 			// integrated into this submatrix.
 			matclr(me.bank_C, _Score);
 
-			for (km=0; km<_Smtx; km+=_Schip)
+			for (km=0; km<_Smtx; km+=me.schip)
 			{
 				// Core loop through chip:
 				// for every chip (mesh) iteration on the operand matrix
@@ -153,11 +163,11 @@ void bigmatmul()
 				// in granularity of cores
 
 				// Wait for the DMA token
-				p_mutex_lock(&pmutex);
+				//p_mutex_lock(&pmutex);
 
 				// get A block from external DRAM
 				ic = me.coords.row * _Score;
-				jc = ((me.coords.col + me.coords.row) % _Nside) * _Score;
+				jc = ((me.coords.col + me.coords.row) % me.nside) * _Score;
 
 				src = &(Mailbox.pA[(im+ic)*_Smtx + (km+jc)]);
 				dst = me.bank_A[me.pingpong];
@@ -167,7 +177,7 @@ void bigmatmul()
 
 				// get B block from DRAM
 				jc = me.coords.col * _Score;
-				ic = ((me.coords.row + me.coords.col) % _Nside) * _Score;
+				ic = ((me.coords.row + me.coords.col) % me.nside) * _Score;
 
 				src = &(Mailbox.pB[(km+ic)*_Smtx + (jm+jc)]);
 				dst = me.bank_B[me.pingpong];
@@ -176,10 +186,10 @@ void bigmatmul()
 				data_copy_2d(dst, src, (_Score >> 1), _Score, 8, 8, ((_Smtx - _Score) * sizeof(float) + 8));
 
 				// Pass the DMA token to next core
-				p_mutex_unlock(&pmutex);
+				//p_mutex_unlock(&pmutex);
 
 				// Multiply submatrices (inner product of row x column)
-				for (kc=0; kc<_Nside; kc++)
+				for (kc=0; kc<me.nside; kc++)
 				{
 					// Core matmul:
 					// for every core calculate the matmul
@@ -193,13 +203,13 @@ void bigmatmul()
 					// Swap A banks horizontally
 					src = me.bank_A[me.pingpong];
 					dst = me.tgt_A[me.pingpong];
-					if (kc < (_Nside - 1))
+					if (kc < (me.nside - 1))
 						data_copy_2d(dst, src, (_Score >> 1), _Score, 8, 8, 8);
 
 					// Swap B banks vertically
 					src = me.bank_B[me.pingpong];
 					dst = me.tgt_B[me.pingpong];
-					if (kc < (_Nside - 1))
+					if (kc < (me.nside - 1))
 						data_copy_2d(dst, src, (_Score >> 1), _Score, 8, 8, 8);
 
 					me.pingpong = 1 - me.pingpong;
@@ -217,13 +227,13 @@ void bigmatmul()
 			dst = &(Mailbox.pC[(im+ic)*_Smtx + (jm+jc)]);
 
 			// Wait for the DMA token
-			p_mutex_lock(&pmutex);
+			//p_mutex_lock(&pmutex);
 
 			// Write data
 			data_copy_2d(dst, src, (_Score >> 1), _Score, 8, ((_Smtx - _Score) * sizeof(float) + 8), 8);
 
 			// Pass the DMA token to the next core
-			p_mutex_unlock(&pmutex);
+			//p_mutex_unlock(&pmutex);
 		}
 	}
 

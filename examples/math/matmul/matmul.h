@@ -26,12 +26,8 @@
 #include <stdint.h>
 #include <pal.h>
 
-#define _Nchips 4                  // # of chips in operand matrix side
-#define _Nside  4                  // # of cores in chip side
-#define _Ncores (_Nside * _Nside)  // Num of cores = 16
-#define _Score  32                 // side size of per-core sub-submatrix (max 32)
-#define _Schip  (_Score * _Nside)  // side size of per-chip submatrix
-#define _Smtx   (_Schip * _Nchips) // side size of operand matrix
+#define _Score  16                 // side size of per-core sub-submatrix (max 32)
+#define _Smtx   512                // side size of operand matrix
 
 #define _Nbanks 4                  // Num of SRAM banks on core
 
@@ -42,12 +38,14 @@
 #define _PING   0
 #define _PONG   1
 
-
 typedef struct {
 	p_coords_t coords;
-	int rank;
-	int west_rank;
-	int north_rank;
+	int rank;         // My rank in team
+	int west_rank;    // Core west of me
+	int north_rank;   // Core north of me
+
+	unsigned schip;   // side size of per-chip submatrix
+	unsigned nside;   // # of cores in chip side
 
 	void  *bank_A[2]; // A Ping Pong Bank local space pointers
 	void  *bank_B[2]; // B Ping Pong Bank local space pointers
