@@ -2,12 +2,15 @@
 
 noinst_LTLIBRARIES  += src/base/devices/posix/epiphany/libdevice.la
 src_base_devices_posix_epiphany_libdevice_la_SOURCES = \
+src/base/devices/posix/epiphany/ctrl.h                 \
 src/base/devices/posix/epiphany/device.c               \
+src/base/devices/posix/epiphany/dev_epiphany.h         \
 src/base/devices/posix/epiphany/loader.c               \
 src/base/devices/posix/epiphany/loader.h               \
 src/base/devices/posix/epiphany/generic.c              \
 src/base/devices/posix/epiphany/generic.h              \
-src/base/devices/posix/epiphany/epiphany-abi.h
+src/base/devices/posix/epiphany/epiphany-abi.h         \
+src/base/devices/posix/epiphany/epiphany-kernel-abi.h
 src_base_devices_posix_epiphany_libdevice_la_CFLAGS = $(CFLAGS) $(LIBELF_CFLAGS)
 src_base_devices_posix_epiphany_libdevice_la_LIBADD = $(LIBELF_LIBS)
 

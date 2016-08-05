@@ -27,6 +27,8 @@ if HOST_IS_EPIPHANY
 examples_image_harris_LDFLAGS = $(EPIPHANY_FAST_LDFLAGS)
 endif
 
+EXTRA_DIST += examples/image/filters2-dev.c
+
 if ENABLE_DEV_EPIPHANY
 BUILT_SOURCES += examples/image/filters2-dev-epiphany.c
 CLEANFILES    += examples/image/filters2-dev-epiphany.c
