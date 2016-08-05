@@ -248,7 +248,7 @@ int epiphany_dev_start(struct team *team, int start, int count)
     /* Ideally a *system* (not host CPU-only) memory barrier here */
     __sync_synchronize();
 
-    epiphany_start(team, team->start.id + start, count);
+    epiphany_start(team, start, count);
 
     return 0;
 }
