@@ -256,19 +256,12 @@ int epiphany_dev_start(struct team *team, int start, int count)
 int epiphany_dev_wait(struct dev *dev, struct team *team)
 {
     unsigned i, j = 0;
-    int last_rank;
-    p_coords_t last_coords;
     bool need_wait = true;
     struct epiphany_dev *data = to_epiphany_dev(dev);
 
-    if (epiphany_last_coords(team, &last_coords))
-        return -EINVAL;
-
-    last_rank = p_coords_to_rank(team, &last_coords, 0);
-
     while (true) {
         need_wait = false;
-        for (i = 0; i <= last_rank; i++) {
+        for (i = 0; i < p_team_size(team); i++) {
             unsigned offset = ctrl_offset(team, i);
 
             switch (data->ctrl->status[offset]) {
@@ -291,9 +284,22 @@ int epiphany_dev_wait(struct dev *dev, struct team *team)
 
         /* Manual check to be compatible with non-pal device programs */
         if (!(++j % 100)) {
-            if (epiphany_is_team_done(team))
-                break;
+            need_wait = false;
+            for (i = 0; i < p_team_size(team); i++) {
+                unsigned offset = ctrl_offset(team, i);
+
+                /* Skip if no program was loaded */
+                if (data->ctrl->status[offset] == STATUS_NONE)
+                    continue;
+
+                if (!epiphany_is_core_done(team, i)) {
+                    need_wait = true;
+                    break;
+                }
+            }
         }
+        if (!need_wait)
+            break;
 
         /* Don't burn CPU. Need HW/Kernel support for blocking wait */
         usleep(1000);

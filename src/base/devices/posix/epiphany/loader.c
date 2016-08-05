@@ -965,51 +965,43 @@ int epiphany_reset_system(struct epiphany_dev *epiphany)
 }
 
 /* Return true if all CPU's in team have exited */
-bool epiphany_is_team_done (struct team *team)
+bool epiphany_is_core_done (struct team *team, int rank)
 {
     struct epiphany_dev *epiphany = to_epiphany_dev(team->dev);
-    p_coords_t last_coords;
-    int last_rank;
+    unsigned coreid;
+    uint32_t core;
+    uint32_t debugstatus, pc;
+    uint16_t insn;
 
-    if (epiphany_last_coords(team, &last_coords))
+    epiphany_rank_to_coreid(team, rank, &coreid);
+    core = coreid << 20;
+
+    debugstatus = reg_read(core, MMR_DEBUGSTATUS);
+
+    if (!(debugstatus & 1))
         return false;
 
-    last_rank = p_coords_to_rank(team, &last_coords, 0);
+    pc = reg_read(core, MMR_PC);
 
-    for (int i = 0; i <= last_rank; i++) {
-        unsigned coreid;
-        uint32_t core;
-        uint32_t debugstatus, pc;
-        uint16_t insn;
+    if (pc >= 2)
+        pc -= 2;
 
-        epiphany_rank_to_coreid(team, i, &coreid);
-        core = coreid << 20;
+    if (pc < 0x100000)
+        pc |= core;
 
-        debugstatus = reg_read(core, MMR_DEBUGSTATUS);
+    mem_read(&insn, pc, sizeof(insn));
 
-        if (!(debugstatus & 1))
-            return false;
-
-        pc = reg_read(core, MMR_PC);
-
-        if (pc >= 2)
-            pc -= 2;
-
-        if (pc < 0x100000)
-            pc |= core;
-
-        mem_read(&insn, pc, sizeof(insn));
-        switch (insn) {
+    switch (insn) {
 #define TRAP3 0x0fe2
 #define TRAP4 0x13e2
 #define TRAP5 0x17e2
-        case TRAP3:
-        case TRAP4:
-        case TRAP5:
-            continue;
-        default:
-            return false;
-        }
+    case TRAP3:
+    case TRAP4:
+    case TRAP5:
+        return true;
+    default:
+        return false;
     }
-    return true;
+    // Unreachable
+    return false;
 }
