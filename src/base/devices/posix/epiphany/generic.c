@@ -312,9 +312,6 @@ int epiphany_dev_kill(struct team *team, int start, int count, int signal)
     if (start < 0 || count <= 0)
         return -EINVAL;
 
-    if (team->size.id < start + count)
-        return -EINVAL;
-
     switch (signal) {
         case SIGKILL:
             return epiphany_soft_reset(team, start, count);
