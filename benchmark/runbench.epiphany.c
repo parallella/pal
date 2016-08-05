@@ -46,7 +46,7 @@ int main(int argc, char **argv)
 
     dev = p_init(P_DEV_EPIPHANY, 0);
     prog = p_load(dev, argv[1], 0);
-    team = p_open(dev, 0, 16); // TODO: Must be 16 for Epiphany
+    team = p_open(dev, 0, 1);
 
     status_mem = p_map(dev, 0x8f200000, sizeof(status));
     results_mem = p_map(dev, 0x8f300000, 1024 * 1024);

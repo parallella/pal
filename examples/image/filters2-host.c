@@ -67,8 +67,7 @@ int main(int argc, char *argv[])
     // load a program from file system
     p_prog_t prog = p_load(dev, BINARY, 0);
 
-    // Open team. FIXME: must be 16 for Epiphany
-    p_team_t team = p_open(dev, 0, 16); // create a team
+    p_team_t team = p_open(dev, 0, 1); // create a team
 
     // "Allocate" output buffer. TODO: We need an API call for this
     p_mem_t out = p_map(dev, 0x8f900000, size * sizeof(float));
