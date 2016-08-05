@@ -9,10 +9,3 @@
 #ifdef PAL_SOURCE
 # include "common.h"
 #endif
-
-#ifdef __epiphany__
-/* Static library. Force a dependency so __pal_init/fini always will be
- * included in built binary. Not pretty but works. */
-extern void __pal_init();
-void (*__pal_init_p) (void) __attribute__((weak)) = __pal_init;
-#endif
