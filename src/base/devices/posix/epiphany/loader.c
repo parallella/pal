@@ -275,7 +275,7 @@ int ecore_reset_regs(struct epiphany_dev *epiphany, unsigned coreid,
 
     /* General purpose registers */
     for (i = 0; i < 64; i++)
-        reg_write(core, i, MMR_R0 + (i << 2));
+        reg_write(core, MMR_R0 + (i << 2), 0);
 
     if (reset_dma)
         if (ecore_soft_reset_dma(epiphany, coreid))
