@@ -22,6 +22,8 @@
 #define CHIP_BASE       0x80800000
 #define CHIP_ROWS       4
 #define CHIP_COLS       4
+#define SRAM_SIZE       0x8000
+#define SRAM_BASE       0x0
 #define CORE_MEM_REGION 0x00100000
 #define EPIPHANY_DEV "/dev/epiphany/mesh0"
 
@@ -148,6 +150,10 @@ static int dev_early_init(struct dev *dev)
     dev_data->epiphany_fd = open(EPIPHANY_DEV, O_RDWR | O_SYNC);
     if (dev_data->epiphany_fd == -1)
         return -errno;
+
+    dev_data->sram_size = SRAM_SIZE;
+    dev_data->eram_base = ERAM_BASE;
+    dev_data->eram_size = ERAM_SIZE;
 
     ret = mmap_eram(dev);
     if (ret)
