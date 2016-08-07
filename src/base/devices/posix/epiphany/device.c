@@ -22,6 +22,8 @@
 #define CHIP_BASE       0x80800000
 #define CHIP_ROWS       4
 #define CHIP_COLS       4
+#define SRAM_SIZE       0x8000
+#define SRAM_BASE       0x0
 #define CORE_MEM_REGION 0x00100000
 #define EPIPHANY_DEV "/dev/epiphany/mesh0"
 
@@ -149,6 +151,10 @@ static int dev_early_init(struct dev *dev)
     if (dev_data->epiphany_fd == -1)
         return -errno;
 
+    dev_data->sram_size = SRAM_SIZE;
+    dev_data->eram_base = ERAM_BASE;
+    dev_data->eram_size = ERAM_SIZE;
+
     ret = mmap_eram(dev);
     if (ret)
         return ret;
@@ -233,19 +239,6 @@ static void *dev_map_member(struct team *team, int member,
     return (void *) addr;
 }
 
-static void *dev_map(struct dev *dev, unsigned long addr, unsigned long size)
-{
-    /* HACK */
-    return (void *) addr;
-}
-
-static int dev_unmap(struct team *team, void *addr)
-{
-    /* HACK */
-
-    return 0;
-}
-
 static uint32_t reg_read(struct epiphany_dev *epiphany,
                          uintptr_t base, uintptr_t offset)
 {
@@ -269,6 +262,63 @@ static void mem_write(struct epiphany_dev *dev, uintptr_t dst, const void *src,
                       size_t n)
 {
     memcpy((void *) dst, (void *) src, n);
+}
+
+static ssize_t dev_mem_write(p_mem_t *mem, const void *src, off_t offset,
+                             size_t nb, int flags)
+{
+    struct epiphany_dev *epiphany = to_epiphany_dev(mem->dev);
+    uintptr_t addr = (uintptr_t) mem->ref;
+
+    if (addr < 0x8e000000 || 32*1024*1024 < addr - 0x8e000000 + nb)
+        return -EINVAL;
+
+    mem_write(epiphany, addr + offset, src, nb);
+
+    return nb;
+}
+
+static ssize_t dev_mem_read(p_mem_t *mem, void *dst, off_t offset,
+                            size_t nb, int flags)
+{
+    struct epiphany_dev *epiphany = to_epiphany_dev(mem->dev);
+    uintptr_t addr = (uintptr_t) mem->ref;
+
+    if (addr < 0x8e000000 || 32*1024*1024 < addr - 0x8e000000 + nb)
+        return -EINVAL;
+
+    mem_read(epiphany, dst, addr + offset, nb);
+
+    return nb;
+}
+
+static struct mem_ops dev_mem_ops = {
+    .read = dev_mem_read,
+    .write = dev_mem_write,
+};
+
+static p_mem_t dev_map(struct dev *dev, unsigned long addr, unsigned long size)
+{
+    struct epiphany_dev *epiphany = to_epiphany_dev(dev);
+    p_mem_t mem;
+
+    /* HACK */
+    if (addr < 0x8e000000 || 32*1024*1024 < addr - 0x8e000000 + size)
+        return p_mem_err(EINVAL);
+
+    mem.ref = (void *) addr;
+    mem.size = size;
+    mem.ops = &dev_mem_ops;
+    mem.dev = dev;
+
+    return mem;
+}
+
+static int dev_unmap(struct team *team, void *addr)
+{
+    /* HACK */
+
+    return 0;
 }
 
 static struct dev_ops epiphany_dev_ops = {
