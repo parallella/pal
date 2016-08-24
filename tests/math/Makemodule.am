@@ -50,6 +50,7 @@ tests/math/gold/p_max_f32.gold.h \
 tests/math/gold/p_mean_f32.gold.h \
 tests/math/gold/p_median_f32.gold.h \
 tests/math/gold/p_min_f32.gold.h \
+tests/math/gold/p_minmax_f32.gold.h \
 tests/math/gold/p_mode_f32.gold.h \
 tests/math/gold/p_mul_f32.gold.h \
 tests/math/gold/p_pow_f32.gold.h \
@@ -91,6 +92,7 @@ tests/math/gold/p_max_f64.gold.h \
 tests/math/gold/p_mean_f64.gold.h \
 tests/math/gold/p_median_f64.gold.h \
 tests/math/gold/p_min_f64.gold.h \
+tests/math/gold/p_minmax_f64.gold.h \
 tests/math/gold/p_mode_f64.gold.h \
 tests/math/gold/p_mul_f64.gold.h \
 tests/math/gold/p_pow_f64.gold.h \
@@ -154,6 +156,7 @@ tests/math/check_p_max_f32        \
 tests/math/check_p_mean_f32       \
 tests/math/check_p_median_f32     \
 tests/math/check_p_min_f32        \
+tests/math/check_p_minmax_f32     \
 tests/math/check_p_mode_f32       \
 tests/math/check_p_mul_f32        \
 tests/math/check_p_popcount       \
@@ -200,6 +203,7 @@ tests/math/check_p_max_f64        \
 tests/math/check_p_mean_f64       \
 tests/math/check_p_median_f64     \
 tests/math/check_p_min_f64        \
+tests/math/check_p_minmax_f64     \
 tests/math/check_p_mode_f64       \
 tests/math/check_p_mul_f64        \
 tests/math/check_p_pow_f64        \
@@ -244,6 +248,7 @@ tests_math_check_p_max_f32_SOURCES         = $(CHECK_SCALAR_AND_INDEX) tests/mat
 tests_math_check_p_mean_f32_SOURCES        = $(SIMPLETEST)
 tests_math_check_p_median_f32_SOURCES      = $(SIMPLETEST)
 tests_math_check_p_min_f32_SOURCES         = $(CHECK_SCALAR_AND_INDEX) tests/math/p_min.c
+tests_math_check_p_minmax_f32_SOURCES      = tests/math/check_p_minmax.c tests/math/check_p_minmax.h tests/math/p_minmax.c
 tests_math_check_p_mode_f32_SOURCES        = $(SIMPLETEST)
 tests_math_check_p_mul_f32_SOURCES         = $(SIMPLETEST)
 tests_math_check_p_popcount_SOURCES        = $(NOTEST)
@@ -289,6 +294,7 @@ tests_math_check_p_max_f64_SOURCES         = $(tests_math_check_p_max_f32_SOURCE
 tests_math_check_p_mean_f64_SOURCES        = $(tests_math_check_p_mean_f32_SOURCES)
 tests_math_check_p_median_f64_SOURCES      = $(tests_math_check_p_median_f32_SOURCES)
 tests_math_check_p_min_f64_SOURCES         = $(tests_math_check_p_min_f32_SOURCES)
+tests_math_check_p_minmax_f64_SOURCES      = $(tests_math_check_p_minmax_f32_SOURCES)
 tests_math_check_p_mode_f64_SOURCES        = $(tests_math_check_p_mode_f32_SOURCES)
 tests_math_check_p_mul_f64_SOURCES         = $(tests_math_check_p_mul_f32_SOURCES)
 tests_math_check_p_pow_f64_SOURCES         = $(NOTEST)
@@ -331,6 +337,7 @@ tests_math_check_p_max_f32_SOURCES        += tests/math/gold/p_max_f32.gold.h
 tests_math_check_p_mean_f32_SOURCES       += tests/math/gold/p_mean_f32.gold.h
 tests_math_check_p_median_f32_SOURCES     += tests/math/gold/p_median_f32.gold.h
 tests_math_check_p_min_f32_SOURCES        += tests/math/gold/p_min_f32.gold.h
+tests_math_check_p_minmax_f32_SOURCES     += tests/math/gold/p_minmax_f32.gold.h
 tests_math_check_p_mode_f32_SOURCES       += tests/math/gold/p_mode_f32.gold.h
 tests_math_check_p_mul_f32_SOURCES        += tests/math/gold/p_mul_f32.gold.h
 tests_math_check_p_pow_f32_SOURCES        += tests/math/gold/p_pow_f32.gold.h
@@ -373,6 +380,7 @@ tests_math_check_p_max_f64_SOURCES        += tests/math/gold/p_max_f64.gold.h
 tests_math_check_p_mean_f64_SOURCES       += tests/math/gold/p_mean_f64.gold.h
 tests_math_check_p_median_f64_SOURCES     += tests/math/gold/p_median_f64.gold.h
 tests_math_check_p_min_f64_SOURCES        += tests/math/gold/p_min_f64.gold.h
+tests_math_check_p_minmax_f64_SOURCES     += tests/math/gold/p_minmax_f64.gold.h
 tests_math_check_p_mode_f64_SOURCES       += tests/math/gold/p_mode_f64.gold.h
 tests_math_check_p_mul_f64_SOURCES        += tests/math/gold/p_mul_f64.gold.h
 #tests_math_check_p_pow_f64_SOURCES        += tests/math/gold/p_pow_f64.gold.h
@@ -416,6 +424,7 @@ tests_math_check_p_max_f32_CFLAGS          = -DP_FLOAT_TYPE=P_FLOAT_SINGLE -DFUN
 tests_math_check_p_mean_f32_CFLAGS         = -DP_FLOAT_TYPE=P_FLOAT_SINGLE -DFUNCTION=p_mean_f32    -DIS_UNARY  -DSCALAR_OUTPUT
 tests_math_check_p_median_f32_CFLAGS       = -DP_FLOAT_TYPE=P_FLOAT_SINGLE -DFUNCTION=p_median_f32  -DIS_UNARY  -DSCALAR_OUTPUT
 tests_math_check_p_min_f32_CFLAGS          = -DP_FLOAT_TYPE=P_FLOAT_SINGLE -DFUNCTION=p_min_f32                 -DSCALAR_OUTPUT
+tests_math_check_p_minmax_f32_CFLAGS       = -DP_FLOAT_TYPE=P_FLOAT_SINGLE -DFUNCTION=p_minmax_f32
 tests_math_check_p_mode_f32_CFLAGS         = -DP_FLOAT_TYPE=P_FLOAT_SINGLE -DFUNCTION=p_mode_f32    -DIS_UNARY  -DSCALAR_OUTPUT
 tests_math_check_p_mul_f32_CFLAGS          = -DP_FLOAT_TYPE=P_FLOAT_SINGLE -DFUNCTION=p_mul_f32     -DIS_BINARY
 tests_math_check_p_popcount_CFLAGS         = -DP_FLOAT_TYPE=P_FLOAT_SINGLE -DFUNCTION=p_popcount
@@ -462,6 +471,7 @@ tests_math_check_p_max_f64_CFLAGS          = -DP_FLOAT_TYPE=P_FLOAT_DOUBLE -DFUN
 tests_math_check_p_mean_f64_CFLAGS         = -DP_FLOAT_TYPE=P_FLOAT_DOUBLE -DFUNCTION=p_mean_f64    -DIS_UNARY  -DSCALAR_OUTPUT
 tests_math_check_p_median_f64_CFLAGS       = -DP_FLOAT_TYPE=P_FLOAT_DOUBLE -DFUNCTION=p_median_f64  -DIS_UNARY  -DSCALAR_OUTPUT
 tests_math_check_p_min_f64_CFLAGS          = -DP_FLOAT_TYPE=P_FLOAT_DOUBLE -DFUNCTION=p_min_f64                 -DSCALAR_OUTPUT
+tests_math_check_p_minmax_f64_CFLAGS       = -DP_FLOAT_TYPE=P_FLOAT_DOUBLE -DFUNCTION=p_minmax_f64
 tests_math_check_p_mode_f64_CFLAGS         = -DP_FLOAT_TYPE=P_FLOAT_DOUBLE -DFUNCTION=p_mode_f64    -DIS_UNARY  -DSCALAR_OUTPUT
 tests_math_check_p_mul_f64_CFLAGS          = -DP_FLOAT_TYPE=P_FLOAT_DOUBLE -DFUNCTION=p_mul_f64     -DIS_BINARY
 # Override fault tolerance for p_pow_f64
@@ -506,6 +516,7 @@ tests_math_check_p_max_f32_CPPFLAGS         = $(CPPFLAGS_tests_math)
 tests_math_check_p_mean_f32_CPPFLAGS        = $(CPPFLAGS_tests_math)
 tests_math_check_p_median_f32_CPPFLAGS      = $(CPPFLAGS_tests_math)
 tests_math_check_p_min_f32_CPPFLAGS         = $(CPPFLAGS_tests_math)
+tests_math_check_p_minmax_f32_CPPFLAGS      = $(CPPFLAGS_tests_math)
 tests_math_check_p_mode_f32_CPPFLAGS        = $(CPPFLAGS_tests_math)
 tests_math_check_p_mul_f32_CPPFLAGS         = $(CPPFLAGS_tests_math)
 tests_math_check_p_popcount_CPPFLAGS        = $(CPPFLAGS_tests_math)
@@ -551,6 +562,7 @@ tests_math_check_p_max_f64_CPPFLAGS         = $(CPPFLAGS_tests_math)
 tests_math_check_p_mean_f64_CPPFLAGS        = $(CPPFLAGS_tests_math)
 tests_math_check_p_median_f64_CPPFLAGS      = $(CPPFLAGS_tests_math)
 tests_math_check_p_min_f64_CPPFLAGS         = $(CPPFLAGS_tests_math)
+tests_math_check_p_minmax_f64_CPPFLAGS      = $(CPPFLAGS_tests_math)
 tests_math_check_p_mode_f64_CPPFLAGS        = $(CPPFLAGS_tests_math)
 tests_math_check_p_mul_f64_CPPFLAGS         = $(CPPFLAGS_tests_math)
 tests_math_check_p_pow_f64_CPPFLAGS         = $(CPPFLAGS_tests_math)
@@ -594,6 +606,7 @@ tests_math_check_p_max_f32_LDFLAGS         = $(LDFLAGS_tests)
 tests_math_check_p_mean_f32_LDFLAGS        = $(LDFLAGS_tests)
 tests_math_check_p_median_f32_LDFLAGS      = $(LDFLAGS_tests)
 tests_math_check_p_min_f32_LDFLAGS         = $(LDFLAGS_tests)
+tests_math_check_p_minmax_f32_LDFLAGS      = $(LDFLAGS_tests)
 tests_math_check_p_mode_f32_LDFLAGS        = $(LDFLAGS_tests_large)
 tests_math_check_p_mul_f32_LDFLAGS         = $(LDFLAGS_tests)
 tests_math_check_p_popcount_LDFLAGS        = $(LDFLAGS_tests)
@@ -639,6 +652,7 @@ tests_math_check_p_max_f64_LDFLAGS         = $(LDFLAGS_tests)
 tests_math_check_p_mean_f64_LDFLAGS        = $(LDFLAGS_tests)
 tests_math_check_p_median_f64_LDFLAGS      = $(LDFLAGS_tests)
 tests_math_check_p_min_f64_LDFLAGS         = $(LDFLAGS_tests)
+tests_math_check_p_minmax_f64_LDFLAGS      = $(LDFLAGS_tests)
 tests_math_check_p_mode_f64_LDFLAGS        = $(LDFLAGS_tests_large)
 tests_math_check_p_mul_f64_LDFLAGS         = $(LDFLAGS_tests)
 tests_math_check_p_pow_f64_LDFLAGS         = $(LDFLAGS_tests)
@@ -682,6 +696,7 @@ tests_math_check_p_max_f32_LDADD           = $(LDADD_tests)
 tests_math_check_p_mean_f32_LDADD          = $(LDADD_tests)
 tests_math_check_p_median_f32_LDADD        = $(LDADD_tests)
 tests_math_check_p_min_f32_LDADD           = $(LDADD_tests)
+tests_math_check_p_minmax_f32_LDADD        = $(LDADD_tests)
 tests_math_check_p_mode_f32_LDADD          = $(LDADD_tests)
 tests_math_check_p_mul_f32_LDADD           = $(LDADD_tests)
 tests_math_check_p_popcount_LDADD          = $(LDADD_tests)
@@ -727,6 +742,7 @@ tests_math_check_p_max_f64_LDADD           = $(LDADD_tests)
 tests_math_check_p_mean_f64_LDADD          = $(LDADD_tests)
 tests_math_check_p_median_f64_LDADD        = $(LDADD_tests)
 tests_math_check_p_min_f64_LDADD           = $(LDADD_tests)
+tests_math_check_p_minmax_f64_LDADD        = $(LDADD_tests)
 tests_math_check_p_mode_f64_LDADD          = $(LDADD_tests)
 tests_math_check_p_mul_f64_LDADD           = $(LDADD_tests)
 tests_math_check_p_pow_f64_LDADD           = $(LDADD_tests)

@@ -227,7 +227,8 @@ FUNCTION     | NOTES
 [p_log10()](src/math/p_log10.c)       | denary log  
 [p_max()](src/math/p_max.c)           | finds max val  
 [p_min()](src/math/p_min.c)           | finds min val  
-[p_mean()](src/math/p_mean.c)         | mean operation  
+[p_minmax()](src/math/p_minmax.c)     | finds min and max val
+[p_mean()](src/math/p_mean.c)         | mean operation
 [p_median()](src/math/p_median.c)     | finds middle value  
 [p_mode()](src/math/p_mode.c)         | finds most common value  
 [p_mul()](src/math/p_mul.c)           | multiplication  

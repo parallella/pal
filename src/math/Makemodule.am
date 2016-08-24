@@ -32,6 +32,7 @@ src/math/p_max.c                  \
 src/math/p_mean.c                 \
 src/math/p_median.c               \
 src/math/p_min.c                  \
+src/math/p_minmax.c               \
 src/math/p_mode.c                 \
 src/math/p_mul.c                  \
 src/math/p_sin.c                  \

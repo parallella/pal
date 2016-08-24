@@ -1,6 +1,6 @@
-/* This type of function has a different signature from most other scalar math
-   functions in the PAL. It has 1 input vector and 1 output scalar and 1 output
-   index.  As a result, it needs a distinct test infrastructure. */
+/* p_minmax has a different signature from all other math functions in the
+   PAL. It has 1 input vector and 2 output scalars and 2 output indices. As a
+   result, it needs a distinct test infrastructure. */
 
 #include <utest.h>
 #include <stdlib.h>
@@ -14,7 +14,7 @@
 #include "../src/base/pal_base_private.h"
 #include <common.h>
 
-#include "check_scalar_and_index.h"
+#include "check_p_minmax.h"
 
 #ifndef FUNCTION
 #error FUNCTION must be defined
@@ -23,14 +23,14 @@
 #define GOLD_PATH XSTRING(gold/FUNCTION.gold.h)
 #include GOLD_PATH
 
-PTYPE *ai, *result;
-int *resultIndex;
+PTYPE *ai, *result1, *result2;
+int *resultIndex1, *resultIndex2;
 
 struct gold *gold = builtin_gold;
 size_t gold_size = ARRAY_SIZE(builtin_gold);
 
 /* For detecting erroneous overwrites */
-#define OUTPUT_END_MARKER 60189537703610376.0f
+#define OUTPUT_END_MARKER ((PTYPE)60189537703610376.0)
 
 bool equals(PTYPE x, PTYPE y)
 {
@@ -57,9 +57,13 @@ int setup(struct ut_suite *suite)
 
     /* Allocate one extra element for res and add end marker so overwrites can
      * be detected */
-    result = calloc(2, sizeof(PTYPE));
-    result[1] = OUTPUT_END_MARKER;
-    resultIndex = calloc(1, sizeof(int));
+    result1 = calloc(2, sizeof(PTYPE));
+    result1[1] = OUTPUT_END_MARKER;
+    resultIndex1 = calloc(1, sizeof(int));
+
+    result2 = calloc(2, sizeof(PTYPE));
+    result2[1] = OUTPUT_END_MARKER;
+    resultIndex2 = calloc(1, sizeof(int));
 
     for (i = 0; i < gold_size; i++) {
         ai[i] = gold[i].ai;
@@ -71,8 +75,10 @@ int setup(struct ut_suite *suite)
 int teardown(struct ut_suite *suite)
 {
     free(ai);
-    free(result);
-    free(resultIndex);
+    free(result1);
+    free(result2);
+    free(resultIndex1);
+    free(resultIndex2);
 
     return 0;
 }
@@ -81,18 +87,25 @@ int tc_against_gold_e(struct ut_suite *suite, struct ut_tcase *tcase)
 {
     /* Run FUNCTION against gold input here so results are available
      * for all test cases. */
-    FUNCTION(ai, result, resultIndex, gold_size);
+    FUNCTION(ai, result1, result2, resultIndex1, resultIndex2, gold_size);
 
     return 0;
 }
 
 int tc_against_gold_v(struct ut_suite *suite, struct ut_tcase *tcase)
 {
-    ut_assert_msg(equals(result[0], gold[0].gold),
-                  "%s: result: %f != %f",
-                  XSTRING(FUNCTION), result[0], gold[0].gold);
+    ut_assert_msg(equals(result1[0], gold[0].gold1),
+                  "%s: result 1: %f != %f",
+                  XSTRING(FUNCTION), result1[0], gold[0].gold1);
 
-    ut_assert_msg(result[1] == OUTPUT_END_MARKER,
+    ut_assert_msg(equals(result2[0], gold[0].gold2),
+                  "%s: result 2: %f != %f",
+                  XSTRING(FUNCTION), result2[0], gold[0].gold2);
+
+    ut_assert_msg(result1[1] == OUTPUT_END_MARKER,
+                  "Output end marker was overwritten");
+
+    ut_assert_msg(result2[1] == OUTPUT_END_MARKER,
                   "Output end marker was overwritten");
 
     // Skip checking the index
@@ -105,17 +118,26 @@ int tc_against_ref_v(struct ut_suite *suite, struct ut_tcase *tcase)
     if (gold_size == 0)
         return 0;
 
-    PTYPE reference;
-    int indexOfReference;
-    generate_ref(&reference, &indexOfReference, gold_size);
+    PTYPE reference1, reference2;
+    int indexOfReference1, indexOfReference2;
+    generate_ref(&reference1, &reference2,
+                 &indexOfReference1, &indexOfReference2, gold_size);
 
-    ut_assert_msg(equals(reference, gold[0].gold),
-                  "%s: result: %f != %f",
-                  XSTRING(FUNCTION), result[0], reference);
+    ut_assert_msg(equals(reference1, gold[0].gold1),
+                  "%s: result 1: %f != %f",
+                  XSTRING(FUNCTION), result1[0], reference1);
 
-    ut_assert_msg(resultIndex[0] == indexOfReference,
-                  "%s: index: %d != %d",
-                  XSTRING(FUNCTION), resultIndex[0], indexOfReference);
+    ut_assert_msg(equals(reference2, gold[0].gold2),
+                  "%s: result 2: %f != %f",
+                  XSTRING(FUNCTION), result2[0], reference2);
+
+    ut_assert_msg(resultIndex1[0] == indexOfReference1,
+                  "%s: index 1: %d != %d",
+                  XSTRING(FUNCTION), resultIndex1[0], indexOfReference1);
+
+    ut_assert_msg(resultIndex2[0] == indexOfReference2,
+                  "%s: index 2: %d != %d",
+                  XSTRING(FUNCTION), resultIndex2[0], indexOfReference2);
 
     return 0;
 }

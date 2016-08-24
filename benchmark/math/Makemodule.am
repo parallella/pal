@@ -30,6 +30,7 @@ benchmark/math/bench_p_max_f32        \
 benchmark/math/bench_p_mean_f32       \
 benchmark/math/bench_p_median_f32     \
 benchmark/math/bench_p_min_f32        \
+benchmark/math/bench_p_minmax_f32     \
 benchmark/math/bench_p_mul_f32        \
 benchmark/math/bench_p_popcount_u32   \
 benchmark/math/bench_p_popcount_u64   \
@@ -81,6 +82,7 @@ benchmark_math_bench_p_max_f32_SOURCES         = benchmark/math/p_max_f32.c
 benchmark_math_bench_p_mean_f32_SOURCES        = benchmark/math/one.c
 benchmark_math_bench_p_median_f32_SOURCES      = benchmark/math/one.c
 benchmark_math_bench_p_min_f32_SOURCES         = benchmark/math/p_min_f32.c
+benchmark_math_bench_p_minmax_f32_SOURCES      = benchmark/math/p_minmax_f32.c
 benchmark_math_bench_p_mode_f32_SOURCES        = benchmark/math/one.c
 benchmark_math_bench_p_mul_f32_SOURCES         = benchmark/math/one.c
 benchmark_math_bench_p_popcount_u32_SOURCES    = benchmark/math/p_popcount_u32.c
@@ -126,6 +128,7 @@ benchmark_math_bench_p_max_f32_CFLAGS          = -DFUNCTION=p_max_f32      -DIS_
 benchmark_math_bench_p_mean_f32_CFLAGS         = -DFUNCTION=p_mean_f32     -DIS_UNARY
 benchmark_math_bench_p_median_f32_CFLAGS       = -DFUNCTION=p_median_f32   -DIS_UNARY
 benchmark_math_bench_p_min_f32_CFLAGS          = -DFUNCTION=p_min_f32      -DIS_UNARY
+benchmark_math_bench_p_minmax_f32_CFLAGS       = -DFUNCTION=p_minmax_f32   -DIS_UNARY
 benchmark_math_bench_p_mode_f32_CFLAGS         = -DFUNCTION=p_mode_f32     -DIS_UNARY
 benchmark_math_bench_p_mul_f32_CFLAGS          = -DFUNCTION=p_mul_f32      -DIS_BINARY
 benchmark_math_bench_p_popcount_u32_CFLAGS     = -DFUNCTION=p_popcount_u32 -DIS_UNARY
@@ -171,6 +174,7 @@ benchmark_math_bench_p_max_f32_LDADD           = $(benchmark_math_LDADD)
 benchmark_math_bench_p_mean_f32_LDADD          = $(benchmark_math_LDADD)
 benchmark_math_bench_p_median_f32_LDADD        = $(benchmark_math_LDADD)
 benchmark_math_bench_p_min_f32_LDADD           = $(benchmark_math_LDADD)
+benchmark_math_bench_p_minmax_f32_LDADD        = $(benchmark_math_LDADD)
 benchmark_math_bench_p_mode_f32_LDADD          = $(benchmark_math_LDADD)
 benchmark_math_bench_p_mul_f32_LDADD           = $(benchmark_math_LDADD)
 benchmark_math_bench_p_popcount_u32_LDADD      = $(benchmark_math_LDADD)

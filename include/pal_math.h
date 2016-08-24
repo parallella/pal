@@ -270,6 +270,10 @@ void p_max_f64(const double *a, double *c, int *index, int n);
 void p_min_f32(const float *a, float *c, int *index, int n);
 void p_min_f64(const double *a, double *c, int *index, int n);
 
+/*find min and max values and their indices from input vector */
+void p_minmax_f32(const float *a, float *c1, float *c2, int *index1, int *index2, int n);
+void p_minmax_f64(const double *a, double *c1, double *c2, int *index1, int *index2, int n);
+
 /*
  ****************************************************************
  * Miscellaneous Operations
