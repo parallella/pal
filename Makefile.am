@@ -3,6 +3,14 @@ AUTOMAKE_OPTIONS = foreign
 
 host_abs_top_builddir = $(abs_top_builddir)/../..
 
+if HOST_IS_EPIPHANY
+LOG_DRIVER = $(SHELL) $(host_abs_top_builddir)/config/test-driver
+TEST_LOG_DRIVER = $(SHELL) $(host_abs_top_builddir)/config/test-driver
+else
+LOG_DRIVER = $(SHELL) config/test-driver
+TEST_LOG_DRIVER = $(SHELL) config/test-driver
+endif
+
 EXTRA_DIST                        =
 SUBDIRS                           =
 DIST_SUBDIRS                      =

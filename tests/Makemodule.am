@@ -1,7 +1,7 @@
 EXTRA_DIST += tests/runtest.noimpl.c tests/runtest.simple.c
 
 if HOST_IS_EPIPHANY
-RUNTEST_SRC = tests/runtest.epiphany.c
+RUNTEST_SRC = $(host_abs_top_builddir)/tests/runtest.epiphany.c
 else
 RUNTEST_SRC = tests/runtest.simple.c
 endif
@@ -20,20 +20,36 @@ endif
 
 noinst_HEADERS += tests/utest.h
 
+if HOST_IS_EPIPHANY
+$(abs_top_builddir)/tests/runtest$(BUILD_EXEEXT): $(RUNTEST_SRC)
+	$(CC_FOR_BUILD) $(CFLAGS_FOR_BUILD) $< -o $@ $(LDFLAGS_FOR_BUILD)
+
+clean-local-tests:
+	-rm -f $(abs_top_builddir)/tests/runtest$(BUILD_EXEEXT)
+else
 tests/runtest$(BUILD_EXEEXT): $(RUNTEST_SRC)
 	$(CC_FOR_BUILD) $(CFLAGS_FOR_BUILD) $< -o $@ $(LDFLAGS_FOR_BUILD)
 
 clean-local-tests:
 	-rm -f tests/runtest$(BUILD_EXEEXT)
+endif
+
 
 CLEAN_LOCAL_TARGETS += clean-local-tests
+if HOST_IS_EPIPHANY
+CHECK_TARGETS += $(abs_top_builddir)/tests/runtest$(BUILD_EXEEXT)
+else
 CHECK_TARGETS += tests/runtest$(BUILD_EXEEXT)
-
+endif
 
 TESTS = $(check_PROGRAMS)
 
 # Target that only compiles the tests and doesn't run them
+if HOST_IS_EPIPHANY
+tests:  $(abs_top_builddir)/tests/runtest$(BUILD_EXEEXT) $(tests_BUILT_SRCS)
+else
 tests:  tests/runtest$(BUILD_EXEEXT) $(tests_BUILT_SRCS)
+endif
 	+$(MAKE) -C $(top_builddir) $(TESTS)
 
 PHONIES += tests
