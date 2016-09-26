@@ -1,0 +1,1 @@
+Placeholder for Autotools when building with --enable-device-epiphany

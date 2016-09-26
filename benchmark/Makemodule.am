@@ -1,4 +1,4 @@
-EXTRA_DIST +=                 \
+noinst_HEADERS +=                 \
 benchmark/runbench.default.c  \
 benchmark/runbench.noimpl.c   \
 benchmark/runbench.epiphany.c \

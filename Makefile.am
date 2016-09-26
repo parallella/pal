@@ -3,7 +3,9 @@ AUTOMAKE_OPTIONS = foreign
 
 host_abs_top_builddir = $(abs_top_builddir)/../..
 
-EXTRA_DIST                        =
+# Use noinst_HEADERS over EXTRA_DIST to work around Automake conditional
+# include (IMHO) bug.
+#EXTRA_DIST                        =
 SUBDIRS                           =
 DIST_SUBDIRS                      =
 CLEANFILES                        =
@@ -58,7 +60,7 @@ endef
 $(eval $(call DEVICE_RULES,epiphany,EPIPHANY))
 EPIPHANY_CPPFLAGS:=$(CPPFLAGS)
 EPIPHANY_AM_CPPFLAGS:=$(AM_CPPFLAGS)
-EPIPHANY_LDADD = devices/epiphany/src/libpal.la
+EPIPHANY_LDADD = $(abs_top_builddir)/../devices/epiphany/src/libpal.la
 
 
 # TODO: Move to configure.ac / become independent
@@ -72,16 +74,21 @@ LDFLAGS_FOR_BUILD += -L$(host_abs_top_builddir)/src/.libs \
 endif
 
 if BUILD_DEV_EPIPHANY
+if PAL_IS_TOPDIR
 SUBDIRS += devices/epiphany
--include devices/epiphany/Makemodule.host.am
+DIST_SUBDIRS += devices/epiphany
+else
+-include ../devices/epiphany/Makemodule.host.am
+endif
 endif
 
 # Top level targets
 
-EXTRA_DIST += config include bootstrap CHANGELOG.md CODING-STYLE.md \
+noinst_HEADERS += config include bootstrap CHANGELOG.md CODING-STYLE.md \
               CONTRIBUTING.md LICENSE QUESTIONS.md README.md scripts
 
-EXTRA_DIST += devices/epiphany/placeholder.txt
+noinst_HEADERS += host/placeholder.txt
+noinst_HEADERS += devices/epiphany/placeholder.txt
 
 # Reports
 PHONIES += reports report-code-size report-stack-usage
@@ -105,12 +112,15 @@ clean-local-top:
 
 CLEAN_LOCAL_TARGETS += clean-local-top
 
-
-include include/Makemodule.am
-include src/Makemodule.am
+if PAL_IS_TOPDIR
+SUBDIRS += host
+DIST_SUBDIRS += host
 if ENABLE_DOC
 include doc/Makemodule.am
 endif
+else
+include include/Makemodule.am
+include src/Makemodule.am
 if ENABLE_EXAMPLES
 include examples/Makemodule.am
 endif
@@ -119,4 +129,5 @@ include benchmark/Makemodule.am
 endif
 if ENABLE_TESTS
 include tests/Makemodule.am
+endif
 endif

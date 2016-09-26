@@ -1,4 +1,4 @@
-EXTRA_DIST += src/math/msun
+noinst_HEADERS += src/math/msun
 
 noinst_LTLIBRARIES +=             \
 src/math/libpal-math-f32.la       \

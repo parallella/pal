@@ -1,7 +1,7 @@
 # TODO:
 # Add blas and wrappers to SUBDIRS
 
-EXTRA_DIST      += src/blas src/wrappers
+noinst_HEADERS      += src/blas src/wrappers
 lib_LTLIBRARIES += src/libpal.la
 
 src_libpal_la_SOURCES  = src/dummy.c

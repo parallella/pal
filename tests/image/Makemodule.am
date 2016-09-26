@@ -1,4 +1,4 @@
-EXTRA_DIST += tests/image/make_p_median3x3_data.py
+noinst_HEADERS += tests/image/make_p_median3x3_data.py
 
 # Alphabetic order
 check_PROGRAMS +=                      \

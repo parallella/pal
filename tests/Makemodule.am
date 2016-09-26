@@ -1,4 +1,4 @@
-EXTRA_DIST += tests/runtest.noimpl.c tests/runtest.simple.c
+noinst_HEADERS += tests/runtest.noimpl.c tests/runtest.simple.c
 
 if HOST_IS_EPIPHANY
 RUNTEST_SRC = tests/runtest.epiphany.c

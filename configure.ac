@@ -1,7 +1,19 @@
 #                                               -*- Autoconf -*-
 # Process this file with autoconf to produce a configure script.
 
-
+# Detect if we're top level configure. If so, we should configure subdirs.
+m4_divert_text([PARSE_ARGS],
+if test -n "$PAL_IS_SUBDIR"; then
+  pal_is_subdir=:
+  pal_is_topdir=false
+else
+  PAL_IS_SUBDIR=:
+  export PAL_IS_SUBDIR
+  pal_is_subdir=false
+  pal_is_topdir=:
+  ac_subdirs_all="host devices/epiphany"
+fi
+)
 
 # Needed for autoconf 2.64
 m4_pattern_allow([AC_CHECK_HEADER_STDBOOL])
@@ -91,9 +103,19 @@ AC_CHECK_FUNCS(clock_gettime, [], [
 ])
 AC_SUBST([BENCHMARK_LIBS])
 
+AM_CONDITIONAL([PAL_IS_SUBDIR],
+               [$pal_is_subdir])
+AM_CONDITIONAL([PAL_IS_TOPDIR],
+               [$pal_is_topdir])
+
 AC_CONFIG_FILES([Makefile
                  benchmark/bench-all.sh
                  Makemodule.host.am])
+
+# Configure host
+if $pal_is_topdir; then
+  AX_CONFIG_DIR([host], [..])
+fi
 
 # Epiphany host support
 AM_CONDITIONAL([HOST_IS_EPIPHANY],
@@ -173,9 +195,10 @@ AS_IF([test "x$enable_device_epiphany" = "xyes" -a "x$host_cpu" != "xepiphany"],
       [build_device_epiphany=yes])
 AM_CONDITIONAL([BUILD_DEV_EPIPHANY],
                [test "x$build_device_epiphany" = "xyes"])
-AS_IF([test "x$build_device_epiphany" = "xyes"],
-      [PAL_CONFIG_DEVICE([epiphany], [epiphany-elf])])
-
+if $pal_is_topdir; then
+  AS_IF([test "x$build_device_epiphany" = "xyes"],
+        [PAL_CONFIG_DEVICE([epiphany], [epiphany-elf])])
+fi
 
 AC_ARG_ENABLE([benchmark], AS_HELP_STRING([--disable-benchmark], [Disable building benchmark binaries]))
 AM_CONDITIONAL([ENABLE_BENCHMARK], [test "x$enable_benchmark" != "xno"])

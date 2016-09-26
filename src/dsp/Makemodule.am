@@ -1,5 +1,5 @@
 # TODO: add host target conditional subdirs
-EXTRA_DIST += src/dsp/asm
+noinst_HEADERS += src/dsp/asm
 
 noinst_LTLIBRARIES += src/dsp/libpal-dsp.la
 src_dsp_libpal_dsp_la_SOURCES = \
