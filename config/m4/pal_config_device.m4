@@ -68,10 +68,10 @@ pal_save_LDFLAGS=$LDFLAGS
 
 host_ac_configure_args=$ac_configure_args
 ac_configure_args=
-m4_expand([CFLAGS=${CFLAGS_FOR_])m4_expand([target]):-"-g -O2"}
-m4_expand([CXXFLAGS=${CXXFLAGS_FOR_])m4_expand([target]):-"-g -O2"}
-m4_expand([CPPFLAGS=$CPPFLAGS_FOR_])m4_expand([target])
-m4_expand([LDFLAGS=$LDFLAGS_FOR_])m4_expand([target])
+m4_expand([CFLAGS=${])m4_expand([target])_CFLAGS:-"-g -O2"}
+m4_expand([CXXFLAGS=${])m4_expand([target])_CXXFLAGS:-"-g -O2"}
+m4_expand([CPPFLAGS=$])m4_expand([target])_CPPFLAGS
+m4_expand([LDFLAGS=$])m4_expand([target])_LDFLAGS
 
 # Whitelist arguments
 for host_arg in $host_ac_configure_args
