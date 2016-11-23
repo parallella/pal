@@ -202,43 +202,6 @@ static void dev_fini(struct dev *dev)
     epiphany_dev_fini(dev);
 }
 
-static int dev_query(struct dev *dev, int property)
-{
-    if (!dev)
-        return -EINVAL;
-
-    switch (property) {
-    case P_PROP_TYPE:
-        return P_DEV_EPIPHANY;
-    case P_PROP_NODES:
-        return 16;
-    case P_PROP_TOPOLOGY:
-        return 2;
-    case P_PROP_ROWS:
-        return 4;
-    case P_PROP_COLS:
-        return 4;
-    case P_PROP_PLANES:
-        return 4;
-    case P_PROP_CHIPROWS:
-        return 4;
-    case P_PROP_CHIPCOLS:
-        return 4;
-    case P_PROP_SIMD:
-        return 1;
-    case P_PROP_MEMSIZE:
-        return 32768;
-    case P_PROP_MEMBASE:
-        return 0x80800000;
-    case P_PROP_VERSION:
-        return 0xdeadbeef;
-    case P_PROP_MEMARCH:
-    case P_PROP_WHOAMI:
-        return -ENOSYS;
-    }
-    return -EINVAL;
-}
-
 static void *dev_map_member(struct team *team, int member,
                             unsigned long offset, unsigned long size)
 {
@@ -250,6 +213,7 @@ static void *dev_map_member(struct team *team, int member,
         return NULL;
 
     if (offset >= (1 << 20) || (offset + size) > (1 << 20))
+        return NULL;
 
     row = member / 4;
     col = member % 4;
@@ -260,6 +224,13 @@ static void *dev_map_member(struct team *team, int member,
 
     return (void *) addr;
 }
+
+static void *dev_map_raw(struct dev *dev, unsigned long addr, unsigned long size)
+{
+    /* HACK */
+    return (void *) addr;
+}
+
 
 static uint32_t reg_read(struct epiphany_dev *epiphany,
                          uintptr_t base, uintptr_t offset)
@@ -292,8 +263,9 @@ static ssize_t dev_mem_write(p_mem_t *mem, const void *src, off_t offset,
     struct epiphany_dev *epiphany = to_epiphany_dev(mem->dev);
     uintptr_t addr = (uintptr_t) mem->ref;
 
-    if (addr < 0x8e000000 || 32*1024*1024 < addr - 0x8e000000 + nb)
-        return -EINVAL;
+    /* HACK */
+    //if (addr < 0x8e000000 || 32*1024*1024 < addr - 0x8e000000 + nb)
+    //    return -EINVAL;
 
     mem_write(epiphany, addr + offset, src, nb);
 
@@ -306,8 +278,9 @@ static ssize_t dev_mem_read(p_mem_t *mem, void *dst, off_t offset,
     struct epiphany_dev *epiphany = to_epiphany_dev(mem->dev);
     uintptr_t addr = (uintptr_t) mem->ref;
 
-    if (addr < 0x8e000000 || 32*1024*1024 < addr - 0x8e000000 + nb)
-        return -EINVAL;
+    /* HACK */
+    //if (addr < 0x8e000000 || 32*1024*1024 < addr - 0x8e000000 + nb)
+    //    return -EINVAL;
 
     mem_read(epiphany, dst, addr + offset, nb);
 
@@ -325,8 +298,8 @@ static p_mem_t dev_map(struct dev *dev, unsigned long addr, unsigned long size)
     p_mem_t mem;
 
     /* HACK */
-    if (addr < 0x8e000000 || 32*1024*1024 < addr - 0x8e000000 + size)
-        return p_mem_err(EINVAL);
+    //if (addr < 0x8e000000 || 32*1024*1024 < addr - 0x8e000000 + size)
+    //    return p_mem_err(EINVAL);
 
     mem.ref = (void *) addr;
     mem.size = size;
@@ -355,10 +328,11 @@ static struct dev_ops epiphany_dev_ops = {
     /* Specific for device */
     .init = dev_init,
     .fini = dev_fini,
-    .query = dev_query,
+    .query = epiphany_dev_query,
     .map_member = dev_map_member,
     .map = dev_map,
     .unmap = dev_unmap,
+    ._map_raw = dev_map_raw,
 };
 
 struct epiphany_dev __pal_dev_epiphany = {
