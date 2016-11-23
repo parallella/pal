@@ -142,31 +142,53 @@ again:
     return 0;
 }
 
-static int dev_early_init(struct dev *dev)
+p_dev_t dev_init(struct dev *dev, int flags)
 {
     int ret;
-    struct epiphany_dev *dev_data = to_epiphany_dev(dev);
+    struct epiphany_dev *epiphany = to_epiphany_dev(dev);
 
-    dev_data->epiphany_fd = open(EPIPHANY_DEV, O_RDWR | O_SYNC);
-    if (dev_data->epiphany_fd == -1)
-        return -errno;
+    if (!epiphany->initialized)
+        return p_ref_err(ENODEV);
 
-    dev_data->sram_size = SRAM_SIZE;
-    dev_data->eram_base = ERAM_BASE;
-    dev_data->eram_size = ERAM_SIZE;
+    /* Be idempotent if already initialized. It might be a better idea to
+     * return EBUSY instead */
+    if (epiphany->opened)
+        return dev;
+
+    epiphany->epiphany_fd = open(EPIPHANY_DEV, O_RDWR | O_SYNC);
+    if (epiphany->epiphany_fd == -1)
+        return p_ref_err(errno);
+
+    epiphany->sram_size = SRAM_SIZE;
+    epiphany->eram_base = ERAM_BASE;
+    epiphany->eram_size = ERAM_SIZE;
 
     ret = mmap_eram(dev);
     if (ret)
-        return ret;
+        return p_ref_err(-ret);
 
     ret = mmap_chip_mem(dev);
     if (ret)
-        return ret;
+        return p_ref_err(-ret);
 
-    return epiphany_dev_early_init(dev);
+    epiphany->ctrl = (struct epiphany_ctrl_mem *) CTRL_MEM_EADDR;
+
+#if 0
+    /* I don't think this is needed here, soft reset on load should be enough */
+    ret = epiphany_reset_system(epiphany);
+    if (ret)
+        return p_ref_err(-ret);
+#endif
+
+    /* Clear control structure */
+    memset(epiphany->ctrl, 0 , sizeof(*epiphany->ctrl));
+
+    epiphany->opened = true;
+
+    return dev;
 }
 
-static void dev_late_fini(struct dev *dev)
+static void dev_fini(struct dev *dev)
 {
     struct epiphany_dev *dev_data = to_epiphany_dev(dev);
 
@@ -177,7 +199,7 @@ static void dev_late_fini(struct dev *dev)
     /* TODO: unmap chip here */
     close(dev_data->epiphany_fd);
 
-    epiphany_dev_late_fini(dev);
+    epiphany_dev_fini(dev);
 }
 
 static int dev_query(struct dev *dev, int property)
@@ -314,7 +336,7 @@ static p_mem_t dev_map(struct dev *dev, unsigned long addr, unsigned long size)
     return mem;
 }
 
-static int dev_unmap(struct team *team, void *addr)
+static int dev_unmap(struct team *team, p_mem_t *mem)
 {
     /* HACK */
 
@@ -323,17 +345,17 @@ static int dev_unmap(struct team *team, void *addr)
 
 static struct dev_ops epiphany_dev_ops = {
     /* Generic */
-    .init = epiphany_dev_init,
-    .fini = epiphany_dev_fini,
+    .early_init = epiphany_dev_early_init,
+    .late_fini = epiphany_dev_late_fini,
     .open = epiphany_dev_open,
     .load = epiphany_dev_load,
     .start = epiphany_dev_start,
     .wait = epiphany_dev_wait,
     .kill = epiphany_dev_kill,
     /* Specific for device */
+    .init = dev_init,
+    .fini = dev_fini,
     .query = dev_query,
-    .early_init = dev_early_init,
-    .late_fini = dev_late_fini,
     .map_member = dev_map_member,
     .map = dev_map,
     .unmap = dev_unmap,
