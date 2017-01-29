@@ -133,10 +133,7 @@ SECTIONS
 
 	. = ADDR(.reserved_crt0) + SIZEOF(.reserved_crt0);
 	.data_bank0 . : {*.o(.data_bank0)} > BANK0_SRAM
-	. = ADDR(.data_bank0) + SIZEOF(.data_bank0);
-	.text_bank0 . : {*.o(.text_bank0)} > BANK0_SRAM
-	
-	.data_bank1   : {*.o(.data_bank1)} > BANK1_SRAM
+
 	.text_bank1   : {*.o(.text_bank1)} > BANK1_SRAM
 
 	.data_bank2   : {*.o(.data_bank2)} > BANK2_SRAM
