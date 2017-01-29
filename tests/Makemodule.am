@@ -27,7 +27,7 @@ ALL_LOCAL_TARGETS += copy-test-driver
 #             if not copied then tests fail to run
 copy-test-driver:
 	mkdir -p $(top_builddir)/config
-	cp $(top_srcdir)/config/test-driver $(top_builddir)/config
+	cp -f $(top_srcdir)/config/test-driver $(top_builddir)/config | exit 0
 
 tests/runtest$(BUILD_EXEEXT): $(RUNTEST_SRC)
 	$(CC_FOR_BUILD) $(CFLAGS_FOR_BUILD) $< -o $@ $(LDFLAGS_FOR_BUILD)
