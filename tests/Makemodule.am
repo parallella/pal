@@ -1,9 +1,9 @@
 noinst_HEADERS += tests/runtest.noimpl.c tests/runtest.simple.c
 
 if HOST_IS_EPIPHANY
-RUNTEST_SRC = tests/runtest.epiphany.c
+RUNTEST_SRC = $(abs_top_srcdir)/tests/runtest.epiphany.c
 else
-RUNTEST_SRC = tests/runtest.simple.c
+RUNTEST_SRC = $(abs_top_srcdir)/tests/runtest.simple.c
 endif
 
 # N.B: Built sources in tests/ should be appended to tests_BUILT_SRCS.
@@ -19,6 +19,15 @@ tests_libutest_la_CFLAGS="-DUT_NO_PRINTF"
 endif
 
 noinst_HEADERS += tests/utest.h
+
+ALL_LOCAL_TARGETS += copy-test-driver
+
+# test-driver is only in the top_srcdir but is expected in
+#             top_builddir so copy to the expected location
+#             if not copied then tests fail to run
+copy-test-driver:
+	mkdir -p $(top_builddir)/config
+	cp -f $(top_srcdir)/config/test-driver $(top_builddir)/config | exit 0
 
 tests/runtest$(BUILD_EXEEXT): $(RUNTEST_SRC)
 	$(CC_FOR_BUILD) $(CFLAGS_FOR_BUILD) $< -o $@ $(LDFLAGS_FOR_BUILD)
