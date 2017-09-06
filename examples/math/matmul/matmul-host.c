@@ -253,11 +253,11 @@ int main(int argc, char *argv[])
 	    printf( "Epiphany(time) %9.1f msec  (@ %03d MHz)\n", tdiff[0], eMHz);
 	    printf( "Host(time)     %9.1f msec  (@ %03d MHz)\n", tdiff[1], aMHz);
 	    printf( "------------------------------------------------------------\n");
-	    printf( "TEST \"matmul-16\" PASSED\n");
+	    printf( "TEST \"matmul\" PASSED\n");
 	    retval = 0;
 	} else {
 	  printf( "\n\nERROR: C_epiphany is different from C_host !!!\n");
-	  printf( "TEST \"matmul-16\" FAILED\n");
+	  printf( "TEST \"matmul\" FAILED\n");
 	  retval = 1;
 	}
 
@@ -404,7 +404,7 @@ void get_args(int argc, char *argv[])
 
 		if (!strcmp(argv[n], "-h") || !strcmp(argv[n], "--help"))
 		{
-			fprintf(stderr, "Usage: matmul-16_host.elf [-no-reset] [-64] [-broadcast] [-no-run] [-verbose N] [-h | --help] [ELF_file]\n");
+			fprintf(stderr, "Usage: %s [-no-reset] [-64] [-broadcast] [-no-run] [-verbose N] [-h | --help] [ELF_file]\n", argv[0]);
 			fprintf(stderr, "       N: available levels of diagnostics\n");
 			exit(0);
 		}
